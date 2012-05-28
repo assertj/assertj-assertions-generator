@@ -1,0 +1,20 @@
+
+  /**
+   * Verifies that the actual ${class_to_assert}'s ${property} is equal to the given one.
+   * @param ${property} the given ${property} to compare the actual ${class_to_assert}'s ${property} to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ${class_to_assert}'s ${property} is not equal to the given one.
+   */
+  public ${class_to_assert}Assert has${Property}(${propertyType} ${property}) {
+    // check that actual ${class_to_assert} we want to make assertions on is not null.
+    isNotNull();
+
+    // we overrides the default error message with a more explicit one
+    String errorMessage = format("Expected ${class_to_assert}'s ${property} to be <%s> but was <%s>", ${property}, actual.get${Property}());
+    
+    // check
+    if (!actual.get${Property}().equals(${property})) { throw new AssertionError(errorMessage); }
+
+    // return the current assertion for method chaining
+    return this;
+  }

@@ -24,7 +24,9 @@
 # Required ENV vars:
 # ------------------
 #   JAVA_HOME - location of a JDK home dir
-#
+# 
+# mvn dependency:copy-dependencies -DincludeScope=runtime
+# 
 # ----------------------------------------------------------------------------
 
 QUOTED_ARGS=""
@@ -105,6 +107,5 @@ if $cygwin; then
     HOME=`cygpath --path --windows "$HOME"`
 fi
 
-exec "$JAVACMD" -classpath ./lib/*.jar org.fest.assertions.generator.AssertionGeneratorLauncher $QUOTED_ARGS
-
+exec "$JAVACMD" -cp ".:classes:classes/templates:lib/*" org.fest.assertions.generator.AssertionGeneratorLauncher $1
 

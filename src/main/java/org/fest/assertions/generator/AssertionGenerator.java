@@ -41,7 +41,7 @@ public class AssertionGenerator {
   private static final String GET_PREFIX = "get";
   private static final String IS_PREFIX = "is";
   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-  private static final String TEMPLATES_DIR = "src/main/resources/templates";
+  private static final String TEMPLATES_DIR = "classes/templates/"; // + File.separator;
 
   private String classAssertionTemplate;
   private String classAssertionTemplateFileName = TEMPLATES_DIR + "custom_assertion_class_template.txt";

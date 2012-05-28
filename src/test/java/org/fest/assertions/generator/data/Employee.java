@@ -1,5 +1,7 @@
 package org.fest.assertions.generator.data;
 
+import org.fest.assertions.generator.Person;
+
 public class Employee extends Person {
 
   private String jobTitle;

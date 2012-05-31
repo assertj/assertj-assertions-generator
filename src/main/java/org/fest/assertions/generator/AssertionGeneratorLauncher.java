@@ -12,6 +12,9 @@
  */
 package org.fest.assertions.generator;
 
+import static java.lang.String.format;
+import static java.lang.System.out;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,7 +26,7 @@ public class AssertionGeneratorLauncher {
     for (String className : classNames) {
       Class<?> clazz = Class.forName(className);
       File playerAssertJavaFile = customAssertionGenerator.generateCustomAssertion(clazz);
-      System.out.println("generated assertion file " + playerAssertJavaFile.getAbsolutePath());
+      out.println(format("Generated %s assertions file -> %s ", clazz.getSimpleName(), playerAssertJavaFile.getAbsolutePath()));
     }
   }
 }

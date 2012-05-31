@@ -15,8 +15,6 @@ package org.fest.assertions.generator;
 import static java.lang.String.format;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 
-import static org.fest.util.Collections.list;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,6 +22,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 // TODO use fluent API to generate file ? something like : generateAssertFor(class).inDirectory(dir).execute()
@@ -182,7 +181,7 @@ public class AssertionGenerator {
 
   private List<Method> getterMethodsOf(Class<?> clazz) {
     Method[] declaredMethods = clazz.getDeclaredMethods();
-    List<Method> getters = list();
+    List<Method> getters = new ArrayList<Method>();
     for (int i = 0; i < declaredMethods.length; i++) {
       Method method = declaredMethods[i];
       // if (method.isAccessible() && (method.getName().startsWith("get") || method.getName().startsWith("is"))) {
@@ -196,7 +195,7 @@ public class AssertionGenerator {
 
   private List<Method> booleanGetterMethodsOf(Class<?> clazz) {
     Method[] declaredMethods = clazz.getDeclaredMethods();
-    List<Method> booleanGetters = list();
+    List<Method> booleanGetters = new ArrayList<Method>();
     for (int i = 0; i < declaredMethods.length; i++) {
       Method method = declaredMethods[i];
       // if (method.isAccessible() && (method.getName().startsWith("get") || method.getName().startsWith("is"))) {

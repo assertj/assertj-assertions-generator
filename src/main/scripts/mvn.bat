@@ -32,6 +32,8 @@
 @REM set MAVEN_OPTS=-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000
 @REM ----------------------------------------------------------------------------
 
+java -cp ".;lib/*" org.fest.assertions.generator.AssertionGeneratorLauncher $1
+
 @REM Begin all REM lines with '@' in case MAVEN_BATCH_ECHO is 'on'
 @echo off
 @REM enable echoing my setting MAVEN_BATCH_ECHO to 'on'

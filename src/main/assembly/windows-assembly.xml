@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+  <id>windows</id>
+  <!-- Generates a zip package containing the needed files -->
+  <formats>
+    <format>zip</format>
+  </formats>
+
+  <!-- Adds dependencies to zip package under lib directory -->
+  <dependencySets>
+    <dependencySet>
+      <useProjectArtifact>true</useProjectArtifact>
+      <outputDirectory>lib</outputDirectory>
+      <unpack>false</unpack>
+    </dependencySet>
+  </dependencySets>
+
+  <fileSets>
+    <!-- Adds startup scripts located in src/main/scripts to the root directory of zip package -->
+    <fileSet>
+      <directory>${project.build.scriptSourceDirectory}</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*.bat</include>
+      </includes>
+      <fileMode>0777</fileMode>
+      <directoryMode>0755</directoryMode>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/src/main/templates</directory>
+      <outputDirectory>templates</outputDirectory>
+      <includes>
+        <include>*template.txt</include>
+      </includes>
+      <fileMode>0666</fileMode>
+      <directoryMode>0755</directoryMode>
+    </fileSet>
+  </fileSets>
+</assembly>
+

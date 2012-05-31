@@ -7,6 +7,15 @@
   <artifactId>fest-assertion-generator</artifactId>
   <version>0.1-SNAPSHOT</version>
   <name>FEST Assertions Generator</name>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <scm>
     <developerConnection>scm:git:git@github.com:joel-costigliola/fest-assertion-generator.git</developerConnection>
     <connection>scm:git:git://github.com/joel-costigliola/fest-assertion-generator.git</connection>
@@ -31,6 +40,7 @@
     </dependency>
   </dependencies>
   <build>
+    <finalName>assertion-generator</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -56,6 +66,55 @@
             <include>**/*Test.java</include>
           </includes>
           <argLine>-Xms128m -Xmx512m</argLine>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.3</version>
+        <!-- The configuration of the plugin -->
+        <executions>
+          <execution>
+            <id>unix-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/unix-assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
+            <id>windows-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/windows-assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- The configuration of maven-jar-plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.1</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <!-- Classpath is added to the manifest of the created jar file. -->
+              <addClasspath>true</addClasspath>
+              <!-- classpath prefix - used to specify that all needed libraries are found under lib/ directory -->
+              <classpathPrefix>lib/</classpathPrefix>
+              <mainClass>org.fest.assertions.generator.AssertionGeneratorLauncher</mainClass>
+            </manifest>
+          </archive>
         </configuration>
       </plugin>
     </plugins>

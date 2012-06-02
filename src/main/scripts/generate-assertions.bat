@@ -28,7 +28,6 @@
 @REM Begin all REM lines with '@' in case MAVEN_BATCH_ECHO is 'on'
 @echo off
 
-
 @REM set %HOME% to equivalent of $HOME
 if "%HOME%" == "" (set "HOME=%HOMEDRIVE%%HOMEPATH%")
 
@@ -68,4 +67,3 @@ goto end
 echo Failed to execute Fest Assertions Generator
 
 :end
-

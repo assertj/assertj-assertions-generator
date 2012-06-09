@@ -51,18 +51,31 @@ public class AssertionGenerator {
   private String targetDirectory = "."; 
 
   /**
-   * Creates a new </code>{@link AssertionGenerator}</code>.
+   * Creates a new </code>{@link AssertionGenerator}</code> with default templates directory.
    * 
-   * @throws FileNotFoundException
-   * @throws IOException
+   * @throws FileNotFoundException if some template file could not be found
+   * @throws IOException if some template file could not be read
    */
   public AssertionGenerator() throws FileNotFoundException, IOException {
+    this(TEMPLATES_DIR);
+  }
+
+  /**
+   * Creates a new </code>{@link AssertionGenerator}</code> with default templates directory.
+   * 
+   * @throws FileNotFoundException if some template file could not be found
+   * @throws IOException if some template file could not be read
+   */
+  public AssertionGenerator(String templatesDirectory) throws FileNotFoundException, IOException {
     super();
+    classAssertionTemplateFileName = templatesDirectory + "custom_assertion_class_template.txt";
+    hasAssertionTemplateFileName = templatesDirectory + "has_assertion_template.txt";
+    isAssertionTemplateFileName = templatesDirectory + "is_assertion_template.txt";
     classAssertionTemplate = readClassAssertionTemplate();
     hasAssertionTemplate = readHasAssertionTemplate();
     isAssertionTemplate = readIsAssertionTemplate();
   }
-
+  
   public void setAssertionClassTemplateFileName(String assertionClassTemplateFileName) {
     this.classAssertionTemplateFileName = assertionClassTemplateFileName;
     this.classAssertionTemplate = readClassAssertionTemplate();

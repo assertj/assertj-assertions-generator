@@ -1,4 +1,4 @@
-package org.fest.assertions.generator.data;
+package org.fest.assertions.generator;
 
 import java.util.Date;
 

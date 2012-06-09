@@ -3,18 +3,15 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd ">
 
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.easytesting</groupId>
+    <artifactId>fest</artifactId>
+    <version>1.0.12</version>
+  </parent>
   <groupId>org.easytesting</groupId>
   <artifactId>fest-assertion-generator</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>1.0M1-SNAPSHOT</version>
   <name>FEST Assertions Generator</name>
-
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
 
   <scm>
     <developerConnection>scm:git:git@github.com:joel-costigliola/fest-assertion-generator.git</developerConnection>
@@ -31,7 +28,7 @@
     <dependency>
       <groupId>org.easytesting</groupId>
       <artifactId>fest-assert-core</artifactId>
-      <version>2.0M4</version>
+      <version>2.0M5</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -47,32 +44,6 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <configuration>
-          <encoding>${project.build.sourceEncoding}</encoding>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-          <encoding>${project.build.sourceEncoding}</encoding>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <includes>
-            <include>**/*Test.java</include>
-          </includes>
-          <argLine>-Xms128m -Xmx512m</argLine>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>2.3</version>
         <!-- The configuration of the plugin -->
@@ -85,19 +56,20 @@
             </goals>
             <configuration>
               <descriptors>
-                <descriptor>src/main/assembly/unix-assembly.xml</descriptor>
+                <descriptor>src/main/assemblies/unix-assembly.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
           <execution>
-            <id>windows-assembly</id>
+            <!-- override make-assembly defined in parent pom to make windows assembly -->
+            <id>make-assembly</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
             <configuration>
               <descriptors>
-                <descriptor>src/main/assembly/windows-assembly.xml</descriptor>
+                <descriptor>src/main/assemblies/windows-assembly.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
@@ -107,7 +79,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3.1</version>
+        <version>2.4</version>
         <configuration>
           <archive>
             <manifest>
@@ -120,9 +92,11 @@
           </archive>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.5</version>
+      </plugin>
     </plugins>
   </build>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
 </project>

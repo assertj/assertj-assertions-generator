@@ -3,7 +3,7 @@
   <id>unix</id>
   <!-- Generates a zip package containing the needed files -->
   <formats>
-    <format>tar.gz</format>
+    <format>zip</format>
   </formats>
 
   <!-- Adds dependencies to assembly under lib directory -->
@@ -16,7 +16,7 @@
   </dependencySets>
 
   <fileSets>
-    <!-- Adds startup scripts located in src/main/scripts to the root directory of tar.gz package -->
+    <!-- Adds startup scripts located in src/main/scripts to the root directory of zip package -->
     <fileSet>
       <directory>${project.build.scriptSourceDirectory}</directory>
       <outputDirectory></outputDirectory>

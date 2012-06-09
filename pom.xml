@@ -9,7 +9,7 @@
   </parent>
   <groupId>org.easytesting</groupId>
   <artifactId>fest-assertion-generator</artifactId>
-  <version>1.0M1</version>
+  <version>1.0M2-SNAPSHOT</version>
   <name>FEST Assertions Generator</name>
 
   <scm>

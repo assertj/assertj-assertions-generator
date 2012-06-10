@@ -22,10 +22,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 // TODO use fluent API to generate file ? something like : generateAssertFor(class).inDirectory(dir).execute()
+// TODO hasNoTeamMates
 public class AssertionGenerator {
 
   private static final String ASSERT_CLASS_SUFFIX = "Assert.java";
@@ -36,6 +40,7 @@ public class AssertionGenerator {
   private static final String PACKAGE__REGEXP = "\\$\\{package\\}";
   private static final String PROPERTY_TYPE_REGEXP = "\\$\\{propertyType\\}";
   private static final String CLASS_TO_ASSERT_REGEXP = "\\$\\{class_to_assert\\}";
+  private static final String ELEMENT_TYPE_REGEXP = "\\$\\{elementType\\}";
   private static final String IMPORTS = "${imports}";
   private static final String GET_PREFIX = "get";
   private static final String IS_PREFIX = "is";
@@ -43,12 +48,11 @@ public class AssertionGenerator {
   private static final String TEMPLATES_DIR = "./templates/"; // + File.separator;
 
   private String classAssertionTemplate;
-  private String classAssertionTemplateFileName = TEMPLATES_DIR + "custom_assertion_class_template.txt";
   private String hasAssertionTemplate;
-  private String hasAssertionTemplateFileName = TEMPLATES_DIR + "has_assertion_template.txt";
+  private String hasIterableElementsAssertionTemplate;
+  private String hasArrayElementsAssertionTemplate;
   private String isAssertionTemplate;
-  private String isAssertionTemplateFileName = TEMPLATES_DIR + "is_assertion_template.txt";
-  private String targetDirectory = "."; 
+  private String targetDirectory = ".";
 
   /**
    * Creates a new </code>{@link AssertionGenerator}</code> with default templates directory.
@@ -68,27 +72,35 @@ public class AssertionGenerator {
    */
   public AssertionGenerator(String templatesDirectory) throws FileNotFoundException, IOException {
     super();
-    classAssertionTemplateFileName = templatesDirectory + "custom_assertion_class_template.txt";
-    hasAssertionTemplateFileName = templatesDirectory + "has_assertion_template.txt";
-    isAssertionTemplateFileName = templatesDirectory + "is_assertion_template.txt";
-    classAssertionTemplate = readClassAssertionTemplate();
-    hasAssertionTemplate = readHasAssertionTemplate();
-    isAssertionTemplate = readIsAssertionTemplate();
+    setAssertionClassTemplateFileName(templatesDirectory + "custom_assertion_class_template.txt");
+    setHasAssertionTemplateFileName(templatesDirectory + "has_assertion_template.txt");
+    setHasElementsAssertionForIterableTemplateFileName(templatesDirectory + "has_elements_assertion_template_for_iterable.txt");
+    setHasElementsAssertionForArrayTemplateFileName(templatesDirectory + "has_elements_assertion_template_for_array.txt");
+    setIsAssertionTemplateFileName(templatesDirectory + "is_assertion_template.txt");
   }
-  
+
+  /**
+   * Defines your own class template file name.
+   * @param assertionClassTemplateFileName
+   */
   public void setAssertionClassTemplateFileName(String assertionClassTemplateFileName) {
-    this.classAssertionTemplateFileName = assertionClassTemplateFileName;
-    this.classAssertionTemplate = readClassAssertionTemplate();
+    this.classAssertionTemplate = readTemplate(assertionClassTemplateFileName);
   }
 
   public void setHasAssertionTemplateFileName(String hasAssertionTemplateFileName) {
-    this.hasAssertionTemplateFileName = hasAssertionTemplateFileName;
-    this.hasAssertionTemplate = readHasAssertionTemplate();
+    this.hasAssertionTemplate = readTemplate(hasAssertionTemplateFileName);
+  }
+
+  public void setHasElementsAssertionForIterableTemplateFileName(String hasIterableElementsAssertionTemplateFileName) {
+    this.hasIterableElementsAssertionTemplate = readTemplate(hasIterableElementsAssertionTemplateFileName);
+  }
+
+  public void setHasElementsAssertionForArrayTemplateFileName(String hasArrayElementsAssertionTemplateFileName) {
+    this.hasArrayElementsAssertionTemplate = readTemplate(hasArrayElementsAssertionTemplateFileName);
   }
 
   public void setIsAssertionTemplateFileName(String isAssertionTemplateFileName) {
-    this.isAssertionTemplateFileName = isAssertionTemplateFileName;
-    this.isAssertionTemplate = readIsAssertionTemplate();
+    this.isAssertionTemplate = readTemplate(isAssertionTemplateFileName);
   }
 
   public void setDirectoryWhereAssertionFilesAreGenerated(String targetDirectory) {
@@ -128,7 +140,7 @@ public class AssertionGenerator {
     assertionFileContent = assertionFileContent.replaceAll(CLASS_TO_ASSERT_REGEXP, clazz.getSimpleName());
     assertionFileContent = assertionFileContent.replace(IMPORTS, generateNeededImportsFor(clazz));
 
-    // finally create the assertion file 
+    // finally create the assertion file
     String assertionFileName = clazz.getSimpleName() + ASSERT_CLASS_SUFFIX;
     return createCustomAssertionFile(assertionFileContent, assertionFileName, targetDirectory);
   }
@@ -155,35 +167,70 @@ public class AssertionGenerator {
     StringBuilder assertionsForGetters = new StringBuilder();
     List<Method> getters = getterMethodsOf(clazz);
     for (Method getter : getters) {
-      String hasAssertionContent = hasAssertionTemplate;
-      if (getter.getReturnType().isPrimitive()) {
+      String assertionContent = hasAssertionTemplate;
+      Class<?> returnType = getter.getReturnType();
+      if (isIterable(returnType)) {
+        assertionContent = hasIterableElementsAssertionTemplate;
+        ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
+        Class<?> actualParameterClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+        assertionContent = assertionContent.replaceAll(ELEMENT_TYPE_REGEXP, actualParameterClass.getSimpleName());
+      } else if (returnType.isArray()) {
+        assertionContent = hasArrayElementsAssertionTemplate;
+        assertionContent = assertionContent.replaceAll(ELEMENT_TYPE_REGEXP, returnType.getComponentType().getSimpleName());
+      } else if (returnType.isPrimitive()) {
         // primitive must be compared with != instead of !equals()
-        hasAssertionContent = hasAssertionContent.replace("!actual.get${Property}().equals(${property})",
+        assertionContent = assertionContent.replace("!actual.get${Property}().equals(${property})",
             "actual.get${Property}() != ${property}");
       }
       String propertyName = getter.getName().substring(GET_PREFIX.length());
-      hasAssertionContent = hasAssertionContent.replaceAll(CLASS_TO_ASSERT_REGEXP, clazz.getSimpleName());
-      hasAssertionContent = hasAssertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, propertyName);
-      hasAssertionContent = hasAssertionContent.replaceAll(PROPERTY_TYPE_REGEXP, getter.getReturnType().getSimpleName());
+      assertionContent = assertionContent.replaceAll(CLASS_TO_ASSERT_REGEXP, clazz.getSimpleName());
+      assertionContent = assertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, propertyName);
+      assertionContent = assertionContent.replaceAll(PROPERTY_TYPE_REGEXP, returnType.getSimpleName());
       // lowercase the first character
       String propertyNameWithLowercasedFirstChar = lowercaseFirstCharOf(propertyName);
-      hasAssertionContent = hasAssertionContent.replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP,
+      assertionContent = assertionContent.replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP,
           propertyNameWithLowercasedFirstChar);
-      assertionsForGetters.append(hasAssertionContent);
+      assertionsForGetters.append(assertionContent);
     }
     return assertionsForGetters.toString();
   }
 
-  protected String generateNeededImportsFor(Class<?> clazz) {
-    StringBuilder imports = new StringBuilder();
+  private static boolean isIterable(Class<?> returnType) {
+    return Iterable.class.isAssignableFrom(returnType);
+  }
+
+  private String generateNeededImportsFor(Class<?> clazz) {
+    // collect property types
+    Set<Class<?>> propertyTypes = new HashSet<Class<?>>();
     for (Method getter : getterMethodsOf(clazz)) {
       Class<?> propertyType = getter.getReturnType();
-      // no need to generate import for types in java.lang
-      if (!propertyType.isPrimitive() && !propertyType.getPackage().getName().equals(JAVA_LANG_PACKAGE)) {
-        imports.append(format(IMPORT_LINE, propertyType.getPackage().getName(), propertyType.getSimpleName(), LINE_SEPARATOR));
+      propertyTypes.add(propertyType);
+      if (propertyType.isArray()) {
+        Class<?> componentType = propertyType.getComponentType();
+        propertyTypes.add(componentType);
+      }
+      if (isIterable(propertyType)) {
+        ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
+        Class<?> actualParameterClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+        propertyTypes.add(actualParameterClass);
       }
     }
+    // remove clazz since our assertion class will be in the same package.
+    propertyTypes.remove(clazz);
+    // generate imports
+    StringBuilder imports = new StringBuilder();
+    for (Class<?> propertyType : propertyTypes) {
+      // no need to generate import for types in java.lang
+      addImportTypeFor(propertyType, imports);
+    }
     return imports.toString();
+  }
+
+  private static void addImportTypeFor(Class<?> clazz, StringBuilder imports) {
+    Package classPackage = clazz.getPackage();
+    if (!clazz.isPrimitive() && classPackage != null && !classPackage.getName().equals(JAVA_LANG_PACKAGE)) {
+      imports.append(format(IMPORT_LINE, clazz.getPackage().getName(), clazz.getSimpleName(), LINE_SEPARATOR));
+    }
   }
 
   private static String lowercaseFirstCharOf(String propertyName) {
@@ -230,27 +277,10 @@ public class AssertionGenerator {
     }
   }
 
-  private String readClassAssertionTemplate() {
+  private static String readTemplate(String templateFileName) {
     BufferedReader reader = null;
     try {
-      reader = new BufferedReader(new FileReader(classAssertionTemplateFileName));
-      String line = null;
-      StringBuilder classAssertTemplateBuilder = new StringBuilder();
-      while ((line = reader.readLine()) != null) {
-        classAssertTemplateBuilder.append(line).append(LINE_SEPARATOR);
-      }
-      return classAssertTemplateBuilder.toString();
-    } catch (Exception e) {
-      throw new RuntimeException("Failed to read " + classAssertionTemplateFileName, e);
-    } finally {
-      closeQuietly(reader);
-    }
-  }
-
-  private String readHasAssertionTemplate() {
-    BufferedReader reader = null;
-    try {
-      reader = new BufferedReader(new FileReader(hasAssertionTemplateFileName));
+      reader = new BufferedReader(new FileReader(templateFileName));
       String line = null;
       StringBuilder hasAssertionTemplateBuilder = new StringBuilder();
       while ((line = reader.readLine()) != null) {
@@ -258,24 +288,7 @@ public class AssertionGenerator {
       }
       return hasAssertionTemplateBuilder.toString();
     } catch (Exception e) {
-      throw new RuntimeException("Failed to read " + hasAssertionTemplateFileName, e);
-    } finally {
-      closeQuietly(reader);
-    }
-  }
-
-  private String readIsAssertionTemplate() {
-    BufferedReader reader = null;
-    try {
-      reader = new BufferedReader(new FileReader(isAssertionTemplateFileName));
-      String line = null;
-      StringBuilder isAssertionTemplateBuilder = new StringBuilder();
-      while ((line = reader.readLine()) != null) {
-        isAssertionTemplateBuilder.append(line).append(LINE_SEPARATOR);
-      }
-      return isAssertionTemplateBuilder.toString();
-    } catch (Exception e) {
-      throw new RuntimeException("Failed to read " + isAssertionTemplateFileName, e);
+      throw new RuntimeException("Failed to read " + templateFileName, e);
     } finally {
       closeQuietly(reader);
     }

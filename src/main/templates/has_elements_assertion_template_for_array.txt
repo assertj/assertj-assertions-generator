@@ -1,0 +1,26 @@
+
+  /**
+   * Verifies that the actual ${class_to_assert}'s ${property} contains the given ${elementType} elements.
+   * @param ${property} the given elements that should be contained in actual ${class_to_assert}'s ${property}.
+   * @return this assertion object.
+   * @throws AssertionError if the actual ${class_to_assert}'s ${property} does not contain all given ${elementType} elements.
+   */
+  public ${class_to_assert}Assert has${Property}(${elementType}... ${property}) {  
+    // check that actual ${class_to_assert} we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given {propertyType} varargs is not null.
+    if (${property} == null) throw new AssertionError("Expecting ${property} parameter not to be null.");
+    
+    // check with standard error message (see commented below to set your own message).
+    Assertions.assertThat(actual.get${Property}()).contains(${property});
+
+    // uncomment the 4 lines below if you want to build your own error message :
+    // WritableAssertionInfo assertionInfo = new WritableAssertionInfo();
+    // String errorMessage = "my error message";
+    // assertionInfo.overridingErrorMessage(errorMessage);
+    // Iterables.instance().assertContains(assertionInfo, actual.getTeamMates(), teamMates);
+    
+    // return the current assertion for method chaining
+    return this;
+  }

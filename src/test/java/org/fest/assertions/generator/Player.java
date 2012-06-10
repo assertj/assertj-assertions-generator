@@ -1,20 +1,22 @@
 /*
  * Created on Feb 22, 2011
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
- *
+ * 
  * Copyright @2011 the original author or authors.
  */
 package org.fest.assertions.generator;
 
 import static java.lang.String.format;
+
+import java.util.List;
 
 /**
  * @author Joel Costigliola
@@ -26,6 +28,8 @@ public class Player {
   private int assistsPerGame;
   private int reboundsPerGame;
   private String team;
+  private List<Player> teamMates;
+  private String[] previousTeams;
 
   public Player() {}
 
@@ -41,7 +45,7 @@ public class Player {
   public void setName(Name name) {
     this.name = name;
   }
-  
+
   public int getPointsPerGame() {
     return pointsPerGame;
   }
@@ -74,7 +78,20 @@ public class Player {
     this.team = team;
   }
 
-  @Override public String toString() {
+  public List<Player> getTeamMates() {
+    return teamMates;
+  }
+
+  public void setTeamMates(List<Player> teamMates) {
+    this.teamMates = teamMates;
+  }
+
+  public String[] getPreviousTeams() {
+    return previousTeams;
+  }
+
+  @Override
+  public String toString() {
     return format("%s[%s %s, team=%s]", getClass().getSimpleName(), name.getFirst(), name.getLast(), team);
   }
 }

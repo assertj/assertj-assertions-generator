@@ -55,7 +55,7 @@ goto error
 @REM ==== END VALIDATION ====
 
 
-@REM Start MAVEN2
+@REM Start generator
 :runGenerator
 SET JAVA_EXE=%JAVA_HOME%\bin\java.exe
 set CMD_LINE_ARGS=%*

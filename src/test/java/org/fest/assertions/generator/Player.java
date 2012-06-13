@@ -24,6 +24,7 @@ import java.util.List;
 public class Player {
 
   private Name name;
+  private boolean rookie;
   private int pointsPerGame;
   private int assistsPerGame;
   private int reboundsPerGame;
@@ -88,6 +89,10 @@ public class Player {
 
   public String[] getPreviousTeams() {
     return previousTeams;
+  }
+
+  public boolean isRookie() {
+    return rookie;
   }
 
   @Override

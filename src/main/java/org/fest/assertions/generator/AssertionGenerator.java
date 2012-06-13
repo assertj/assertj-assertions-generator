@@ -150,17 +150,19 @@ public class AssertionGenerator {
     List<Method> booleanGetterMethods = booleanGetterMethodsOf(clazz);
     for (Method booleanGetter : booleanGetterMethods) {
       String isAssertionContent = isAssertionTemplate;
+      Class<?> returnTypeName = booleanGetter.getReturnType();
       String propertyName = booleanGetter.getName().substring(IS_PREFIX.length());
-      isAssertionContent = isAssertionContent.replaceAll(CLASS_TO_ASSERT_REGEXP, clazz.getSimpleName());
-      isAssertionContent = isAssertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, propertyName);
-      isAssertionContent = isAssertionContent.replaceAll(PROPERTY_TYPE_REGEXP, booleanGetter.getReturnType().getSimpleName());
-      // lowercase the first character
-      String propertyNameWithLowercasedFirstChar = lowercaseFirstCharOf(propertyName);
-      isAssertionContent = isAssertionContent.replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP,
-          propertyNameWithLowercasedFirstChar);
+      isAssertionContent = replacePropertyNameAndGetterReturnType(isAssertionContent, returnTypeName, propertyName);
       assertionsForBooleanGetters.append(isAssertionContent);
     }
     return assertionsForBooleanGetters.toString();
+  }
+
+  private static String replacePropertyNameAndGetterReturnType(String assertionContent, Class<?> returnType, String propertyName) {
+    assertionContent = assertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, propertyName);
+    assertionContent = assertionContent.replaceAll(PROPERTY_TYPE_REGEXP, returnType.getSimpleName());
+    assertionContent = assertionContent.replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP, lowercaseFirstCharOf(propertyName));
+    return assertionContent;
   }
 
   protected String generateAssertionsForGettersOf(Class<?> clazz) {
@@ -183,7 +185,6 @@ public class AssertionGenerator {
             "actual.get${Property}() != ${property}");
       }
       String propertyName = getter.getName().substring(GET_PREFIX.length());
-      assertionContent = assertionContent.replaceAll(CLASS_TO_ASSERT_REGEXP, clazz.getSimpleName());
       assertionContent = assertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, propertyName);
       assertionContent = assertionContent.replaceAll(PROPERTY_TYPE_REGEXP, returnType.getSimpleName());
       // lowercase the first character

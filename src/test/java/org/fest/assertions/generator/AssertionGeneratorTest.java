@@ -9,7 +9,7 @@ public class AssertionGeneratorTest {
 
   @Test
   public void test() throws FileNotFoundException, IOException {
-    AssertionGenerator customAssertionGenerator = new AssertionGenerator("src/main/templates/");
+    AssertionGenerator customAssertionGenerator = new AssertionGenerator("src/main/resources/templates/");
     customAssertionGenerator.setDirectoryWhereAssertionFilesAreGenerated("target");
     customAssertionGenerator.generateCustomAssertion(Player.class);
   }

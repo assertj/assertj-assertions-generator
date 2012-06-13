@@ -3,6 +3,7 @@ package ${package};
 import static java.lang.String.format;
 
 import org.fest.assertions.api.AbstractAssert;
+import org.fest.assertions.api.Assertions;
 ${imports}
 
 /**

@@ -12,7 +12,7 @@
     String errorMessage = format("Expected actual ${class_to_assert} to be ${property} but was not.", actual);
     
     // check
-    if (!actual.get${Property}()) { throw new AssertionError(errorMessage); }
+    if (!actual.is${Property}()) throw new AssertionError(errorMessage);
 
     // return the current assertion for method chaining
     return this;

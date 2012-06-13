@@ -54,11 +54,12 @@ goto error
 
 @REM ==== END VALIDATION ====
 
-SET JAVA_EXE="%JAVA_HOME%\bin\java.exe"
-set CMD_LINE_ARGS=%*
 
 @REM Start MAVEN2
 :runGenerator
+SET JAVA_EXE=%JAVA_HOME%\bin\java.exe
+set CMD_LINE_ARGS=%*
+
 %JAVA_EXE% -classpath ".;lib/*" org.fest.assertions.generator.AssertionGeneratorLauncher %CMD_LINE_ARGS%
 if ERRORLEVEL 1 goto error
 goto end

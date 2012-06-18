@@ -15,18 +15,44 @@ package org.fest.assertions.generator;
 import static java.lang.String.format;
 import static java.lang.System.out;
 
+import static org.fest.assertions.generator.util.ClassUtil.getClassesInPackage;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AssertionGeneratorLauncher {
 
-  public static void main(String[] classNames) throws FileNotFoundException, IOException, ClassNotFoundException {
+  public static void main(String[] classesOrPackagesNames) throws FileNotFoundException, IOException, ClassNotFoundException {
+    List<Class<?>> classes = collectClasses(classesOrPackagesNames);
     AssertionGenerator customAssertionGenerator = new AssertionGenerator();
-    for (String className : classNames) {
-      Class<?> clazz = Class.forName(className);
+    for (Class<?> clazz : classes) {
       File playerAssertJavaFile = customAssertionGenerator.generateCustomAssertion(clazz);
       out.println(format("Generated %s assertions file -> %s ", clazz.getSimpleName(), playerAssertJavaFile.getAbsolutePath()));
+    }
+  }
+
+  private static List<Class<?>> collectClasses(String[] classOrPackageNames) throws ClassNotFoundException {
+    List<Class<?>> classes = new ArrayList<Class<?>>();
+    for (String classOrPackageName : classOrPackageNames) {
+      Class<?> clazz = tryToLoadClass(classOrPackageName);
+      if (clazz != null) {
+        classes.add(clazz);
+      } else {
+        // should be a package
+        classes.addAll(getClassesInPackage(classOrPackageName));
+      }
+    }
+    return classes;
+  }
+
+  private static Class<?> tryToLoadClass(String className)  {
+    try {
+      return Class.forName(className);
+    } catch (ClassNotFoundException e) {
+      return null;
     }
   }
 }

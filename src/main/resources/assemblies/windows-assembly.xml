@@ -27,10 +27,10 @@
       <directoryMode>0755</directoryMode>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/src/main/templates</directory>
+      <directory>${project.basedir}/src/main/resources/templates</directory>
       <outputDirectory>templates</outputDirectory>
       <includes>
-        <include>*template.txt</include>
+        <include>*template*.txt</include>
       </includes>
       <fileMode>0666</fileMode>
       <directoryMode>0755</directoryMode>

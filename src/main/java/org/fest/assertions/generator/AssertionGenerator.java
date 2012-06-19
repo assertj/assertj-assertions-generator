@@ -28,8 +28,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-// TODO use fluent API to generate file ? something like : generateAssertFor(class).inDirectory(dir).execute()
-// TODO hasNoTeamMates
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class AssertionGenerator {
 
   private static final String ASSERT_CLASS_SUFFIX = "Assert.java";
@@ -46,6 +47,8 @@ public class AssertionGenerator {
   private static final String IS_PREFIX = "is";
   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
   private static final String TEMPLATES_DIR = "./templates/"; // + File.separator;
+
+  private static final Logger logger = LoggerFactory.getLogger(AssertionGenerator.class);
 
   private String classAssertionTemplate;
   private String hasAssertionTemplate;
@@ -169,7 +172,16 @@ public class AssertionGenerator {
     StringBuilder assertionsForGetters = new StringBuilder();
     List<Method> getters = getterMethodsOf(clazz);
     for (Method getter : getters) {
-      String assertionContent = hasAssertionTemplate;
+      String assertionContent = assertionContentFor(getter);
+      assertionsForGetters.append(assertionContent);
+    }
+    return assertionsForGetters.toString();
+  }
+
+  private String assertionContentFor(Method getter) {
+    String assertionContent;
+    try {
+      assertionContent = hasAssertionTemplate;
       Class<?> returnType = getter.getReturnType();
       if (isIterable(returnType)) {
         assertionContent = hasIterableElementsAssertionTemplate;
@@ -191,9 +203,11 @@ public class AssertionGenerator {
       String propertyNameWithLowercasedFirstChar = lowercaseFirstCharOf(propertyName);
       assertionContent = assertionContent.replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP,
           propertyNameWithLowercasedFirstChar);
-      assertionsForGetters.append(assertionContent);
+    } catch (Exception e) {
+      logger.info("Won't generate asserion for {} because of error {}", getter.getName(), e.getMessage());
+      return "";
     }
-    return assertionsForGetters.toString();
+    return assertionContent;
   }
 
   private static boolean isIterable(Class<?> returnType) {
@@ -246,7 +260,7 @@ public class AssertionGenerator {
     for (int i = 0; i < declaredMethods.length; i++) {
       Method method = declaredMethods[i];
       // if (method.isAccessible() && (method.getName().startsWith("get") || method.getName().startsWith("is"))) {
-      if (method.getName().startsWith(GET_PREFIX) && method.getReturnType() != null) {
+      if (method.getName().startsWith(GET_PREFIX) && method.getReturnType() != null && method.getParameterTypes().length == 0) {
         // probably a getter
         getters.add(method);
       }
@@ -259,8 +273,8 @@ public class AssertionGenerator {
     List<Method> booleanGetters = new ArrayList<Method>();
     for (int i = 0; i < declaredMethods.length; i++) {
       Method method = declaredMethods[i];
-      // if (method.isAccessible() && (method.getName().startsWith("get") || method.getName().startsWith("is"))) {
-      if (method.getName().startsWith(IS_PREFIX) && Boolean.TYPE.equals(method.getReturnType())) {
+      if (method.getName().startsWith(IS_PREFIX) && Boolean.TYPE.equals(method.getReturnType())
+          && method.getParameterTypes().length == 0) {
         // probably a getter
         booleanGetters.add(method);
       }

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
+
 public class ClassUtil {
 
   /**
@@ -119,6 +120,28 @@ public class ClassUtil {
   private static void closeJarFile(final JarInputStream jarFile) throws IOException {
     if (jarFile != null) {
       jarFile.close();
+    }
+  }
+
+  public static List<Class<?>> collectClasses(String... classOrPackageNames) throws ClassNotFoundException {
+    List<Class<?>> classes = new ArrayList<Class<?>>();
+    for (String classOrPackageName : classOrPackageNames) {
+      Class<?> clazz = ClassUtil.tryToLoadClass(classOrPackageName);
+      if (clazz != null) {
+        classes.add(clazz);
+      } else {
+        // should be a package
+        classes.addAll(getClassesInPackage(classOrPackageName));
+      }
+    }
+    return classes;
+  }
+
+  public static Class<?> tryToLoadClass(String className)  {
+    try {
+      return Class.forName(className);
+    } catch (ClassNotFoundException e) {
+      return null;
     }
   }
 

@@ -1,4 +1,4 @@
-[[/images/fest-header-image-black-text.png]]
+[[/img/fest-header-image-black-text.png]]
 
 # Welcome to the fest-assertion-generator wiki !
 

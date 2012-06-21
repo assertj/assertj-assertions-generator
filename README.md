@@ -6,4 +6,4 @@ The Assertion Generator is able to create assertions specific to your own classe
 
 ## Documentation
 
-Have a look at our  [wiki documentation](https://github.com/joel-costigliola/fest-assertion-generator/wiki).
+Have a look at our  **[wiki documentation](https://github.com/joel-costigliola/fest-assertion-generator/wiki)**.

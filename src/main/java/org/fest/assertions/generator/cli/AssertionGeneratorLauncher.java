@@ -10,7 +10,7 @@
  * 
  * Copyright @2010-2011 the original author or authors.
  */
-package org.fest.assertions.generator;
+package org.fest.assertions.generator.cli;
 
 import static org.fest.assertions.generator.util.ClassUtil.collectClasses;
 
@@ -22,17 +22,27 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.fest.assertions.generator.BaseAssertionGenerator;
+import org.fest.assertions.generator.description.ClassDescription;
+import org.fest.assertions.generator.description.converter.ClassToClassDescriptionConverter;
+
 public class AssertionGeneratorLauncher {
 
   private static final Logger logger = LoggerFactory.getLogger(AssertionGeneratorLauncher.class);
-  
+  private static ClassToClassDescriptionConverter classDescriptionConverter = new ClassToClassDescriptionConverter();
+
   public static void main(String[] classesOrPackagesNames) throws FileNotFoundException, IOException, ClassNotFoundException {
     List<Class<?>> classes = collectClasses(classesOrPackagesNames);
-    AssertionGenerator customAssertionGenerator = new AssertionGenerator();
+    logger.info("Generating assertions for classes {}", classes);
+    BaseAssertionGenerator customAssertionGenerator = new BaseAssertionGenerator();
     for (Class<?> clazz : classes) {
-      logger.info("Generating assertions for {}", clazz.getName());
-      File playerAssertJavaFile = customAssertionGenerator.generateCustomAssertion(clazz);
-      logger.info("Generated {} assertions file -> {}", clazz.getSimpleName(), playerAssertJavaFile.getAbsolutePath());
+      logger.info("Generating assertions for class : {}", clazz.getName());
+      File customAssertionFile = customAssertionGenerator.generateCustomAssertionFor(toClassDescription(clazz));
+      logger.info("Generated {} assertions file -> {}", clazz.getSimpleName(), customAssertionFile.getAbsolutePath());
     }
+  }
+
+  private static ClassDescription toClassDescription(Class<?> clazz) {
+    return classDescriptionConverter.convertToClassDescription(clazz);
   }
 }

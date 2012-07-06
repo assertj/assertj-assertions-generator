@@ -1,9 +1,12 @@
 package org.fest.assertions.generator.util;
 
+import static org.apache.commons.lang3.StringUtils.*;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -13,7 +16,17 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 
+/**
+ * 
+ * Some utilities methods related to classes and packages. 
+ *
+ * @author Joel Costigliola
+ *
+ */
 public class ClassUtil {
+
+  public static final String IS_PREFIX = "is";
+  public static final String GET_PREFIX = "get";
 
   /**
    * Retrieves recursively all the classes belonging to a package.
@@ -126,7 +139,7 @@ public class ClassUtil {
   public static List<Class<?>> collectClasses(String... classOrPackageNames) throws ClassNotFoundException {
     List<Class<?>> classes = new ArrayList<Class<?>>();
     for (String classOrPackageName : classOrPackageNames) {
-      Class<?> clazz = ClassUtil.tryToLoadClass(classOrPackageName);
+      Class<?> clazz = tryToLoadClass(classOrPackageName);
       if (clazz != null) {
         classes.add(clazz);
       } else {
@@ -143,6 +156,47 @@ public class ClassUtil {
     } catch (ClassNotFoundException e) {
       return null;
     }
+  }
+
+  /**
+   * Returns the property name of given getter method, examples :
+   * 
+   * <pre>getName -> name</pre>
+   * 
+   * <pre>isMostValuablePlayer -> mostValuablePlayer</pre>
+   * @param getter getter method to deduce property from.
+   * @return the property name of given getter method
+   */
+  public static String propertyNameOf(Method getter) {
+    String prefixToRemove = isBooleanGetter(getter) ? IS_PREFIX : GET_PREFIX;
+    String propertyWithCapitalLetter = substringAfter(getter.getName(), prefixToRemove);
+    return uncapitalize(propertyWithCapitalLetter);
+  }
+
+  public static boolean isIterable(Class<?> returnType) {
+    return Iterable.class.isAssignableFrom(returnType);
+  }
+
+  public static boolean isStandardGetter(Method method) {
+    return method.getName().startsWith(GET_PREFIX) && method.getReturnType() != null && method.getParameterTypes().length == 0;
+  }
+
+  public static boolean isBooleanGetter(Method method) {
+    return method.getName().startsWith(IS_PREFIX) && Boolean.TYPE.equals(method.getReturnType())
+        && method.getParameterTypes().length == 0;
+  }
+
+  public static List<Method> getterMethodsOf(Class<?> clazz) {
+    Method[] declaredMethods = clazz.getDeclaredMethods();
+    List<Method> getters = new ArrayList<Method>();
+    for (int i = 0; i < declaredMethods.length; i++) {
+      Method method = declaredMethods[i];
+      if (isStandardGetter(method) || isBooleanGetter(method)) {
+        // probably a getter
+        getters.add(method);
+      }
+    }
+    return getters;
   }
 
 }

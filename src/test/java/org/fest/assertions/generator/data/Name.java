@@ -12,7 +12,7 @@
  *
  * Copyright @2011 the original author or authors.
  */
-package org.fest.assertions.generator;
+package org.fest.assertions.generator.data;
 
 import static org.fest.util.Strings.quote;
 

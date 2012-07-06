@@ -12,9 +12,11 @@
  * 
  * Copyright @2011 the original author or authors.
  */
-package org.fest.assertions.generator;
+package org.fest.assertions.generator.data;
 
 import static java.lang.String.format;
+
+import static org.fest.util.Objects.areEqual;
 
 import java.util.List;
 
@@ -93,6 +95,10 @@ public class Player {
 
   public boolean isRookie() {
     return rookie;
+  }
+  
+  public boolean isInTeam(String team) {
+    return areEqual(this.team, team);
   }
 
   @Override

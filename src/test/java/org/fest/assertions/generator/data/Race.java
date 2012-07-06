@@ -12,7 +12,7 @@
  * 
  * Copyright @2010 the original author or authors.
  */
-package org.fest.assertions.generator;
+package org.fest.assertions.generator.data;
 
 /**
  * Race in Tolkien's Lord of the Rings.

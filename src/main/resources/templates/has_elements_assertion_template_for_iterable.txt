@@ -9,7 +9,7 @@
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
-    // check that given {propertyType} varargs is not null.
+    // check that given ${elementType} varargs is not null.
     if (${property} == null) throw new AssertionError("Expecting ${property} parameter not to be null.");
     
     // check with standard error message (see commented below to set your own message).

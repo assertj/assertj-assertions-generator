@@ -95,7 +95,6 @@ public class TypeName implements Comparable<TypeName> {
     return isEmpty(packageName) ? typeSimpleName : packageName + "." + typeSimpleName;
   }
 
-  @Override
   public int compareTo(TypeName o) {
     // TODO Auto-generated method stub
     return 0;

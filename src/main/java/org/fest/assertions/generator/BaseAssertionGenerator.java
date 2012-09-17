@@ -14,7 +14,8 @@ package org.fest.assertions.generator;
 
 import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
-import static org.apache.commons.io.IOUtils.*;
+import static org.apache.commons.io.IOUtils.closeQuietly;
+import static org.apache.commons.io.IOUtils.copy;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 
 import java.io.File;
@@ -26,8 +27,8 @@ import java.io.StringWriter;
 import java.util.Set;
 
 import org.fest.assertions.generator.description.ClassDescription;
-import org.fest.assertions.generator.description.TypeName;
 import org.fest.assertions.generator.description.GetterDescription;
+import org.fest.assertions.generator.description.TypeName;
 
 public class BaseAssertionGenerator implements AssertionGenerator {
 
@@ -134,7 +135,7 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   private static String listImports(Set<TypeName> typesToImport, String assertClassPackage) {
     StringBuilder importsBuilder = new StringBuilder();
     for (TypeName type : typesToImport) {
-      if (!type.isPrimitive() && !type.belongsToJavaLangPackage()) {
+      if (!type.isPrimitive() && !type.belongsToJavaLangPackage() && !type.getPackageName().equals(assertClassPackage)) {
         importsBuilder.append(format(IMPORT_LINE, type, LINE_SEPARATOR));
       }
     }

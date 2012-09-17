@@ -1,12 +1,15 @@
 package org.fest.assertions.generator.description;
 
 import static org.apache.commons.lang3.ArrayUtils.contains;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.substringAfterLast;
+import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
 
 /**
  * Describes a type with package and class/interface simple name.
  * <p>
- * {@link TypeName} is immutabel.
+ * {@link TypeName} is immutable.
  * 
  * @author Joel Costigliola
  * 
@@ -96,8 +99,7 @@ public class TypeName implements Comparable<TypeName> {
   }
 
   public int compareTo(TypeName o) {
-    // TODO Auto-generated method stub
-    return 0;
+    return toString().compareTo(o.toString());
   }
 
   private void setPackageName(String packageName) {

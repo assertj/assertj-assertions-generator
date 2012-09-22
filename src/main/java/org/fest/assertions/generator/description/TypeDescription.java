@@ -16,8 +16,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Stores the information needed to generate an assertion for a getter method, data related to the getter returned type
- * (mostly to import needed classes).
+ * Stores the information needed to generate an assertion for a getter method, and data related to the getter returned
+ * type (mostly to import needed classes).
  * <p>
  * We need to know :
  * <ul>
@@ -29,10 +29,16 @@ import java.util.Set;
  * For example, let's say we have the following method in class <code>Team</code> :
  * 
  * <pre>
- * <code>public List&lt;Player&gt; getPlayers()</code></pre>
- * <p>
- * To generate <code>TeamAssert</code> <code>hasPlayers(Player... expectedPlayers)</code> assertion, we need to know the
- * generic type of players property : <code>Player</code>.
+ * <code>public List&lt;Player&gt; getPlayers()</code>
+ * </pre>
+ * 
+ * To generate the following assertion :
+ * 
+ * <pre>
+ * <code>TeamAssert</code> <code>hasPlayers(Player... expectedPlayers)</code>
+ * </pre>
+ * 
+ * we need to know the generic type of players property : <code>Player</code>.
  * <p>
  * 
  * @author Joel Costigliola
@@ -113,9 +119,9 @@ public class TypeDescription {
 
   @Override
   public String toString() {
-    return "TypeDescription [typeName=" + typeName + ", array=" + isArray + ", generic=" + isGeneric + ", iterable=" + isIterable
-        + ", primitive=" + isPrimitive() + ", boolean=" + isBoolean() + ", elementTypeName=" + elementTypeName
-        + ", relatedTypeNames=" + relatedTypeNames + "]";
+    return "TypeDescription [typeName=" + typeName + ", array=" + isArray + ", generic=" + isGeneric + ", iterable="
+        + isIterable + ", primitive=" + isPrimitive() + ", boolean=" + isBoolean() + ", elementTypeName="
+        + elementTypeName + ", relatedTypeNames=" + relatedTypeNames + "]";
   }
 
 }

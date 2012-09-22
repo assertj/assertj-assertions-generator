@@ -12,14 +12,14 @@
  */
 package org.fest.assertions.generator.description;
 
-
 /**
  * Stores the information needed to generate an assertion for a getter method.
  * <p>
  * Let's say we have the following method in class <code>Person</code> :
  * 
  * <pre>
- * <code>public int getAge()</code></pre>
+ * <code>public int getAge()</code>
+ * </pre>
  * <p>
  * To generate <code>PersonAssert</code> <code>hasAge(int expectedAge)</code> assertion in <code>PersonAssert</code>, we
  * need to know :
@@ -73,12 +73,12 @@ public class GetterDescription implements Comparable<GetterDescription> {
   }
 
   public String getElementTypeName() {
-    return typeDescription.getElementTypeName().getSimpleName();
+    return typeDescription.getElementTypeName() == null ? null : typeDescription.getElementTypeName().getSimpleName();
   }
 
   @Override
   public String toString() {
     return "GetterDescription [propertyName=" + propertyName + ", typeDescription=" + typeDescription + "]";
   }
-  
+
 }

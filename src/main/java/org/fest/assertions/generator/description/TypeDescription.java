@@ -12,9 +12,6 @@
  */
 package org.fest.assertions.generator.description;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Stores the information needed to generate an assertion for a getter method, and data related to the getter returned
  * type (mostly to import needed classes).
@@ -48,18 +45,15 @@ public class TypeDescription {
 
   private TypeName typeName;
   private boolean isArray;
-  private boolean isGeneric;
   private boolean isIterable;
-  private Set<TypeName> relatedTypeNames; // for array and generic types
-  private TypeName elementTypeName; // for array or iterable types only
+  // for array or iterable types only
+  private TypeName elementTypeName;
 
   public TypeDescription(TypeName typeName) {
     super();
     this.typeName = typeName;
     this.isArray = false;
-    this.isGeneric = false;
     this.isIterable = false;
-    this.relatedTypeNames = new HashSet<TypeName>();
     this.elementTypeName = null;
   }
 
@@ -73,24 +67,6 @@ public class TypeDescription {
 
   public void setArray(boolean isArray) {
     this.isArray = isArray;
-  }
-
-  public boolean isGeneric() {
-    return isGeneric;
-  }
-
-  public void setGeneric(boolean isGeneric) {
-    this.isGeneric = isGeneric;
-  }
-
-  public Set<TypeName> getRelatedTypeNames() {
-    return relatedTypeNames;
-  }
-
-  public void addRelatedTypeNames(TypeName... relatedTypeNames) {
-    for (TypeName typeName : relatedTypeNames) {
-      this.relatedTypeNames.add(typeName);
-    }
   }
 
   public boolean isPrimitive() {
@@ -119,9 +95,8 @@ public class TypeDescription {
 
   @Override
   public String toString() {
-    return "TypeDescription [typeName=" + typeName + ", array=" + isArray + ", generic=" + isGeneric + ", iterable="
-        + isIterable + ", primitive=" + isPrimitive() + ", boolean=" + isBoolean() + ", elementTypeName="
-        + elementTypeName + ", relatedTypeNames=" + relatedTypeNames + "]";
+    return "TypeDescription[typeName=" + typeName + ", array=" + isArray + ", iterable=" + isIterable + ", primitive="
+        + isPrimitive() + ", boolean=" + isBoolean() + ", elementTypeName=" + elementTypeName + "]";
   }
 
 }

@@ -52,7 +52,6 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
         ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
         Class<?> parameterClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
         typeDescription.setElementTypeName(new TypeName(parameterClass));
-        typeDescription.setGeneric(true);
         typeDescription.setIterable(true);
       }
       getterDescriptions.add(new GetterDescription(propertyNameOf(getter), typeDescription));

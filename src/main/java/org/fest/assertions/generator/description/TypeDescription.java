@@ -50,8 +50,8 @@ public class TypeDescription {
   private boolean isArray;
   private boolean isGeneric;
   private boolean isIterable;
-  private Set<TypeName> relatedTypeNames; // for arrray and generic types
-  private TypeName elementTypeName; // for arrray or iterable types only
+  private Set<TypeName> relatedTypeNames; // for array and generic types
+  private TypeName elementTypeName; // for array or iterable types only
 
   public TypeDescription(TypeName typeName) {
     super();

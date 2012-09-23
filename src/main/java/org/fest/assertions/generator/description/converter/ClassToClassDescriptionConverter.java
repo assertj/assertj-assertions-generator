@@ -12,7 +12,11 @@
  */
 package org.fest.assertions.generator.description.converter;
 
-import static org.fest.assertions.generator.util.ClassUtil.*;
+import static org.fest.assertions.generator.description.TypeName.JAVA_LANG_PACKAGE;
+import static org.fest.assertions.generator.util.ClassUtil.getClassesRelatedTo;
+import static org.fest.assertions.generator.util.ClassUtil.getterMethodsOf;
+import static org.fest.assertions.generator.util.ClassUtil.isIterable;
+import static org.fest.assertions.generator.util.ClassUtil.propertyNameOf;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -51,7 +55,6 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
         typeDescription.setGeneric(true);
         typeDescription.setIterable(true);
       }
-      // TODO what if there is several parameter types ?
       getterDescriptions.add(new GetterDescription(propertyNameOf(getter), typeDescription));
     }
     return getterDescriptions;
@@ -59,29 +62,36 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
 
   private Set<TypeName> getNeededImportsFor(Class<?> clazz) {
     // collect property types
-    Set<Class<?>> typesToImport = new HashSet<Class<?>>();
+    Set<Class<?>> classesToImport = new HashSet<Class<?>>();
     for (Method getter : getterMethodsOf(clazz)) {
       Class<?> propertyType = getter.getReturnType();
       if (propertyType.isArray()) {
         // we only need the component type, that is T in T[] array
-        typesToImport.add(propertyType.getComponentType());
+        classesToImport.add(propertyType.getComponentType());
       } else if (isIterable(propertyType)) {
         // we need the Iterable parameter type, that is T in Iterable<T> 
         // we don't need to import the Iterable since it does not appear directly in generated code, ex :
         // assertThat(actual.getTeamMates()).contains(teamMates); // teamMates -> List
         ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
         Class<?> actualParameterClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-        typesToImport.add(actualParameterClass);
+        classesToImport.add(actualParameterClass);
+      } else if (getter.getGenericReturnType() instanceof ParameterizedType) {
+        // return type is generic type, add it and all its parameters type.
+        ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
+        classesToImport.addAll(getClassesRelatedTo(parameterizedType));
       } else {
-        typesToImport.add(propertyType);
+        // return type is not generic type, simply add it.
+        classesToImport.add(propertyType);
       }
     }
-    // imports as String
-    Set<TypeName> imports = new TreeSet<TypeName>();
-    for (Class<?> propertyType : typesToImport) {
-      imports.add(new TypeName(propertyType));
+    // convert to TypeName, excluding primitive or types in java.lang that don't need to be imported.
+    Set<TypeName> typeToImports = new TreeSet<TypeName>();
+    for (Class<?> propertyType : classesToImport) {
+      if (!propertyType.isPrimitive() && !JAVA_LANG_PACKAGE.equals(propertyType.getPackage().getName())) {
+        typeToImports.add(new TypeName(propertyType));
+      }
     }
-    return imports;
+    return typeToImports;
   }
 
 }

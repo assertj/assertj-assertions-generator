@@ -1,27 +1,31 @@
 package org.fest.assertions.generator.util;
 
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.substringAfter;
+import static org.apache.commons.lang3.StringUtils.uncapitalize;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
-
 /**
  * 
- * Some utilities methods related to classes and packages. 
- *
+ * Some utilities methods related to classes and packages.
+ * 
  * @author Joel Costigliola
- *
+ * 
  */
 public class ClassUtil {
 
@@ -30,6 +34,7 @@ public class ClassUtil {
 
   /**
    * Retrieves recursively all the classes belonging to a package.
+   * 
    * @param packageName
    * @return the list of Class found
    * @throws ClassNotFoundException if any error occurs
@@ -40,6 +45,7 @@ public class ClassUtil {
 
   /**
    * Retrieves recursively all the classes belonging to a package.
+   * 
    * @param packageName
    * @param classLoader the class loader used to load the class in the given package
    * @return the list of Class found
@@ -48,7 +54,9 @@ public class ClassUtil {
   public static List<Class<?>> getClassesInPackage(String packageName, ClassLoader classLoader)
       throws ClassNotFoundException {
     try {
-      if (classLoader == null) { throw new ClassNotFoundException("Can't get class loader."); }
+      if (classLoader == null) {
+        throw new ClassNotFoundException("Can't get class loader.");
+      }
       String path = packageName.replace('.', '/');
       // Ask for all resources for the path
       Enumeration<URL> resources = classLoader.getResources(path);
@@ -66,11 +74,14 @@ public class ClassUtil {
       }
       return classes;
     } catch (NullPointerException x) {
-      throw new ClassNotFoundException(packageName + " does not appear to be a valid package (Null pointer exception)", x);
+      throw new ClassNotFoundException(packageName + " does not appear to be a valid package (Null pointer exception)",
+          x);
     } catch (UnsupportedEncodingException encex) {
-      throw new ClassNotFoundException(packageName + " does not appear to be a valid package (Unsupported encoding)", encex);
+      throw new ClassNotFoundException(packageName + " does not appear to be a valid package (Unsupported encoding)",
+          encex);
     } catch (IOException ioex) {
-      throw new ClassNotFoundException("IOException was thrown when trying to get all resources for " + packageName, ioex);
+      throw new ClassNotFoundException("IOException was thrown when trying to get all resources for " + packageName,
+          ioex);
     }
   }
 
@@ -150,7 +161,7 @@ public class ClassUtil {
     return classes;
   }
 
-  public static Class<?> tryToLoadClass(String className)  {
+  public static Class<?> tryToLoadClass(String className) {
     try {
       return Class.forName(className);
     } catch (ClassNotFoundException e) {
@@ -161,9 +172,14 @@ public class ClassUtil {
   /**
    * Returns the property name of given getter method, examples :
    * 
-   * <pre>getName -> name</pre>
+   * <pre>
+   * getName -> name
+   * </pre>
    * 
-   * <pre>isMostValuablePlayer -> mostValuablePlayer</pre>
+   * <pre>
+   * isMostValuablePlayer -> mostValuablePlayer
+   * </pre>
+   * 
    * @param getter getter method to deduce property from.
    * @return the property name of given getter method
    */
@@ -178,7 +194,8 @@ public class ClassUtil {
   }
 
   public static boolean isStandardGetter(Method method) {
-    return method.getName().startsWith(GET_PREFIX) && method.getReturnType() != null && method.getParameterTypes().length == 0;
+    return method.getName().startsWith(GET_PREFIX) && method.getReturnType() != null
+        && method.getParameterTypes().length == 0;
   }
 
   public static boolean isBooleanGetter(Method method) {
@@ -197,6 +214,34 @@ public class ClassUtil {
       }
     }
     return getters;
+  }
+
+  public static Set<Class<?>> getClassesRelatedTo(Type type) {
+    Set<Class<?>> classes = new HashSet<Class<?>>();
+
+    // non generic type : just add current type.
+    if (type instanceof Class) {
+      classes.add((Class<?>) type);
+      return classes;
+    }
+
+    // generic type : add current type and its parameter types
+    if (type instanceof ParameterizedType) {
+      ParameterizedType parameterizedType = (ParameterizedType) type;
+      for (Type actualTypeArgument : parameterizedType.getActualTypeArguments()) {
+        if (actualTypeArgument instanceof ParameterizedType) {
+          classes.addAll(getClassesRelatedTo(actualTypeArgument));
+        } else if (actualTypeArgument instanceof Class) {
+          classes.add((Class<?>) actualTypeArgument);
+        }
+        // I'm almost sure we should not arrive here !
+      }
+      Type rawType = parameterizedType.getRawType();
+      if (rawType instanceof Class) {
+        classes.add((Class<?>) rawType);
+      }
+    }
+    return classes;
   }
 
 }

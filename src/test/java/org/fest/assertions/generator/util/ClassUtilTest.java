@@ -1,7 +1,12 @@
 package org.fest.assertions.generator.util;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.generator.util.ClassUtil.*;
+import static org.fest.assertions.generator.util.ClassUtil.getClassesInPackage;
+import static org.fest.assertions.generator.util.ClassUtil.getterMethodsOf;
+import static org.fest.assertions.generator.util.ClassUtil.isBooleanGetter;
+import static org.fest.assertions.generator.util.ClassUtil.isIterable;
+import static org.fest.assertions.generator.util.ClassUtil.isStandardGetter;
+import static org.fest.assertions.generator.util.ClassUtil.propertyNameOf;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -13,8 +18,8 @@ import org.fest.assertions.generator.data.ArtWork;
 import org.fest.assertions.generator.data.Movie;
 import org.fest.assertions.generator.data.Name;
 import org.fest.assertions.generator.data.Player;
-import org.fest.assertions.generator.data.Race;
-import org.fest.assertions.generator.data.Ring;
+import org.fest.assertions.generator.data.lotr.Race;
+import org.fest.assertions.generator.data.lotr.Ring;
 
 public class ClassUtilTest {
 

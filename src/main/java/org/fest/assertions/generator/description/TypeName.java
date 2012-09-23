@@ -18,7 +18,7 @@ public class TypeName implements Comparable<TypeName> {
 
   private static final String BOOLEAN = "boolean";
   private static final String NO_PACKAGE = "";
-  protected static final String JAVA_LANG_PACKAGE = "java.lang";
+  public static final String JAVA_LANG_PACKAGE = "java.lang";
   protected static final String[] PRIMITIVE_TYPES = { "int", "long", "short", "byte", "float", "double", "char", BOOLEAN };
 
   private String typeSimpleName;

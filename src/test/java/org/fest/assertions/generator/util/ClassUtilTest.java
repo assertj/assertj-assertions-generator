@@ -6,6 +6,7 @@ import static org.fest.assertions.generator.util.ClassUtil.getterMethodsOf;
 import static org.fest.assertions.generator.util.ClassUtil.isBooleanGetter;
 import static org.fest.assertions.generator.util.ClassUtil.isIterable;
 import static org.fest.assertions.generator.util.ClassUtil.isStandardGetter;
+import static org.fest.assertions.generator.util.ClassUtil.isValidGetterName;
 import static org.fest.assertions.generator.util.ClassUtil.propertyNameOf;
 
 import java.lang.reflect.Method;
@@ -65,6 +66,19 @@ public class ClassUtilTest {
 
     method = Player.class.getMethod("isRookie", NO_PARAMS);
     assertThat(isBooleanGetter(method)).isTrue();
+  }
+
+  @Test
+  public void should_return_true_if_string_follows_getter_name_pattern() throws Exception {
+    assertThat(isValidGetterName("isRookie")).isTrue();
+    assertThat(isValidGetterName("getTeam")).isTrue();
+  }
+
+  @Test
+  public void should_return_false_if_string_does_not_follow_getter_name_pattern() throws Exception {
+    assertThat(isValidGetterName("isrookie")).isFalse();
+    assertThat(isValidGetterName("getteam")).isFalse();
+    assertThat(isValidGetterName("GetTeam")).isFalse();
   }
 
   @Test

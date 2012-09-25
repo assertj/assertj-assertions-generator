@@ -1,5 +1,6 @@
 package org.fest.assertions.generator.util;
 
+import static java.lang.Character.isUpperCase;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static org.apache.commons.lang3.StringUtils.uncapitalize;
 
@@ -201,6 +202,18 @@ public class ClassUtil {
   public static boolean isBooleanGetter(Method method) {
     return method.getName().startsWith(IS_PREFIX) && Boolean.TYPE.equals(method.getReturnType())
         && method.getParameterTypes().length == 0;
+  }
+
+  public static boolean isValidGetterName(String methodName) {
+    return isValidStandardGetterName(methodName) || isValidBooleanGetterName(methodName);
+  }
+
+  private static boolean isValidStandardGetterName(String name) {
+    return name.length() >= 4 && isUpperCase(name.charAt(3)) && name.startsWith(GET_PREFIX);
+  }
+
+  private static boolean isValidBooleanGetterName(String name) {
+    return name.length() >= 3 && isUpperCase(name.charAt(2)) && name.startsWith(IS_PREFIX);
   }
 
   public static List<Method> getterMethodsOf(Class<?> clazz) {

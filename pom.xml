@@ -96,7 +96,7 @@
               <addClasspath>true</addClasspath>
               <!-- classpath prefix - used to specify that all needed libraries are found under lib/ directory -->
               <classpathPrefix>lib/</classpathPrefix>
-              <mainClass>org.fest.assertions.generator.AssertionGeneratorLauncher</mainClass>
+              <mainClass>org.fest.assertions.generator.cli.AssertionGeneratorLauncher</mainClass>
             </manifest>
           </archive>
         </configuration>

@@ -99,6 +99,6 @@ if $cygwin; then
     HOME=`cygpath --path --windows "$HOME"`
 fi
 
-exec "$JAVACMD" -cp ".:lib/*" org.fest.assertions.generator.AssertionGeneratorLauncher $1
+exec "$JAVACMD" -cp ".:lib/*" org.fest.assertions.generator.cli.AssertionGeneratorLauncher $1
 # exec "$JAVACMD" -cp ".:lib/*" -jar assertion-generator.jar $1
 

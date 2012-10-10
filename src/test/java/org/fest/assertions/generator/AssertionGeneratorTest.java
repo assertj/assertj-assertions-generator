@@ -46,4 +46,22 @@ public class AssertionGeneratorTest {
       logger.info("Generated {} assertions file -> {}", clazz.getSimpleName(), customAssertionFile.getAbsolutePath());
     }
   }
+
+  @Test
+  public void should_generate_assertion_for_classes_in_package_using_provided_class_loader() throws Exception {
+    ClassLoader customClassLoader = new MyClassLoader(Thread.currentThread().getContextClassLoader());
+    List<Class<?>> classes = collectClasses(customClassLoader, "org.fest.assertions.generator.data");
+    for (Class<?> clazz : classes) {
+      logger.info("Generating assertions for {}", clazz.getName());
+      File customAssertionFile = customAssertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(clazz));
+      logger.info("Generated {} assertions file -> {}", clazz.getSimpleName(), customAssertionFile.getAbsolutePath());
+    }
+  }
+
+  class MyClassLoader extends ClassLoader {
+    public MyClassLoader(ClassLoader parent) {
+      super(parent);
+    }
+  }
+
 }

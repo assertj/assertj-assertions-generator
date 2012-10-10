@@ -69,8 +69,8 @@ public class ClassUtil {
           classes.addAll(getClassesInDirectory(directory, packageName, classLoader));
         } else {
           // it's a jar file
-          classes.addAll(getClassesInJarFile(directory.getPath().substring(5, directory.getPath().indexOf(".jar") + 4),
-              packageName));
+          String jarName = directory.getPath().substring(5, directory.getPath().indexOf(".jar") + 4);
+          classes.addAll(getClassesInJarFile(jarName, packageName, classLoader));
         }
       }
       return classes;
@@ -98,7 +98,8 @@ public class ClassUtil {
         // removes the .class extension
         // CHECKSTYLE:OFF
         try {
-          classes.add(Class.forName(packageName + '.' + currentFile.substring(0, currentFile.length() - 6)));
+          String className = packageName + '.' + currentFile.substring(0, currentFile.length() - 6);
+          classes.add(loadClass(className, classLoader));
         } catch (Throwable e) {
           // do nothing. this class hasn't been found by the loader, and we don't care.
         }
@@ -116,7 +117,7 @@ public class ClassUtil {
     return classes;
   }
 
-  private static List<Class<?>> getClassesInJarFile(String jar, String packageName) throws IOException {
+  private static List<Class<?>> getClassesInJarFile(String jar, String packageName, ClassLoader classLoader) throws IOException {
     List<Class<?>> classes = new ArrayList<Class<?>>();
     JarInputStream jarFile = null;
     jarFile = new JarInputStream(new FileInputStream(jar));
@@ -129,7 +130,7 @@ public class ClassUtil {
           if (className.startsWith(packageName)) {
             // CHECKSTYLE:OFF
             try {
-              classes.add(Class.forName(className.replace('/', '.')));
+              classes.add(loadClass(className.replace('/', '.'), classLoader));
             } catch (Throwable e) {
               // do nothing. this class hasn't been found by the loader, and we don't care.
             }
@@ -149,22 +150,32 @@ public class ClassUtil {
   }
 
   public static List<Class<?>> collectClasses(String... classOrPackageNames) throws ClassNotFoundException {
+    return collectClasses(Thread.currentThread().getContextClassLoader(), classOrPackageNames);
+  }
+
+  public static List<Class<?>> collectClasses(ClassLoader classLoader, String... classOrPackageNames) throws ClassNotFoundException {
     List<Class<?>> classes = new ArrayList<Class<?>>();
     for (String classOrPackageName : classOrPackageNames) {
-      Class<?> clazz = tryToLoadClass(classOrPackageName);
+      Class<?> clazz = tryToLoadClass(classOrPackageName, classLoader);
       if (clazz != null) {
         classes.add(clazz);
       } else {
         // should be a package
-        classes.addAll(getClassesInPackage(classOrPackageName));
+        classes.addAll(getClassesInPackage(classOrPackageName, classLoader));
       }
     }
     return classes;
   }
 
-  public static Class<?> tryToLoadClass(String className) {
+
+  private static Class<?> loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
+    return Class.forName(className, true, classLoader);
+  }
+
+
+  public static Class<?> tryToLoadClass(String className, ClassLoader classLoader) {
     try {
-      return Class.forName(className);
+      return loadClass(className, classLoader);
     } catch (ClassNotFoundException e) {
       return null;
     }

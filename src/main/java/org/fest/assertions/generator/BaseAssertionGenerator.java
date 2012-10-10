@@ -37,7 +37,7 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   private static final String DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ITERABLE = "has_elements_assertion_template_for_iterable.txt";
   private static final String DEFAULT_HAS_ASSERTION_TEMPLATE = "has_assertion_template.txt";
   private static final String DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE = "custom_assertion_class_template.txt";
-  private static final String ASSERT_CLASS_SUFFIX = "Assert.java";
+  static final String ASSERT_CLASS_SUFFIX = "Assert.java";
   private static final String IMPORT_LINE = "import %s;%s";
   private static final String PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP = "\\$\\{Property\\}";
   private static final String PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP = "\\$\\{property\\}";
@@ -129,7 +129,9 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     assertionFileContent = assertionFileContent.replace(IMPORTS, listImports(classDescription.getImports(), classDescription.getPackageName()));
 
     // finally create the assertion file
-    return createCustomAssertionFile(assertionFileContent, className + ASSERT_CLASS_SUFFIX, targetDirectory);
+    String packageDirs = targetDirectory + File.separator + classDescription.getPackageName().replace('.', File.separatorChar);
+    new File(packageDirs).mkdirs();
+    return createCustomAssertionFile(assertionFileContent, className + ASSERT_CLASS_SUFFIX, packageDirs);
   }
 
   private static String listImports(Set<TypeName> typesToImport, String assertClassPackage) {

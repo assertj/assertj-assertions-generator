@@ -33,8 +33,13 @@ public class AssertionGeneratorTest {
   @Test
   public void should_generate_assertion_for_player_class() throws Exception {
     customAssertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Player.class));
-    assertThat(new File(TARGET_DIRECTORY, "PlayerAssert.java")).hasContentEqualTo(
-        new File("src/test/resources/PlayerAssert.expected.txt"));
+    assertThat(fileGeneratedFor(Player.class)).hasContentEqualTo(new File("src/test/resources/PlayerAssert.expected.txt"));
+  }
+
+  private File fileGeneratedFor(Class<Player> clazz) {
+    String dirName = TARGET_DIRECTORY + File.separatorChar + clazz.getPackage().getName().replace('.', File.separatorChar);
+    String generatedFileName = clazz.getSimpleName() + BaseAssertionGenerator.ASSERT_CLASS_SUFFIX;
+    return new File(dirName, generatedFileName);
   }
 
   @Test

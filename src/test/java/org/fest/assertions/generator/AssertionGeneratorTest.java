@@ -1,6 +1,7 @@
 package org.fest.assertions.generator;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_SUFFIX;
 import static org.fest.assertions.generator.util.ClassUtil.collectClasses;
 
 import java.io.File;
@@ -36,12 +37,6 @@ public class AssertionGeneratorTest {
     assertThat(fileGeneratedFor(Player.class)).hasContentEqualTo(new File("src/test/resources/PlayerAssert.expected.txt"));
   }
 
-  private File fileGeneratedFor(Class<Player> clazz) {
-    String dirName = TARGET_DIRECTORY + File.separatorChar + clazz.getPackage().getName().replace('.', File.separatorChar);
-    String generatedFileName = clazz.getSimpleName() + BaseAssertionGenerator.ASSERT_CLASS_SUFFIX;
-    return new File(dirName, generatedFileName);
-  }
-
   @Test
   public void should_generate_assertion_for_classes_in_package() throws Exception {
     List<Class<?>> classes = collectClasses("org.fest.assertions.generator.data");
@@ -61,6 +56,13 @@ public class AssertionGeneratorTest {
       File customAssertionFile = customAssertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(clazz));
       logger.info("Generated {} assertions file -> {}", clazz.getSimpleName(), customAssertionFile.getAbsolutePath());
     }
+  }
+
+  private static File fileGeneratedFor(Class<Player> clazz) {
+    String dirName = TARGET_DIRECTORY + File.separatorChar
+        + clazz.getPackage().getName().replace('.', File.separatorChar);
+    String generatedFileName = clazz.getSimpleName() + ASSERT_CLASS_SUFFIX;
+    return new File(dirName, generatedFileName);
   }
 
   class MyClassLoader extends ClassLoader {

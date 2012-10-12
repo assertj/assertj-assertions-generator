@@ -48,8 +48,10 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   private static final String IMPORTS = "${imports}";
   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
   private static final String TEMPLATES_DIR = "templates/"; // + File.separator;
-  
-  private String targetDirectory = ".";
+
+  // assertions classes are generated in their package directory starting from targetBaseDirectory.
+  // ex : org.fest.Player -> targetBaseDirectory/org/fest/PlayerAssert.java
+  private String targetBaseDirectory = ".";
   private String classAssertionTemplate;
   private String hasAssertionTemplate;
   private String hasIterableElementsAssertionTemplate;
@@ -76,13 +78,16 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     super();
     setAssertionClassTemplateFileName(templatesDirectory + DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE);
     setHasAssertionTemplateFileName(templatesDirectory + DEFAULT_HAS_ASSERTION_TEMPLATE);
-    setHasElementsAssertionForIterableTemplateFileName(templatesDirectory + DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ITERABLE);
-    setHasElementsAssertionForArrayTemplateFileName(templatesDirectory + DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ARRAY);
+    setHasElementsAssertionForIterableTemplateFileName(templatesDirectory
+        + DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ITERABLE);
+    setHasElementsAssertionForArrayTemplateFileName(templatesDirectory
+        + DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ARRAY);
     setIsAssertionTemplateFileName(templatesDirectory + DEFAULT_IS_ASSERTION_TEMPLATE);
   }
 
   /**
    * Defines your own class template file name.
+   * 
    * @param assertionClassTemplateFileName
    */
   public void setAssertionClassTemplateFileName(String assertionClassTemplateFileName) {
@@ -105,8 +110,8 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     this.isAssertionTemplate = readTemplate(isAssertionTemplateFileName);
   }
 
-  public void setDirectoryWhereAssertionFilesAreGenerated(String targetDirectory) {
-    this.targetDirectory = targetDirectory;
+  public void setDirectoryWhereAssertionFilesAreGenerated(String targetBaseDirectory) {
+    this.targetBaseDirectory = targetBaseDirectory;
   }
 
   /** {@inheritDoc} */
@@ -126,12 +131,24 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     String assertionFileContent = assertionFileContentBuilder.toString();
     assertionFileContent = assertionFileContent.replaceAll(PACKAGE__REGEXP, classDescription.getPackageName());
     assertionFileContent = assertionFileContent.replaceAll(CLASS_TO_ASSERT_REGEXP, className);
-    assertionFileContent = assertionFileContent.replace(IMPORTS, listImports(classDescription.getImports(), classDescription.getPackageName()));
+    assertionFileContent = assertionFileContent.replace(IMPORTS,
+        listImports(classDescription.getImports(), classDescription.getPackageName()));
 
-    // finally create the assertion file
-    String packageDirs = targetDirectory + File.separator + classDescription.getPackageName().replace('.', File.separatorChar);
-    new File(packageDirs).mkdirs();
-    return createCustomAssertionFile(assertionFileContent, className + ASSERT_CLASS_SUFFIX, packageDirs);
+    // finally create the assertion file, located in its package directory starting from targetBaseDirectory
+    String targetDirectory = getTargetDirectoryPathFor(classDescription);
+    // build any needed directories
+    new File(targetDirectory).mkdirs();
+    return createCustomAssertionFile(assertionFileContent, className + ASSERT_CLASS_SUFFIX, targetDirectory);
+  }
+
+  /**
+   * Returns the target directory path where the assertions file for given classDescription will be created.
+   * 
+   * @param classDescription the {@link ClassDescription} we want to generate an assertion file for.
+   * @return the target directory path where the assertions file for given classDescription will be created.
+   */
+  private String getTargetDirectoryPathFor(ClassDescription classDescription) {
+    return targetBaseDirectory + File.separator + classDescription.getPackageName().replace('.', File.separatorChar);
   }
 
   private static String listImports(Set<TypeName> typesToImport, String assertClassPackage) {
@@ -160,7 +177,8 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     if (getter.isBooleanPropertyType()) {
       assertionContent = isAssertionTemplate;
     } else if (getter.isIterablePropertyType()) {
-      assertionContent = hasIterableElementsAssertionTemplate.replaceAll(ELEMENT_TYPE_REGEXP, getter.getElementTypeName());
+      assertionContent = hasIterableElementsAssertionTemplate.replaceAll(ELEMENT_TYPE_REGEXP,
+          getter.getElementTypeName());
     } else if (getter.isArrayPropertyType()) {
       assertionContent = hasArrayElementsAssertionTemplate.replaceAll(ELEMENT_TYPE_REGEXP, getter.getElementTypeName());
     }
@@ -186,8 +204,8 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   }
 
   private static String readTemplate(String templateFileName) {
-    InputStream inputStream= null;
-    StringWriter writer= null;
+    InputStream inputStream = null;
+    StringWriter writer = null;
     try {
       // load from classpath
       inputStream = currentThread().getContextClassLoader().getResourceAsStream(templateFileName);

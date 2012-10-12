@@ -1,7 +1,14 @@
 package org.fest.assertions.generator.util;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.generator.util.ClassUtil.*;
+import static org.fest.assertions.generator.util.ClassUtil.collectClasses;
+import static org.fest.assertions.generator.util.ClassUtil.getClassesInPackage;
+import static org.fest.assertions.generator.util.ClassUtil.getterMethodsOf;
+import static org.fest.assertions.generator.util.ClassUtil.isBooleanGetter;
+import static org.fest.assertions.generator.util.ClassUtil.isIterable;
+import static org.fest.assertions.generator.util.ClassUtil.isStandardGetter;
+import static org.fest.assertions.generator.util.ClassUtil.isValidGetterName;
+import static org.fest.assertions.generator.util.ClassUtil.propertyNameOf;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -19,7 +26,6 @@ import org.fest.assertions.generator.data.lotr.Ring;
 public class ClassUtilTest {
 
   public static final String TEST_PACKAGE_NAME = "org.fest.assertions.generator.data";
-  private static final Class[] EXPECTED_CLASSES_IN_TEST_PACKAGE = new Class[]{Player.class, ArtWork.class, Name.class, Movie.class, Ring.class, Race.class};
   private static final Class<?>[] NO_PARAMS = new Class[0];
   private Method method;
 
@@ -87,8 +93,8 @@ public class ClassUtilTest {
   @Test
   public void should_return_getters_methods_only() throws Exception {
     List<Method> playerGetterMethods = getterMethodsOf(Player.class);
-    assertThat(playerGetterMethods).contains(Player.class.getMethod("getTeam", NO_PARAMS))
-        .doesNotContain(Player.class.getMethod("isInTeam", String.class));
+    assertThat(playerGetterMethods).contains(Player.class.getMethod("getTeam", NO_PARAMS)).doesNotContain(
+        Player.class.getMethod("isInTeam", String.class));
   }
 
 }

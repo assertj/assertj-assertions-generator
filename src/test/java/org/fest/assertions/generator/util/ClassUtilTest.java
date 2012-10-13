@@ -2,7 +2,6 @@ package org.fest.assertions.generator.util;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.generator.util.ClassUtil.collectClasses;
-import static org.fest.assertions.generator.util.ClassUtil.getClassesInPackage;
 import static org.fest.assertions.generator.util.ClassUtil.getterMethodsOf;
 import static org.fest.assertions.generator.util.ClassUtil.isBooleanGetter;
 import static org.fest.assertions.generator.util.ClassUtil.isIterable;
@@ -31,7 +30,7 @@ public class ClassUtilTest {
 
   @Test
   public void should_get_classes_in_package_and_subpackages() throws ClassNotFoundException {
-    List<Class<?>> classesInPackage = getClassesInPackage("org.fest.assertions.generator.data");
+    List<Class<?>> classesInPackage = collectClasses("org.fest.assertions.generator.data");
     assertThat(classesInPackage).contains(Player.class, ArtWork.class, Name.class, Movie.class, Ring.class, Race.class);
   }
 

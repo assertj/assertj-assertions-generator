@@ -5,7 +5,6 @@ import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static org.apache.commons.lang3.StringUtils.uncapitalize;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
@@ -18,8 +17,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarInputStream;
 
 /**
  * 
@@ -34,55 +31,64 @@ public class ClassUtil {
   public static final String GET_PREFIX = "get";
 
   /**
-   * Retrieves recursively all the classes belonging to a package.
-   * 
-   * @param packageName
-   * @return the list of Class found
-   * @throws ClassNotFoundException if any error occurs
+   * Call {@link #collectClasses(ClassLoader, String...)} with
+   * <code>Thread.currentThread().getContextClassLoader()</code>
    */
-  public static List<Class<?>> getClassesInPackage(String packageName) throws ClassNotFoundException {
-    return getClassesInPackage(packageName, Thread.currentThread().getContextClassLoader());
+  public static List<Class<?>> collectClasses(String... classOrPackageNames) throws ClassNotFoundException {
+    return collectClasses(Thread.currentThread().getContextClassLoader(), classOrPackageNames);
+  }
+
+  /**
+   * Collects all the classes from given classes names or classes belonging to given a package name (recursively).
+   * 
+   * @param classLoader {@link ClassLoader} used to load classes defines in classOrPackageNames
+   * @param classOrPackageNames classes names or packages names we want to collect classes from (recursively for
+   *          packages)
+   * @return the list of {@link Class}es found
+   * @throws RuntimeException if any error occurs
+   */
+  public static List<Class<?>> collectClasses(ClassLoader classLoader, String... classOrPackageNames) {
+    List<Class<?>> classes = new ArrayList<Class<?>>();
+    for (String classOrPackageName : classOrPackageNames) {
+      Class<?> clazz = tryToLoadClass(classOrPackageName, classLoader);
+      if (clazz != null) {
+        classes.add(clazz);
+      } else {
+        // should be a package
+        classes.addAll(getClassesInPackage(classOrPackageName, classLoader));
+      }
+    }
+    return classes;
   }
 
   /**
    * Retrieves recursively all the classes belonging to a package.
    * 
-   * @param packageName
-   * @param classLoader the class loader used to load the class in the given package
+   * @param packageName package name we want to load classes from
+   * @param classLoader the class loader used to load the classes in the given package
    * @return the list of Class found
-   * @throws ClassNotFoundException if any error occurs
+   * @throws RuntimeException if any error occurs
    */
-  public static List<Class<?>> getClassesInPackage(String packageName, ClassLoader classLoader)
-      throws ClassNotFoundException {
+  private static List<Class<?>> getClassesInPackage(String packageName, ClassLoader classLoader) {
     try {
       if (classLoader == null) {
-        throw new ClassNotFoundException("Can't get class loader.");
+        throw new IllegalArgumentException("Null class loader.");
       }
-      String path = packageName.replace('.', '/');
+      String packagePath = packageName.replace('.', '/');
       // Ask for all resources for the path
-      Enumeration<URL> resources = classLoader.getResources(path);
+      Enumeration<URL> resources = classLoader.getResources(packagePath);
       List<Class<?>> classes = new ArrayList<Class<?>>();
       while (resources.hasMoreElements()) {
-        URL resource = resources.nextElement();
-        File directory = new File(URLDecoder.decode(resource.getPath(), "UTF-8"));
+        File directory = new File(URLDecoder.decode(resources.nextElement().getPath(), "UTF-8"));
         if (directory.canRead()) {
           classes.addAll(getClassesInDirectory(directory, packageName, classLoader));
-        } else {
-          // it's a jar file
-          String jarName = directory.getPath().substring(5, directory.getPath().indexOf(".jar") + 4);
-          classes.addAll(getClassesInJarFile(jarName, packageName, classLoader));
         }
       }
       return classes;
-    } catch (NullPointerException x) {
-      throw new ClassNotFoundException(packageName + " does not appear to be a valid package (Null pointer exception)",
-          x);
     } catch (UnsupportedEncodingException encex) {
-      throw new ClassNotFoundException(packageName + " does not appear to be a valid package (Unsupported encoding)",
-          encex);
+      throw new RuntimeException(packageName + " does not appear to be a valid package (Unsupported encoding)", encex);
     } catch (IOException ioex) {
-      throw new ClassNotFoundException("IOException was thrown when trying to get all resources for " + packageName,
-          ioex);
+      throw new RuntimeException("IOException was thrown when trying to get all classes for " + packageName, ioex);
     }
   }
 
@@ -117,68 +123,16 @@ public class ClassUtil {
     return classes;
   }
 
-  private static List<Class<?>> getClassesInJarFile(String jar, String packageName, ClassLoader classLoader) throws IOException {
-    List<Class<?>> classes = new ArrayList<Class<?>>();
-    JarInputStream jarFile = null;
-    jarFile = new JarInputStream(new FileInputStream(jar));
-    JarEntry jarEntry;
-    while ((jarEntry = jarFile.getNextJarEntry()) != null) {
-      if (jarEntry != null) {
-        String className = jarEntry.getName();
-        if (className.endsWith(".class")) {
-          className = className.substring(0, className.length() - ".class".length()).replace('/', '.');
-          if (className.startsWith(packageName)) {
-            // CHECKSTYLE:OFF
-            try {
-              classes.add(loadClass(className.replace('/', '.'), classLoader));
-            } catch (Throwable e) {
-              // do nothing. this class hasn't been found by the loader, and we don't care.
-            }
-            // CHECKSTYLE:ON
-          }
-        }
-      }
-    }
-    closeJarFile(jarFile);
-    return classes;
-  }
-
-  private static void closeJarFile(final JarInputStream jarFile) throws IOException {
-    if (jarFile != null) {
-      jarFile.close();
-    }
-  }
-
-  public static List<Class<?>> collectClasses(String... classOrPackageNames) throws ClassNotFoundException {
-    return collectClasses(Thread.currentThread().getContextClassLoader(), classOrPackageNames);
-  }
-
-  public static List<Class<?>> collectClasses(ClassLoader classLoader, String... classOrPackageNames) throws ClassNotFoundException {
-    List<Class<?>> classes = new ArrayList<Class<?>>();
-    for (String classOrPackageName : classOrPackageNames) {
-      Class<?> clazz = tryToLoadClass(classOrPackageName, classLoader);
-      if (clazz != null) {
-        classes.add(clazz);
-      } else {
-        // should be a package
-        classes.addAll(getClassesInPackage(classOrPackageName, classLoader));
-      }
-    }
-    return classes;
-  }
-
-
-  private static Class<?> loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
-    return Class.forName(className, true, classLoader);
-  }
-
-
-  public static Class<?> tryToLoadClass(String className, ClassLoader classLoader) {
+  private static Class<?> tryToLoadClass(String className, ClassLoader classLoader) {
     try {
       return loadClass(className, classLoader);
     } catch (ClassNotFoundException e) {
       return null;
     }
+  }
+
+  private static Class<?> loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
+    return Class.forName(className, true, classLoader);
   }
 
   /**
@@ -220,11 +174,13 @@ public class ClassUtil {
   }
 
   private static boolean isValidStandardGetterName(String name) {
-    return name.length() >= 4 && isUpperCase(name.charAt(3)) && name.startsWith(GET_PREFIX);
+    return name.length() >= GET_PREFIX.length() + 1 && isUpperCase(name.charAt(GET_PREFIX.length()))
+        && name.startsWith(GET_PREFIX);
   }
 
   private static boolean isValidBooleanGetterName(String name) {
-    return name.length() >= 3 && isUpperCase(name.charAt(2)) && name.startsWith(IS_PREFIX);
+    return name.length() >= IS_PREFIX.length() + 1 && isUpperCase(name.charAt(IS_PREFIX.length()))
+        && name.startsWith(IS_PREFIX);
   }
 
   public static List<Method> getterMethodsOf(Class<?> clazz) {

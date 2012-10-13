@@ -74,7 +74,7 @@ public class ClassUtil {
       if (classLoader == null) {
         throw new IllegalArgumentException("Null class loader.");
       }
-      String packagePath = packageName.replace('.', '/');
+      String packagePath = packageName.replace('.', File.separatorChar);
       // Ask for all resources for the path
       Enumeration<URL> resources = classLoader.getResources(packagePath);
       List<Class<?>> classes = new ArrayList<Class<?>>();
@@ -114,7 +114,7 @@ public class ClassUtil {
         // It's another package
         String subPackageName = packageName + '.' + currentFile;
         // Ask for all resources for the path
-        URL resource = classLoader.getResource(subPackageName.replace('.', '/'));
+        URL resource = classLoader.getResource(subPackageName.replace('.', File.separatorChar));
         File subDirectory = new File(URLDecoder.decode(resource.getPath(), "UTF-8"));
         List<Class<?>> classesForSubPackage = getClassesInDirectory(subDirectory, subPackageName, classLoader);
         classes.addAll(classesForSubPackage);

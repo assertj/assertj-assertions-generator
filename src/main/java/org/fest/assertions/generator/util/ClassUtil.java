@@ -184,16 +184,19 @@ public class ClassUtil {
   }
 
   public static List<Method> getterMethodsOf(Class<?> clazz) {
-    Method[] declaredMethods = clazz.getDeclaredMethods();
+    Method[] methods = clazz.getMethods();
     List<Method> getters = new ArrayList<Method>();
-    for (int i = 0; i < declaredMethods.length; i++) {
-      Method method = declaredMethods[i];
-      if (isStandardGetter(method) || isBooleanGetter(method)) {
-        // probably a getter
+    for (int i = 0; i < methods.length; i++) {
+      Method method = methods[i];
+      if (isNotDefinedInObjectClass(method) && (isStandardGetter(method) || isBooleanGetter(method))) {
         getters.add(method);
       }
     }
     return getters;
+  }
+
+  private static boolean isNotDefinedInObjectClass(Method method) {
+    return !method.getDeclaringClass().equals(Object.class);
   }
 
   public static Set<Class<?>> getClassesRelatedTo(Type type) {

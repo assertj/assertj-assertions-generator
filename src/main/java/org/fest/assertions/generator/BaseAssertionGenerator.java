@@ -137,7 +137,7 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     // finally create the assertion file, located in its package directory starting from targetBaseDirectory
     String targetDirectory = getTargetDirectoryPathFor(classDescription);
     // build any needed directories
-    boolean mkdirs = new File(targetDirectory).mkdirs();
+    new File(targetDirectory).mkdirs();
     return createCustomAssertionFile(assertionFileContent, className + ASSERT_CLASS_SUFFIX, targetDirectory);
   }
 

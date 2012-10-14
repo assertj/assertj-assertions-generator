@@ -96,4 +96,11 @@ public class ClassUtilTest {
         Player.class.getMethod("isInTeam", String.class));
   }
 
+  @Test
+  public void should_also_return_inherited_getters_methods() throws Exception {
+    List<Method> playerGetterMethods = getterMethodsOf(Movie.class);
+    assertThat(playerGetterMethods).containsOnly(Movie.class.getMethod("getReleaseDate", NO_PARAMS),
+        ArtWork.class.getMethod("getTitle", NO_PARAMS));
+  }
+
 }

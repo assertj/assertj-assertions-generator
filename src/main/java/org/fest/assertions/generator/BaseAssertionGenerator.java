@@ -65,38 +65,37 @@ public class BaseAssertionGenerator implements AssertionGenerator {
    * @throws IOException           if some template file could not be read
    */
   public BaseAssertionGenerator(String templatesDirectory) throws FileNotFoundException, IOException {
-    super();
-    setAssertionClassTemplateFileName(templatesDirectory + Template.DEFAULT_CUSTOM_ASSERTION_CLASS);
-    setHasAssertionTemplateFileName(templatesDirectory + Template.DEFAULT_HAS_ASSERTION);
-    setHasElementsAssertionForIterableTemplateFileName(templatesDirectory
-        + Template.DEFAULT_HAS_ELEMENTS_ASSERTION_FOR_ITERABLE);
-    setHasElementsAssertionForArrayTemplateFileName(templatesDirectory
-        + Template.DEFAULT_HAS_ELEMENTS_ASSERTION_FOR_ARRAY);
-    setIsAssertionTemplateFileName(templatesDirectory + Template.DEFAULT_IS_ASSERTION);
+    setAssertionClassTemplate(Template.fromClasspath(templatesDirectory + Template.DEFAULT_CUSTOM_ASSERTION_CLASS));
+    setHasAssertionTemplate(Template.fromClasspath(templatesDirectory + Template.DEFAULT_HAS_ASSERTION));
+    setHasElementsAssertionForIterableTemplate(Template.fromClasspath(templatesDirectory
+        + Template.DEFAULT_HAS_ELEMENTS_ASSERTION_FOR_ITERABLE));
+    setHasElementsAssertionForArrayTemplate(Template.fromClasspath(templatesDirectory
+        + Template.DEFAULT_HAS_ELEMENTS_ASSERTION_FOR_ARRAY));
+    setIsAssertionTemplate(Template.fromClasspath(templatesDirectory + Template.DEFAULT_IS_ASSERTION));
   }
 
   /**
    * Defines your own class template file name.
-   * @param assertionClassTemplateFileName
+   * @param assertionClassTemplate
    */
-  public void setAssertionClassTemplateFileName(String assertionClassTemplateFileName) {
-    this.classAssertionTemplate = Template.fromClasspath(assertionClassTemplateFileName);
+  public void setAssertionClassTemplate(Template assertionClassTemplate) {
+    this.classAssertionTemplate = assertionClassTemplate;
   }
 
-  public void setHasAssertionTemplateFileName(String hasAssertionTemplateFileName) {
-    this.hasAssertionTemplate = Template.fromClasspath(hasAssertionTemplateFileName);
+  public void setHasAssertionTemplate(Template hasAssertionTemplate) {
+    this.hasAssertionTemplate = hasAssertionTemplate;
   }
 
-  public void setHasElementsAssertionForIterableTemplateFileName(String hasIterableElementsAssertionTemplateFileName) {
-    this.hasIterableElementsAssertionTemplate = Template.fromClasspath(hasIterableElementsAssertionTemplateFileName);
+  public void setHasElementsAssertionForIterableTemplate(Template hasIterableElementsAssertionTemplate) {
+    this.hasIterableElementsAssertionTemplate = hasIterableElementsAssertionTemplate;
   }
 
-  public void setHasElementsAssertionForArrayTemplateFileName(String hasArrayElementsAssertionTemplateFileName) {
-    this.hasArrayElementsAssertionTemplate = Template.fromClasspath(hasArrayElementsAssertionTemplateFileName);
+  public void setHasElementsAssertionForArrayTemplate(Template hasArrayElementsAssertionTemplate) {
+    this.hasArrayElementsAssertionTemplate = hasArrayElementsAssertionTemplate;
   }
 
-  public void setIsAssertionTemplateFileName(String isAssertionTemplateFileName) {
-    this.isAssertionTemplate = Template.fromClasspath(isAssertionTemplateFileName);
+  public void setIsAssertionTemplate(Template isAssertionTemplate) {
+    this.isAssertionTemplate = isAssertionTemplate;
   }
 
   public void setDirectoryWhereAssertionFilesAreGenerated(String targetBaseDirectory) {

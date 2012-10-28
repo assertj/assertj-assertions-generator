@@ -1,7 +1,9 @@
 package org.fest.assertions.generator;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.URL;
 
 import static java.lang.Thread.currentThread;
 import static org.apache.commons.io.IOUtils.closeQuietly;
@@ -14,27 +16,42 @@ public class Template {
   static final String DEFAULT_HAS_ASSERTION = "has_assertion_template.txt";
   static final String DEFAULT_CUSTOM_ASSERTION_CLASS = "custom_assertion_class_template.txt";
 
-  private final String templatePath;
+  static final String TEMPLATES_DIR = "templates/"; // + File.separator;
+
   private final String content;
 
-  private Template(String templatePath, String content) {
+  private Template(String content) {
     this.content = content;
-    this.templatePath = templatePath;
   }
 
   static Template fromClasspath(String templateFileName) {
-    InputStream inputStream = null;
-    StringWriter writer = null;
     try {
-      // load from classpath
-      inputStream = currentThread().getContextClassLoader().getResourceAsStream(templateFileName);
-      writer = new StringWriter();
-      copy(inputStream, writer);
-      return new Template(templateFileName, writer.toString());
+      return readTemplateThenClose(currentThread().getContextClassLoader().getResourceAsStream(templateFileName));
     } catch (Exception e) {
       throw new RuntimeException("Failed to read " + templateFileName, e);
+    }
+  }
+
+  static Template from(URL url) {
+
+    if (url.getPath().endsWith("/")) throw new RuntimeException("Failed to read template from " + url);
+
+    try {
+      InputStream input = url.openStream();
+      return readTemplateThenClose(input);
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to read template from " + url, e);
+    }
+  }
+
+  static private Template readTemplateThenClose(InputStream input) throws IOException {
+    StringWriter writer = null;
+    try {
+      writer = new StringWriter();
+      copy(input, writer);
+      return new Template(writer.toString());
     } finally {
-      closeQuietly(inputStream);
+      closeQuietly(input);
       closeQuietly(writer);
     }
   }

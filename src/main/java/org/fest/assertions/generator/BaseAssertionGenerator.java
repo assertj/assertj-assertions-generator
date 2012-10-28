@@ -38,7 +38,6 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   private static final String ELEMENT_TYPE_REGEXP = "\\$\\{elementType\\}";
   private static final String IMPORTS = "${imports}";
   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-  private static final String TEMPLATES_DIR = "templates/"; // + File.separator;
 
   // assertions classes are generated in their package directory starting from targetBaseDirectory.
   // ex : org.fest.Player -> targetBaseDirectory/org/fest/PlayerAssert.java
@@ -56,11 +55,12 @@ public class BaseAssertionGenerator implements AssertionGenerator {
    * @throws IOException           if some template file could not be read
    */
   public BaseAssertionGenerator() throws FileNotFoundException, IOException {
-    this(TEMPLATES_DIR);
+    this(Template.TEMPLATES_DIR);
   }
 
   /**
-   * Creates a new </code>{@link BaseAssertionGenerator}</code> with default templates directory.
+   * Creates a new </code>{@link BaseAssertionGenerator}</code> with in the specified directory.
+   * @param templatesDirectory path where to find templates
    * @throws FileNotFoundException if some template file could not be found
    * @throws IOException           if some template file could not be read
    */

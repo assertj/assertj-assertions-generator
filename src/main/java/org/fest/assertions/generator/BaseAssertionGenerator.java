@@ -25,6 +25,7 @@ import java.util.Set;
 import static java.lang.String.format;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.lang3.StringUtils.capitalize;
+import static org.fest.assertions.generator.Template.*;
 
 public class BaseAssertionGenerator implements AssertionGenerator {
 
@@ -55,7 +56,11 @@ public class BaseAssertionGenerator implements AssertionGenerator {
    * @throws IOException           if some template file could not be read
    */
   public BaseAssertionGenerator() throws FileNotFoundException, IOException {
-    this(Template.TEMPLATES_DIR);
+    classAssertionTemplate = Template.of(Type.CUSTOM).create();
+    hasAssertionTemplate = Template.of(Type.HAS).create();
+    hasIterableElementsAssertionTemplate = Template.of(Type.HAS_FOR_ITERABLE).create();
+    hasArrayElementsAssertionTemplate = Template.of(Type.HAS_FOR_ARRAY).create();
+    isAssertionTemplate = Template.of(Type.IS).create();
   }
 
   /**
@@ -65,13 +70,11 @@ public class BaseAssertionGenerator implements AssertionGenerator {
    * @throws IOException           if some template file could not be read
    */
   public BaseAssertionGenerator(String templatesDirectory) throws FileNotFoundException, IOException {
-    setAssertionClassTemplate(Template.fromClasspath(templatesDirectory + Template.DEFAULT_CUSTOM_ASSERTION_CLASS));
-    setHasAssertionTemplate(Template.fromClasspath(templatesDirectory + Template.DEFAULT_HAS_ASSERTION));
-    setHasElementsAssertionForIterableTemplate(Template.fromClasspath(templatesDirectory
-        + Template.DEFAULT_HAS_ELEMENTS_ASSERTION_FOR_ITERABLE));
-    setHasElementsAssertionForArrayTemplate(Template.fromClasspath(templatesDirectory
-        + Template.DEFAULT_HAS_ELEMENTS_ASSERTION_FOR_ARRAY));
-    setIsAssertionTemplate(Template.fromClasspath(templatesDirectory + Template.DEFAULT_IS_ASSERTION));
+    classAssertionTemplate = Template.of(Type.CUSTOM).in(templatesDirectory).create();
+    hasAssertionTemplate = Template.of(Type.HAS).in(templatesDirectory).create();
+    hasIterableElementsAssertionTemplate = Template.of(Type.HAS_FOR_ITERABLE).in(templatesDirectory).create();
+    hasArrayElementsAssertionTemplate = Template.of(Type.HAS_FOR_ARRAY).in(templatesDirectory).create();
+    isAssertionTemplate = Template.of(Type.IS).in(templatesDirectory).create();
   }
 
   /**

@@ -1,110 +1,112 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package org.fest.assertions.generator;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.net.URL;
 
 import static java.lang.Thread.currentThread;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.io.IOUtils.copy;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.net.URL;
+
+/**
+ * 
+ * Holds the template content for assertion generation, can be initialized from a {@link File} or an {@link URL}.
+ * <p>
+ * Template content example for <code>hasXXX</code> property assertion :
+ * 
+ * <pre>
+ * public ${class_to_assert}Assert has${Property}(${propertyType} ${property}) {
+ *   // check that actual ${class_to_assert} we want to make assertions on is not null.
+ *   isNotNull();
+ * 
+ *   // we overrides the default error message with a more explicit one
+ *   String errorMessage = format("Expected ${class_to_assert}'s ${property} to be <%s> but was <%s>", ${property}, actual.get${Property}());
+ *   
+ *   // check
+ *   if (!actual.get${Property}().equals(${property})) { throw new AssertionError(errorMessage); }
+ * 
+ *   // return the current assertion for method chaining
+ *   return this;
+ * }
+ * </pre>
+ * 
+ * @author Miguel Bazire
+ * @author Joel Costigliola
+ */
 public class Template {
 
-  public enum Type {
-    IS("is_assertion_template.txt"),
-    HAS_FOR_ARRAY("has_elements_assertion_template_for_array.txt"),
-    HAS_FOR_ITERABLE("has_elements_assertion_template_for_iterable.txt"),
-    HAS("has_assertion_template.txt"),
-    CUSTOM("custom_assertion_class_template.txt");
+  private final String content;
 
-    public final String defaultFileName;
+  /**
+   * Creates a new </code>{@link Template}</code> from the given content.
+   * 
+   * @param templateContent the template content
+   */
+  public Template(String templateContent) {
+    this.content = templateContent;
+  }
 
-    private Type(String defaultFileName) {
-      this.defaultFileName = defaultFileName;
+  /**
+   * Creates a new </code>{@link Template}</code> from the content of the given {@link URL}.
+   * 
+   * @param url the {@link URL} to read to set the content of the {@link Template}
+   * @throws RuntimeException if we fail to read the {@link URL} content
+   */
+  public Template(URL url) {
+    if (url.getPath().endsWith("/")) {
+      throw new RuntimeException("Failed to read template from " + url);
+    }
+
+    try {
+      InputStream input = url.openStream();
+      content = readContentThenClose(input);
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to read template from " + url, e);
     }
   }
 
-  static final String TEMPLATES_DIR = "templates/";
-
-  private final String content;
-  private final Type assertionType;
-
-  private Template(Type assertionType, String content) {
-    this.content = content;
-    this.assertionType = assertionType;
-  }
-
-  public static Factory of(Type assertionType) {
-    return new Factory(assertionType);
+  /**
+   * Creates a new </code>{@link Template}</code> from the content of the given {@link File} searched in the classpath.
+   * 
+   * @param file the {@link File} to read to set the content of the {@link Template}
+   * @throws RuntimeException if we fail to read the {@link File} content
+   */
+  public Template(File file) {
+    try {
+      // load from classpath
+      InputStream inputStream = currentThread().getContextClassLoader().getResourceAsStream(file.getPath());
+      content = readContentThenClose(inputStream);
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to read template from file " + file, e);
+    }
   }
 
   String getContent() {
     return content;
   }
 
-  public static class Factory {
-
-    private final Type selectedType;
-    private String templateContent;
-    private String path = TEMPLATES_DIR;
-
-    Factory(Type assertionTemplateType) {
-      this.selectedType = assertionTemplateType;
+  private String readContentThenClose(InputStream input) throws IOException {
+    StringWriter writer = null;
+    try {
+      writer = new StringWriter();
+      copy(input, writer);
+      return writer.toString();
+    } finally {
+      closeQuietly(input);
+      closeQuietly(writer);
     }
-
-    public Factory in(String directory){
-      this.path = directory;
-      return this;
-    }
-
-    public Factory from(URL url) {
-
-      if (url.getPath().endsWith("/")) throw new RuntimeException("Failed to read template from " + url);
-
-      try {
-        InputStream input = url.openStream();
-        templateContent = readContentThenClose(input);
-      } catch (IOException e) {
-        throw new RuntimeException("Failed to read template from " + url, e);
-      }
-      return this;
-    }
-
-    public Factory fromClasspath(String filePath) {
-      try {
-        templateContent = readContentThenClose(currentThread().getContextClassLoader().getResourceAsStream(filePath));
-      } catch (Exception e) {
-        throw new RuntimeException("Failed to read " + filePath, e);
-      }
-      return this;
-    }
-
-    public Template create() {
-      try{
-        if(templateContent == null) loadFromDefaultLocation();
-        return new Template(selectedType,templateContent);
-      }finally {
-        templateContent = null;
-        path = TEMPLATES_DIR;
-      }
-    }
-
-    private void loadFromDefaultLocation(){
-      fromClasspath(path + selectedType.defaultFileName);
-    }
-
-    private String readContentThenClose(InputStream input) throws IOException {
-      StringWriter writer = null;
-      try {
-        writer = new StringWriter();
-        copy(input, writer);
-        return writer.toString();
-      } finally {
-        closeQuietly(input);
-        closeQuietly(writer);
-      }
-    }
-
   }
+
 }

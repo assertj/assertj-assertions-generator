@@ -12,9 +12,9 @@
  */
 package org.fest.assertions.generator;
 
-import org.fest.assertions.generator.description.ClassDescription;
-import org.fest.assertions.generator.description.GetterDescription;
-import org.fest.assertions.generator.description.TypeName;
+import static java.lang.String.format;
+import static org.apache.commons.io.IOUtils.closeQuietly;
+import static org.apache.commons.lang3.StringUtils.capitalize;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,12 +22,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Set;
 
-import static java.lang.String.format;
-import static org.apache.commons.io.IOUtils.closeQuietly;
-import static org.apache.commons.lang3.StringUtils.capitalize;
-import static org.fest.assertions.generator.Template.*;
+import org.fest.assertions.generator.description.ClassDescription;
+import org.fest.assertions.generator.description.GetterDescription;
+import org.fest.assertions.generator.description.TypeName;
 
 public class BaseAssertionGenerator implements AssertionGenerator {
+
+  // default file for templates
+  static final String DEFAULT_IS_ASSERTION_TEMPLATE = "is_assertion_template.txt";
+  static final String DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ARRAY = "has_elements_assertion_template_for_array.txt";
+  static final String DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ITERABLE = "has_elements_assertion_template_for_iterable.txt";
+  static final String DEFAULT_HAS_ASSERTION_TEMPLATE = "has_assertion_template.txt";
+  static final String DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE = "custom_assertion_class_template.txt";
 
   static final String ASSERT_CLASS_SUFFIX = "Assert.java";
   private static final String IMPORT_LINE = "import %s;%s";
@@ -39,6 +45,7 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   private static final String ELEMENT_TYPE_REGEXP = "\\$\\{elementType\\}";
   private static final String IMPORTS = "${imports}";
   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+  static final String TEMPLATES_DIR = "templates" + File.separator;
 
   // assertions classes are generated in their package directory starting from targetBaseDirectory.
   // ex : org.fest.Player -> targetBaseDirectory/org/fest/PlayerAssert.java
@@ -52,34 +59,36 @@ public class BaseAssertionGenerator implements AssertionGenerator {
 
   /**
    * Creates a new </code>{@link BaseAssertionGenerator}</code> with default templates directory.
+   * 
    * @throws FileNotFoundException if some template file could not be found
-   * @throws IOException           if some template file could not be read
+   * @throws IOException if some template file could not be read
    */
   public BaseAssertionGenerator() throws FileNotFoundException, IOException {
-    classAssertionTemplate = Template.of(Type.CUSTOM).create();
-    hasAssertionTemplate = Template.of(Type.HAS).create();
-    hasIterableElementsAssertionTemplate = Template.of(Type.HAS_FOR_ITERABLE).create();
-    hasArrayElementsAssertionTemplate = Template.of(Type.HAS_FOR_ARRAY).create();
-    isAssertionTemplate = Template.of(Type.IS).create();
+    this(TEMPLATES_DIR);
   }
 
   /**
    * Creates a new </code>{@link BaseAssertionGenerator}</code> with in the specified directory.
+   * 
    * @param templatesDirectory path where to find templates
    * @throws FileNotFoundException if some template file could not be found
-   * @throws IOException           if some template file could not be read
+   * @throws IOException if some template file could not be read
    */
   public BaseAssertionGenerator(String templatesDirectory) throws FileNotFoundException, IOException {
-    classAssertionTemplate = Template.of(Type.CUSTOM).in(templatesDirectory).create();
-    hasAssertionTemplate = Template.of(Type.HAS).in(templatesDirectory).create();
-    hasIterableElementsAssertionTemplate = Template.of(Type.HAS_FOR_ITERABLE).in(templatesDirectory).create();
-    hasArrayElementsAssertionTemplate = Template.of(Type.HAS_FOR_ARRAY).in(templatesDirectory).create();
-    isAssertionTemplate = Template.of(Type.IS).in(templatesDirectory).create();
+    classAssertionTemplate = new Template(new File(templatesDirectory, DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE));
+    hasAssertionTemplate = new Template(new File(templatesDirectory, DEFAULT_HAS_ASSERTION_TEMPLATE));
+    hasIterableElementsAssertionTemplate = new Template(new File(templatesDirectory,
+        DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ITERABLE));
+    hasArrayElementsAssertionTemplate = new Template(new File(templatesDirectory,
+        DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ARRAY));
+    isAssertionTemplate = new Template(new File(templatesDirectory, DEFAULT_IS_ASSERTION_TEMPLATE));
   }
 
   /**
-   * Defines your own class template file name.
-   * @param assertionClassTemplate
+   * Setter to define your own {@link Template} for assertion class general skeleton (see
+   * custom_assertion_class_template.txt as an example).
+   * 
+   * @param assertionClassTemplate the {@link Template} to use for assertion class general skeleton.
    */
   public void setAssertionClassTemplate(Template assertionClassTemplate) {
     this.classAssertionTemplate = assertionClassTemplate;
@@ -134,6 +143,7 @@ public class BaseAssertionGenerator implements AssertionGenerator {
 
   /**
    * Returns the target directory path where the assertions file for given classDescription will be created.
+   * 
    * @param classDescription the {@link ClassDescription} we want to generate an assertion file for.
    * @return the target directory path where the assertions file for given classDescription will be created.
    */
@@ -170,7 +180,8 @@ public class BaseAssertionGenerator implements AssertionGenerator {
       assertionContent = hasIterableElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
           getter.getElementTypeName());
     } else if (getter.isArrayPropertyType()) {
-      assertionContent = hasArrayElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP, getter.getElementTypeName());
+      assertionContent = hasArrayElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
+          getter.getElementTypeName());
     }
     if (getter.isPrimitivePropertyType()) {
       // primitive must be compared with != instead of (not) equals()

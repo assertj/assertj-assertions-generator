@@ -48,14 +48,16 @@ import java.net.URL;
 public class Template {
 
   private final String content;
+  private final Type type;
 
   /**
    * Creates a new </code>{@link Template}</code> from the given content.
    * 
    * @param templateContent the template content
    */
-  public Template(String templateContent) {
+  public Template(Type type, String templateContent) {
     this.content = templateContent;
+    this.type = type;
   }
 
   /**
@@ -64,11 +66,11 @@ public class Template {
    * @param url the {@link URL} to read to set the content of the {@link Template}
    * @throws RuntimeException if we fail to read the {@link URL} content
    */
-  public Template(URL url) {
+  public Template(Type type, URL url) {
+    this.type = type;
     if (url.getPath().endsWith("/")) {
       throw new RuntimeException("Failed to read template from " + url);
     }
-
     try {
       InputStream input = url.openStream();
       content = readContentThenClose(input);
@@ -83,9 +85,11 @@ public class Template {
    * @param file the {@link File} to read to set the content of the {@link Template}
    * @throws RuntimeException if we fail to read the {@link File} content
    */
-  public Template(File file) {
+  public Template(Type type, File file) {
+    this.type = type;
+    // don't use file.toURI().toURL() to call Template based URL constructor :
+    // it does not load resources from classpath.
     try {
-      // load from classpath
       InputStream inputStream = currentThread().getContextClassLoader().getResourceAsStream(file.getPath());
       content = readContentThenClose(inputStream);
     } catch (Exception e) {
@@ -93,8 +97,12 @@ public class Template {
     }
   }
 
-  String getContent() {
+  public String getContent() {
     return content;
+  }
+
+  public Type getType() {
+    return type;
   }
 
   private String readContentThenClose(InputStream input) throws IOException {
@@ -107,6 +115,10 @@ public class Template {
       closeQuietly(input);
       closeQuietly(writer);
     }
+  }
+  
+  public enum Type {
+    IS, HAS_FOR_ARRAY, HAS_FOR_ITERABLE, HAS, ASSERT_CLASS;
   }
 
 }

@@ -22,6 +22,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Set;
 
+import org.fest.assertions.generator.Template.Type;
 import org.fest.assertions.generator.description.ClassDescription;
 import org.fest.assertions.generator.description.GetterDescription;
 import org.fest.assertions.generator.description.TypeName;
@@ -75,13 +76,15 @@ public class BaseAssertionGenerator implements AssertionGenerator {
    * @throws IOException if some template file could not be read
    */
   public BaseAssertionGenerator(String templatesDirectory) throws FileNotFoundException, IOException {
-    classAssertionTemplate = new Template(new File(templatesDirectory, DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE));
-    hasAssertionTemplate = new Template(new File(templatesDirectory, DEFAULT_HAS_ASSERTION_TEMPLATE));
-    hasIterableElementsAssertionTemplate = new Template(new File(templatesDirectory,
-        DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ITERABLE));
-    hasArrayElementsAssertionTemplate = new Template(new File(templatesDirectory,
-        DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ARRAY));
-    isAssertionTemplate = new Template(new File(templatesDirectory, DEFAULT_IS_ASSERTION_TEMPLATE));
+    setAssertionClassTemplate(new Template(Template.Type.ASSERT_CLASS, new File(templatesDirectory,
+        DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE)));
+    setHasAssertionTemplate(new Template(Template.Type.HAS,
+        new File(templatesDirectory, DEFAULT_HAS_ASSERTION_TEMPLATE)));
+    setHasElementsAssertionForIterableTemplate(new Template(Template.Type.HAS_FOR_ITERABLE, new File(
+        templatesDirectory, DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ITERABLE)));
+    setHasElementsAssertionForArrayTemplate(new Template(Template.Type.HAS_FOR_ARRAY, new File(templatesDirectory,
+        DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ARRAY)));
+    setIsAssertionTemplate(new Template(Template.Type.IS, new File(templatesDirectory, DEFAULT_IS_ASSERTION_TEMPLATE)));
   }
 
   /**
@@ -91,22 +94,27 @@ public class BaseAssertionGenerator implements AssertionGenerator {
    * @param assertionClassTemplate the {@link Template} to use for assertion class general skeleton.
    */
   public void setAssertionClassTemplate(Template assertionClassTemplate) {
+    checkTemplateParameter(assertionClassTemplate, Template.Type.ASSERT_CLASS);
     this.classAssertionTemplate = assertionClassTemplate;
   }
 
   public void setHasAssertionTemplate(Template hasAssertionTemplate) {
+    checkTemplateParameter(hasAssertionTemplate, Template.Type.HAS);
     this.hasAssertionTemplate = hasAssertionTemplate;
   }
 
   public void setHasElementsAssertionForIterableTemplate(Template hasIterableElementsAssertionTemplate) {
+    checkTemplateParameter(hasIterableElementsAssertionTemplate, Template.Type.HAS_FOR_ITERABLE);
     this.hasIterableElementsAssertionTemplate = hasIterableElementsAssertionTemplate;
   }
 
   public void setHasElementsAssertionForArrayTemplate(Template hasArrayElementsAssertionTemplate) {
+    checkTemplateParameter(hasArrayElementsAssertionTemplate, Template.Type.HAS_FOR_ARRAY);
     this.hasArrayElementsAssertionTemplate = hasArrayElementsAssertionTemplate;
   }
 
   public void setIsAssertionTemplate(Template isAssertionTemplate) {
+    checkTemplateParameter(isAssertionTemplate, Template.Type.IS);
     this.isAssertionTemplate = isAssertionTemplate;
   }
 
@@ -210,6 +218,16 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     assertionJavaFile.createNewFile();
     fillAssertionJavaFile(assertionFileContent, assertionJavaFile);
     return assertionJavaFile;
+  }
+
+  private static void checkTemplateParameter(Template assertionClassTemplate, Type templateType) {
+    if (assertionClassTemplate == null) {
+      throw new NullPointerException("Expecting a non null Template");
+    }
+    if (templateType != assertionClassTemplate.getType()) {
+      throw new IllegalArgumentException("Expecting a Template type to be '" + templateType + "' but was '"
+          + assertionClassTemplate.getType() + "'");
+    }
   }
 
 }

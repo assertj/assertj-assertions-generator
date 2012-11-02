@@ -16,7 +16,7 @@ public class TemplateTest {
   public void should_throw_an_exception_when_directory_url() {
     URL templateURL = getClass().getClassLoader().getResource(TEMPLATES_DIR);
     try {
-      new Template(templateURL);
+      new Template(Template.Type.ASSERT_CLASS, templateURL);
       fail("A directory url should throw an exception");
     } catch (RuntimeException e) {
       assertThat(e).hasMessageStartingWith("Failed to read template from");
@@ -26,14 +26,14 @@ public class TemplateTest {
   @Test
   public void should_create_template_from_url() {
     URL templateURL = getClass().getClassLoader().getResource(TEMPLATES_DIR + DEFAULT_HAS_ASSERTION_TEMPLATE);
-    Template template = new Template(templateURL);
+    Template template = new Template(Template.Type.ASSERT_CLASS, templateURL);
     assertThat(template.getContent()).isNotEmpty();
   }
 
   @Test
   public void should_create_template_from_file() {
     File templateFile = new File(TEMPLATES_DIR, DEFAULT_HAS_ASSERTION_TEMPLATE);
-    Template template = new Template(templateFile);
+    Template template = new Template(Template.Type.HAS, templateFile);
     assertThat(template.getContent()).isNotEmpty();
   }
 

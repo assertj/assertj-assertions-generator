@@ -1,6 +1,7 @@
 package org.fest.assertions.generator;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.fest.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_SUFFIX;
 import static org.fest.assertions.generator.util.ClassUtil.collectClasses;
 
@@ -34,7 +35,8 @@ public class AssertionGeneratorTest {
   @Test
   public void should_generate_assertion_for_player_class() throws Exception {
     customAssertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Player.class));
-    assertThat(fileGeneratedFor(Player.class)).hasContentEqualTo(new File("src/test/resources/PlayerAssert.expected.txt"));
+    assertThat(fileGeneratedFor(Player.class)).hasContentEqualTo(
+        new File("src/test/resources/PlayerAssert.expected.txt"));
   }
 
   @Test
@@ -42,7 +44,8 @@ public class AssertionGeneratorTest {
     List<Class<?>> classes = collectClasses("org.fest.assertions.generator.data");
     for (Class<?> clazz : classes) {
       logger.info("Generating assertions for {}", clazz.getName());
-      File customAssertionFile = customAssertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(clazz));
+      File customAssertionFile = customAssertionGenerator.generateCustomAssertionFor(converter
+          .convertToClassDescription(clazz));
       logger.info("Generated {} assertions file -> {}", clazz.getSimpleName(), customAssertionFile.getAbsolutePath());
     }
   }
@@ -53,9 +56,22 @@ public class AssertionGeneratorTest {
     List<Class<?>> classes = collectClasses(customClassLoader, "org.fest.assertions.generator.data");
     for (Class<?> clazz : classes) {
       logger.info("Generating assertions for {}", clazz.getName());
-      File customAssertionFile = customAssertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(clazz));
+      File customAssertionFile = customAssertionGenerator.generateCustomAssertionFor(converter
+          .convertToClassDescription(clazz));
       logger.info("Generated {} assertions file -> {}", clazz.getSimpleName(), customAssertionFile.getAbsolutePath());
     }
+  }
+
+  @Test
+  public void should_check_template_type() throws Exception {
+    customAssertionGenerator.setHasAssertionTemplate(new Template(Template.Type.HAS, "template content"));
+    try {
+      customAssertionGenerator.setHasAssertionTemplate(new Template(Template.Type.IS, "template content"));
+      failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("Expecting a Template type to be 'HAS' but was 'IS'");
+    }
+
   }
 
   private static File fileGeneratedFor(Class<Player> clazz) {

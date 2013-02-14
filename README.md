@@ -2,7 +2,7 @@
 
 ## Overview 
 
-The Assertion Generator is able to create assertions specific to your own classes either with a CLI tool or an eclipse plugin (WIP).
+The Assertion Generator is able to create assertions specific to your own classes, it comes with a CLI tool but a [**maven plugin**](https://github.com/joel-costigliola/maven-fest-assertion-generator-plugin) or an [**eclipse plugin**](https://github.com/joel-costigliola/fest-eclipse-plugin) are also available.
 
 ## Documentation
 

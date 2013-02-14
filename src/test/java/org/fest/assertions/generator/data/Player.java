@@ -97,6 +97,10 @@ public class Player {
     return rookie;
   }
   
+  public void setRookie(boolean rookie) {
+    this.rookie = rookie;
+  }
+  
   public boolean isInTeam(String team) {
     return areEqual(this.team, team);
   }

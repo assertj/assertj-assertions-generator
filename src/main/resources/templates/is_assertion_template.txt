@@ -17,3 +17,22 @@
     // return the current assertion for method chaining
     return this;
   }
+
+  /**
+   * Verifies that the actual ${class_to_assert} is not ${property}.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ${class_to_assert} is ${property}.
+   */
+  public ${class_to_assert}Assert isNot${Property}() {
+    // check that actual ${class_to_assert} we want to make assertions on is not null.
+    isNotNull();
+
+    // we overrides the default error message with a more explicit one
+    String errorMessage = format("Expected actual ${class_to_assert} not to be ${property} but was.", actual);
+    
+    // check
+    if (actual.is${Property}()) throw new AssertionError(errorMessage);
+
+    // return the current assertion for method chaining
+    return this;
+  }

@@ -175,6 +175,25 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
   }
 
   /**
+   * Verifies that the actual Player is not rookie.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player is rookie.
+   */
+  public PlayerAssert isNotRookie() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // we overrides the default error message with a more explicit one
+    String errorMessage = format("Expected actual Player not to be rookie but was.", actual);
+    
+    // check
+    if (actual.isRookie()) throw new AssertionError(errorMessage);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Player's team is equal to the given one.
    * @param team the given team to compare the actual Player's team to.
    * @return this assertion object.

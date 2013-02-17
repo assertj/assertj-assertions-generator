@@ -40,7 +40,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we overrides the default error message with a more explicit one
-    String errorMessage = format("Expected Player's assistsPerGame to be <%s> but was <%s>", assistsPerGame, actual.getAssistsPerGame());
+    String errorMessage = format("\nExpected <%s> assistsPerGame to be:\n  <%s>\n but was:\n  <%s>", actual, assistsPerGame, actual.getAssistsPerGame());
     
     // check
     if (actual.getAssistsPerGame() != assistsPerGame) { throw new AssertionError(errorMessage); }
@@ -60,7 +60,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we overrides the default error message with a more explicit one
-    String errorMessage = format("Expected Player's name to be <%s> but was <%s>", name, actual.getName());
+    String errorMessage = format("\nExpected <%s> name to be:\n  <%s>\n but was:\n  <%s>", actual, name, actual.getName());
     
     // check
     if (!actual.getName().equals(name)) { throw new AssertionError(errorMessage); }
@@ -80,7 +80,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we overrides the default error message with a more explicit one
-    String errorMessage = format("Expected Player's pointsPerGame to be <%s> but was <%s>", pointsPerGame, actual.getPointsPerGame());
+    String errorMessage = format("\nExpected <%s> pointsPerGame to be:\n  <%s>\n but was:\n  <%s>", actual, pointsPerGame, actual.getPointsPerGame());
     
     // check
     if (actual.getPointsPerGame() != pointsPerGame) { throw new AssertionError(errorMessage); }
@@ -125,7 +125,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we overrides the default error message with a more explicit one
-    String errorMessage = format("Expected actual <%s> not to have previousTeams but had :\\n%s", actual, actual.getPreviousTeams());
+    String errorMessage = format("\nExpected :\n  <%s>\nnot to have previousTeams but had :\n  <%s>", actual, java.util.Arrays.toString(actual.getPreviousTeams()));
     
     // check
     if (actual.getPreviousTeams().length > 0) throw new AssertionError(errorMessage);
@@ -146,7 +146,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we overrides the default error message with a more explicit one
-    String errorMessage = format("Expected Player's reboundsPerGame to be <%s> but was <%s>", reboundsPerGame, actual.getReboundsPerGame());
+    String errorMessage = format("\nExpected <%s> reboundsPerGame to be:\n  <%s>\n but was:\n  <%s>", actual, reboundsPerGame, actual.getReboundsPerGame());
     
     // check
     if (actual.getReboundsPerGame() != reboundsPerGame) { throw new AssertionError(errorMessage); }
@@ -204,7 +204,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we overrides the default error message with a more explicit one
-    String errorMessage = format("Expected Player's team to be <%s> but was <%s>", team, actual.getTeam());
+    String errorMessage = format("\nExpected <%s> team to be:\n  <%s>\n but was:\n  <%s>", actual, team, actual.getTeam());
     
     // check
     if (!actual.getTeam().equals(team)) { throw new AssertionError(errorMessage); }
@@ -249,7 +249,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we overrides the default error message with a more explicit one
-    String errorMessage = format("Expected actual <%s> not to have teamMates but had :\\n%s", actual, actual.getTeamMates());
+    String errorMessage = format("\nExpected :\n  <%s>\nnot to have teamMates but had :\n  <%s>", actual, actual.getTeamMates());
     
     // check
     if (!actual.getTeamMates().isEmpty()) throw new AssertionError(errorMessage);

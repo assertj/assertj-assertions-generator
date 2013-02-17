@@ -35,7 +35,7 @@
     isNotNull();
 
     // we overrides the default error message with a more explicit one
-    String errorMessage = format("Expected actual <%s> not to have ${property} but had :\\n%s", actual, actual.get${Property}());
+    String errorMessage = format("\nExpected :\n  <%s>\nnot to have ${property} but had :\n  <%s>", actual, actual.get${Property}());
     
     // check
     if (!actual.get${Property}().isEmpty()) throw new AssertionError(errorMessage);

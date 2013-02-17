@@ -34,8 +34,6 @@ public class Player {
   private List<Player> teamMates;
   private String[] previousTeams;
 
-  public Player() {}
-
   public Player(Name name, String team) {
     setName(name);
     setTeam(team);
@@ -91,6 +89,10 @@ public class Player {
 
   public String[] getPreviousTeams() {
     return previousTeams;
+  }
+  
+  public void setPreviousTeams(String[] previousTeams) {
+    this.previousTeams = previousTeams;
   }
 
   public boolean isRookie() {

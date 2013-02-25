@@ -8,6 +8,7 @@ import static org.fest.assertions.generator.util.ClassUtil.collectClasses;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 import org.junit.Before;
@@ -38,11 +39,14 @@ public class AssertionGeneratorTest {
     assertThat(fileGeneratedFor(Player.class)).hasContentEqualTo(
         new File("src/test/resources/PlayerAssert.expected.txt"));
   }
-
+  
   @Test
   public void should_generate_assertion_for_classes_in_package() throws Exception {
     List<Class<?>> classes = collectClasses("org.fest.assertions.generator.data");
     for (Class<?> clazz : classes) {
+      assertThat(clazz.isAnonymousClass()).as("check that " + clazz.getSimpleName() +" is not anonymous").isFalse();
+      assertThat(clazz.isLocalClass()).as("check that " + clazz.getSimpleName() +" is not local").isFalse();
+      assertThat(Modifier.isPublic(clazz.getModifiers())).as("check that " + clazz.getSimpleName() +" is public").isTrue();
       logger.info("Generating assertions for {}", clazz.getName());
       File customAssertionFile = customAssertionGenerator.generateCustomAssertionFor(converter
           .convertToClassDescription(clazz));
@@ -55,6 +59,9 @@ public class AssertionGeneratorTest {
     ClassLoader customClassLoader = new MyClassLoader(Thread.currentThread().getContextClassLoader());
     List<Class<?>> classes = collectClasses(customClassLoader, "org.fest.assertions.generator.data");
     for (Class<?> clazz : classes) {
+      assertThat(clazz.isAnonymousClass()).as("check that " + clazz.getSimpleName() +" is not anonymous").isFalse();
+      assertThat(clazz.isLocalClass()).as("check that " + clazz.getSimpleName() +" is not local").isFalse();
+      assertThat(Modifier.isPublic(clazz.getModifiers())).as("check that " + clazz.getSimpleName() +" is public").isTrue();
       logger.info("Generating assertions for {}", clazz.getName());
       File customAssertionFile = customAssertionGenerator.generateCustomAssertionFor(converter
           .convertToClassDescription(clazz));
@@ -74,7 +81,7 @@ public class AssertionGeneratorTest {
 
   }
 
-  private static File fileGeneratedFor(Class<Player> clazz) {
+  private static File fileGeneratedFor(Class<?> clazz) {
     String dirName = TARGET_DIRECTORY + File.separatorChar
         + clazz.getPackage().getName().replace('.', File.separatorChar);
     String generatedFileName = clazz.getSimpleName() + ASSERT_CLASS_SUFFIX;

@@ -1,6 +1,7 @@
 package org.fest.assertions.generator.util;
 
 import static java.lang.Character.isUpperCase;
+import static java.lang.reflect.Modifier.isPublic;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static org.apache.commons.lang3.StringUtils.uncapitalize;
 
@@ -18,6 +19,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * 
  * Some utilities methods related to classes and packages.
@@ -27,6 +31,7 @@ import java.util.Set;
  */
 public class ClassUtil {
 
+  private static final String CLASS_SUFFIX = ".class";
   public static final String IS_PREFIX = "is";
   public static final String GET_PREFIX = "get";
 
@@ -39,7 +44,10 @@ public class ClassUtil {
   }
 
   /**
-   * Collects all the classes from given classes names or classes belonging to given a package name (recursively).
+   * Collects all the <b>public</b> classes from given classes names or classes belonging to given a package name
+   * (recursively).
+   * <p>
+   * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the resulting list.
    * 
    * @param classLoader {@link ClassLoader} used to load classes defines in classOrPackageNames
    * @param classOrPackageNames classes names or packages names we want to collect classes from (recursively for
@@ -92,27 +100,42 @@ public class ClassUtil {
     }
   }
 
+  /**
+   * Get <b>public</b> classes in given directory (recursively).
+   * <p>
+   * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the resulting list.
+   * 
+   * @param directory directory where to look for classes
+   * @param packageName package name corresponding to directory
+   * @param classLoader used classloader
+   * @return
+   * @throws UnsupportedEncodingException
+   */
   private static List<Class<?>> getClassesInDirectory(File directory, String packageName, ClassLoader classLoader)
       throws UnsupportedEncodingException {
     List<Class<?>> classes = new ArrayList<Class<?>>();
     // Capture all the .class files in this directory
     // Get the list of the files contained in the package
-    String[] files = directory.list();
-    for (String currentFile : files) {
-      // we are only interested in .class files
-      if (currentFile.endsWith(".class")) {
-        // removes the .class extension
+    File[] files = directory.listFiles();
+    for (File currentFile : files) {
+      String currentFileName = currentFile.getName();
+      if (isClass(currentFileName)) {
         // CHECKSTYLE:OFF
         try {
-          String className = packageName + '.' + currentFile.substring(0, currentFile.length() - 6);
-          classes.add(loadClass(className, classLoader));
+          // removes the .class extension
+          String className = packageName + '.' + StringUtils.remove(currentFileName, CLASS_SUFFIX);
+          Class<?> loadedClass = loadClass(className, classLoader);
+          // we are only interested in public classes that are neither anonymous nor local
+          if (isPublic(loadedClass.getModifiers()) && !loadedClass.isAnonymousClass() && !loadedClass.isLocalClass()) {
+            classes.add(loadedClass);
+          }
         } catch (Throwable e) {
           // do nothing. this class hasn't been found by the loader, and we don't care.
         }
         // CHECKSTYLE:ON
-      } else {
+      } else if (currentFile.isDirectory()) {
         // It's another package
-        String subPackageName = packageName + '.' + currentFile;
+        String subPackageName = packageName + ClassUtils.PACKAGE_SEPARATOR + currentFileName;
         // Ask for all resources for the path
         URL resource = classLoader.getResource(subPackageName.replace('.', File.separatorChar));
         File subDirectory = new File(URLDecoder.decode(resource.getPath(), "UTF-8"));
@@ -121,6 +144,10 @@ public class ClassUtil {
       }
     }
     return classes;
+  }
+
+  private static boolean isClass(String fileName) {
+    return fileName.endsWith(CLASS_SUFFIX);
   }
 
   private static Class<?> tryToLoadClass(String className, ClassLoader classLoader) {

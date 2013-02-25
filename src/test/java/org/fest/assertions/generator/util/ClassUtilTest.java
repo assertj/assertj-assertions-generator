@@ -19,8 +19,11 @@ import org.fest.assertions.generator.data.ArtWork;
 import org.fest.assertions.generator.data.Movie;
 import org.fest.assertions.generator.data.Name;
 import org.fest.assertions.generator.data.Player;
+import org.fest.assertions.generator.data.TreeEnum;
+import org.fest.assertions.generator.data.lotr.FellowshipOfTheRing;
 import org.fest.assertions.generator.data.lotr.Race;
 import org.fest.assertions.generator.data.lotr.Ring;
+import org.fest.assertions.generator.data.lotr.TolkienCharacter;
 
 public class ClassUtilTest {
 
@@ -31,7 +34,9 @@ public class ClassUtilTest {
   @Test
   public void should_get_classes_in_package_and_subpackages() throws ClassNotFoundException {
     List<Class<?>> classesInPackage = collectClasses("org.fest.assertions.generator.data");
-    assertThat(classesInPackage).contains(Player.class, ArtWork.class, Name.class, Movie.class, Ring.class, Race.class);
+    assertThat(classesInPackage).containsOnly(Player.class, ArtWork.class, Name.class, Movie.class,
+        Movie.PublicCategory.class, Ring.class, Race.class, FellowshipOfTheRing.class, TolkienCharacter.class,
+        TreeEnum.class);
   }
 
   @Test
@@ -99,7 +104,7 @@ public class ClassUtilTest {
   @Test
   public void should_also_return_inherited_getters_methods() throws Exception {
     List<Method> playerGetterMethods = getterMethodsOf(Movie.class);
-    assertThat(playerGetterMethods).containsOnly(Movie.class.getMethod("getReleaseDate", NO_PARAMS),
+    assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS),
         ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }
 

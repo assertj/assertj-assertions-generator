@@ -19,7 +19,7 @@ public class TemplateTest {
       new Template(Template.Type.ASSERT_CLASS, templateURL);
       fail("A directory url should throw an exception");
     } catch (RuntimeException e) {
-      assertThat(e).hasMessageStartingWith("Failed to read template from");
+      assertThat(e).hasMessageStartingWith("Failed to read template from an URL which is not a file");
     }
   }
 

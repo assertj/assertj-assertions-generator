@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
+import java.net.URLDecoder;
+
+import org.apache.commons.lang3.CharEncoding;
 
 /**
  * 
@@ -68,10 +71,13 @@ public class Template {
    */
   public Template(Type type, URL url) {
     this.type = type;
-    if (url.getPath().endsWith("/")) {
-      throw new RuntimeException("Failed to read template from " + url);
-    }
+    File urlFile = null;
     try {
+      urlFile = new File(URLDecoder.decode(url.getFile(), CharEncoding.UTF_8));
+      if (!urlFile.isFile()) {
+        throw new RuntimeException("Failed to read template from an URL which is not a file, URL was :" + url);
+      }
+      // TODO : read from file directly ?
       InputStream input = url.openStream();
       content = readContentThenClose(input);
     } catch (IOException e) {
@@ -116,7 +122,7 @@ public class Template {
       closeQuietly(writer);
     }
   }
-  
+
   public enum Type {
     IS, HAS_FOR_ARRAY, HAS_FOR_ITERABLE, HAS, ASSERT_CLASS;
   }

@@ -50,7 +50,7 @@ import org.apache.commons.lang3.CharEncoding;
  */
 public class Template {
 
-  private final String content;
+  private String content;
   private final Type type;
 
   /**
@@ -95,9 +95,21 @@ public class Template {
     this.type = type;
     // don't use file.toURI().toURL() to call Template based URL constructor :
     // it does not load resources from classpath.
+    String path = file.getPath();
     try {
-      InputStream inputStream = currentThread().getContextClassLoader().getResourceAsStream(file.getPath());
-      content = readContentThenClose(inputStream);
+      // TODO see if we can get rid of this and only call readTemplateFile(file, path.replace('\\', '/'));
+      this.content = readTemplateFile(file, file.getPath());
+    } catch (RuntimeException e) {
+      // try to read file again but from fest-assertion-generator jar
+      // => need to replace file system separator by '/' because it relies o
+      this.content = readTemplateFile(file, path.replace('\\', '/'));
+    }
+  }
+
+  private String readTemplateFile(File file, String path) {
+    try {
+      InputStream inputStream = currentThread().getContextClassLoader().getResourceAsStream(path);
+      return readContentThenClose(inputStream);
     } catch (Exception e) {
       throw new RuntimeException("Failed to read template from file " + file, e);
     }

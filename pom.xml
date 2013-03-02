@@ -29,11 +29,10 @@
       <artifactId>commons-lang3</artifactId>
       <version>3.1</version>
     </dependency>
-        <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>13.0.1</version>
-      <scope>test</scope>
+    <dependency>
+       <groupId>org.reflections</groupId>
+       <artifactId>reflections</artifactId>
+       <version>0.9.8</version>
     </dependency>
     
     <dependency>

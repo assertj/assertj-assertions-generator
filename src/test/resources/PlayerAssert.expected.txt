@@ -1,9 +1,9 @@
-package org.fest.assertions.generator.data;
+package org.assertj.assertions.generator.data;
 
 import static java.lang.String.format;
 
-import org.fest.assertions.api.AbstractAssert;
-import org.fest.assertions.api.Assertions;
+import org.assertj.core.api.AbstractAssert;
+import org.assertj.core.api.Assertions;
 
 
 /**
@@ -20,7 +20,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
   }
 
   /**
-   * An entry point for PlayerAssert to follow Fest standard <code>assertThat()</code> statements.<br>
+   * An entry point for PlayerAssert to follow AssertJ standard <code>assertThat()</code> statements.<br>
    * With a static import, one's can write directly : <code>assertThat(myPlayer)</code> and get specific assertion with code completion.
    * @param actual the Player we want to make assertions on.
    * @return a new </code>{@link PlayerAssert}</code>

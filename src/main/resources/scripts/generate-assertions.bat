@@ -60,7 +60,7 @@ goto error
 SET JAVA_EXE="%JAVA_HOME%\bin\java.exe"
 set CMD_LINE_ARGS=%*
 
-%JAVA_EXE% -classpath ".;lib/*" org.fest.assertions.generator.cli.AssertionGeneratorLauncher %CMD_LINE_ARGS%
+%JAVA_EXE% -classpath ".;lib/*" org.assertj.assertions.generator.cli.AssertionGeneratorLauncher %CMD_LINE_ARGS%
 if ERRORLEVEL 1 goto error
 goto end
 

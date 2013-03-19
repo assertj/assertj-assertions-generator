@@ -2,8 +2,8 @@ package ${package};
 
 import static java.lang.String.format;
 
-import org.fest.assertions.api.AbstractAssert;
-import org.fest.assertions.api.Assertions;
+import org.assertj.core.api.AbstractAssert;
+import org.assertj.core.api.Assertions;
 ${imports}
 
 /**
@@ -20,7 +20,7 @@ public class ${class_to_assert}Assert extends AbstractAssert<${class_to_assert}A
   }
 
   /**
-   * An entry point for ${class_to_assert}Assert to follow Fest standard <code>assertThat()</code> statements.<br>
+   * An entry point for ${class_to_assert}Assert to follow AssertJ standard <code>assertThat()</code> statements.<br>
    * With a static import, one's can write directly : <code>assertThat(my${class_to_assert})</code> and get specific assertion with code completion.
    * @param actual the ${class_to_assert} we want to make assertions on.
    * @return a new </code>{@link ${class_to_assert}Assert}</code>

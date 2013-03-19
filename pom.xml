@@ -3,19 +3,19 @@
 
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.easytesting</groupId>
-    <artifactId>fest</artifactId>
-    <version>1.0.15</version>
+    <groupId>org.assertj</groupId>
+    <artifactId>assertj-parent-pom</artifactId>
+    <version>1.0.0</version>
   </parent>
-  <groupId>org.easytesting</groupId>
-  <artifactId>fest-assertion-generator</artifactId>
-  <version>1.2-SNAPSHOT</version>
-  <name>FEST Assertions Generator</name>
+  <groupId>org.assertj</groupId>
+  <artifactId>assertj-assertions-generator</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>AssertJ Assertions Generator</name>
 
   <scm>
-    <developerConnection>scm:git:git@github.com:joel-costigliola/fest-assertion-generator.git</developerConnection>
-    <connection>scm:git:git://github.com/joel-costigliola/fest-assertion-generator.git</connection>
-    <url>https://joel-costigliola@github.com/joel-costigliola/fest-assertion-generator.git</url>
+    <developerConnection>scm:git:git@github.com:joel-costigliola/assertj-assertions-generator.git</developerConnection>
+    <connection>scm:git:git://github.com/joel-costigliola/assertj-assertions-generator.git</connection>
+    <url>https://joel-costigliola@github.com/joel-costigliola/assertj-assertions-generator.git</url>
   </scm>
 
   <dependencies>
@@ -38,18 +38,17 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.0.6</version>
+      <version>1.0.10</version>
     </dependency>
     <dependency>
-      <groupId>org.easytesting</groupId>
-      <artifactId>fest-assert-core</artifactId>
-      <version>2.0M10</version>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>1.0.0M1-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.10</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -102,7 +101,7 @@
               <addClasspath>true</addClasspath>
               <!-- classpath prefix - used to specify that all needed libraries are found under lib/ directory -->
               <classpathPrefix>lib/</classpathPrefix>
-              <mainClass>org.fest.assertions.generator.cli.AssertionGeneratorLauncher</mainClass>
+              <mainClass>org.assertj.assertions.generator.cli.AssertionGeneratorLauncher</mainClass>
             </manifest>
           </archive>
         </configuration>

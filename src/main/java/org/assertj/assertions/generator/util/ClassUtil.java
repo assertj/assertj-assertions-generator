@@ -90,13 +90,9 @@ public class ClassUtil {
     }
     // load classes from classpath file system, this won't load classes in jars
     Set<Class<?>> packageClasses = getPackageClassesFromClasspathFiles(packageName, classLoader);
-    // load classes from classpath file system, this won't load classes in jars
+    // load classes from classpath jars
     Set<Class<?>> packageClassesFromClasspathJars = getPackageClassesFromClasspathJars(packageName, classLoader);
-    for (Class<?> classFromJar : packageClassesFromClasspathJars) {
-      if (isClassCandidateToAssertionsGeneration(classFromJar)) {
-        packageClasses.add(classFromJar);
-      }
-    }
+    packageClasses.addAll(packageClassesFromClasspathJars);
     return packageClasses;
   }
 
@@ -110,7 +106,14 @@ public class ClassUtil {
         .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
         .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
         .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packageName))));
-    return reflections.getSubTypesOf(Object.class);
+    Set<Class<?>> classesInPackage = reflections.getSubTypesOf(Object.class);
+    Set<Class<?>> filteredClassesInPackage = new HashSet<Class<?>>();
+    for (Class<?> classFromJar : classesInPackage) {
+      if (isClassCandidateToAssertionsGeneration(classFromJar)) {
+        filteredClassesInPackage.add(classFromJar);
+      }
+    }
+    return filteredClassesInPackage;
   }
 
   private static Set<Class<?>> getPackageClassesFromClasspathFiles(String packageName, ClassLoader classLoader) {
@@ -184,7 +187,8 @@ public class ClassUtil {
    * @return
    */
   private static boolean isClassCandidateToAssertionsGeneration(Class<?> loadedClass) {
-    return isPublic(loadedClass.getModifiers()) && !loadedClass.isAnonymousClass() && !loadedClass.isLocalClass();
+    return loadedClass != null && isPublic(loadedClass.getModifiers()) && !loadedClass.isAnonymousClass()
+        && !loadedClass.isLocalClass();
   }
 
   private static boolean isClass(String fileName) {

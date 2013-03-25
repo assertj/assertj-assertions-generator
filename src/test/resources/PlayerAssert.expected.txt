@@ -1,8 +1,7 @@
 package org.assertj.assertions.generator.data;
 
-import static java.lang.String.format;
-
 import org.assertj.core.api.AbstractAssert;
+// Assertions is needed if an assertion for Iterable is generated
 import org.assertj.core.api.Assertions;
 
 
@@ -40,10 +39,12 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we overrides the default error message with a more explicit one
-    String errorMessage = format("\nExpected <%s> assistsPerGame to be:\n  <%s>\n but was:\n  <%s>", actual, assistsPerGame, actual.getAssistsPerGame());
+    String errorMessage = "\nExpected assistsPerGame of:\n  <%s>\nto be:\n  <%s>\n but was:\n  <%s>";
     
     // check
-    if (actual.getAssistsPerGame() != assistsPerGame) { throw new AssertionError(errorMessage); }
+    if (actual.getAssistsPerGame() != assistsPerGame) { 
+      failWithMessage(errorMessage, actual, assistsPerGame, actual.getAssistsPerGame()); 
+    }
 
     // return the current assertion for method chaining
     return this;
@@ -60,10 +61,12 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we overrides the default error message with a more explicit one
-    String errorMessage = format("\nExpected <%s> name to be:\n  <%s>\n but was:\n  <%s>", actual, name, actual.getName());
+    String errorMessage = "\nExpected name of:\n  <%s>\nto be:\n  <%s>\n but was:\n  <%s>";
     
     // check
-    if (!actual.getName().equals(name)) { throw new AssertionError(errorMessage); }
+    if (!actual.getName().equals(name)) { 
+      failWithMessage(errorMessage, actual, name, actual.getName()); 
+    }
 
     // return the current assertion for method chaining
     return this;
@@ -80,10 +83,12 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we overrides the default error message with a more explicit one
-    String errorMessage = format("\nExpected <%s> pointsPerGame to be:\n  <%s>\n but was:\n  <%s>", actual, pointsPerGame, actual.getPointsPerGame());
+    String errorMessage = "\nExpected pointsPerGame of:\n  <%s>\nto be:\n  <%s>\n but was:\n  <%s>";
     
     // check
-    if (actual.getPointsPerGame() != pointsPerGame) { throw new AssertionError(errorMessage); }
+    if (actual.getPointsPerGame() != pointsPerGame) { 
+      failWithMessage(errorMessage, actual, pointsPerGame, actual.getPointsPerGame()); 
+    }
 
     // return the current assertion for method chaining
     return this;
@@ -105,11 +110,10 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     // check with standard error message (see commented below to set your own message).
     Assertions.assertThat(actual.getPreviousTeams()).contains(previousTeams);
 
-    // uncomment the 4 lines below if you want to build your own error message :
-    // WritableAssertionInfo assertionInfo = new WritableAssertionInfo();
-    // String errorMessage = "my error message";
-    // assertionInfo.overridingErrorMessage(errorMessage);
-    // Iterables.instance().assertContains(assertionInfo, actual.getTeamMates(), teamMates);
+    // To override the standard error message :
+    // - remove the previous call to Assertions.assertThat(actual.getPreviousTeams().contains(previousTeams)
+    // - uncomment the line below and set your error message:
+    // Assertions.assertThat(actual.getPreviousTeams()).overridingErrorMessage("\nmy error message %s", "arg1").contains(previousTeams);
     
     // return the current assertion for method chaining
     return this;
@@ -124,11 +128,13 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     // check that actual Player we want to make assertions on is not null.
     isNotNull();
 
-    // we overrides the default error message with a more explicit one
-    String errorMessage = format("\nExpected :\n  <%s>\nnot to have previousTeams but had :\n  <%s>", actual, java.util.Arrays.toString(actual.getPreviousTeams()));
+    // we override the default error message with a more explicit one
+    String errorMessage = "\nExpected :\n  <%s>\nnot to have previousTeams but had :\n  <%s>";
     
     // check
-    if (actual.getPreviousTeams().length > 0) throw new AssertionError(errorMessage);
+    if (actual.getPreviousTeams().length > 0)  { 
+      failWithMessage(errorMessage, actual, java.util.Arrays.toString(actual.getPreviousTeams()));
+    }
     
     // return the current assertion for method chaining
     return this;
@@ -146,10 +152,12 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we overrides the default error message with a more explicit one
-    String errorMessage = format("\nExpected <%s> reboundsPerGame to be:\n  <%s>\n but was:\n  <%s>", actual, reboundsPerGame, actual.getReboundsPerGame());
+    String errorMessage = "\nExpected reboundsPerGame of:\n  <%s>\nto be:\n  <%s>\n but was:\n  <%s>";
     
     // check
-    if (actual.getReboundsPerGame() != reboundsPerGame) { throw new AssertionError(errorMessage); }
+    if (actual.getReboundsPerGame() != reboundsPerGame) { 
+      failWithMessage(errorMessage, actual, reboundsPerGame, actual.getReboundsPerGame()); 
+    }
 
     // return the current assertion for method chaining
     return this;
@@ -164,12 +172,11 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     // check that actual Player we want to make assertions on is not null.
     isNotNull();
 
-    // we overrides the default error message with a more explicit one
-    String errorMessage = format("Expected actual Player to be rookie but was not.", actual);
-    
     // check
-    if (!actual.isRookie()) throw new AssertionError(errorMessage);
-
+    if (!actual.isRookie()) { 
+      failWithMessage("\nExpected actual Player to be rookie but was not."); 
+    }
+    
     // return the current assertion for method chaining
     return this;
   }
@@ -183,12 +190,11 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     // check that actual Player we want to make assertions on is not null.
     isNotNull();
 
-    // we overrides the default error message with a more explicit one
-    String errorMessage = format("Expected actual Player not to be rookie but was.", actual);
-    
     // check
-    if (actual.isRookie()) throw new AssertionError(errorMessage);
-
+    if (actual.isRookie()) { 
+      failWithMessage("\nExpected actual Player not to be rookie but was.");
+    }
+    
     // return the current assertion for method chaining
     return this;
   }
@@ -204,10 +210,12 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we overrides the default error message with a more explicit one
-    String errorMessage = format("\nExpected <%s> team to be:\n  <%s>\n but was:\n  <%s>", actual, team, actual.getTeam());
+    String errorMessage = "\nExpected team of:\n  <%s>\nto be:\n  <%s>\n but was:\n  <%s>";
     
     // check
-    if (!actual.getTeam().equals(team)) { throw new AssertionError(errorMessage); }
+    if (!actual.getTeam().equals(team)) { 
+      failWithMessage(errorMessage, actual, team, actual.getTeam()); 
+    }
 
     // return the current assertion for method chaining
     return this;
@@ -229,12 +237,11 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     // check with standard error message (see commented below to set your own message).
     Assertions.assertThat(actual.getTeamMates()).contains(teamMates);
 
-    // uncomment the 4 lines below if you want to build your own error message :
-    // WritableAssertionInfo assertionInfo = new WritableAssertionInfo();
-    // String errorMessage = "my error message";
-    // assertionInfo.overridingErrorMessage(errorMessage);
-    // Iterables.instance().assertContains(assertionInfo, actual.getTeamMates(), teamMates);
-    
+    // To override the standard error message :
+    // - remove the previous call to Assertions.assertThat(actual.getTeamMates().contains(teamMates)
+    // - uncomment the line below and set your error message:
+    // Assertions.assertThat(actual.getTeamMates()).overridingErrorMessage("\nmy error message %s", "arg1").contains(teamMates);
+
     // return the current assertion for method chaining
     return this;
   }
@@ -248,11 +255,13 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     // check that actual Player we want to make assertions on is not null.
     isNotNull();
 
-    // we overrides the default error message with a more explicit one
-    String errorMessage = format("\nExpected :\n  <%s>\nnot to have teamMates but had :\n  <%s>", actual, actual.getTeamMates());
+    // we override the default error message with a more explicit one
+    String errorMessage = "\nExpected :\n  <%s>\nnot to have teamMates but had :\n  <%s>";
     
     // check
-    if (!actual.getTeamMates().isEmpty()) throw new AssertionError(errorMessage);
+    if (!actual.getTeamMates().isEmpty()) { 
+      failWithMessage(errorMessage, actual, actual.getTeamMates());
+    }
     
     // return the current assertion for method chaining
     return this;

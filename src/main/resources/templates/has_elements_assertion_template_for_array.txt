@@ -15,11 +15,10 @@
     // check with standard error message (see commented below to set your own message).
     Assertions.assertThat(actual.get${Property}()).contains(${property});
 
-    // uncomment the 4 lines below if you want to build your own error message :
-    // WritableAssertionInfo assertionInfo = new WritableAssertionInfo();
-    // String errorMessage = "my error message";
-    // assertionInfo.overridingErrorMessage(errorMessage);
-    // Iterables.instance().assertContains(assertionInfo, actual.getTeamMates(), teamMates);
+    // To override the standard error message :
+    // - remove the previous call to Assertions.assertThat(actual.get${Property}().contains(${property})
+    // - uncomment the line below and set your error message:
+    // Assertions.assertThat(actual.get${Property}()).overridingErrorMessage("\nmy error message %s", "arg1").contains(${property});
     
     // return the current assertion for method chaining
     return this;
@@ -34,11 +33,13 @@
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
-    // we overrides the default error message with a more explicit one
-    String errorMessage = format("\nExpected :\n  <%s>\nnot to have ${property} but had :\n  <%s>", actual, java.util.Arrays.toString(actual.get${Property}()));
+    // we override the default error message with a more explicit one
+    String errorMessage = "\nExpected :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
     
     // check
-    if (actual.get${Property}().length > 0) throw new AssertionError(errorMessage);
+    if (actual.get${Property}().length > 0)  { 
+      failWithMessage(errorMessage, actual, java.util.Arrays.toString(actual.get${Property}()));
+    }
     
     // return the current assertion for method chaining
     return this;

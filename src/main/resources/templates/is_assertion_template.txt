@@ -8,12 +8,11 @@
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
-    // we overrides the default error message with a more explicit one
-    String errorMessage = format("Expected actual ${class_to_assert} to be ${property} but was not.", actual);
-    
     // check
-    if (!actual.is${Property}()) throw new AssertionError(errorMessage);
-
+    if (!actual.is${Property}()) { 
+      failWithMessage("\nExpected actual ${class_to_assert} to be ${property} but was not."); 
+    }
+    
     // return the current assertion for method chaining
     return this;
   }
@@ -27,12 +26,11 @@
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
-    // we overrides the default error message with a more explicit one
-    String errorMessage = format("Expected actual ${class_to_assert} not to be ${property} but was.", actual);
-    
     // check
-    if (actual.is${Property}()) throw new AssertionError(errorMessage);
-
+    if (actual.is${Property}()) { 
+      failWithMessage("\nExpected actual ${class_to_assert} not to be ${property} but was.");
+    }
+    
     // return the current assertion for method chaining
     return this;
   }

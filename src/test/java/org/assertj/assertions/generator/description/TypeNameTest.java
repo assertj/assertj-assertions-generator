@@ -5,12 +5,17 @@ import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
 import org.assertj.assertions.generator.data.Player;
 import org.assertj.assertions.generator.description.TypeName;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 
 public class TypeNameTest {
 
   private TypeName typeName;
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
   @Test
   public void should_create_valid_typename_from_class() {
@@ -58,6 +63,13 @@ public class TypeNameTest {
   }
 
   @Test
+  public void should_fail_if_typename_description_is_empty() {
+    thrown.expect(IllegalArgumentException.class);
+    thrown.expectMessage("type name should not be blank or null");
+    typeName = new TypeName("");
+  }
+  
+  @Test
   public void should_detect_primitives_typename() {
     assertThat(new TypeName(int.class).isPrimitive()).isTrue();
     assertThat(new TypeName(long.class).isPrimitive()).isTrue();
@@ -68,8 +80,20 @@ public class TypeNameTest {
     assertThat(new TypeName(float.class).isPrimitive()).isTrue();
     assertThat(new TypeName(double.class).isPrimitive()).isTrue();
     assertThat(new TypeName(String.class).isPrimitive()).isFalse();
+    assertThat(new TypeName("test.int").isPrimitive()).isFalse();
+    assertThat(new TypeName("test.boolean").isPrimitive()).isFalse();
+    assertThat(new TypeName("test.Boolean").isPrimitive()).isFalse();
   }
 
+  @Test
+  public void should_detect_boolean_typename() {
+    assertThat(new TypeName(boolean.class).isBoolean()).isTrue();
+    assertThat(new TypeName("boolean").isBoolean()).isTrue();
+    assertThat(new TypeName(char.class).isBoolean()).isFalse();
+    assertThat(new TypeName("Boolean").isBoolean()).isFalse();
+    assertThat(new TypeName("test.boolean").isBoolean()).isFalse();
+  }
+  
   @Test
   public void should_fail_if_type_simple_name_is_null() {
     try {
@@ -81,7 +105,7 @@ public class TypeNameTest {
   }
 
   @Test
-  public void compare_to_should_compare_classes_fully_qaulified_names() {
+  public void compare_to_should_compare_classes_fully_qualified_names() {
     // compare package before all
     TypeName typeNameData1A = new TypeName("A", "org.assertj.assertions.generator.data1");
     TypeName typeNameData2B = new TypeName("A", "org.assertj.assertions.generator.data2");

@@ -107,7 +107,37 @@ public class Player {
   public boolean isInTeam(String team) {
     return areEqual(this.team, team);
   }
+  
+  // for testing only
+  public void getVoid() {
+    // empty
+  }
 
+  // for testing only
+  public String get() {
+    return "something";
+  }
+  
+  // for testing only
+  public String is() {
+    return "somebody";
+  }
+  
+  // for testing only
+  public String getWithParam(String param) {
+    return param;
+  }
+  
+  // for testing only
+  public void isVoid() {
+    // empty
+  }
+  
+  // for testing only
+  public String isWithParam(String param) {
+    return param;
+  }
+  
   @Override
   public String toString() {
     return format("%s[%s %s, team=%s]", getClass().getSimpleName(), name.getFirst(), name.getLast(), team);

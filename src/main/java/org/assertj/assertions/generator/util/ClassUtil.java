@@ -102,10 +102,17 @@ public class ClassUtil {
     classLoadersList.add(ClasspathHelper.staticClassLoader());
     classLoadersList.add(classLoader);
 
-    Reflections reflections = new Reflections(new ConfigurationBuilder()
-        .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
-        .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
-        .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packageName))));
+    Reflections reflections = new Reflections(
+                                              new ConfigurationBuilder()
+                                                                        .setScanners(new SubTypesScanner(false /*
+                                                                                                                * don't
+                                                                                                                * exclude
+                                                                                                                * Object
+                                                                                                                * .class
+                                                                                                                */),
+                                                                                     new ResourcesScanner())
+                                                                        .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
+                                                                        .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packageName))));
     Set<Class<?>> classesInPackage = reflections.getSubTypesOf(Object.class);
     Set<Class<?>> filteredClassesInPackage = new HashSet<Class<?>>();
     for (Class<?> classFromJar : classesInPackage) {
@@ -232,12 +239,14 @@ public class ClassUtil {
   }
 
   public static boolean isStandardGetter(Method method) {
-    return method.getName().startsWith(GET_PREFIX) && method.getReturnType() != null
+    return isValidStandardGetterName(method.getName())
+        && !Void.TYPE.equals(method.getReturnType()) 
         && method.getParameterTypes().length == 0;
   }
 
   public static boolean isBooleanGetter(Method method) {
-    return method.getName().startsWith(IS_PREFIX) && Boolean.TYPE.equals(method.getReturnType())
+    return isValidBooleanGetterName(method.getName()) 
+        && Boolean.TYPE.equals(method.getReturnType())
         && method.getParameterTypes().length == 0;
   }
 
@@ -246,12 +255,14 @@ public class ClassUtil {
   }
 
   private static boolean isValidStandardGetterName(String name) {
-    return name.length() >= GET_PREFIX.length() + 1 && isUpperCase(name.charAt(GET_PREFIX.length()))
+    return name.length() >= GET_PREFIX.length() + 1 
+        && isUpperCase(name.charAt(GET_PREFIX.length()))
         && name.startsWith(GET_PREFIX);
   }
 
   private static boolean isValidBooleanGetterName(String name) {
-    return name.length() >= IS_PREFIX.length() + 1 && isUpperCase(name.charAt(IS_PREFIX.length()))
+    return name.length() >= IS_PREFIX.length() + 1
+        && isUpperCase(name.charAt(IS_PREFIX.length()))
         && name.startsWith(IS_PREFIX);
   }
 

@@ -25,19 +25,18 @@ import org.assertj.assertions.generator.data.lotr.Ring;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.junit.Test;
 
-
 public class ClassUtilTest {
 
   public static final String TEST_PACKAGE_NAME = "org.assertj.assertions.generator.data";
   private static final Class<?>[] NO_PARAMS = new Class[0];
-  private Method method;
 
   @Test
   public void should_get_classes_in_package_and_subpackages() throws ClassNotFoundException {
     List<Class<?>> classesInPackage = collectClasses("org.assertj.assertions.generator.data");
     assertThat(classesInPackage).containsOnly(Player.class, ArtWork.class, Name.class, Movie.class,
-        Movie.PublicCategory.class, Ring.class, Race.class, FellowshipOfTheRing.class, TolkienCharacter.class,
-        TreeEnum.class);
+                                              Movie.PublicCategory.class, Ring.class, Race.class,
+                                              FellowshipOfTheRing.class, TolkienCharacter.class,
+                                              TreeEnum.class);
   }
 
   @Test
@@ -49,11 +48,8 @@ public class ClassUtilTest {
 
   @Test
   public void should_return_property_of_getter_method() throws Exception {
-    method = Player.class.getMethod("getTeam", NO_PARAMS);
-    assertThat(propertyNameOf(method)).isEqualTo("team");
-
-    method = Player.class.getMethod("isRookie", NO_PARAMS);
-    assertThat(propertyNameOf(method)).isEqualTo("rookie");
+    assertThat(propertyNameOf(Player.class.getMethod("getTeam", NO_PARAMS))).isEqualTo("team");
+    assertThat(propertyNameOf(Player.class.getMethod("isRookie", NO_PARAMS))).isEqualTo("rookie");
   }
 
   @Test
@@ -66,22 +62,28 @@ public class ClassUtilTest {
 
   @Test
   public void should_return_true_if_method_is_a_standard_getter() throws Exception {
-    method = Player.class.getMethod("getTeam", NO_PARAMS);
-    assertThat(isStandardGetter(method)).isTrue();
+    assertThat(isStandardGetter(Player.class.getMethod("getTeam", NO_PARAMS))).isTrue();
+  }
 
-    method = Player.class.getMethod("isRookie", NO_PARAMS);
-    assertThat(isStandardGetter(method)).isFalse();
+  @Test
+  public void should_return_false_if_method_is_not_a_standard_getter() throws Exception {
+    assertThat(isStandardGetter(Player.class.getMethod("isRookie", NO_PARAMS))).isFalse();
+    assertThat(isStandardGetter(Player.class.getMethod("getVoid", NO_PARAMS))).isFalse();
+    assertThat(isStandardGetter(Player.class.getMethod("getWithParam", new Class[] { String.class }))).isFalse();
   }
 
   @Test
   public void should_return_true_if_method_is_a_boolean_getter() throws Exception {
-    method = Player.class.getMethod("getTeam", NO_PARAMS);
-    assertThat(isBooleanGetter(method)).isFalse();
-
-    method = Player.class.getMethod("isRookie", NO_PARAMS);
-    assertThat(isBooleanGetter(method)).isTrue();
+    assertThat(isBooleanGetter(Player.class.getMethod("isRookie", NO_PARAMS))).isTrue();
   }
-
+  
+  @Test
+  public void should_return_false_if_method_is_not_a_boolean_getter() throws Exception {
+    assertThat(isBooleanGetter(Player.class.getMethod("getTeam", NO_PARAMS))).isFalse();
+    assertThat(isStandardGetter(Player.class.getMethod("isVoid", NO_PARAMS))).isFalse();
+    assertThat(isStandardGetter(Player.class.getMethod("isWithParam", new Class[] { String.class }))).isFalse();
+  }
+  
   @Test
   public void should_return_true_if_string_follows_getter_name_pattern() throws Exception {
     assertThat(isValidGetterName("isRookie")).isTrue();
@@ -89,24 +91,33 @@ public class ClassUtilTest {
   }
 
   @Test
+  public void should_return_false_if_string_follows_getter_name_pattern() throws Exception {
+    assertThat(isValidGetterName("isrookie")).isFalse();
+    assertThat(isValidGetterName("get")).isFalse();
+  }
+  
+  @Test
   public void should_return_false_if_string_does_not_follow_getter_name_pattern() throws Exception {
     assertThat(isValidGetterName("isrookie")).isFalse();
     assertThat(isValidGetterName("getteam")).isFalse();
     assertThat(isValidGetterName("GetTeam")).isFalse();
+    assertThat(isValidGetterName("get")).isFalse();
+    assertThat(isValidGetterName("is")).isFalse();
   }
 
   @Test
   public void should_return_getters_methods_only() throws Exception {
     List<Method> playerGetterMethods = getterMethodsOf(Player.class);
-    assertThat(playerGetterMethods).contains(Player.class.getMethod("getTeam", NO_PARAMS)).doesNotContain(
-        Player.class.getMethod("isInTeam", String.class));
+    assertThat(playerGetterMethods).contains(Player.class.getMethod("getTeam", NO_PARAMS))
+                                   .doesNotContain(
+                                                   Player.class.getMethod("isInTeam", String.class));
   }
 
   @Test
   public void should_also_return_inherited_getters_methods() throws Exception {
     List<Method> playerGetterMethods = getterMethodsOf(Movie.class);
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS),
-        ArtWork.class.getMethod("getTitle", NO_PARAMS));
+                                             ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }
 
 }

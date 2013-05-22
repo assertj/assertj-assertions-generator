@@ -27,7 +27,6 @@ import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.description.TypeName;
 
-
 public class BaseAssertionGenerator implements AssertionGenerator {
 
   // default file for templates
@@ -186,8 +185,12 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     if (getter.isBooleanPropertyType()) {
       assertionContent = isAssertionTemplate.getContent();
     } else if (getter.isIterablePropertyType()) {
+      StringBuilder sb = new StringBuilder(getter.getElementTypeName());
+      if (getter.isArrayPropertyType()) {
+        sb.append("[]");
+      }
       assertionContent = hasIterableElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
-          getter.getElementTypeName());
+          sb.toString());
     } else if (getter.isArrayPropertyType()) {
       assertionContent = hasArrayElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
           getter.getElementTypeName());

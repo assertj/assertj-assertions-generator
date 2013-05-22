@@ -8,6 +8,7 @@ import static org.apache.commons.lang3.StringUtils.uncapitalize;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -299,7 +300,10 @@ public class ClassUtil {
           classes.addAll(getClassesRelatedTo(actualTypeArgument));
         } else if (actualTypeArgument instanceof Class) {
           classes.add((Class<?>) actualTypeArgument);
+        } else if (actualTypeArgument instanceof GenericArrayType) {
+            classes.addAll(getClassesRelatedTo(actualTypeArgument));
         }
+//          throw new IllegalArgumentException("cannot find type " + actualTypeArgument);
         // I'm almost sure we should not arrive here !
       }
       Type rawType = parameterizedType.getRawType();

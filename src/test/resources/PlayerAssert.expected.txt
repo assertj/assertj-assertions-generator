@@ -73,6 +73,53 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
   }
 
   /**
+   * Verifies that the actual Player's points contains the given int[] elements.
+   * @param points the given elements that should be contained in actual Player's points.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's points does not contain all given int[] elements.
+   */
+  public PlayerAssert hasPoints(int[]... points) {  
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given int[] varargs is not null.
+    if (points == null) throw new AssertionError("Expecting points parameter not to be null.");
+    
+    // check with standard error message (see commented below to set your own message).
+    Assertions.assertThat(actual.getPoints()).contains(points);
+
+    // To override the standard error message :
+    // - remove the previous call to Assertions.assertThat(actual.getPoints().contains(points)
+    // - uncomment the line below and set your error message:
+    // Assertions.assertThat(actual.getPoints()).overridingErrorMessage("\nmy error message %s", "arg1").contains(points);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player has no points.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's points is not empty.
+   */
+  public PlayerAssert hasNoPoints() {  
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // we override the default error message with a more explicit one
+    String errorMessage = "\nExpected :\n  <%s>\nnot to have points but had :\n  <%s>";
+    
+    // check
+    if (!actual.getPoints().isEmpty()) { 
+      failWithMessage(errorMessage, actual, actual.getPoints());
+    }
+    
+    // return the current assertion for method chaining
+    return this;
+  }
+  
+
+  /**
    * Verifies that the actual Player's pointsPerGame is equal to the given one.
    * @param pointsPerGame the given pointsPerGame to compare the actual Player's pointsPerGame to.
    * @return this assertion object.

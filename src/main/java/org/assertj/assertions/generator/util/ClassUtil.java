@@ -239,6 +239,10 @@ public class ClassUtil {
     return Iterable.class.isAssignableFrom(returnType);
   }
 
+  public static boolean isArray(Class<?> returnType) {
+    return returnType.isArray();
+  }
+
   public static boolean isStandardGetter(Method method) {
     return isValidStandardGetterName(method.getName())
         && !Void.TYPE.equals(method.getReturnType()) 

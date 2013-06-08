@@ -52,7 +52,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
   protected TypeDescription getTypeDescription(Class<?> clazz, Method getter) {
     final Class<?> propertyType = getter.getReturnType();
     final TypeDescription typeDescription = new TypeDescription(new TypeName(propertyType));
-    if (propertyType.isArray()) {
+    if (isArray(propertyType)) {
       typeDescription.setElementTypeName(new TypeName(propertyType.getComponentType()));
       typeDescription.setArray(true);
     } else if (isIterable(propertyType)) {
@@ -64,8 +64,8 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
         typeDescription.setIterable(true);
         typeDescription.setArray(true);
       } else {
-        Class<?> parameterClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-        typeDescription.setElementTypeName(new TypeName(parameterClass));
+        // Class<?> parameterClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+        typeDescription.setElementTypeName(new TypeName(getClass(parameterizedType.getActualTypeArguments()[0])));
         typeDescription.setIterable(true);
       }
     }
@@ -106,7 +106,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     Set<Class<?>> classesToImport = new HashSet<Class<?>>();
     for (Method getter : getterMethodsOf(clazz)) {
       Class<?> propertyType = getter.getReturnType();
-      if (propertyType.isArray()) {
+      if (isArray(propertyType)) {
         // we only need the component type, that is T in T[] array
         classesToImport.add(propertyType.getComponentType());
       } else if (isIterable(propertyType)) {
@@ -114,15 +114,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
         // we don't need to import the Iterable since it does not appear directly in generated code, ex :
         // assertThat(actual.getTeamMates()).contains(teamMates); // teamMates -> List
         ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
-        if (parameterizedType.getActualTypeArguments()[0] instanceof GenericArrayType) {
-          //
-          GenericArrayType genericArrayType = (GenericArrayType) parameterizedType.getActualTypeArguments()[0];
-          Class<?> parameterClass = getClass(genericArrayType.getGenericComponentType());
-          classesToImport.add(parameterClass);
-        } else {
-          Class<?> actualParameterClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-          classesToImport.add(actualParameterClass);
-        }
+        classesToImport.add(getClass(parameterizedType.getActualTypeArguments()[0]));
       } else if (getter.getGenericReturnType() instanceof ParameterizedType) {
         // return type is generic type, add it and all its parameters type.
         ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();

@@ -37,7 +37,7 @@ public class ClassToClassDescriptionConverterTest {
 
   @Ignore("in case of java 7 oracle, return int[], in case of java 6 return int")
   @Test
-  public void should_build_class_description_for_iterable_of_simple_type() throws Exception {
+  public void should_build_class_description_for_iterable_of_array_of_primitive_type() throws Exception {
     class Type {
       List<int[]> scores;
 
@@ -52,6 +52,43 @@ public class ClassToClassDescriptionConverterTest {
     assertThat(getterDescription.isIterablePropertyType()).as("getterDescription must be iterable").isTrue();
     assertThat(getterDescription.getElementTypeName()).isEqualTo("int");
     assertThat(getterDescription.isArrayPropertyType()).as("getterDescription must be an array").isTrue();
+  }
+
+  @Ignore("in case of java 7 oracle, return int[], in case of java 6 return int")
+  @Test
+  public void should_build_class_description_for_iterable_of_array_of_array_of_class_type() throws Exception {
+    class Type {
+      List<Object[][]> scores;
+
+      public List<Object[][]> getScores() {
+        return scores;
+      }
+    }
+    ClassDescription classDescription = converter.convertToClassDescription(Type.class);
+    assertThat(classDescription.getClassName()).isEqualTo("Type");
+    assertThat(classDescription.getGetters()).hasSize(1);
+    GetterDescription getterDescription = classDescription.getGetters().iterator().next();
+    assertThat(getterDescription.isIterablePropertyType()).as("getterDescription must be iterable").isTrue();
+    assertThat(getterDescription.getElementTypeName()).isEqualTo("Object[]");
+    assertThat(getterDescription.isArrayPropertyType()).as("getterDescription must be an array").isTrue();
+  }
+
+  @Test
+  public void should_build_class_description_for_iterable_of_array_of_array_of_complex_type() throws Exception {
+    class Type {
+      List<List<Object>> scores;
+
+      public List<List<Object>> getScores() {
+        return scores;
+      }
+    }
+    ClassDescription classDescription = converter.convertToClassDescription(Type.class);
+    assertThat(classDescription.getClassName()).isEqualTo("Type");
+    assertThat(classDescription.getGetters()).hasSize(1);
+    GetterDescription getterDescription = classDescription.getGetters().iterator().next();
+    assertThat(getterDescription.isIterablePropertyType()).as("getterDescription must be iterable").isTrue();
+    assertThat(getterDescription.getElementTypeName()).isEqualTo("List");
+    assertThat(getterDescription.isArrayPropertyType()).as("getterDescription must not be an array").isFalse();
   }
 
   @Test

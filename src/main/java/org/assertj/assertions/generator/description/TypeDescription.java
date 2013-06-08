@@ -51,6 +51,9 @@ public class TypeDescription {
 
   public TypeDescription(TypeName typeName) {
     super();
+    if (typeName == null) {
+      throw new NullPointerException("typeName must not be null.");
+    }
     this.typeName = typeName;
     this.isArray = false;
     this.isIterable = false;

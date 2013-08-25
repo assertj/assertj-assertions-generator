@@ -42,8 +42,9 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     String errorMessage = "\nExpected assistsPerGame of:\n  <%s>\nto be:\n  <%s>\n but was:\n  <%s>";
     
     // check
-    if (actual.getAssistsPerGame() != assistsPerGame) { 
-      failWithMessage(errorMessage, actual, assistsPerGame, actual.getAssistsPerGame()); 
+    int actualAssistsPerGame = actual.getAssistsPerGame();
+    if (actualAssistsPerGame != assistsPerGame) {
+      failWithMessage(errorMessage, actual, assistsPerGame, actualAssistsPerGame);
     }
 
     // return the current assertion for method chaining
@@ -64,8 +65,9 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     String errorMessage = "\nExpected name of:\n  <%s>\nto be:\n  <%s>\n but was:\n  <%s>";
     
     // check
-    if (!actual.getName().equals(name)) { 
-      failWithMessage(errorMessage, actual, name, actual.getName()); 
+    Name actualName = actual.getName();
+    if (!actualName.equals(name)) {
+      failWithMessage(errorMessage, actual, name, actualName);
     }
 
     // return the current assertion for method chaining
@@ -86,8 +88,9 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     String errorMessage = "\nExpected pointsPerGame of:\n  <%s>\nto be:\n  <%s>\n but was:\n  <%s>";
     
     // check
-    if (actual.getPointsPerGame() != pointsPerGame) { 
-      failWithMessage(errorMessage, actual, pointsPerGame, actual.getPointsPerGame()); 
+    int actualPointsPerGame = actual.getPointsPerGame();
+    if (actualPointsPerGame != pointsPerGame) {
+      failWithMessage(errorMessage, actual, pointsPerGame, actualPointsPerGame);
     }
 
     // return the current assertion for method chaining
@@ -155,8 +158,9 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     String errorMessage = "\nExpected reboundsPerGame of:\n  <%s>\nto be:\n  <%s>\n but was:\n  <%s>";
     
     // check
-    if (actual.getReboundsPerGame() != reboundsPerGame) { 
-      failWithMessage(errorMessage, actual, reboundsPerGame, actual.getReboundsPerGame()); 
+    int actualReboundsPerGame = actual.getReboundsPerGame();
+    if (actualReboundsPerGame != reboundsPerGame) {
+      failWithMessage(errorMessage, actual, reboundsPerGame, actualReboundsPerGame);
     }
 
     // return the current assertion for method chaining
@@ -213,8 +217,9 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     String errorMessage = "\nExpected team of:\n  <%s>\nto be:\n  <%s>\n but was:\n  <%s>";
     
     // check
-    if (!actual.getTeam().equals(team)) { 
-      failWithMessage(errorMessage, actual, team, actual.getTeam()); 
+    String actualTeam = actual.getTeam();
+    if (!actualTeam.equals(team)) {
+      failWithMessage(errorMessage, actual, team, actualTeam);
     }
 
     // return the current assertion for method chaining

@@ -42,8 +42,9 @@ public class ${nestedClass}Assert extends AbstractAssert<${nestedClass}Assert, $
     String errorMessage = "\nExpected name of:\n  <%s>\nto be:\n  <%s>\n but was:\n  <%s>";
     
     // check
-    if (!actual.getName().equals(name)) { 
-      failWithMessage(errorMessage, actual, name, actual.getName()); 
+    String actualName = actual.getName();
+    if (!actualName.equals(name)) {
+      failWithMessage(errorMessage, actual, name, actualName);
     }
 
     // return the current assertion for method chaining

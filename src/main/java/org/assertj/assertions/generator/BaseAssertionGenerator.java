@@ -197,8 +197,8 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     }
     if (getter.isPrimitivePropertyType()) {
       // primitive must be compared with != instead of (not) equals()
-      assertionContent = assertionContent.replace("!actual.get${Property}().equals(${property})",
-          "actual.get${Property}() != ${property}");
+      assertionContent = assertionContent.replace("!actual${Property}.equals(${property})",
+          "actual${Property} != ${property}");
     }
     String propertyName = getter.getPropertyName();
     assertionContent = assertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, capitalize(propertyName));

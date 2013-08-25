@@ -20,10 +20,7 @@ import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
@@ -55,7 +52,12 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
         typeDescription.setElementTypeName(new TypeName(parameterClass));
         typeDescription.setIterable(true);
       }
-      getterDescriptions.add(new GetterDescription(propertyNameOf(getter), typeDescription));
+
+      List<TypeName> exceptions = new ArrayList<TypeName>();
+      for (Class<?> exception : getter.getExceptionTypes()) {
+          exceptions.add(new TypeName(exception));
+      }
+      getterDescriptions.add(new GetterDescription(propertyNameOf(getter), typeDescription, exceptions));
     }
     return getterDescriptions;
   }
@@ -82,6 +84,10 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
       } else {
         // return type is not generic type, simply add it.
         classesToImport.add(propertyType);
+      }
+
+      for (Class<?> exceptionType : getter.getExceptionTypes()) {
+        classesToImport.add(exceptionType);
       }
     }
     // convert to TypeName, excluding primitive or types in java.lang that don't need to be imported.

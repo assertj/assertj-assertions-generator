@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Map;
 
+import org.assertj.assertions.generator.BeanWithExceptionsTest;
 import org.assertj.assertions.generator.NestedClassesTest;
 import org.assertj.assertions.generator.data.Name;
 import org.assertj.assertions.generator.data.Player;
@@ -12,6 +13,7 @@ import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
 import org.assertj.assertions.generator.data.lotr.Race;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.description.ClassDescription;
+import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.description.TypeName;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,7 +23,7 @@ import org.junit.runner.RunWith;
 
 
 @RunWith(Theories.class)
-public class ClassToClassDescriptionConverterTest implements NestedClassesTest {
+public class ClassToClassDescriptionConverterTest implements NestedClassesTest, BeanWithExceptionsTest {
     private static ClassToClassDescriptionConverter converter;
 
   @BeforeClass
@@ -50,7 +52,26 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest {
     assertThat(classDescription.getImports()).isEmpty();
   }
 
-  @Test
+
+  @Theory
+  public void should_build_getter_with_exception_description(GetterWithException getter) throws Exception {
+    Class clazz = getter.getBeanClass();
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    assertThat(classDescription.getClassName()).isEqualTo(clazz.getSimpleName());
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo(clazz.getSimpleName());
+    assertThat(classDescription.getPackageName()).isEqualTo(clazz.getPackage().getName());
+    assertThat(classDescription.getGetters()).hasSize(4);
+    assertThat(classDescription.getImports()).containsOnly(getter.getExceptions());
+
+    for (GetterDescription desc : classDescription.getGetters()) {
+      if (desc.getPropertyName().equals(getter.getPropertyName())) {
+        assertThat(desc.getExceptions()).containsOnly(getter.getExceptions());
+        break;
+      }
+    }
+  }
+
+    @Test
   public void should_build_fellowshipOfTheRing_class_description() throws Exception {
     ClassDescription classDescription = converter.convertToClassDescription(FellowshipOfTheRing.class);
     assertThat(classDescription.getClassName()).isEqualTo("FellowshipOfTheRing");

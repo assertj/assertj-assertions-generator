@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_FILE_SUFFIX;
@@ -25,8 +26,9 @@ import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
 
 @RunWith(Theories.class)
-public class AssertionGeneratorTest implements NestedClassesTest {
-
+public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExceptionsTest {
+  private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    
   private static final String TARGET_DIRECTORY = "target";
   private static final Logger logger = LoggerFactory.getLogger(AssertionGeneratorTest.class);
   private ClassToClassDescriptionConverter converter;
@@ -53,6 +55,33 @@ public class AssertionGeneratorTest implements NestedClassesTest {
     assertThat(fileGeneratedFor(clazz)).hasContent(expectedContentFromTemplate(clazz));
   }
 
+  @Theory
+  public void should_generate_assertion_for_property_with_exception(Class<?> beanClass) throws Exception {
+    customAssertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(beanClass));
+    String expectedContent = FileUtils.readFileToString(new File("src/test/resources/BeanWithOneException.expected.txt"));
+    if (!BEAN_WITH_ONE_EXCEPTION.equals(beanClass)) {
+      String importException = "import java.io.IOException;" + LINE_SEPARATOR;
+      expectedContent = expectedContent.replace(importException, importException + "import java.sql.SQLException;" + LINE_SEPARATOR);
+
+      expectedContent = expectedContent.replace(BEAN_WITH_ONE_EXCEPTION.getSimpleName(), beanClass.getSimpleName());
+      expectedContent = expectedContent.replace(" throws IOException ", " throws IOException, SQLException ");
+
+      GetterWithException[] getters = {STRING_1_EXCEPTION, BOOLEAN_1_EXCEPTION, ARRAY_1_EXCEPTION, ITERABLE_1_EXCEPTION};
+      for (GetterWithException getter : getters) {
+        String throwsClause = generateThrowsClause(IOException.class, getter.getPropertyName(), getter.isBooleanType());
+        String replacement = throwsClause + generateThrowsClause(SQLException.class, getter.getPropertyName(), getter.isBooleanType()); 
+        expectedContent = expectedContent.replace(throwsClause, replacement);
+      }
+    }
+    String actualContent = FileUtils.readFileToString(fileGeneratedFor(beanClass)); 
+    assertThat(fileGeneratedFor(beanClass)).hasContent(expectedContent);
+  }
+
+  private String generateThrowsClause(Class<?> exception, String property, boolean booleanType) {
+      String getter = (booleanType ? "is" : "get") + Character.toUpperCase(property.charAt(0)) + property.substring(1); 
+      return "   * @throws " + exception.getSimpleName() + " if actual." + getter + "() throws one." + LINE_SEPARATOR;
+  }
+    
   @Test
   public void should_generate_assertion_for_classes_in_package() throws Exception {
     List<Class<?>> classes = collectClasses("org.assertj.assertions.generator.data");

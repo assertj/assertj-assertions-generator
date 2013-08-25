@@ -47,6 +47,8 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   private static final String CLASS_TO_ASSERT_REGEXP = "\\$\\{class_to_assert\\}";
   private static final String ELEMENT_TYPE_REGEXP = "\\$\\{elementType\\}";
   private static final String IMPORTS = "${imports}";
+  private static final String THROWS = "${throws}";
+  private static final String THROWS_JAVADOC = "${throws_javadoc}";
   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
   static final String TEMPLATES_DIR = "templates" + File.separator;
 
@@ -200,13 +202,46 @@ public class BaseAssertionGenerator implements AssertionGenerator {
       assertionContent = assertionContent.replace("!actual${Property}.equals(${property})",
           "actual${Property} != ${property}");
     }
+      
+    assertionContent = declareExceptions(getter, assertionContent);
+
     String propertyName = getter.getPropertyName();
     assertionContent = assertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, capitalize(propertyName));
     assertionContent = assertionContent.replaceAll(PROPERTY_TYPE_REGEXP, getter.getPropertyTypeName());
     return assertionContent.replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP, propertyName);
   }
 
-  private void fillAssertionJavaFile(String customAssertionContent, File assertionJavaFile) throws IOException {
+  /**
+   * Handle case where getter throws an exception.
+   * @param getter
+   * @param assertionContent
+   * @return
+   */
+  private String declareExceptions(GetterDescription getter, String assertionContent) {            
+    StringBuilder throwsClause = new StringBuilder();
+    StringBuilder throwsJavaDoc = new StringBuilder();
+    boolean first = true;
+    for (TypeName exception : getter.getExceptions()) {
+      if (first) {
+        throwsClause.append("throws ");
+      } else {
+        throwsClause.append(", ");
+      }
+      first = false;
+      String exceptionName = exception.getSimpleNameWithOuterClass(); 
+      throwsClause.append(exceptionName);
+      throwsJavaDoc.append(LINE_SEPARATOR).append("   * @throws ").append(exceptionName);
+      throwsJavaDoc.append(" if actual.").append(getter.isBooleanPropertyType() ? "is" : "get").append("${Property}() throws one.");        
+    }
+    if (!getter.getExceptions().isEmpty()) {
+      throwsClause.append(' ');
+    }
+    assertionContent = assertionContent.replace(THROWS_JAVADOC, throwsJavaDoc.toString());
+    assertionContent = assertionContent.replace(THROWS, throwsClause.toString());
+    return assertionContent;
+  }
+
+    private void fillAssertionJavaFile(String customAssertionContent, File assertionJavaFile) throws IOException {
     FileWriter fileWriter = null;
     try {
       fileWriter = new FileWriter(assertionJavaFile);

@@ -37,7 +37,8 @@ public class ClassUtilTest implements NestedClassesTest {
                                               OuterClass.class,
                                               StaticNestedPerson.SNP_InnerPerson.class,
                                               StaticNestedPerson.class,
-                                              StaticNestedPerson.SNP_StaticNestedPerson.class);
+                                              StaticNestedPerson.SNP_StaticNestedPerson.class,
+                                              BeanWithOneException.class, BeanWithTwoExceptions.class);
   }
 
   @Test

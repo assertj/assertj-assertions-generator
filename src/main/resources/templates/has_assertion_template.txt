@@ -3,9 +3,9 @@
    * Verifies that the actual ${class_to_assert}'s ${property} is equal to the given one.
    * @param ${property} the given ${property} to compare the actual ${class_to_assert}'s ${property} to.
    * @return this assertion object.
-   * @throws AssertionError - if the actual ${class_to_assert}'s ${property} is not equal to the given one.
+   * @throws AssertionError - if the actual ${class_to_assert}'s ${property} is not equal to the given one.${throws_javadoc}
    */
-  public ${class_to_assert}Assert has${Property}(${propertyType} ${property}) {
+  public ${class_to_assert}Assert has${Property}(${propertyType} ${property}) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 

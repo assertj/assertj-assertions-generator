@@ -2,15 +2,15 @@
   /**
    * Verifies that the actual ${class_to_assert} is ${property}.
    * @return this assertion object.
-   * @throws AssertionError - if the actual ${class_to_assert} is not ${property}.
+   * @throws AssertionError - if the actual ${class_to_assert} is not ${property}.${throws_javadoc}
    */
-  public ${class_to_assert}Assert is${Property}() {
+  public ${class_to_assert}Assert is${Property}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
     // check
-    if (!actual.is${Property}()) { 
-      failWithMessage("\nExpected actual ${class_to_assert} to be ${property} but was not."); 
+    if (!actual.is${Property}()) {
+      failWithMessage("\nExpected actual ${class_to_assert} to be ${property} but was not.");
     }
     
     // return the current assertion for method chaining
@@ -20,14 +20,14 @@
   /**
    * Verifies that the actual ${class_to_assert} is not ${property}.
    * @return this assertion object.
-   * @throws AssertionError - if the actual ${class_to_assert} is ${property}.
+   * @throws AssertionError - if the actual ${class_to_assert} is ${property}.${throws_javadoc}
    */
-  public ${class_to_assert}Assert isNot${Property}() {
+  public ${class_to_assert}Assert isNot${Property}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
     // check
-    if (actual.is${Property}()) { 
+    if (actual.is${Property}()) {
       failWithMessage("\nExpected actual ${class_to_assert} not to be ${property} but was.");
     }
     

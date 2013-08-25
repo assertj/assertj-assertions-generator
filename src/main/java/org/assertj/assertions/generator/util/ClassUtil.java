@@ -1,9 +1,13 @@
 package org.assertj.assertions.generator.util;
 
-import static java.lang.Character.isUpperCase;
-import static java.lang.reflect.Modifier.isPublic;
-import static org.apache.commons.lang3.StringUtils.substringAfter;
-import static org.apache.commons.lang3.StringUtils.uncapitalize;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,21 +17,12 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
+import static java.lang.Character.isUpperCase;
+import static java.lang.reflect.Modifier.isPublic;
+import static org.apache.commons.lang3.StringUtils.substringAfter;
+import static org.apache.commons.lang3.StringUtils.uncapitalize;
 
 /**
  * 
@@ -310,4 +305,19 @@ public class ClassUtil {
     return classes;
   }
 
+  /**
+   * Gets the simple name of the class but, unlike {@link Class#getSimpleName()}, it includes the name of the outer
+   * class when <code>clazz</code> is an inner class.
+   * @param clazz
+   * @return
+   */
+  public static String getSimpleNameWithOuterClass(Class<?> clazz) {
+    String nestedClassName = null;
+    if (clazz.getDeclaringClass() != null) {
+      nestedClassName = clazz.getName();
+      nestedClassName = nestedClassName.substring(clazz.getPackage().getName().length() + 1);
+      nestedClassName = nestedClassName.replace('$', '.');
+    }
+    return nestedClassName;
+  }
 }

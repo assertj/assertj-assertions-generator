@@ -8,6 +8,7 @@ import org.assertj.assertions.generator.description.TypeDescription;
 import org.assertj.assertions.generator.description.TypeName;
 import org.junit.Test;
 
+import java.util.Collections;
 
 public class GetterDescriptionTest {
 
@@ -15,7 +16,7 @@ public class GetterDescriptionTest {
 
   @Test
   public void should_create_valid_typename_from_class() {
-    getterDescription = new GetterDescription("bestPlayer", new TypeDescription(new TypeName(Player.class)));
+    getterDescription = new GetterDescription("bestPlayer", new TypeDescription(new TypeName(Player.class)), Collections.<TypeName>emptyList());
     assertThat(getterDescription.getPropertyName()).isEqualTo("bestPlayer");
     assertThat(getterDescription.getPropertyTypeName()).isEqualTo("Player");
     assertThat(getterDescription.getElementTypeName()).isNull();

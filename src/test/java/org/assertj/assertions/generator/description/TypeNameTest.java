@@ -1,17 +1,19 @@
 package org.assertj.assertions.generator.description;
 
+import org.assertj.assertions.generator.NestedClassesTest;
+import org.assertj.assertions.generator.data.Player;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.experimental.theories.Theories;
+import org.junit.experimental.theories.Theory;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
-import org.assertj.assertions.generator.data.Player;
-import org.assertj.assertions.generator.description.TypeName;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-
-public class TypeNameTest {
+@RunWith(Theories.class)
+public class TypeNameTest implements NestedClassesTest {
 
   private TypeName typeName;
   @Rule
@@ -21,6 +23,17 @@ public class TypeNameTest {
   public void should_create_valid_typename_from_class() {
     typeName = new TypeName(Player.class);
     assertThat(typeName.getSimpleName()).isEqualTo("Player");
+    assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo("Player");
+    assertThat(typeName.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
+    assertThat(typeName.belongsToJavaLangPackage()).isFalse();
+    assertThat(typeName.isPrimitive()).isFalse();
+  }
+
+  @Theory
+  public void should_create_valid_typename_from_nestedclass(NestedClass nestedClass) {
+    typeName = new TypeName(nestedClass.getNestedClass());
+    assertThat(typeName.getSimpleName()).isEqualTo(nestedClass.getNestedClass().getSimpleName());
+    assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo(nestedClass.getClassNameWithOuterClass());
     assertThat(typeName.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isFalse();
@@ -30,6 +43,7 @@ public class TypeNameTest {
   public void should_create_valid_typename() {
     typeName = new TypeName("Player", "org.assertj.assertions.generator.data");
     assertThat(typeName.getSimpleName()).isEqualTo("Player");
+    assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo("Player");
     assertThat(typeName.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isFalse();
@@ -39,6 +53,7 @@ public class TypeNameTest {
   public void should_create_valid_typename_from_type_name_string_description() {
     typeName = new TypeName("org.assertj.assertions.generator.data.Player");
     assertThat(typeName.getSimpleName()).isEqualTo("Player");
+    assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo("Player");
     assertThat(typeName.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isFalse();
@@ -48,6 +63,7 @@ public class TypeNameTest {
   public void should_create_valid_typename_for_primitive() {
     typeName = new TypeName(int.class);
     assertThat(typeName.getSimpleName()).isEqualTo("int");
+    assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo("int");
     assertThat(typeName.getPackageName()).isEmpty();
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isTrue();
@@ -57,6 +73,7 @@ public class TypeNameTest {
   public void should_create_valid_typename_for_primitive_from_type_name_string_description() {
     typeName = new TypeName("int");
     assertThat(typeName.getSimpleName()).isEqualTo("int");
+    assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo("int");
     assertThat(typeName.getPackageName()).isEmpty();
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isTrue();

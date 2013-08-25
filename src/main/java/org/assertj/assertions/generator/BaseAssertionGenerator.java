@@ -12,9 +12,10 @@
  */
 package org.assertj.assertions.generator;
 
-import static java.lang.String.format;
-import static org.apache.commons.io.IOUtils.closeQuietly;
-import static org.apache.commons.lang3.StringUtils.capitalize;
+import org.assertj.assertions.generator.Template.Type;
+import org.assertj.assertions.generator.description.ClassDescription;
+import org.assertj.assertions.generator.description.GetterDescription;
+import org.assertj.assertions.generator.description.TypeName;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,10 +23,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Set;
 
-import org.assertj.assertions.generator.Template.Type;
-import org.assertj.assertions.generator.description.ClassDescription;
-import org.assertj.assertions.generator.description.GetterDescription;
-import org.assertj.assertions.generator.description.TypeName;
+import static java.lang.String.format;
+import static org.apache.commons.io.IOUtils.closeQuietly;
+import static org.apache.commons.lang3.StringUtils.capitalize;
 
 
 public class BaseAssertionGenerator implements AssertionGenerator {
@@ -37,7 +37,8 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   static final String DEFAULT_HAS_ASSERTION_TEMPLATE = "has_assertion_template.txt";
   static final String DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE = "custom_assertion_class_template.txt";
 
-  static final String ASSERT_CLASS_SUFFIX = "Assert.java";
+  static final String ASSERT_CLASS_SUFFIX = "Assert";
+  static final String ASSERT_CLASS_FILE_SUFFIX = ASSERT_CLASS_SUFFIX + ".java";
   private static final String IMPORT_LINE = "import %s;%s";
   private static final String PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP = "\\$\\{Property\\}";
   private static final String PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP = "\\$\\{property\\}";
@@ -46,6 +47,8 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   private static final String CLASS_TO_ASSERT_REGEXP = "\\$\\{class_to_assert\\}";
   private static final String ELEMENT_TYPE_REGEXP = "\\$\\{elementType\\}";
   private static final String IMPORTS = "${imports}";
+  private static final String THROWS = "${throws}";
+  private static final String THROWS_JAVADOC = "${throws_javadoc}";
   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
   static final String TEMPLATES_DIR = "templates" + File.separator;
 
@@ -135,11 +138,13 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     // close class with }
     assertionFileContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
 
-    String className = classDescription.getClassName();
+    String className = classDescription.getClassName(); // className could be a nested class like "OuterClass.NestedClass"
+
     // resolve template markers
     String assertionFileContent = assertionFileContentBuilder.toString();
     assertionFileContent = assertionFileContent.replaceAll(PACKAGE__REGEXP, classDescription.getPackageName());
-    assertionFileContent = assertionFileContent.replaceAll(CLASS_TO_ASSERT_REGEXP, className);
+    assertionFileContent = assertionFileContent.replaceAll(CLASS_TO_ASSERT_REGEXP + ASSERT_CLASS_SUFFIX, className + ASSERT_CLASS_SUFFIX);
+    assertionFileContent = assertionFileContent.replaceAll(CLASS_TO_ASSERT_REGEXP, classDescription.getClassNameWithOuterClass());
     assertionFileContent = assertionFileContent.replace(IMPORTS,
         listImports(classDescription.getImports(), classDescription.getPackageName()));
 
@@ -147,7 +152,7 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     String targetDirectory = getTargetDirectoryPathFor(classDescription);
     // build any needed directories
     new File(targetDirectory).mkdirs();
-    return createCustomAssertionFile(assertionFileContent, className + ASSERT_CLASS_SUFFIX, targetDirectory);
+    return createCustomAssertionFile(assertionFileContent, className + ASSERT_CLASS_FILE_SUFFIX, targetDirectory);
   }
 
   /**
@@ -194,16 +199,49 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     }
     if (getter.isPrimitivePropertyType()) {
       // primitive must be compared with != instead of (not) equals()
-      assertionContent = assertionContent.replace("!actual.get${Property}().equals(${property})",
-          "actual.get${Property}() != ${property}");
+      assertionContent = assertionContent.replace("!actual${Property}.equals(${property})",
+          "actual${Property} != ${property}");
     }
+      
+    assertionContent = declareExceptions(getter, assertionContent);
+
     String propertyName = getter.getPropertyName();
     assertionContent = assertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, capitalize(propertyName));
     assertionContent = assertionContent.replaceAll(PROPERTY_TYPE_REGEXP, getter.getPropertyTypeName());
     return assertionContent.replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP, propertyName);
   }
 
-  private void fillAssertionJavaFile(String customAssertionContent, File assertionJavaFile) throws IOException {
+  /**
+   * Handle case where getter throws an exception.
+   * @param getter
+   * @param assertionContent
+   * @return
+   */
+  private String declareExceptions(GetterDescription getter, String assertionContent) {            
+    StringBuilder throwsClause = new StringBuilder();
+    StringBuilder throwsJavaDoc = new StringBuilder();
+    boolean first = true;
+    for (TypeName exception : getter.getExceptions()) {
+      if (first) {
+        throwsClause.append("throws ");
+      } else {
+        throwsClause.append(", ");
+      }
+      first = false;
+      String exceptionName = exception.getSimpleNameWithOuterClass(); 
+      throwsClause.append(exceptionName);
+      throwsJavaDoc.append(LINE_SEPARATOR).append("   * @throws ").append(exceptionName);
+      throwsJavaDoc.append(" if actual.").append(getter.isBooleanPropertyType() ? "is" : "get").append("${Property}() throws one.");        
+    }
+    if (!getter.getExceptions().isEmpty()) {
+      throwsClause.append(' ');
+    }
+    assertionContent = assertionContent.replace(THROWS_JAVADOC, throwsJavaDoc.toString());
+    assertionContent = assertionContent.replace(THROWS, throwsClause.toString());
+    return assertionContent;
+  }
+
+    private void fillAssertionJavaFile(String customAssertionContent, File assertionJavaFile) throws IOException {
     FileWriter fileWriter = null;
     try {
       fileWriter = new FileWriter(assertionJavaFile);

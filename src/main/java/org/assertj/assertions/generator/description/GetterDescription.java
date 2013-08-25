@@ -12,6 +12,9 @@
  */
 package org.assertj.assertions.generator.description;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Stores the information needed to generate an assertion for a getter method.
  * <p>
@@ -37,11 +40,13 @@ public class GetterDescription implements Comparable<GetterDescription> {
 
   private String propertyName;
   private TypeDescription typeDescription;
+  private final List<TypeName> exceptions;
 
-  public GetterDescription(String propertyName, TypeDescription typeDescription) {
+  public GetterDescription(String propertyName, TypeDescription typeDescription, List<TypeName> exceptions) {
     super();
     this.propertyName = propertyName;
     this.typeDescription = typeDescription;
+    this.exceptions = new ArrayList<TypeName>(exceptions);
   }
 
   public String getPropertyName() {
@@ -49,7 +54,7 @@ public class GetterDescription implements Comparable<GetterDescription> {
   }
 
   public String getPropertyTypeName() {
-    return typeDescription.getSimpleName();
+    return typeDescription.getSimpleNameWithOuterClass();
   }
 
   public boolean isIterablePropertyType() {
@@ -73,7 +78,7 @@ public class GetterDescription implements Comparable<GetterDescription> {
   }
 
   public String getElementTypeName() {
-    return typeDescription.getElementTypeName() == null ? null : typeDescription.getElementTypeName().getSimpleName();
+    return typeDescription.getElementTypeName() == null ? null : typeDescription.getElementTypeName().getSimpleNameWithOuterClass();
   }
 
   @Override
@@ -81,4 +86,7 @@ public class GetterDescription implements Comparable<GetterDescription> {
     return "GetterDescription [propertyName=" + propertyName + ", typeDescription=" + typeDescription + "]";
   }
 
+  public List<TypeName> getExceptions() {
+    return exceptions;
+  }
 }

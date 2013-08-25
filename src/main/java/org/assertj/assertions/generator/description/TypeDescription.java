@@ -57,8 +57,8 @@ public class TypeDescription {
     this.elementTypeName = null;
   }
 
-  public String getSimpleName() {
-    return typeName.getSimpleName();
+  public String getSimpleNameWithOuterClass() {
+    return typeName.getSimpleNameWithOuterClass();
   }
 
   public boolean isArray() {

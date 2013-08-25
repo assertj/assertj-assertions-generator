@@ -49,7 +49,7 @@ public class GetterDescription implements Comparable<GetterDescription> {
   }
 
   public String getPropertyTypeName() {
-    return typeDescription.getSimpleName();
+    return typeDescription.getSimpleNameWithOuterClass();
   }
 
   public boolean isIterablePropertyType() {
@@ -73,7 +73,7 @@ public class GetterDescription implements Comparable<GetterDescription> {
   }
 
   public String getElementTypeName() {
-    return typeDescription.getElementTypeName() == null ? null : typeDescription.getElementTypeName().getSimpleName();
+    return typeDescription.getElementTypeName() == null ? null : typeDescription.getElementTypeName().getSimpleNameWithOuterClass();
   }
 
   @Override

@@ -38,12 +38,12 @@ public class ${nestedClass}Assert extends AbstractAssert<${nestedClass}Assert, $
     // check that actual ${nestedClass} we want to make assertions on is not null.
     isNotNull();
 
-    // we overrides the default error message with a more explicit one
-    String errorMessage = "\nExpected name of:\n  <%s>\nto be:\n  <%s>\n but was:\n  <%s>";
+    // overrides the default error message with a more explicit one
+    String errorMessage = "\nExpected name of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
-    // check
+    // null safe check
     String actualName = actual.getName();
-    if (!actualName.equals(name)) {
+    if (!org.assertj.core.util.Objects.areEqual(actualName, name)) {
       failWithMessage(errorMessage, actual, name, actualName);
     }
 

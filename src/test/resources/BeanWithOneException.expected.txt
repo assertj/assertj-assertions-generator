@@ -176,12 +176,12 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
     // check that actual BeanWithOneException we want to make assertions on is not null.
     isNotNull();
 
-    // we overrides the default error message with a more explicit one
-    String errorMessage = "\nExpected stringPropertyThrowsException of:\n  <%s>\nto be:\n  <%s>\n but was:\n  <%s>";
+    // overrides the default error message with a more explicit one
+    String errorMessage = "\nExpected stringPropertyThrowsException of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
-    // check
+    // null safe check
     String actualStringPropertyThrowsException = actual.getStringPropertyThrowsException();
-    if (!actualStringPropertyThrowsException.equals(stringPropertyThrowsException)) {
+    if (!org.assertj.core.util.Objects.areEqual(actualStringPropertyThrowsException, stringPropertyThrowsException)) {
       failWithMessage(errorMessage, actual, stringPropertyThrowsException, actualStringPropertyThrowsException);
     }
 

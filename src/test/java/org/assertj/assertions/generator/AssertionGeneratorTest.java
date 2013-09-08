@@ -35,7 +35,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   private BaseAssertionGenerator customAssertionGenerator;
 
   @Before
-  public void beforeEachTest() throws FileNotFoundException, IOException {
+  public void beforeEachTest() throws IOException {
     converter = new ClassToClassDescriptionConverter();
     customAssertionGenerator = new BaseAssertionGenerator();
     customAssertionGenerator.setDirectoryWhereAssertionFilesAreGenerated(TARGET_DIRECTORY);
@@ -73,7 +73,6 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
         expectedContent = expectedContent.replace(throwsClause, replacement);
       }
     }
-    String actualContent = FileUtils.readFileToString(fileGeneratedFor(beanClass)); 
     assertThat(fileGeneratedFor(beanClass)).hasContent(expectedContent);
   }
 

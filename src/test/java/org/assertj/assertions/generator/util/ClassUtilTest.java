@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(Theories.class)
 public class ClassUtilTest implements NestedClassesTest {
 
-  public static final String TEST_PACKAGE_NAME = "org.assertj.assertions.generator.data";
   private static final Class<?>[] NO_PARAMS = new Class[0];
 
   @Test

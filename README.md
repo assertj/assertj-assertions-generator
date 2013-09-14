@@ -5,7 +5,7 @@
 The Assertion Generator is able to create assertions specific to your own classes, it comes with :
 * a CLI tool (this project)
 * a [**maven plugin**](https://github.com/joel-costigliola/assertj-assertions-generator-maven-plugin) 
-* an [**eclipse plugin**](https://github.com/joel-costigliola/assertj-eclipse-plugin) (planned for April).
+* an [**eclipse plugin**](https://github.com/joel-costigliola/assertj-eclipse-plugin) (planned later).
 
 Let's say that you have a `Player` class with `name` and `team` properties, the generator is able to create a `PlayerAssert` assertions class with `hasName` and `hasTeam` assertions, to write code like :
 
@@ -15,6 +15,14 @@ assertThat(mvp).hasName("Lebron James").hasTeam("Miami Heat");
 
 ## Latest news
 
+**2013-09-15 : 1.1.0 release**
+* Generated assertions use null safe equals for non primtive types
+* Add exceptions to assertion method signature if underlying getter of class to assert throws some (Fabien Duminy)
+* Generate assertions for nested/inner classes (Fabien Duminy)
+* Fix error message displaying unrelevant property value when getter of class to assert doesn't return the same value on successive calls (Fabien Duminy)
+
+Big thanks to **Fabien Duminy** that has done most of the work of this release !
+
 **2013-03-26 : 1.0.0 release : the first release after Fest fork, generated assertions are cleaner.**
 
 ## Generate assertions from Maven
@@ -23,7 +31,9 @@ You should use the provided [**maven plugin**](https://github.com/joel-costiglio
 
 ## Use with Eclipse
 
-We have developed an Eclipse plugin that allows you to generate assertions for a specific class (one at time only).  
+Work (not so much) in progress ...
+
+We are developing an Eclipse plugin that allows you to generate assertions for a specific class (one at time only).
 Please check **[AssertJ eclipse plugin documentation](http://joel-costigliola.github.com/assertj-eclipse-plugin/)**.
 
 ## Quickstart for NON Maven users

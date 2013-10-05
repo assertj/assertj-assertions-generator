@@ -40,6 +40,10 @@ public class ClassDescription {
     return classTypeName.getSimpleName();
   }
 
+  public String getClassNameWithOuterClass() {
+    return classTypeName.getSimpleNameWithOuterClass();
+  }
+
   public String getPackageName() {
     return classTypeName.getPackageName();
   }
@@ -64,5 +68,4 @@ public class ClassDescription {
   public String toString() {
     return "ClassDescription [classTypeName=" + classTypeName + ", typesToImports=" + typesToImports + "]";
   }
-
 }

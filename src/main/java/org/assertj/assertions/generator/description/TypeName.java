@@ -1,5 +1,7 @@
 package org.assertj.assertions.generator.description;
 
+import org.assertj.assertions.generator.util.ClassUtil;
+
 import static org.apache.commons.lang3.ArrayUtils.contains;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -22,6 +24,7 @@ public class TypeName implements Comparable<TypeName> {
   protected static final String[] PRIMITIVE_TYPES = { "int", "long", "short", "byte", "float", "double", "char", BOOLEAN };
 
   private String typeSimpleName;
+  private String typeSimpleNameWithOuterClass;
   private String packageName;
 
   public TypeName(String typeSimpleName, String packageName) {
@@ -46,11 +49,16 @@ public class TypeName implements Comparable<TypeName> {
   public TypeName(Class<?> clazz) {
     super();
     this.typeSimpleName = clazz.getSimpleName();
+    this.typeSimpleNameWithOuterClass = ClassUtil.getSimpleNameWithOuterClass(clazz);
     this.packageName = clazz.getPackage() == null ? NO_PACKAGE : clazz.getPackage().getName();
   }
 
   public String getSimpleName() {
     return typeSimpleName;
+  }
+
+  public String getSimpleNameWithOuterClass() {
+    return (typeSimpleNameWithOuterClass == null) ? getSimpleName() : typeSimpleNameWithOuterClass;
   }
 
   public String getPackageName() {
@@ -109,5 +117,4 @@ public class TypeName implements Comparable<TypeName> {
   private void setTypeSimpleName(String typeSimpleName) {
     this.typeSimpleName = typeSimpleName;
   }
-
 }

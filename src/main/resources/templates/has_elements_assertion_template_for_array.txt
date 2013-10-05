@@ -3,9 +3,9 @@
    * Verifies that the actual ${class_to_assert}'s ${property} contains the given ${elementType} elements.
    * @param ${property} the given elements that should be contained in actual ${class_to_assert}'s ${property}.
    * @return this assertion object.
-   * @throws AssertionError if the actual ${class_to_assert}'s ${property} does not contain all given ${elementType} elements.
+   * @throws AssertionError if the actual ${class_to_assert}'s ${property} does not contain all given ${elementType} elements.${throws_javadoc}
    */
-  public ${class_to_assert}Assert has${Property}(${elementType}... ${property}) {  
+  public ${class_to_assert}Assert has${Property}(${elementType}... ${property}) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
@@ -27,9 +27,9 @@
   /**
    * Verifies that the actual ${class_to_assert} has no ${property}.
    * @return this assertion object.
-   * @throws AssertionError if the actual ${class_to_assert}'s ${property} is not empty.
+   * @throws AssertionError if the actual ${class_to_assert}'s ${property} is not empty.${throws_javadoc}
    */
-  public ${class_to_assert}Assert hasNo${Property}() {  
+  public ${class_to_assert}Assert hasNo${Property}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
@@ -37,7 +37,7 @@
     String errorMessage = "\nExpected :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
     
     // check
-    if (actual.get${Property}().length > 0)  { 
+    if (actual.get${Property}().length > 0)  {
       failWithMessage(errorMessage, actual, java.util.Arrays.toString(actual.get${Property}()));
     }
     

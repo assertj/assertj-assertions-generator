@@ -12,9 +12,13 @@
  */
 package org.assertj.assertions.generator.description.converter;
 
+import org.apache.commons.lang3.StringUtils;
 import static org.assertj.assertions.generator.description.TypeName.JAVA_LANG_PACKAGE;
 import static org.assertj.assertions.generator.util.ClassUtil.*;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.util.*;
 import java.lang.reflect.*;
 import java.util.HashSet;
 import java.util.List;
@@ -43,7 +47,11 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     List<Method> getters = getterMethodsOf(clazz);
     for (Method getter : getters) {
       final TypeDescription typeDescription = getTypeDescription(clazz, getter);
-      getterDescriptions.add(new GetterDescription(propertyNameOf(getter), typeDescription));
+      List<TypeName> exceptions = new ArrayList<TypeName>();
+      for (Class<?> exception : getter.getExceptionTypes()) {
+          exceptions.add(new TypeName(exception));
+      }
+      getterDescriptions.add(new GetterDescription(propertyNameOf(getter), typeDescription, exceptions));
     }
     return getterDescriptions;
   }
@@ -64,10 +72,17 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
         typeDescription.setIterable(true);
         typeDescription.setArray(true);
       } else {
-        // Class<?> parameterClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-        typeDescription.setElementTypeName(new TypeName(getClass(parameterizedType.getActualTypeArguments()[0])));
-        typeDescription.setIterable(true);
+        Class<?> parameterClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+        typeDescription.setElementTypeName(new TypeName(parameterClass));
+
+        // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486, try to change if java 7 and
+        // a real array
+        if(parameterClass.getSimpleName().contains("[]")) {
+          typeDescription.setElementTypeName(new TypeName(StringUtils.removeEnd(parameterClass.getSimpleName(), "[]")));
+          typeDescription.setArray(true);
+        }
       }
+      typeDescription.setIterable(true);
     }
     return typeDescription;
   }
@@ -114,7 +129,19 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
         // we don't need to import the Iterable since it does not appear directly in generated code, ex :
         // assertThat(actual.getTeamMates()).contains(teamMates); // teamMates -> List
         ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
+//<<<<<<< HEAD
         classesToImport.add(getClass(parameterizedType.getActualTypeArguments()[0]));
+//=======
+//        if (parameterizedType.getActualTypeArguments()[0] instanceof GenericArrayType) {
+
+//          GenericArrayType genericArrayType = (GenericArrayType) parameterizedType.getActualTypeArguments()[0];
+//          Class<?> parameterClass = getClass(genericArrayType.getGenericComponentType());
+//          classesToImport.add(parameterClass);
+//        } else {
+//          Class<?> actualParameterClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+//          classesToImport.add(actualParameterClass);
+//        }
+//>>>>>>> iterable-arrays
       } else if (getter.getGenericReturnType() instanceof ParameterizedType) {
         // return type is generic type, add it and all its parameters type.
         ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
@@ -122,6 +149,10 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
       } else {
         // return type is not generic type, simply add it.
         classesToImport.add(propertyType);
+      }
+
+      for (Class<?> exceptionType : getter.getExceptionTypes()) {
+        classesToImport.add(exceptionType);
       }
     }
     // convert to TypeName, excluding primitive or types in java.lang that don't need to be imported.

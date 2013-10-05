@@ -71,15 +71,13 @@ public class Template {
    */
   public Template(Type type, URL url) {
     this.type = type;
-    File urlFile = null;
     try {
-      urlFile = new File(URLDecoder.decode(url.getFile(), CharEncoding.UTF_8));
+      File urlFile = new File(URLDecoder.decode(url.getFile(), CharEncoding.UTF_8));
       if (!urlFile.isFile()) {
         throw new RuntimeException("Failed to read template from an URL which is not a file, URL was :" + url);
       }
       // TODO : read from file directly ?
-      InputStream input = url.openStream();
-      content = readContentThenClose(input);
+      content = readContentThenClose(url.openStream());
     } catch (IOException e) {
       throw new RuntimeException("Failed to read template from " + url, e);
     }
@@ -136,7 +134,7 @@ public class Template {
   }
 
   public enum Type {
-    IS, HAS_FOR_ARRAY, HAS_FOR_ITERABLE, HAS, ASSERT_CLASS;
+    IS, HAS_FOR_ARRAY, HAS_FOR_ITERABLE, HAS, HAS_FOR_PRIMITIVE, ASSERT_CLASS;
   }
 
 }

@@ -1,33 +1,27 @@
 package org.assertj.assertions.generator.util;
 
-import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
-import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
-import static org.assertj.assertions.generator.util.ClassUtil.isBooleanGetter;
-import static org.assertj.assertions.generator.util.ClassUtil.isIterable;
-import static org.assertj.assertions.generator.util.ClassUtil.isStandardGetter;
-import static org.assertj.assertions.generator.util.ClassUtil.isValidGetterName;
-import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.List;
-
-import org.assertj.assertions.generator.data.ArtWork;
-import org.assertj.assertions.generator.data.Movie;
-import org.assertj.assertions.generator.data.Name;
-import org.assertj.assertions.generator.data.Player;
-import org.assertj.assertions.generator.data.TreeEnum;
+import org.assertj.assertions.generator.NestedClassesTest;
+import org.assertj.assertions.generator.data.*;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
 import org.assertj.assertions.generator.data.lotr.Race;
 import org.assertj.assertions.generator.data.lotr.Ring;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.junit.Test;
+import org.junit.experimental.theories.Theories;
+import org.junit.experimental.theories.Theory;
+import org.junit.runner.RunWith;
 
-public class ClassUtilTest {
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.List;
 
-  public static final String TEST_PACKAGE_NAME = "org.assertj.assertions.generator.data";
+import static org.assertj.assertions.generator.data.OuterClass.StaticNestedPerson;
+import static org.assertj.assertions.generator.util.ClassUtil.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
+@RunWith(Theories.class)
+public class ClassUtilTest implements NestedClassesTest {
+
   private static final Class<?>[] NO_PARAMS = new Class[0];
 
   @Test
@@ -36,7 +30,14 @@ public class ClassUtilTest {
     assertThat(classesInPackage).containsOnly(Player.class, ArtWork.class, Name.class, Movie.class,
                                               Movie.PublicCategory.class, Ring.class, Race.class,
                                               FellowshipOfTheRing.class, TolkienCharacter.class,
-                                              TreeEnum.class);
+                                              TreeEnum.class,
+                                              OuterClass.InnerPerson.IP_InnerPerson.class,
+                                              OuterClass.InnerPerson.class,
+                                              OuterClass.class,
+                                              StaticNestedPerson.SNP_InnerPerson.class,
+                                              StaticNestedPerson.class,
+                                              StaticNestedPerson.SNP_StaticNestedPerson.class,
+                                              BeanWithOneException.class, BeanWithTwoExceptions.class);
   }
 
   @Test
@@ -110,14 +111,24 @@ public class ClassUtilTest {
     List<Method> playerGetterMethods = getterMethodsOf(Player.class);
     assertThat(playerGetterMethods).contains(Player.class.getMethod("getTeam", NO_PARAMS))
                                    .doesNotContain(
-                                                   Player.class.getMethod("isInTeam", String.class));
+                                           Player.class.getMethod("isInTeam", String.class));
   }
 
   @Test
   public void should_also_return_inherited_getters_methods() throws Exception {
     List<Method> playerGetterMethods = getterMethodsOf(Movie.class);
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS),
-                                             ArtWork.class.getMethod("getTitle", NO_PARAMS));
+            ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }
 
+  @Theory
+  public void testGetSimpleNameWithOuterClass(NestedClass nestedClass) throws Exception {
+    String actualName = ClassUtil.getSimpleNameWithOuterClass(nestedClass.getNestedClass());
+    assertThat(actualName).isEqualTo(nestedClass.getClassNameWithOuterClass());
+  }
+
+  @Test
+  public void testGetSimpleNameWithOuterClass_notNestedClass() throws Exception {
+    assertThat(ClassUtil.getSimpleNameWithOuterClass(String.class)).isNull();
+  }
 }

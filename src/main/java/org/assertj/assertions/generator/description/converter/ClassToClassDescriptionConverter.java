@@ -12,6 +12,7 @@
  */
 package org.assertj.assertions.generator.description.converter;
 
+import org.apache.commons.lang3.StringUtils;
 import static org.assertj.assertions.generator.description.TypeName.JAVA_LANG_PACKAGE;
 import static org.assertj.assertions.generator.util.ClassUtil.*;
 
@@ -68,13 +69,19 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
         GenericArrayType genericArrayType = (GenericArrayType) parameterizedType.getActualTypeArguments()[0];
         Class<?> parameterClass = getClass(genericArrayType.getGenericComponentType());
         typeDescription.setElementTypeName(new TypeName(parameterClass));
-        typeDescription.setIterable(true);
         typeDescription.setArray(true);
       } else {
         Class<?> parameterClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
         typeDescription.setElementTypeName(new TypeName(parameterClass));
-        typeDescription.setIterable(true);
+
+        // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486, try to change if java 7 and
+        // a real array
+        if(parameterClass.getSimpleName().contains("[]")) {
+          typeDescription.setElementTypeName(new TypeName(StringUtils.removeEnd(parameterClass.getSimpleName(), "[]")));
+          typeDescription.setArray(true);
+        }
       }
+      typeDescription.setIterable(true);
     }
     return typeDescription;
   }

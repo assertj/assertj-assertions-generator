@@ -89,6 +89,30 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Test
+  public void should_build_class_description_for_iterable_of_Object_type() throws Exception {
+    // Given
+    class Type {
+      List<Player[]> players;
+
+      public List<Player[]> getPlayers() {
+        return players;
+      }
+    }
+
+    // When
+    ClassDescription classDescription = converter.convertToClassDescription(Type.class);
+
+    // Then
+    assertThat(classDescription.getClassName()).isEqualTo("Type");
+    assertThat(classDescription.getGetters()).hasSize(1);
+    GetterDescription getterDescription = classDescription.getGetters().iterator().next();
+    assertThat(getterDescription.isIterablePropertyType()).as("getterDescription must be iterable").isTrue();
+    assertThat(getterDescription.getElementTypeName()).isEqualTo("Player");
+    assertThat(getterDescription.isArrayPropertyType()).as("getterDescription must be an array").isTrue();
+    assertThat(classDescription.getImports()).extracting("simpleName").contains(Player.class.getSimpleName());
+  }
+
+  @Test
   public void should_build_fellowshipOfTheRing_class_description() throws Exception {
     ClassDescription classDescription = converter.convertToClassDescription(FellowshipOfTheRing.class);
     assertThat(classDescription.getClassName()).isEqualTo("FellowshipOfTheRing");
@@ -97,6 +121,16 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getGetters()).hasSize(1);
     assertThat(classDescription.getImports()).containsOnly(new TypeName(Map.class), new TypeName(List.class),
         new TypeName(Race.class), new TypeName(TolkienCharacter.class));
+  }
+
+  @Test
+  public void should_handle_toString() {
+    ClassDescription classDescription = converter.convertToClassDescription(FellowshipOfTheRing.class);
+    assertThat(classDescription.toString()).contains(FellowshipOfTheRing.class.getSimpleName())
+        .contains("java.util.Map",
+            "java.util.List",
+            "org.assertj.assertions.generator.data.lotr.Race",
+            "org.assertj.assertions.generator.data.lotr.TolkienCharacter");
   }
 
 }

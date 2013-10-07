@@ -16,12 +16,6 @@ import static java.lang.String.format;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
-import static org.assertj.assertions.generator.Template.Type.HAS;
-import static org.assertj.assertions.generator.Template.Type.HAS_FOR_ARRAY;
-import static org.assertj.assertions.generator.Template.Type.HAS_FOR_ITERABLE;
-import static org.assertj.assertions.generator.Template.Type.HAS_FOR_PRIMITIVE;
-import static org.assertj.assertions.generator.Template.Type.IS;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -137,7 +131,7 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   }
 
   public final void setHasAssertionTemplateForPrimitive(Template hasAssertionTemplateForPrimitive) {
-    checkTemplateParameter(hasAssertionTemplateForPrimitive, HAS_FOR_PRIMITIVE);
+    checkTemplateParameter(hasAssertionTemplateForPrimitive, Template.Type.HAS_FOR_PRIMITIVE);
     this.hasAssertionTemplateForPrimitive = hasAssertionTemplateForPrimitive;
   }
 

@@ -1,5 +1,6 @@
 package org.assertj.assertions.generator.util;
 
+import java.lang.reflect.ParameterizedType;
 import org.assertj.assertions.generator.NestedClassesTest;
 import org.assertj.assertions.generator.data.*;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
@@ -23,6 +24,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ClassUtilTest implements NestedClassesTest {
 
   private static final Class<?>[] NO_PARAMS = new Class[0];
+
+  private static class Generic {
+    public List<Integer> getListOfInteger() {
+      return null;
+    }
+    public List<? extends Integer> getListOfWildcardInteger() {
+      return null;
+    }
+  }
+
+  @Test
+  public void should_get_class_only() {
+    assertThat(ClassUtil.collectClasses(this.getClass().getClassLoader(), Movie.class.getName())).containsOnly(Movie.class);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void should_thow_exception_when_classLoader_null() {
+    ClassUtil.collectClasses((ClassLoader) null, "org.assertj.assertions.generator.data");
+  }
 
   @Test
   public void should_get_classes_in_package_and_subpackages() throws ClassNotFoundException {
@@ -130,5 +150,28 @@ public class ClassUtilTest implements NestedClassesTest {
   @Test
   public void testGetSimpleNameWithOuterClass_notNestedClass() throws Exception {
     assertThat(ClassUtil.getSimpleNameWithOuterClass(String.class)).isNull();
+  }
+
+  @Test
+  public void getClass_on_parametrized_List_should_return_list() throws Exception {
+    Method method = Generic.class.getMethod("getListOfInteger");
+    Class<?> clazz = ClassUtil.getClass(method.getGenericReturnType());
+    assertThat(clazz).isEqualTo(List.class);
+  }
+
+  @Test
+  public void getClass_on_parametrized_List_should_return_Integer() throws Exception {
+    Method method = Generic.class.getMethod("getListOfInteger");
+
+    Class<?> clazz = ClassUtil.getClass(((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0]);
+    assertThat(clazz).isEqualTo(Integer.class);
+  }
+
+  @Test
+  public void getClass_on_wildcard_List_should_return_Integer() throws Exception {
+    Method method = Generic.class.getMethod("getListOfWildcardInteger");
+
+    Class<?> clazz = ClassUtil.getClass(((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0]);
+    assertThat(clazz).isEqualTo(Integer.class);
   }
 }

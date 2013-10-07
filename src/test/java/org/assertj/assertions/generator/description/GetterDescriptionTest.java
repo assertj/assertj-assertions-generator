@@ -21,4 +21,10 @@ public class GetterDescriptionTest {
     assertThat(getterDescription.getPropertyTypeName()).isEqualTo("Player");
     assertThat(getterDescription.getElementTypeName()).isNull();
   }
+
+  @Test
+  public void should_show_information_in_toString() {
+    getterDescription = new GetterDescription("bestPlayer", new TypeDescription(new TypeName(Player.class)), Collections.<TypeName>emptyList());
+    assertThat(getterDescription.toString()).contains("bestPlayer").contains(Player.class.getName());
+  }
 }

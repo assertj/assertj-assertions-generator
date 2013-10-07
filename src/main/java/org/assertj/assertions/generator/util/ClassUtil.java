@@ -1,5 +1,7 @@
 package org.assertj.assertions.generator.util;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.WildcardType;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
@@ -12,6 +14,7 @@ import org.reflections.util.FilterBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -25,11 +28,9 @@ import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static org.apache.commons.lang3.StringUtils.uncapitalize;
 
 /**
- * 
  * Some utilities methods related to classes and packages.
- * 
+ *
  * @author Joel Costigliola
- * 
  */
 public class ClassUtil {
 
@@ -48,12 +49,12 @@ public class ClassUtil {
   /**
    * Collects all the <b>public</b> classes from given classes names or classes belonging to given a package name
    * (recursively).
-   * <p>
+   * <p/>
    * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the resulting list.
-   * 
-   * @param classLoader {@link ClassLoader} used to load classes defines in classOrPackageNames
+   *
+   * @param classLoader         {@link ClassLoader} used to load classes defines in classOrPackageNames
    * @param classOrPackageNames classes names or packages names we want to collect classes from (recursively for
-   *          packages)
+   *                            packages)
    * @return the list of {@link Class}es found
    * @throws RuntimeException if any error occurs
    */
@@ -73,7 +74,7 @@ public class ClassUtil {
 
   /**
    * Retrieves recursively all the classes belonging to a package.
-   * 
+   *
    * @param packageName package name we want to load classes from
    * @param classLoader the class loader used to load the classes in the given package
    * @return the list of Class found
@@ -98,16 +99,11 @@ public class ClassUtil {
     classLoadersList.add(classLoader);
 
     Reflections reflections = new Reflections(
-                                              new ConfigurationBuilder()
-                                                                        .setScanners(new SubTypesScanner(false /*
-                                                                                                                * don't
-                                                                                                                * exclude
-                                                                                                                * Object
-                                                                                                                * .class
-                                                                                                                */),
-                                                                                     new ResourcesScanner())
-                                                                        .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
-                                                                        .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packageName))));
+        new ConfigurationBuilder()
+            .setScanners(new SubTypesScanner(false /* don't exclude Object .class */),
+                new ResourcesScanner())
+            .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
+            .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packageName))));
     Set<Class<?>> classesInPackage = reflections.getSubTypesOf(Object.class);
     Set<Class<?>> filteredClassesInPackage = new HashSet<Class<?>>();
     for (Class<?> classFromJar : classesInPackage) {
@@ -140,10 +136,10 @@ public class ClassUtil {
 
   /**
    * Get <b>public</b> classes in given directory (recursively).
-   * <p>
+   * <p/>
    * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the resulting list.
-   * 
-   * @param directory directory where to look for classes
+   *
+   * @param directory   directory where to look for classes
    * @param packageName package name corresponding to directory
    * @param classLoader used classloader
    * @return
@@ -211,15 +207,15 @@ public class ClassUtil {
 
   /**
    * Returns the property name of given getter method, examples :
-   * 
+   * <p/>
    * <pre>
    * getName -> name
    * </pre>
-   * 
+   * <p/>
    * <pre>
    * isMostValuablePlayer -> mostValuablePlayer
    * </pre>
-   * 
+   *
    * @param getter getter method to deduce property from.
    * @return the property name of given getter method
    */
@@ -235,12 +231,12 @@ public class ClassUtil {
 
   public static boolean isStandardGetter(Method method) {
     return isValidStandardGetterName(method.getName())
-        && !Void.TYPE.equals(method.getReturnType()) 
+        && !Void.TYPE.equals(method.getReturnType())
         && method.getParameterTypes().length == 0;
   }
 
   public static boolean isBooleanGetter(Method method) {
-    return isValidBooleanGetterName(method.getName()) 
+    return isValidBooleanGetterName(method.getName())
         && Boolean.TYPE.equals(method.getReturnType())
         && method.getParameterTypes().length == 0;
   }
@@ -250,7 +246,7 @@ public class ClassUtil {
   }
 
   private static boolean isValidStandardGetterName(String name) {
-    return name.length() >= GET_PREFIX.length() + 1 
+    return name.length() >= GET_PREFIX.length() + 1
         && isUpperCase(name.charAt(GET_PREFIX.length()))
         && name.startsWith(GET_PREFIX);
   }
@@ -294,7 +290,10 @@ public class ClassUtil {
           classes.addAll(getClassesRelatedTo(actualTypeArgument));
         } else if (actualTypeArgument instanceof Class) {
           classes.add((Class<?>) actualTypeArgument);
+        } else if (actualTypeArgument instanceof GenericArrayType) {
+          classes.addAll(getClassesRelatedTo(actualTypeArgument));
         }
+//          throw new IllegalArgumentException("cannot find type " + actualTypeArgument);
         // I'm almost sure we should not arrive here !
       }
       Type rawType = parameterizedType.getRawType();
@@ -308,6 +307,7 @@ public class ClassUtil {
   /**
    * Gets the simple name of the class but, unlike {@link Class#getSimpleName()}, it includes the name of the outer
    * class when <code>clazz</code> is an inner class.
+   *
    * @param clazz
    * @return
    */
@@ -320,4 +320,33 @@ public class ClassUtil {
     }
     return nestedClassName;
   }
+
+  /**
+   * Get the underlying class for a type, or null if the type is a variable type.
+   *
+   * @param type the type
+   * @return the underlying class
+   */
+  public static Class<?> getClass(final Type type) {
+    if (type instanceof Class) {
+      return (Class<?>) type;
+    } else if (type instanceof ParameterizedType) {
+      return getClass(((ParameterizedType) type).getRawType());
+    } else if (type instanceof GenericArrayType) {
+      final Type componentType = ((GenericArrayType) type).getGenericComponentType();
+      final Class<?> componentClass = getClass(componentType);
+      if (componentClass != null) {
+        return Array.newInstance(componentClass, 0).getClass();
+      } else {
+        return null;
+      }
+    } else if (type instanceof WildcardType) {
+      final WildcardType wildcard = (WildcardType) type;
+      return wildcard.getUpperBounds() != null ? getClass(wildcard.getUpperBounds()[0])
+          : wildcard.getLowerBounds() != null ? getClass(wildcard.getLowerBounds()[0]) : null;
+    } else {
+      return null;
+    }
+  }
+
 }

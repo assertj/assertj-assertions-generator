@@ -15,7 +15,6 @@
 package org.assertj.assertions.generator.data;
 
 import static java.lang.String.format;
-
 import static org.assertj.core.util.Objects.areEqual;
 
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ public class Player {
   private int reboundsPerGame;
   private String team;
   private List<Player> teamMates = new ArrayList<Player>();
+  private List<int[]> points = new ArrayList<int[]>();
   private String[] previousTeams = {};
 
   public Player(Name name, String team) {
@@ -91,7 +91,7 @@ public class Player {
   public String[] getPreviousTeams() {
     return previousTeams;
   }
-  
+
   public void setPreviousTeams(String[] previousTeams) {
     this.previousTeams = previousTeams;
   }
@@ -99,15 +99,19 @@ public class Player {
   public boolean isRookie() {
     return rookie;
   }
-  
+
   public void setRookie(boolean rookie) {
     this.rookie = rookie;
   }
-  
+
   public boolean isInTeam(String team) {
     return areEqual(this.team, team);
   }
-  
+
+  public List<int[]> getPoints() {
+    return points;
+  }
+
   // for testing only
   public void getVoid() {
     // empty
@@ -117,27 +121,27 @@ public class Player {
   public String get() {
     return "something";
   }
-  
+
   // for testing only
   public String is() {
     return "somebody";
   }
-  
+
   // for testing only
   public String getWithParam(String param) {
     return param;
   }
-  
+
   // for testing only
   public void isVoid() {
     // empty
   }
-  
+
   // for testing only
   public String isWithParam(String param) {
     return param;
   }
-  
+
   @Override
   public String toString() {
     return format("%s[%s %s, team=%s]", getClass().getSimpleName(), name.getFirst(), name.getLast(), team);

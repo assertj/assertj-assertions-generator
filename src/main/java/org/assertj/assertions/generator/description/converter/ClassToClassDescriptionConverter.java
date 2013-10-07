@@ -14,6 +14,7 @@ package org.assertj.assertions.generator.description.converter;
 
 import org.apache.commons.lang3.StringUtils;
 import static org.assertj.assertions.generator.description.TypeName.JAVA_LANG_PACKAGE;
+import org.assertj.assertions.generator.util.ClassUtil;
 import static org.assertj.assertions.generator.util.ClassUtil.*;
 
 import java.lang.reflect.Method;
@@ -46,7 +47,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     Set<GetterDescription> getterDescriptions = new TreeSet<GetterDescription>();
     List<Method> getters = getterMethodsOf(clazz);
     for (Method getter : getters) {
-      final TypeDescription typeDescription = getTypeDescription(clazz, getter);
+      final TypeDescription typeDescription = getTypeDescription(getter);
       List<TypeName> exceptions = new ArrayList<TypeName>();
       for (Class<?> exception : getter.getExceptionTypes()) {
           exceptions.add(new TypeName(exception));
@@ -56,8 +57,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     return getterDescriptions;
   }
 
-  @VisibleForTesting
-  protected TypeDescription getTypeDescription(Class<?> clazz, Method getter) {
+  protected TypeDescription getTypeDescription(Method getter) {
     final Class<?> propertyType = getter.getReturnType();
     final TypeDescription typeDescription = new TypeDescription(new TypeName(propertyType));
     if (propertyType.isArray()) {
@@ -67,7 +67,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
       ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
       if (parameterizedType.getActualTypeArguments()[0] instanceof GenericArrayType) {
         GenericArrayType genericArrayType = (GenericArrayType) parameterizedType.getActualTypeArguments()[0];
-        Class<?> parameterClass = getClass(genericArrayType.getGenericComponentType());
+        Class<?> parameterClass = ClassUtil.getClass(genericArrayType.getGenericComponentType());
         typeDescription.setElementTypeName(new TypeName(parameterClass));
         typeDescription.setArray(true);
       } else {
@@ -84,34 +84,6 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
       typeDescription.setIterable(true);
     }
     return typeDescription;
-  }
-
-  /**
-   * Get the underlying class for a type, or null if the type is a variable type.
-   * 
-   * @param type the type
-   * @return the underlying class
-   */
-  public static Class<?> getClass(final Type type) {
-    if (type instanceof Class) {
-      return (Class<?>) type;
-    } else if (type instanceof ParameterizedType) {
-      return getClass(((ParameterizedType) type).getRawType());
-    } else if (type instanceof GenericArrayType) {
-      final Type componentType = ((GenericArrayType) type).getGenericComponentType();
-      final Class<?> componentClass = getClass(componentType);
-      if (componentClass != null) {
-        return Array.newInstance(componentClass, 0).getClass();
-      } else {
-        return null;
-      }
-    } else if (type instanceof WildcardType) {
-      final WildcardType wildcard = (WildcardType) type;
-      return wildcard.getUpperBounds() != null ? getClass(wildcard.getUpperBounds()[0])
-          : wildcard.getLowerBounds() != null ? getClass(wildcard.getLowerBounds()[0]) : null;
-    } else {
-      return null;
-    }
   }
 
   @VisibleForTesting
@@ -131,7 +103,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
         if (parameterizedType.getActualTypeArguments()[0] instanceof GenericArrayType) {
           //
           GenericArrayType genericArrayType = (GenericArrayType) parameterizedType.getActualTypeArguments()[0];
-          Class<?> parameterClass = getClass(genericArrayType.getGenericComponentType());
+          Class<?> parameterClass = ClassUtil.getClass(genericArrayType.getGenericComponentType());
           classesToImport.add(parameterClass);
         } else {
           Class<?> actualParameterClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];

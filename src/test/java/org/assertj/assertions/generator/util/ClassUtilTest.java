@@ -25,6 +25,16 @@ public class ClassUtilTest implements NestedClassesTest {
   private static final Class<?>[] NO_PARAMS = new Class[0];
 
   @Test
+  public void should_get_class_only() {
+    assertThat(ClassUtil.collectClasses(this.getClass().getClassLoader(), Movie.class.getName())).containsOnly(Movie.class);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void should_thow_exception_when_classLoader_null() {
+    ClassUtil.collectClasses((ClassLoader) null, "org.assertj.assertions.generator.data");
+  }
+
+  @Test
   public void should_get_classes_in_package_and_subpackages() throws ClassNotFoundException {
     List<Class<?>> classesInPackage = collectClasses("org.assertj.assertions.generator.data");
     assertThat(classesInPackage).containsOnly(Player.class, ArtWork.class, Name.class, Movie.class,

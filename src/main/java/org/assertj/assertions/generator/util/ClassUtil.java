@@ -1,5 +1,7 @@
 package org.assertj.assertions.generator.util;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.WildcardType;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
@@ -324,4 +326,33 @@ public class ClassUtil {
     }
     return nestedClassName;
   }
+
+  /**
+   * Get the underlying class for a type, or null if the type is a variable type.
+   *
+   * @param type the type
+   * @return the underlying class
+   */
+  public static Class<?> getClass(final Type type) {
+    if (type instanceof Class) {
+      return (Class<?>) type;
+    } else if (type instanceof ParameterizedType) {
+      return getClass(((ParameterizedType) type).getRawType());
+    } else if (type instanceof GenericArrayType) {
+      final Type componentType = ((GenericArrayType) type).getGenericComponentType();
+      final Class<?> componentClass = getClass(componentType);
+      if (componentClass != null) {
+        return Array.newInstance(componentClass, 0).getClass();
+      } else {
+        return null;
+      }
+    } else if (type instanceof WildcardType) {
+      final WildcardType wildcard = (WildcardType) type;
+      return wildcard.getUpperBounds() != null ? getClass(wildcard.getUpperBounds()[0])
+          : wildcard.getLowerBounds() != null ? getClass(wildcard.getLowerBounds()[0]) : null;
+    } else {
+      return null;
+    }
+  }
+
 }

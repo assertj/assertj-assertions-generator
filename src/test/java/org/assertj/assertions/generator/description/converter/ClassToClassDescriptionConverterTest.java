@@ -100,4 +100,14 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
         new TypeName(Race.class), new TypeName(TolkienCharacter.class));
   }
 
+  @Test
+  public void should_handle_toString() {
+    ClassDescription classDescription = converter.convertToClassDescription(FellowshipOfTheRing.class);
+    assertThat(classDescription.toString()).contains(FellowshipOfTheRing.class.getSimpleName())
+        .contains("java.util.Map",
+            "java.util.List",
+            "org.assertj.assertions.generator.data.lotr.Race",
+            "org.assertj.assertions.generator.data.lotr.TolkienCharacter");
+  }
+
 }

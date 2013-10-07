@@ -57,12 +57,20 @@ public class TypeName implements Comparable<TypeName> {
     return typeSimpleName;
   }
 
+  private void setTypeSimpleName(String typeSimpleName) {
+    this.typeSimpleName = typeSimpleName;
+  }
+
   public String getSimpleNameWithOuterClass() {
     return (typeSimpleNameWithOuterClass == null) ? getSimpleName() : typeSimpleNameWithOuterClass;
   }
 
   public String getPackageName() {
     return packageName;
+  }
+
+  private void setPackageName(String packageName) {
+    this.packageName = packageName == null ? NO_PACKAGE : packageName;
   }
 
   public boolean isPrimitive() {
@@ -106,15 +114,8 @@ public class TypeName implements Comparable<TypeName> {
     return isEmpty(packageName) ? typeSimpleName : packageName + "." + typeSimpleName;
   }
 
+  @Override
   public int compareTo(TypeName o) {
     return toString().compareTo(o.toString());
-  }
-
-  private void setPackageName(String packageName) {
-    this.packageName = packageName == null ? NO_PACKAGE : packageName;
-  }
-
-  private void setTypeSimpleName(String typeSimpleName) {
-    this.typeSimpleName = typeSimpleName;
   }
 }

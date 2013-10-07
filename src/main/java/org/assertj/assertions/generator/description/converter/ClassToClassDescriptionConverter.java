@@ -12,26 +12,25 @@
  */
 package org.assertj.assertions.generator.description.converter;
 
-import org.apache.commons.lang3.StringUtils;
-import static org.assertj.assertions.generator.description.TypeName.JAVA_LANG_PACKAGE;
-import org.assertj.assertions.generator.util.ClassUtil;
-import static org.assertj.assertions.generator.util.ClassUtil.*;
-
+import com.google.common.annotations.VisibleForTesting;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.util.*;
-import java.lang.reflect.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.description.TypeDescription;
 import org.assertj.assertions.generator.description.TypeName;
-
-import com.google.common.annotations.VisibleForTesting;
+import static org.assertj.assertions.generator.description.TypeName.JAVA_LANG_PACKAGE;
+import org.assertj.assertions.generator.util.ClassUtil;
+import static org.assertj.assertions.generator.util.ClassUtil.getClassesRelatedTo;
+import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
+import static org.assertj.assertions.generator.util.ClassUtil.isIterable;
+import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
 
 public class ClassToClassDescriptionConverter implements ClassDescriptionConverter<Class<?>> {
 
@@ -50,7 +49,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
       final TypeDescription typeDescription = getTypeDescription(getter);
       List<TypeName> exceptions = new ArrayList<TypeName>();
       for (Class<?> exception : getter.getExceptionTypes()) {
-          exceptions.add(new TypeName(exception));
+        exceptions.add(new TypeName(exception));
       }
       getterDescriptions.add(new GetterDescription(propertyNameOf(getter), typeDescription, exceptions));
     }
@@ -71,14 +70,14 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
         typeDescription.setElementTypeName(new TypeName(parameterClass));
         typeDescription.setArray(true);
       } else {
-        Class<?> parameterClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-        typeDescription.setElementTypeName(new TypeName(parameterClass));
-
         // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486, try to change if java 7 and
         // a real array
-        if(parameterClass.getSimpleName().contains("[]")) {
-          typeDescription.setElementTypeName(new TypeName(StringUtils.removeEnd(parameterClass.getSimpleName(), "[]")));
+        Class internalClass = ClassUtil.getClass(parameterizedType.getActualTypeArguments()[0]);
+        if (internalClass.isArray()) {
+          typeDescription.setElementTypeName(new TypeName(internalClass.getComponentType()));
           typeDescription.setArray(true);
+        } else {
+          typeDescription.setElementTypeName(new TypeName(internalClass));
         }
       }
       typeDescription.setIterable(true);
@@ -86,7 +85,6 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     return typeDescription;
   }
 
-  @VisibleForTesting
   protected Set<TypeName> getNeededImportsFor(Class<?> clazz) {
     // collect property types
     Set<Class<?>> classesToImport = new HashSet<Class<?>>();
@@ -106,8 +104,14 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
           Class<?> parameterClass = ClassUtil.getClass(genericArrayType.getGenericComponentType());
           classesToImport.add(parameterClass);
         } else {
-          Class<?> actualParameterClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-          classesToImport.add(actualParameterClass);
+          // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486, try to change if java 7 and
+          // a real array
+          Class internalClass = ClassUtil.getClass(parameterizedType.getActualTypeArguments()[0]);
+          if (internalClass.isArray()) {
+            classesToImport.add(internalClass.getComponentType());
+          } else {
+            classesToImport.add(internalClass);
+          }
         }
       } else if (getter.getGenericReturnType() instanceof ParameterizedType) {
         // return type is generic type, add it and all its parameters type.

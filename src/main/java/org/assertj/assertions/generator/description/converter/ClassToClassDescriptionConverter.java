@@ -47,13 +47,18 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     List<Method> getters = getterMethodsOf(clazz);
     for (Method getter : getters) {
       final TypeDescription typeDescription = getTypeDescription(getter);
-      List<TypeName> exceptions = new ArrayList<TypeName>();
-      for (Class<?> exception : getter.getExceptionTypes()) {
-        exceptions.add(new TypeName(exception));
-      }
-      getterDescriptions.add(new GetterDescription(propertyNameOf(getter), typeDescription, exceptions));
+      final List<TypeName> exceptionsTypeNames = getExceptionTypeNames(getter);
+      getterDescriptions.add(new GetterDescription(propertyNameOf(getter), typeDescription, exceptionsTypeNames));
     }
     return getterDescriptions;
+  }
+
+  private List<TypeName> getExceptionTypeNames(final Method getter) {
+    List<TypeName> exceptions = new ArrayList<TypeName>();
+    for (Class<?> exception : getter.getExceptionTypes()) {
+      exceptions.add(new TypeName(exception));
+    }
+    return exceptions;
   }
 
   protected TypeDescription getTypeDescription(Method getter) {

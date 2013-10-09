@@ -2,6 +2,7 @@ package org.assertj.assertions.generator.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.WildcardType;
+
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
@@ -34,13 +35,13 @@ import static org.apache.commons.lang3.StringUtils.uncapitalize;
  */
 public class ClassUtil {
 
-  private static final String CLASS_SUFFIX = ".class";
   public static final String IS_PREFIX = "is";
   public static final String GET_PREFIX = "get";
+  private static final String CLASS_SUFFIX = ".class";
 
   /**
-   * Call {@link #collectClasses(ClassLoader, String...)} with
-   * <code>Thread.currentThread().getContextClassLoader()</code>
+   * Call {@link #collectClasses(ClassLoader, String...)} with <code>Thread.currentThread().getContextClassLoader()
+   * </code>
    */
   public static List<Class<?>> collectClasses(String... classOrPackageNames) throws ClassNotFoundException {
     return collectClasses(Thread.currentThread().getContextClassLoader(), classOrPackageNames);
@@ -99,11 +100,14 @@ public class ClassUtil {
     classLoadersList.add(classLoader);
 
     Reflections reflections = new Reflections(
-        new ConfigurationBuilder()
-            .setScanners(new SubTypesScanner(false /* don't exclude Object .class */),
-                new ResourcesScanner())
-            .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
-            .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packageName))));
+                                               new ConfigurationBuilder()
+                                                 .setScanners(new SubTypesScanner(false /* don't exclude Object
+                                                 .class */),
+                                                              new ResourcesScanner())
+                                                 .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new
+                                                                                                                    ClassLoader[0])))
+                                                 .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix
+                                                                                                             (packageName))));
     Set<Class<?>> classesInPackage = reflections.getSubTypesOf(Object.class);
     Set<Class<?>> filteredClassesInPackage = new HashSet<Class<?>>();
     for (Class<?> classFromJar : classesInPackage) {
@@ -146,7 +150,7 @@ public class ClassUtil {
    * @throws UnsupportedEncodingException
    */
   private static List<Class<?>> getClassesInDirectory(File directory, String packageName, ClassLoader classLoader)
-      throws UnsupportedEncodingException {
+    throws UnsupportedEncodingException {
     List<Class<?>> classes = new ArrayList<Class<?>>();
     // Capture all the .class files in this directory
     // Get the list of the files contained in the package
@@ -186,7 +190,7 @@ public class ClassUtil {
    */
   private static boolean isClassCandidateToAssertionsGeneration(Class<?> loadedClass) {
     return loadedClass != null && isPublic(loadedClass.getModifiers()) && !loadedClass.isAnonymousClass()
-        && !loadedClass.isLocalClass();
+             && !loadedClass.isLocalClass();
   }
 
   private static boolean isClass(String fileName) {
@@ -231,14 +235,14 @@ public class ClassUtil {
 
   public static boolean isStandardGetter(Method method) {
     return isValidStandardGetterName(method.getName())
-        && !Void.TYPE.equals(method.getReturnType())
-        && method.getParameterTypes().length == 0;
+             && !Void.TYPE.equals(method.getReturnType())
+             && method.getParameterTypes().length == 0;
   }
 
   public static boolean isBooleanGetter(Method method) {
     return isValidBooleanGetterName(method.getName())
-        && Boolean.TYPE.equals(method.getReturnType())
-        && method.getParameterTypes().length == 0;
+             && Boolean.TYPE.equals(method.getReturnType())
+             && method.getParameterTypes().length == 0;
   }
 
   public static boolean isValidGetterName(String methodName) {
@@ -247,14 +251,14 @@ public class ClassUtil {
 
   private static boolean isValidStandardGetterName(String name) {
     return name.length() >= GET_PREFIX.length() + 1
-        && isUpperCase(name.charAt(GET_PREFIX.length()))
-        && name.startsWith(GET_PREFIX);
+             && isUpperCase(name.charAt(GET_PREFIX.length()))
+             && name.startsWith(GET_PREFIX);
   }
 
   private static boolean isValidBooleanGetterName(String name) {
     return name.length() >= IS_PREFIX.length() + 1
-        && isUpperCase(name.charAt(IS_PREFIX.length()))
-        && name.startsWith(IS_PREFIX);
+             && isUpperCase(name.charAt(IS_PREFIX.length()))
+             && name.startsWith(IS_PREFIX);
   }
 
   public static List<Method> getterMethodsOf(Class<?> clazz) {
@@ -328,25 +332,19 @@ public class ClassUtil {
    * @return the underlying class
    */
   public static Class<?> getClass(final Type type) {
-    if (type instanceof Class) {
-      return (Class<?>) type;
-    } else if (type instanceof ParameterizedType) {
-      return getClass(((ParameterizedType) type).getRawType());
-    } else if (type instanceof GenericArrayType) {
+    if (type instanceof Class) return (Class<?>) type;
+    if (type instanceof ParameterizedType) return getClass(((ParameterizedType) type).getRawType());
+
+    if (type instanceof GenericArrayType) {
       final Type componentType = ((GenericArrayType) type).getGenericComponentType();
       final Class<?> componentClass = getClass(componentType);
-      if (componentClass != null) {
-        return Array.newInstance(componentClass, 0).getClass();
-      } else {
-        return null;
-      }
+      return componentClass == null ? null : Array.newInstance(componentClass, 0).getClass();
     } else if (type instanceof WildcardType) {
-      final WildcardType wildcard = (WildcardType) type;
-      return wildcard.getUpperBounds() != null ? getClass(wildcard.getUpperBounds()[0])
-          : wildcard.getLowerBounds() != null ? getClass(wildcard.getLowerBounds()[0]) : null;
-    } else {
-      return null;
+      final WildcardType wildcardType = (WildcardType) type;
+      return wildcardType.getUpperBounds() != null ? getClass(wildcardType.getUpperBounds()[0])
+               : wildcardType.getLowerBounds() != null ? getClass(wildcardType.getLowerBounds()[0]) : null;
     }
+    return null;
   }
 
 }

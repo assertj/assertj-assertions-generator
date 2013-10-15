@@ -45,7 +45,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_generate_assertion_for_player_class() throws Exception {
     customAssertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Player.class));
     assertThat(fileGeneratedFor(Player.class)).hasContentEqualTo(
-            new File("src/test/resources/PlayerAssert.expected.txt"));
+            new File("src/test/resources/PlayerAssert.expected.txt").getAbsoluteFile());
   }
 
   @Theory

@@ -30,6 +30,7 @@ import org.assertj.assertions.generator.util.ClassUtil;
 import static org.assertj.assertions.generator.util.ClassUtil.getClassesRelatedTo;
 import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
 import static org.assertj.assertions.generator.util.ClassUtil.isIterable;
+import static org.assertj.assertions.generator.util.ClassUtil.isArray;
 import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
 
 public class ClassToClassDescriptionConverter implements ClassDescriptionConverter<Class<?>> {
@@ -64,7 +65,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
   protected TypeDescription getTypeDescription(Method getter) {
     final Class<?> propertyType = getter.getReturnType();
     final TypeDescription typeDescription = new TypeDescription(new TypeName(propertyType));
-    if (propertyType.isArray()) {
+    if (isArray(propertyType)) {
       typeDescription.setElementTypeName(new TypeName(propertyType.getComponentType()));
       typeDescription.setArray(true);
     } else if (isIterable(propertyType)) {
@@ -73,6 +74,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
         GenericArrayType genericArrayType = (GenericArrayType) parameterizedType.getActualTypeArguments()[0];
         Class<?> parameterClass = ClassUtil.getClass(genericArrayType.getGenericComponentType());
         typeDescription.setElementTypeName(new TypeName(parameterClass));
+        typeDescription.setIterable(true);
         typeDescription.setArray(true);
       } else {
         // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486, try to change if java 7 and
@@ -95,7 +97,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     Set<Class<?>> classesToImport = new HashSet<Class<?>>();
     for (Method getter : getterMethodsOf(clazz)) {
       Class<?> propertyType = getter.getReturnType();
-      if (propertyType.isArray()) {
+      if (isArray(propertyType)) {
         // we only need the component type, that is T in T[] array
         classesToImport.add(propertyType.getComponentType());
       } else if (isIterable(propertyType)) {

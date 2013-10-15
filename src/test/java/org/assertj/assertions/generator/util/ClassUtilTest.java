@@ -1,12 +1,14 @@
 package org.assertj.assertions.generator.util;
 
 import java.lang.reflect.ParameterizedType;
+
 import org.assertj.assertions.generator.NestedClassesTest;
 import org.assertj.assertions.generator.data.*;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
 import org.assertj.assertions.generator.data.lotr.Race;
 import org.assertj.assertions.generator.data.lotr.Ring;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
+
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
@@ -25,23 +27,14 @@ public class ClassUtilTest implements NestedClassesTest {
 
   private static final Class<?>[] NO_PARAMS = new Class[0];
 
-  private static class Generic {
-    public List<Integer> getListOfInteger() {
-      return null;
-    }
-    public List<? extends Integer> getListOfWildcardInteger() {
-      return null;
-    }
-  }
-
   @Test
   public void should_get_class_only() {
-    assertThat(ClassUtil.collectClasses(this.getClass().getClassLoader(), Movie.class.getName())).containsOnly(Movie.class);
+    assertThat(collectClasses(getClass().getClassLoader(), Movie.class.getName())).containsOnly(Movie.class);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void should_thow_exception_when_classLoader_null() {
-    ClassUtil.collectClasses((ClassLoader) null, "org.assertj.assertions.generator.data");
+    collectClasses((ClassLoader) null, "org.assertj.assertions.generator.data");
   }
 
   @Test
@@ -90,21 +83,21 @@ public class ClassUtilTest implements NestedClassesTest {
   public void should_return_false_if_method_is_not_a_standard_getter() throws Exception {
     assertThat(isStandardGetter(Player.class.getMethod("isRookie", NO_PARAMS))).isFalse();
     assertThat(isStandardGetter(Player.class.getMethod("getVoid", NO_PARAMS))).isFalse();
-    assertThat(isStandardGetter(Player.class.getMethod("getWithParam", new Class[] { String.class }))).isFalse();
+    assertThat(isStandardGetter(Player.class.getMethod("getWithParam", new Class[]{String.class}))).isFalse();
   }
 
   @Test
   public void should_return_true_if_method_is_a_boolean_getter() throws Exception {
     assertThat(isBooleanGetter(Player.class.getMethod("isRookie", NO_PARAMS))).isTrue();
   }
-  
+
   @Test
   public void should_return_false_if_method_is_not_a_boolean_getter() throws Exception {
     assertThat(isBooleanGetter(Player.class.getMethod("getTeam", NO_PARAMS))).isFalse();
     assertThat(isStandardGetter(Player.class.getMethod("isVoid", NO_PARAMS))).isFalse();
-    assertThat(isStandardGetter(Player.class.getMethod("isWithParam", new Class[] { String.class }))).isFalse();
+    assertThat(isStandardGetter(Player.class.getMethod("isWithParam", new Class[]{String.class}))).isFalse();
   }
-  
+
   @Test
   public void should_return_true_if_string_follows_getter_name_pattern() throws Exception {
     assertThat(isValidGetterName("isRookie")).isTrue();
@@ -116,7 +109,7 @@ public class ClassUtilTest implements NestedClassesTest {
     assertThat(isValidGetterName("isrookie")).isFalse();
     assertThat(isValidGetterName("get")).isFalse();
   }
-  
+
   @Test
   public void should_return_false_if_string_does_not_follow_getter_name_pattern() throws Exception {
     assertThat(isValidGetterName("isrookie")).isFalse();
@@ -130,20 +123,19 @@ public class ClassUtilTest implements NestedClassesTest {
   public void should_return_getters_methods_only() throws Exception {
     List<Method> playerGetterMethods = getterMethodsOf(Player.class);
     assertThat(playerGetterMethods).contains(Player.class.getMethod("getTeam", NO_PARAMS))
-                                   .doesNotContain(
-                                           Player.class.getMethod("isInTeam", String.class));
+      .doesNotContain(Player.class.getMethod("isInTeam", String.class));
   }
 
   @Test
   public void should_also_return_inherited_getters_methods() throws Exception {
     List<Method> playerGetterMethods = getterMethodsOf(Movie.class);
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS),
-            ArtWork.class.getMethod("getTitle", NO_PARAMS));
+                                             ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }
 
   @Theory
   public void testGetSimpleNameWithOuterClass(NestedClass nestedClass) throws Exception {
-    String actualName = ClassUtil.getSimpleNameWithOuterClass(nestedClass.getNestedClass());
+    String actualName = getSimpleNameWithOuterClass(nestedClass.getNestedClass());
     assertThat(actualName).isEqualTo(nestedClass.getClassNameWithOuterClass());
   }
 
@@ -153,25 +145,37 @@ public class ClassUtilTest implements NestedClassesTest {
   }
 
   @Test
-  public void getClass_on_parametrized_List_should_return_list() throws Exception {
+  public void getClass_on_parameterized_List_should_return_List_class() throws Exception {
     Method method = Generic.class.getMethod("getListOfInteger");
     Class<?> clazz = ClassUtil.getClass(method.getGenericReturnType());
     assertThat(clazz).isEqualTo(List.class);
   }
 
   @Test
-  public void getClass_on_parametrized_List_should_return_Integer() throws Exception {
+  public void getClass_on_parameterized_List_should_return_Integer_class() throws Exception {
     Method method = Generic.class.getMethod("getListOfInteger");
 
-    Class<?> clazz = ClassUtil.getClass(((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0]);
+    Class<?> clazz = ClassUtil.getClass(((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()
+                                          [0]);
     assertThat(clazz).isEqualTo(Integer.class);
   }
 
   @Test
-  public void getClass_on_wildcard_List_should_return_Integer() throws Exception {
+  public void getClass_on_wildcard_List_should_return_Integer_class() throws Exception {
     Method method = Generic.class.getMethod("getListOfWildcardInteger");
 
-    Class<?> clazz = ClassUtil.getClass(((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0]);
+    Class<?> clazz = ClassUtil.getClass(((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()
+                                          [0]);
     assertThat(clazz).isEqualTo(Integer.class);
+  }
+
+  private static class Generic {
+    public List<Integer> getListOfInteger() {
+      return null;
+    }
+
+    public List<? extends Integer> getListOfWildcardInteger() {
+      return null;
+    }
   }
 }

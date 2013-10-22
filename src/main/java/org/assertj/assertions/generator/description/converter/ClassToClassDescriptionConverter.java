@@ -12,26 +12,19 @@
  */
 package org.assertj.assertions.generator.description.converter;
 
+import static org.assertj.assertions.generator.description.TypeName.JAVA_LANG_PACKAGE;
+import static org.assertj.assertions.generator.util.ClassUtil.*;
+
 import com.google.common.annotations.VisibleForTesting;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.description.TypeDescription;
 import org.assertj.assertions.generator.description.TypeName;
-import static org.assertj.assertions.generator.description.TypeName.JAVA_LANG_PACKAGE;
 import org.assertj.assertions.generator.util.ClassUtil;
-import static org.assertj.assertions.generator.util.ClassUtil.getClassesRelatedTo;
-import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
-import static org.assertj.assertions.generator.util.ClassUtil.isIterable;
-import static org.assertj.assertions.generator.util.ClassUtil.isArray;
-import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
 
 public class ClassToClassDescriptionConverter implements ClassDescriptionConverter<Class<?>> {
 
@@ -134,15 +127,33 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
       }
     }
     // convert to TypeName, excluding primitive or types in java.lang that don't need to be imported.
+    return resolveTypesToImport(classesToImport);
+  }
+
+  private Set<TypeName> resolveTypesToImport(Set<Class<?>> classesToImport) {
     Set<TypeName> typeToImports = new TreeSet<TypeName>();
     for (Class<?> propertyType : classesToImport) {
-      // Package can be null in case of array of primitive.
-      if (!propertyType.isPrimitive()
-          && (propertyType.getPackage() != null && !JAVA_LANG_PACKAGE.equals(propertyType.getPackage().getName()))) {
-        typeToImports.add(new TypeName(propertyType));
+      TypeName typeName = resolveType(propertyType);
+      if (typeName != null) {
+        typeToImports.add(typeName);
       }
     }
     return typeToImports;
+  }
+
+  private TypeName resolveType(Class<?> propertyType) {
+    if (propertyType.isArray()) {
+      return resolveType(propertyType.getComponentType());
+    }
+    // Package can be null in case of array of primitive.
+    if (shouldBeImported(propertyType)) {
+      return new TypeName(propertyType);
+    }
+    return null;
+  }
+
+  private boolean shouldBeImported(Class<?> propertyType) {
+    return !propertyType.isPrimitive() && (!JAVA_LANG_PACKAGE.equals(propertyType.getPackage().getName()));
   }
 
 }

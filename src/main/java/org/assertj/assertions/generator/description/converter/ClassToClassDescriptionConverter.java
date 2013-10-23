@@ -143,17 +143,18 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
 
   private TypeName resolveType(Class<?> propertyType) {
     if (propertyType.isArray()) {
+      // recursive call for array of arrays
       return resolveType(propertyType.getComponentType());
     }
-    // Package can be null in case of array of primitive.
-    if (shouldBeImported(propertyType)) {
-      return new TypeName(propertyType);
-    }
-    return null;
+    return shouldBeImported(propertyType) ? new TypeName(propertyType) : null;
   }
 
-  private boolean shouldBeImported(Class<?> propertyType) {
-    return !propertyType.isPrimitive() && (!JAVA_LANG_PACKAGE.equals(propertyType.getPackage().getName()));
+  private boolean shouldBeImported(Class<?> type) {
+    if  (type.isPrimitive()) return false;
+    // Package can be null in case of array of primitive.
+    if  (type.getPackage() == null) return false;
+    if  (JAVA_LANG_PACKAGE.equals(type.getPackage().getName())) return false;
+    return true;
   }
 
 }

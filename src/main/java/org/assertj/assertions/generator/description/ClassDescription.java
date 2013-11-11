@@ -40,6 +40,10 @@ public class ClassDescription {
     return classTypeName.getSimpleName();
   }
 
+  public TypeName getTypeName() {
+    return classTypeName;
+  }
+
   public String getClassNameWithOuterClass() {
     return classTypeName.getSimpleNameWithOuterClass();
   }
@@ -67,5 +71,22 @@ public class ClassDescription {
   @Override
   public String toString() {
     return "ClassDescription [classTypeName=" + classTypeName + ", typesToImports=" + typesToImports + "]";
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (!(o instanceof ClassDescription)) return false;
+
+    final ClassDescription that = (ClassDescription) o;
+
+    if (classTypeName != null ? !classTypeName.equals(that.classTypeName) : that.classTypeName != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return classTypeName != null ? classTypeName.hashCode() : 0;
   }
 }

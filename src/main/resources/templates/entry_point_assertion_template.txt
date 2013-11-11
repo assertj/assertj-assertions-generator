@@ -1,0 +1,9 @@
+  /**
+   * Creates a new instance of <code>{@link ${class_to_assert}Assert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static ${class_to_assert}Assert assertThat(${class_to_assert} actual) {
+    return new ${class_to_assert}Assert(actual);
+  }

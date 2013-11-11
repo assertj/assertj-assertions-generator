@@ -2,6 +2,7 @@ package org.assertj.assertions.generator.description;
 
 import org.assertj.assertions.generator.NestedClassesTest;
 import org.assertj.assertions.generator.data.Player;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
@@ -15,9 +16,9 @@ import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 @RunWith(Theories.class)
 public class TypeNameTest implements NestedClassesTest {
 
-  private TypeName typeName;
   @Rule
   public ExpectedException thrown = ExpectedException.none();
+  private TypeName typeName;
 
   @Test
   public void should_create_valid_typename_from_class() {
@@ -77,6 +78,13 @@ public class TypeNameTest implements NestedClassesTest {
     assertThat(typeName.getPackageName()).isEmpty();
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isTrue();
+    // same
+    typeName = new TypeName("int", null);
+    assertThat(typeName.getSimpleName()).isEqualTo("int");
+    assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo("int");
+    assertThat(typeName.getPackageName()).isEmpty();
+    assertThat(typeName.belongsToJavaLangPackage()).isFalse();
+    assertThat(typeName.isPrimitive()).isTrue();
   }
 
   @Test
@@ -85,7 +93,7 @@ public class TypeNameTest implements NestedClassesTest {
     thrown.expectMessage("type name should not be blank or null");
     typeName = new TypeName("");
   }
-  
+
   @Test
   public void should_detect_primitives_typename() {
     assertThat(new TypeName(int.class).isPrimitive()).isTrue();
@@ -110,7 +118,7 @@ public class TypeNameTest implements NestedClassesTest {
     assertThat(new TypeName("Boolean").isBoolean()).isFalse();
     assertThat(new TypeName("test.boolean").isBoolean()).isFalse();
   }
-  
+
   @Test
   public void should_fail_if_type_simple_name_is_null() {
     try {

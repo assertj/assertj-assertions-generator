@@ -31,7 +31,7 @@ public class AssertionGeneratorLauncher {
   private static final Logger logger = LoggerFactory.getLogger(AssertionGeneratorLauncher.class);
   private static ClassToClassDescriptionConverter classDescriptionConverter = new ClassToClassDescriptionConverter();
 
-  public static void main(String[] classesOrPackagesNames) throws FileNotFoundException, IOException, ClassNotFoundException {
+  public static void main(String[] classesOrPackagesNames) throws IOException, ClassNotFoundException {
     List<Class<?>> classes = collectClasses(classesOrPackagesNames);
     logger.info("Generating assertions for classes {}", classes);
     BaseAssertionGenerator customAssertionGenerator = new BaseAssertionGenerator();

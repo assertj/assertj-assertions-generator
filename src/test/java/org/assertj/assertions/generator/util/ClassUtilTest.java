@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.assertions.generator.data.OuterClass.StaticNestedPerson;
 import static org.assertj.assertions.generator.util.ClassUtil.*;
@@ -154,7 +155,6 @@ public class ClassUtilTest implements NestedClassesTest {
   @Test
   public void getClass_on_parameterized_List_should_return_Integer_class() throws Exception {
     Method method = Generic.class.getMethod("getListOfInteger");
-
     Class<?> clazz = ClassUtil.getClass(((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()
                                           [0]);
     assertThat(clazz).isEqualTo(Integer.class);
@@ -163,14 +163,37 @@ public class ClassUtilTest implements NestedClassesTest {
   @Test
   public void getClass_on_wildcard_List_should_return_Integer_class() throws Exception {
     Method method = Generic.class.getMethod("getListOfWildcardInteger");
-
     Class<?> clazz = ClassUtil.getClass(((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()
                                           [0]);
     assertThat(clazz).isEqualTo(Integer.class);
   }
 
+  @Test
+  public void getClass_on_variable_type_should_return_null() throws Exception {
+    Method method = Generic.class.getMethod("getGenericArray");
+    Class<?> clazz = ClassUtil.getClass((method.getGenericReturnType()));
+    assertThat(clazz).isNull();
+  }
+
+  @Test
+  public void getClassRelatedTo_on_non_generic_type_should_return_given_type() throws Exception {
+    Set<Class<?>> classes = ClassUtil.getClassesRelatedTo(String.class.getMethod("toString").getReturnType());
+    assertThat(classes).containsOnly(String.class);
+  }
+
+  @Test
+  public void getClassRelatedTo_on_generic_list_should_return_list_and_component_type() throws Exception {
+    Method method = Generic.class.getMethod("getListOfInteger");
+    Set<Class<?>> classes = ClassUtil.getClassesRelatedTo(method.getGenericReturnType());
+    assertThat(classes).containsOnly(Integer.class, List.class);
+  }
+
   private static class Generic {
     public List<Integer> getListOfInteger() {
+      return null;
+    }
+
+    public <T> T[] getGenericArray() {
       return null;
     }
 

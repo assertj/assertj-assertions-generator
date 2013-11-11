@@ -301,7 +301,7 @@ public class ClassUtil {
         } else if (actualTypeArgument instanceof GenericArrayType) {
           classes.addAll(getClassesRelatedTo(actualTypeArgument));
         }
-//          throw new IllegalArgumentException("cannot find type " + actualTypeArgument);
+        // throw new IllegalArgumentException("cannot find type " + actualTypeArgument);
         // I'm almost sure we should not arrive here !
       }
       Type rawType = parameterizedType.getRawType();

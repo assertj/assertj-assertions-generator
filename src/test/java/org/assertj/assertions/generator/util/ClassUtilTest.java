@@ -62,6 +62,13 @@ public class ClassUtilTest implements NestedClassesTest {
   }
 
   @Test
+  public void should_return_empty_collection_if_package_does_not_exist() throws ClassNotFoundException {
+    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    assertThat(collectClasses(classLoader, "fakepackage")).isEmpty();
+    assertThat(collectClasses("fakepackage")).isEmpty();
+  }
+
+  @Test
   public void should_return_property_of_getter_method() throws Exception {
     assertThat(propertyNameOf(Player.class.getMethod("getTeam", NO_PARAMS))).isEqualTo("team");
     assertThat(propertyNameOf(Player.class.getMethod("isRookie", NO_PARAMS))).isEqualTo("rookie");

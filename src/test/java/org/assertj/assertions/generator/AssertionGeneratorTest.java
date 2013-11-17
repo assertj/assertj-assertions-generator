@@ -1,6 +1,7 @@
 package org.assertj.assertions.generator;
 
 import static com.google.common.collect.Lists.*;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.assertj.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_FILE_SUFFIX;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
@@ -21,6 +22,8 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Sets;
 
 import org.assertj.assertions.generator.data.ArtWork;
 import org.assertj.assertions.generator.data.Movie;
@@ -130,15 +133,35 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     // GIVEN : classes we want to have entry point assertions for
     List<Class<?>> classes = newArrayList(Ring.class, Race.class, ArtWork.class, Name.class, Player.class, Movie.class,
                                           TolkienCharacter.class, TreeEnum.class, Movie.PublicCategory.class);
-    Set<ClassDescription> classClassDescriptionSet = new LinkedHashSet<ClassDescription>(classes.size());
+    Set<ClassDescription> classDescriptionSet = new LinkedHashSet<ClassDescription>(classes.size());
     for (Class<?> clazz : classes) {
-      classClassDescriptionSet.add(converter.convertToClassDescription(clazz));
+      classDescriptionSet.add(converter.convertToClassDescription(clazz));
     }
     // WHEN
-    final File assertionsEntryPointFile = customAssertionGenerator.generateAssertionsEntryPointFor(classClassDescriptionSet);
+    final File assertionsEntryPointFile = customAssertionGenerator.generateAssertionsEntryPointFor(classDescriptionSet);
     // THEN
     String expectedContent = readFileToString(new File("src/test/resources/Assertions.expected.txt"));
     assertThat(assertionsEntryPointFile).as("check entry point class content").hasContent(expectedContent);
+  }
+
+  @Test
+  public void should_return_null_assertion_entry_point_file_if_no_classes_description_are_given() throws Exception {
+    // GIVEN no ClassDescription
+    Set<ClassDescription> classDescriptionSet = newLinkedHashSet();
+    // WHEN
+    final File assertionsEntryPointFile = customAssertionGenerator.generateAssertionsEntryPointFor(classDescriptionSet);
+    // THEN
+    assertThat(assertionsEntryPointFile).isNull();
+  }
+
+  @Test
+  public void should_return_empty_assertion_entry_point_class_if_no_classes_description_are_given() throws Exception {
+    // GIVEN no ClassDescription
+    Set<ClassDescription> classDescriptionSet = newLinkedHashSet();
+    // WHEN
+    final String content = customAssertionGenerator.generateAssertionsEntryPointContentFor(classDescriptionSet);
+    // THEN
+    assertThat(content).isEmpty();
   }
 
   @Test

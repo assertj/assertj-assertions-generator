@@ -236,6 +236,7 @@ public class BaseAssertionGenerator implements AssertionGenerator {
 
   @Override
   public String generateAssertionsEntryPointContentFor(final Set<ClassDescription> classDescriptionSet) {
+    if (classDescriptionSet == null || classDescriptionSet.isEmpty()) return "";
     final String entryPointAssertionsClassTemplateContent = entryPointAssertionsClassTemplate.getContent();
     String entryPointAssertionsClassContent = new StringBuilder(entryPointAssertionsClassTemplateContent).toString();
     // resolve template markers
@@ -254,6 +255,7 @@ public class BaseAssertionGenerator implements AssertionGenerator {
 
   @Override
   public File generateAssertionsEntryPointFor(final Set<ClassDescription> classDescriptionSet) throws IOException {
+    if (classDescriptionSet == null || classDescriptionSet.isEmpty()) return null;
     String assertionsEntryPointFileContent = generateAssertionsEntryPointContentFor(classDescriptionSet);
     // create the assertion entry point file, located in its package directory starting from targetBaseDirectory
     String entryPointAssertionsClassPackage = determineEntryPointsAssertionsClassPackage(classDescriptionSet);

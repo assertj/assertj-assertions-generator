@@ -27,6 +27,8 @@ import static java.lang.Character.isUpperCase;
 import static java.lang.reflect.Modifier.isPublic;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static org.apache.commons.lang3.StringUtils.uncapitalize;
+import static org.reflections.util.ClasspathHelper.forClassLoader;
+import static org.reflections.util.FilterBuilder.prefix;
 
 /**
  * Some utilities methods related to classes and packages.
@@ -99,15 +101,14 @@ public class ClassUtil {
     classLoadersList.add(ClasspathHelper.staticClassLoader());
     classLoadersList.add(classLoader);
 
-    Reflections reflections = new Reflections(
-                                               new ConfigurationBuilder()
+    final ConfigurationBuilder configuration = new ConfigurationBuilder()
                                                  .setScanners(new SubTypesScanner(false /* don't exclude Object
-                                                 .class */),
+                                                                                            class */),
                                                               new ResourcesScanner())
-                                                 .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new
-                                                                                                                    ClassLoader[0])))
-                                                 .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix
-                                                                                                             (packageName))));
+                                                 .setUrls(forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
+                                                 .filterInputsBy(new FilterBuilder().include(prefix(packageName)));
+
+    Reflections reflections = new Reflections(configuration);
     Set<Class<?>> classesInPackage = reflections.getSubTypesOf(Object.class);
     Set<Class<?>> filteredClassesInPackage = new HashSet<Class<?>>();
     for (Class<?> classFromJar : classesInPackage) {
@@ -190,7 +191,7 @@ public class ClassUtil {
    */
   private static boolean isClassCandidateToAssertionsGeneration(Class<?> loadedClass) {
     return loadedClass != null && isPublic(loadedClass.getModifiers()) && !loadedClass.isAnonymousClass()
-             && !loadedClass.isLocalClass();
+           && !loadedClass.isLocalClass();
   }
 
   private static boolean isClass(String fileName) {
@@ -239,14 +240,14 @@ public class ClassUtil {
 
   public static boolean isStandardGetter(Method method) {
     return isValidStandardGetterName(method.getName())
-             && !Void.TYPE.equals(method.getReturnType())
-             && method.getParameterTypes().length == 0;
+           && !Void.TYPE.equals(method.getReturnType())
+           && method.getParameterTypes().length == 0;
   }
 
   public static boolean isBooleanGetter(Method method) {
     return isValidBooleanGetterName(method.getName())
-             && Boolean.TYPE.equals(method.getReturnType())
-             && method.getParameterTypes().length == 0;
+           && Boolean.TYPE.equals(method.getReturnType())
+           && method.getParameterTypes().length == 0;
   }
 
   public static boolean isValidGetterName(String methodName) {
@@ -255,14 +256,14 @@ public class ClassUtil {
 
   private static boolean isValidStandardGetterName(String name) {
     return name.length() >= GET_PREFIX.length() + 1
-             && isUpperCase(name.charAt(GET_PREFIX.length()))
-             && name.startsWith(GET_PREFIX);
+           && isUpperCase(name.charAt(GET_PREFIX.length()))
+           && name.startsWith(GET_PREFIX);
   }
 
   private static boolean isValidBooleanGetterName(String name) {
     return name.length() >= IS_PREFIX.length() + 1
-             && isUpperCase(name.charAt(IS_PREFIX.length()))
-             && name.startsWith(IS_PREFIX);
+           && isUpperCase(name.charAt(IS_PREFIX.length()))
+           && name.startsWith(IS_PREFIX);
   }
 
   public static List<Method> getterMethodsOf(Class<?> clazz) {

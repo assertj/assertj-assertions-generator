@@ -66,11 +66,11 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String errorMessage = "\nExpected :\n  <%s>\nnot to have arrayPropertyThrowsException but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have arrayPropertyThrowsException but had :\n  <%s>";
     
     // check
     if (actual.getArrayPropertyThrowsException().length > 0)  {
-      failWithMessage(errorMessage, actual, java.util.Arrays.toString(actual.getArrayPropertyThrowsException()));
+      failWithMessage(assertjErrorMessage, actual, java.util.Arrays.toString(actual.getArrayPropertyThrowsException()));
     }
     
     // return the current assertion for method chaining
@@ -153,11 +153,11 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String errorMessage = "\nExpected :\n  <%s>\nnot to have iterablePropertyThrowsException but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have iterablePropertyThrowsException but had :\n  <%s>";
     
     // check
     if (!actual.getIterablePropertyThrowsException().isEmpty()) {
-      failWithMessage(errorMessage, actual, actual.getIterablePropertyThrowsException());
+      failWithMessage(assertjErrorMessage, actual, actual.getIterablePropertyThrowsException());
     }
     
     // return the current assertion for method chaining
@@ -177,12 +177,12 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String errorMessage = "\nExpected stringPropertyThrowsException of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpected stringPropertyThrowsException of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     String actualStringPropertyThrowsException = actual.getStringPropertyThrowsException();
     if (!org.assertj.core.util.Objects.areEqual(actualStringPropertyThrowsException, stringPropertyThrowsException)) {
-      failWithMessage(errorMessage, actual, stringPropertyThrowsException, actualStringPropertyThrowsException);
+      failWithMessage(assertjErrorMessage, actual, stringPropertyThrowsException, actualStringPropertyThrowsException);
     }
 
     // return the current assertion for method chaining

@@ -57,9 +57,9 @@ public interface AssertionGenerator {
    *     // check that actual Race we want to make assertions on is not null.
    *     isNotNull();
    *     // we overrides the default error message with a more explicit one
-   *     String errorMessage = format("Expected Race's name to be <%s> but was <%s>", name, actual.getName());
+   *     String assertjErrorMessage = format("Expected Race's name to be <%s> but was <%s>", name, actual.getName());
    *     // check
-   *     if (!actual.getName().equals(name)) { throw new AssertionError(errorMessage); }
+   *     if (!actual.getName().equals(name)) { throw new AssertionError(assertjErrorMessage); }
    *
    *     // return the current assertion for method chaining
    *     return this;
@@ -69,9 +69,9 @@ public interface AssertionGenerator {
    *     // check that actual Race we want to make assertions on is not null.
    *     isNotNull();
    *     // we overrides the default error message with a more explicit one
-   *     String errorMessage = format("Expected actual Race to be immortal but was not.", actual);
+   *     String assertjErrorMessage = format("Expected actual Race to be immortal but was not.", actual);
    *     // check
-   *     if (!actual.isImmortal()) throw new AssertionError(errorMessage);
+   *     if (!actual.isImmortal()) throw new AssertionError(assertjErrorMessage);
    *     // return the current assertion for method chaining
    *     return this;
    *   }
@@ -132,9 +132,9 @@ public interface AssertionGenerator {
    *     // check that actual Race we want to make assertions on is not null.
    *     isNotNull();
    *     // we overrides the default error message with a more explicit one
-   *     String errorMessage = format("Expected Race's name to be <%s> but was <%s>", name, actual.getName());
+   *     String assertjErrorMessage = format("Expected Race's name to be <%s> but was <%s>", name, actual.getName());
    *     // check
-   *     if (!actual.getName().equals(name)) { throw new AssertionError(errorMessage); }
+   *     if (!actual.getName().equals(name)) { throw new AssertionError(assertjErrorMessage); }
    *
    *     // return the current assertion for method chaining
    *     return this;
@@ -144,9 +144,9 @@ public interface AssertionGenerator {
    *     // check that actual Race we want to make assertions on is not null.
    *     isNotNull();
    *     // we overrides the default error message with a more explicit one
-   *     String errorMessage = format("Expected actual Race to be immortal but was not.", actual);
+   *     String assertjErrorMessage = format("Expected actual Race to be immortal but was not.", actual);
    *     // check
-   *     if (!actual.isImmortal()) throw new AssertionError(errorMessage);
+   *     if (!actual.isImmortal()) throw new AssertionError(assertjErrorMessage);
    *     // return the current assertion for method chaining
    *     return this;
    *   }

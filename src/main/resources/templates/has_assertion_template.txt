@@ -10,12 +10,12 @@
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String errorMessage = "\nExpected ${property} of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpected ${property} of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     ${propertyType} actual${Property} = actual.get${Property}();
     if (!org.assertj.core.util.Objects.areEqual(actual${Property}, ${property})) {
-      failWithMessage(errorMessage, actual, ${property}, actual${Property});
+      failWithMessage(assertjErrorMessage, actual, ${property}, actual${Property});
     }
 
     // return the current assertion for method chaining

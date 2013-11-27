@@ -35,10 +35,10 @@ import org.apache.commons.lang3.CharEncoding;
  *   isNotNull();
  * 
  *   // we overrides the default error message with a more explicit one
- *   String errorMessage = format("Expected ${class_to_assert}'s ${property} to be <%s> but was <%s>", ${property}, actual.get${Property}());
+ *   String assertjErrorMessage = format("Expected ${class_to_assert}'s ${property} to be <%s> but was <%s>", ${property}, actual.get${Property}());
  *   
  *   // check
- *   if (!actual.get${Property}().equals(${property})) { throw new AssertionError(errorMessage); }
+ *   if (!actual.get${Property}().equals(${property})) { throw new AssertionError(assertjErrorMessage); }
  * 
  *   // return the current assertion for method chaining
  *   return this;

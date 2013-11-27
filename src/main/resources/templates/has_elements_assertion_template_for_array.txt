@@ -34,11 +34,11 @@
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String errorMessage = "\nExpected :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
     
     // check
     if (actual.get${Property}().length > 0)  {
-      failWithMessage(errorMessage, actual, java.util.Arrays.toString(actual.get${Property}()));
+      failWithMessage(assertjErrorMessage, actual, java.util.Arrays.toString(actual.get${Property}()));
     }
     
     // return the current assertion for method chaining

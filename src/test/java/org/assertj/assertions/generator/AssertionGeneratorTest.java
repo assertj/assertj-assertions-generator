@@ -2,6 +2,7 @@ package org.assertj.assertions.generator;
 
 import static com.google.common.collect.Lists.*;
 import static com.google.common.collect.Sets.newLinkedHashSet;
+import static java.lang.reflect.Modifier.isPublic;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.assertj.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_FILE_SUFFIX;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
@@ -37,7 +38,6 @@ import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
 import org.assertj.assertions.generator.util.ClassUtil;
 
-
 @RunWith(Theories.class)
 public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExceptionsTest {
   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -57,8 +57,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_generate_assertion_for_player_class() throws Exception {
     customAssertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Player.class));
     assertThat(fileGeneratedFor(Player.class)).hasContentEqualTo(
-                                                                  new File("src/test/resources/PlayerAssert.expected" +
-                                                                           ".txt").getAbsoluteFile());
+        new File("src/test/resources/PlayerAssert.expected" + ".txt").getAbsoluteFile());
   }
 
   @Theory
@@ -74,18 +73,18 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     String expectedContent = readFileToString(new File("src/test/resources/BeanWithOneException.expected.txt"));
     if (!BEAN_WITH_ONE_EXCEPTION.equals(beanClass)) {
       String importException = "import java.io.IOException;" + LINE_SEPARATOR;
-      expectedContent = expectedContent.replace(importException, importException + "import java.sql.SQLException;" +
-                                                                 LINE_SEPARATOR);
+      expectedContent = expectedContent.replace(importException, importException + "import java.sql.SQLException;"
+          + LINE_SEPARATOR);
 
       expectedContent = expectedContent.replace(BEAN_WITH_ONE_EXCEPTION.getSimpleName(), beanClass.getSimpleName());
       expectedContent = expectedContent.replace(" throws IOException ", " throws IOException, SQLException ");
 
-      GetterWithException[] getters = {STRING_1_EXCEPTION, BOOLEAN_1_EXCEPTION, ARRAY_1_EXCEPTION,
-                                        ITERABLE_1_EXCEPTION};
+      GetterWithException[] getters = { STRING_1_EXCEPTION, BOOLEAN_1_EXCEPTION, ARRAY_1_EXCEPTION,
+          ITERABLE_1_EXCEPTION };
       for (GetterWithException getter : getters) {
         String throwsClause = generateThrowsClause(IOException.class, getter.getPropertyName(), getter.isBooleanType());
-        String replacement = throwsClause + generateThrowsClause(SQLException.class, getter.getPropertyName(),
-                                                                 getter.isBooleanType());
+        String replacement = throwsClause
+            + generateThrowsClause(SQLException.class, getter.getPropertyName(), getter.isBooleanType());
         expectedContent = expectedContent.replace(throwsClause, replacement);
       }
     }
@@ -103,8 +102,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     for (Class<?> clazz : classes) {
       assertThat(clazz.isAnonymousClass()).as("check that <" + clazz.getSimpleName() + "> is not anonymous").isFalse();
       assertThat(clazz.isLocalClass()).as("check that " + clazz.getSimpleName() + " is not local").isFalse();
-      assertThat(Modifier.isPublic(clazz.getModifiers())).as("check that " + clazz.getSimpleName() + " is public")
-        .isTrue();
+      assertThat(isPublic(clazz.getModifiers())).as("check that " + clazz.getSimpleName() + " is public").isTrue();
       logger.info("Generating assertions for {}", clazz.getName());
       final ClassDescription classDescription = converter.convertToClassDescription(clazz);
       File customAssertionFile = customAssertionGenerator.generateCustomAssertionFor(classDescription);
@@ -119,8 +117,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     for (Class<?> clazz : classes) {
       assertThat(clazz.isAnonymousClass()).as("check that " + clazz.getSimpleName() + " is not anonymous").isFalse();
       assertThat(clazz.isLocalClass()).as("check that " + clazz.getSimpleName() + " is not local").isFalse();
-      assertThat(Modifier.isPublic(clazz.getModifiers())).as("check that " + clazz.getSimpleName() + " is public")
-        .isTrue();
+      assertThat(isPublic(clazz.getModifiers())).as("check that " + clazz.getSimpleName() + " is public").isTrue();
       logger.info("Generating assertions for {}", clazz.getName());
       final ClassDescription classDescription = converter.convertToClassDescription(clazz);
       File customAssertionFile = customAssertionGenerator.generateCustomAssertionFor(classDescription);
@@ -132,7 +129,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_generate_assertion_entry_point_class_file() throws Exception {
     // GIVEN : classes we want to have entry point assertions for
     List<Class<?>> classes = newArrayList(Ring.class, Race.class, ArtWork.class, Name.class, Player.class, Movie.class,
-                                          TolkienCharacter.class, TreeEnum.class, Movie.PublicCategory.class);
+        TolkienCharacter.class, TreeEnum.class, Movie.PublicCategory.class);
     Set<ClassDescription> classDescriptionSet = new LinkedHashSet<ClassDescription>(classes.size());
     for (Class<?> clazz : classes) {
       classDescriptionSet.add(converter.convertToClassDescription(clazz));
@@ -184,7 +181,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 
   private static File fileGeneratedFor(Class<?> clazz) {
     String dirName = TARGET_DIRECTORY + File.separatorChar
-                     + clazz.getPackage().getName().replace('.', File.separatorChar);
+        + clazz.getPackage().getName().replace('.', File.separatorChar);
     String generatedFileName = clazz.getSimpleName() + ASSERT_CLASS_FILE_SUFFIX;
     return new File(dirName, generatedFileName);
   }

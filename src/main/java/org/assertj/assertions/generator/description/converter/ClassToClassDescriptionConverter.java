@@ -16,10 +16,12 @@ import static org.assertj.assertions.generator.description.TypeName.JAVA_LANG_PA
 import static org.assertj.assertions.generator.util.ClassUtil.*;
 
 import com.google.common.annotations.VisibleForTesting;
+
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
+
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.description.TypeDescription;
@@ -40,11 +42,17 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     Set<GetterDescription> getterDescriptions = new TreeSet<GetterDescription>();
     List<Method> getters = getterMethodsOf(clazz);
     for (Method getter : getters) {
+      // ignore hasDeclaringClass if Enum
+      if (isGetDeclaringClassEnumGetter(getter, clazz)) continue;
       final TypeDescription typeDescription = getTypeDescription(getter);
       final List<TypeName> exceptionsTypeNames = getExceptionTypeNames(getter);
       getterDescriptions.add(new GetterDescription(propertyNameOf(getter), typeDescription, exceptionsTypeNames));
     }
     return getterDescriptions;
+  }
+
+  private boolean isGetDeclaringClassEnumGetter(final Method getter, final Class<?> clazz) {
+    return clazz.isEnum() && getter.getName().equals("getDeclaringClass");
   }
 
   private List<TypeName> getExceptionTypeNames(final Method getter) {
@@ -121,10 +129,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
         // return type is not generic type, simply add it.
         classesToImport.add(propertyType);
       }
-
-      for (Class<?> exceptionType : getter.getExceptionTypes()) {
-        classesToImport.add(exceptionType);
-      }
+      Collections.addAll(classesToImport, getter.getExceptionTypes());
     }
     // convert to TypeName, excluding primitive or types in java.lang that don't need to be imported.
     return resolveTypesToImport(classesToImport);
@@ -134,27 +139,20 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     Set<TypeName> typeToImports = new TreeSet<TypeName>();
     for (Class<?> propertyType : classesToImport) {
       TypeName typeName = resolveType(propertyType);
-      if (typeName != null) {
-        typeToImports.add(typeName);
-      }
+      if (typeName != null) typeToImports.add(typeName);
     }
     return typeToImports;
   }
 
   private TypeName resolveType(Class<?> propertyType) {
-    if (propertyType.isArray()) {
-      // recursive call for array of arrays
-      return resolveType(propertyType.getComponentType());
-    }
+    // recursive call for array of arrays
+    if (propertyType.isArray()) return resolveType(propertyType.getComponentType());
     return shouldBeImported(propertyType) ? new TypeName(propertyType) : null;
   }
 
   private boolean shouldBeImported(Class<?> type) {
-    if  (type.isPrimitive()) return false;
     // Package can be null in case of array of primitive.
-    if  (type.getPackage() == null) return false;
-    if  (JAVA_LANG_PACKAGE.equals(type.getPackage().getName())) return false;
-    return true;
+    return !(type.isPrimitive() || type.getPackage() == null || JAVA_LANG_PACKAGE.equals(type.getPackage().getName()));
   }
 
 }

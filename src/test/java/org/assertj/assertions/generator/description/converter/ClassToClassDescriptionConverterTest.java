@@ -9,12 +9,14 @@ import org.assertj.assertions.generator.BeanWithExceptionsTest;
 import org.assertj.assertions.generator.NestedClassesTest;
 import org.assertj.assertions.generator.data.Name;
 import org.assertj.assertions.generator.data.Player;
+import org.assertj.assertions.generator.data.TreeEnum;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
 import org.assertj.assertions.generator.data.lotr.Race;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.description.TypeName;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
@@ -50,7 +52,6 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getGetters()).hasSize(1);
     assertThat(classDescription.getImports()).isEmpty();
   }
-
 
   @Theory
   public void should_build_getter_with_exception_description(GetterWithException getter) throws Exception {
@@ -89,11 +90,22 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Test
+  public void should_build_class_description_for_enum_type() throws Exception {
+    ClassDescription classDescription = converter.convertToClassDescription(TreeEnum.class);
+    assertThat(classDescription.getClassName()).isEqualTo("TreeEnum");
+    // should not contain getDeclaringClassGetter as we don't want to have hasDeclaringClass assertion
+    assertThat(classDescription.getGetters()).hasSize(1);
+    GetterDescription getterDescription = classDescription.getGetters().iterator().next();
+    assertThat(getterDescription.isIterablePropertyType()).as("getterDescription must be iterable").isTrue();
+    assertThat(getterDescription.getElementTypeName()).isEqualTo("TreeEnum");
+    assertThat(getterDescription.isArrayPropertyType()).as("getterDescription must be an array").isFalse();
+  }
+
+  @Test
   public void should_build_class_description_for_iterable_of_Object_type() throws Exception {
     // Given
     class Type {
       List<Player[]> players;
-
       public List<Player[]> getPlayers() {
         return players;
       }
@@ -120,17 +132,18 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.lotr");
     assertThat(classDescription.getGetters()).hasSize(1);
     assertThat(classDescription.getImports()).containsOnly(new TypeName(Map.class), new TypeName(List.class),
-        new TypeName(Race.class), new TypeName(TolkienCharacter.class));
+                                                           new TypeName(Race.class),
+                                                           new TypeName(TolkienCharacter.class));
   }
 
   @Test
   public void should_handle_toString() {
     ClassDescription classDescription = converter.convertToClassDescription(FellowshipOfTheRing.class);
-    assertThat(classDescription.toString()).contains(FellowshipOfTheRing.class.getSimpleName())
-        .contains("java.util.Map",
-            "java.util.List",
-            "org.assertj.assertions.generator.data.lotr.Race",
-            "org.assertj.assertions.generator.data.lotr.TolkienCharacter");
+    assertThat(classDescription.toString()).contains(FellowshipOfTheRing.class.getSimpleName(),
+                                                     "java.util.Map",
+                                                     "java.util.List",
+                                                     "org.assertj.assertions.generator.data.lotr.Race",
+                                                     "org.assertj.assertions.generator.data.lotr.TolkienCharacter");
   }
 
 }

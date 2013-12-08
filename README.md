@@ -12,8 +12,47 @@ Let's say that you have a `Player` class with `name` and `team` properties, the 
 ```java
 assertThat(mvp).hasName("Lebron James").hasTeam("Miami Heat");
 ```
+Since 1.2.0 version, the generator also creates an `Assertions` class with `assertThat` methods giving access to each generated `*Assert` classes.  
+In the case where `PlayerAssert` and `GameAssert` have been generated, the generator will also create the `Assertions` class below:
+
+```java
+public class Assertions {
+
+  /**
+   * Creates a new instance of <code>{@link GameAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static GameAssert assertThat(Game actual) {
+    return new GameAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link PlayerAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static PlayerAssert assertThat(Player actual) {
+    return new PlayerAssert(actual);
+  }
+
+  /**
+   * Creates a new </code>{@link Assertions}</code>.
+   */
+  protected Assertions() {
+    // empty
+  }
+}
+```
 
 ## Latest news
+
+**2013-08-12 : 1.2.0 release**
+* To ease using generated assertions, generate an entry point class `Assertions` providing `assertThat` methods giving access to each generated `*Assert` classes.
+* Don't generate `hasDeclaringClass` assertion for `Enum`. 
+* In generated method assertions, rename `errorMessage` local variable to `assertjErrorMessage` to avoid collision when object under test has an `errorMessage` property (Willam Delanoue)
 
 **2013-09-15 : 1.1.0 release**
 * Generated assertions use null safe equals for non primtive types

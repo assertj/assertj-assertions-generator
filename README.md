@@ -49,7 +49,7 @@ public class Assertions {
 
 ## Latest news
 
-**2013-08-12 : 1.2.0 release**
+**2013-12-08 : 1.2.0 release**
 * To ease using generated assertions, generate an entry point class `Assertions` providing `assertThat` methods giving access to each generated `*Assert` classes.
 * Don't generate `hasDeclaringClass` assertion for `Enum`. 
 * In generated method assertions, rename `errorMessage` local variable to `assertjErrorMessage` to avoid collision when object under test has an `errorMessage` property (Willam Delanoue)

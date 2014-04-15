@@ -1,13 +1,13 @@
 /*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * Copyright @2010-2011 the original author or authors.
  */
 package org.assertj.assertions.generator;
@@ -60,6 +60,7 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   private static final String THROWS_JAVADOC = "${throws_javadoc}";
   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
   private static final String ASSERTIONS_ENTRY_POINT_FILE = "Assertions.java";
+  private static final String BDD_ASSERTIONS_ENTRY_POINT_FILE = "BddAssertions.java";
   // assertions classes are generated in their package directory starting from targetBaseDirectory.
   // ex : com.nba.Player -> targetBaseDirectory/com/nba/PlayerAssert.java
   private String targetBaseDirectory = ".";
@@ -263,6 +264,28 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     // build any needed directories
     new File(targetDirectory).mkdirs();
     return createCustomAssertionFile(assertionsEntryPointFileContent, ASSERTIONS_ENTRY_POINT_FILE, targetDirectory);
+  }
+
+  @Override
+  public File generateBddAssertionsEntryPointFor(final Set<ClassDescription> classDescriptionSet) throws IOException {
+    if (classDescriptionSet == null || classDescriptionSet.isEmpty()) return null;
+    String bddAssertionsEntryPointFileContent = generateBddAssertionsEntryPointContentFor(classDescriptionSet);
+    // create the assertion entry point file, located in its package directory starting from targetBaseDirectory
+    String entryPointBddAssertionsClassPackage = determineEntryPointsAssertionsClassPackage(classDescriptionSet);
+    String targetDirectory = getDirectoryPathCorrespondingToPackage(entryPointBddAssertionsClassPackage);
+    // build any needed directories
+    new File(targetDirectory).mkdirs();
+    return createCustomAssertionFile(bddAssertionsEntryPointFileContent, BDD_ASSERTIONS_ENTRY_POINT_FILE, targetDirectory);
+  }
+
+  @Override
+  public String generateBddAssertionsEntryPointContentFor(Set<ClassDescription> classDescriptionSet) {
+    // Assertions and BddAssertions are very similar, we only have few things to change.
+    String bddAssertionsEntryPointClassContent = generateAssertionsEntryPointContentFor(classDescriptionSet);
+    bddAssertionsEntryPointClassContent = bddAssertionsEntryPointClassContent.replaceAll("assertThat", "then");
+    bddAssertionsEntryPointClassContent = bddAssertionsEntryPointClassContent.replaceAll("Assertions", "BddAssertions");
+    bddAssertionsEntryPointClassContent = bddAssertionsEntryPointClassContent.replaceAll("Entry point for assertion", "Entry point for BDD assertion");
+    return bddAssertionsEntryPointClassContent;
   }
 
   private String generateAssertThatEntryPointsAssertionsFor(final Set<ClassDescription> classDescriptionSet) {

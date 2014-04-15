@@ -10,7 +10,6 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Modifier;
 import java.sql.SQLException;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,8 +22,6 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Sets;
 
 import org.assertj.assertions.generator.data.ArtWork;
 import org.assertj.assertions.generator.data.Movie;
@@ -61,7 +58,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   @Theory
-  public void should_generate_assertion_for_nestedclass(NestedClass nestedClass) throws Exception {
+  public void should_generate_assertion_for_nested_class(NestedClass nestedClass) throws Exception {
     Class clazz = nestedClass.getNestedClass();
     customAssertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(clazz));
     assertThat(fileGeneratedFor(clazz)).hasContent(expectedContentFromTemplate(clazz));
@@ -128,6 +125,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   @Test
   public void should_generate_assertion_entry_point_class_file() throws Exception {
     // GIVEN : classes we want to have entry point assertions for
+    @SuppressWarnings("unchecked")
     List<Class<?>> classes = newArrayList(Ring.class, Race.class, ArtWork.class, Name.class, Player.class, Movie.class,
         TolkienCharacter.class, TreeEnum.class, Movie.PublicCategory.class);
     Set<ClassDescription> classDescriptionSet = new LinkedHashSet<ClassDescription>(classes.size());
@@ -138,6 +136,23 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     final File assertionsEntryPointFile = customAssertionGenerator.generateAssertionsEntryPointFor(classDescriptionSet);
     // THEN
     String expectedContent = readFileToString(new File("src/test/resources/Assertions.expected.txt"));
+    assertThat(assertionsEntryPointFile).as("check entry point class content").hasContent(expectedContent);
+  }
+
+  @Test
+  public void should_generate_soft_assertion_entry_point_class_file() throws Exception {
+    // GIVEN : classes we want to have entry point assertions for
+    @SuppressWarnings("unchecked")
+    List<Class<?>> classes = newArrayList(Ring.class, Race.class, ArtWork.class, Name.class, Player.class, Movie.class,
+        TolkienCharacter.class, TreeEnum.class, Movie.PublicCategory.class);
+    Set<ClassDescription> classDescriptionSet = new LinkedHashSet<ClassDescription>(classes.size());
+    for (Class<?> clazz : classes) {
+      classDescriptionSet.add(converter.convertToClassDescription(clazz));
+    }
+    // WHEN
+    final File assertionsEntryPointFile = customAssertionGenerator.generateAssertionsEntryPointFor(classDescriptionSet);
+    // THEN
+    String expectedContent = readFileToString(new File("src/test/resources/SoftAssertions.expected.txt"));
     assertThat(assertionsEntryPointFile).as("check entry point class content").hasContent(expectedContent);
   }
 

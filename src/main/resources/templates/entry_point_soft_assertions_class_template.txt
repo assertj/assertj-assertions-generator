@@ -1,0 +1,62 @@
+package ${package};
+
+${imports}
+
+// cglib is included in assertj-core jar with maven jarjar plugin
+import org.assertj.core.internal.cglib.proxy.Enhancer;
+import org.assertj.core.internal.cglib.proxy.MethodInterceptor;
+import org.assertj.core.internal.cglib.proxy.MethodProxy;
+
+/**
+ * Entry point for assertion of different data types. Each method in this class is a static factory for the
+ * type-specific assertion objects.
+ */
+public class SoftAssertions {
+${all_soft_assertions_entry_points}
+  /** Collects error messages of all AssertionErrors thrown by the proxied method. */
+  private class ErrorCollector implements MethodInterceptor {
+
+    private final List<String> errors = new ArrayList<String>();
+
+    @Override
+    public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+      try {
+        proxy.invokeSuper(obj, args);
+      } catch (AssertionError e) {
+        errors.add(e.getMessage());
+      }
+      return obj;
+    }
+
+    public List<String> errors() {
+      return Collections.unmodifiableList(errors);
+    }
+  }
+
+  protected final ErrorCollector collector = new ErrorCollector();
+
+  /**
+   * Verifies that no proxied assertion methods have failed.
+   *
+   * @throws SoftAssertionError if any proxied assertion objects threw
+   */
+  public void assertAll() {
+    List<String> errors = collector.errors();
+    if (!errors.isEmpty()) {
+      throw new SoftAssertionError(errors);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  protected <T, V> V proxy(Class<V> assertClass, Class<T> actualClass, T actual) {
+    Enhancer enhancer = new Enhancer();
+    enhancer.setSuperclass(assertClass);
+    enhancer.setCallback(collector);
+    return (V) enhancer.create(new Class[] { actualClass }, new Object[] { actual });
+  }
+
+  /** Creates a new </code>{@link SoftAssertions}</code>. */
+  public SoftAssertions() {
+  }
+
+}

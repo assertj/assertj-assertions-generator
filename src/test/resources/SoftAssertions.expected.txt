@@ -1,0 +1,157 @@
+package org.assertj.assertions.generator.data;
+
+import org.assertj.assertions.generator.data.lotr.Race;
+import org.assertj.assertions.generator.data.lotr.RaceAssert;
+import org.assertj.assertions.generator.data.lotr.Ring;
+import org.assertj.assertions.generator.data.lotr.RingAssert;
+import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
+import org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert;
+
+// cglib is included in assertj-core jar with maven jarjar plugin
+import org.assertj.core.internal.cglib.proxy.Enhancer;
+import org.assertj.core.internal.cglib.proxy.MethodInterceptor;
+import org.assertj.core.internal.cglib.proxy.MethodProxy;
+
+/**
+ * Entry point for assertion of different data types. Each method in this class is a static factory for the
+ * type-specific assertion objects.
+ */
+public class SoftAssertions {
+
+  /**
+   * Creates a new instance of <code>{@link ArtWorkAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static ArtWorkAssert assertThat(ArtWork actual) {
+    return new ArtWorkAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link MovieAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static MovieAssert assertThat(Movie actual) {
+    return new MovieAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link NameAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static NameAssert assertThat(Name actual) {
+    return new NameAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link PlayerAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static PlayerAssert assertThat(Player actual) {
+    return new PlayerAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link PublicCategoryAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static PublicCategoryAssert assertThat(Movie.PublicCategory actual) {
+    return new PublicCategoryAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link RaceAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static RaceAssert assertThat(Race actual) {
+    return new RaceAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link RingAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static RingAssert assertThat(Ring actual) {
+    return new RingAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link TolkienCharacterAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static TolkienCharacterAssert assertThat(TolkienCharacter actual) {
+    return new TolkienCharacterAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link TreeEnumAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static TreeEnumAssert assertThat(TreeEnum actual) {
+    return new TreeEnumAssert(actual);
+  }
+
+  /** Collects error messages of all AssertionErrors thrown by the proxied method. */
+  private class ErrorCollector implements MethodInterceptor {
+
+    private final List<String> errors = new ArrayList<String>();
+
+    @Override
+    public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+      try {
+        proxy.invokeSuper(obj, args);
+      } catch (AssertionError e) {
+        errors.add(e.getMessage());
+      }
+      return obj;
+    }
+
+    public List<String> errors() {
+      return Collections.unmodifiableList(errors);
+    }
+  }
+
+  protected final ErrorCollector collector = new ErrorCollector();
+
+  /**
+   * Verifies that no proxied assertion methods have failed.
+   *
+   * @throws SoftAssertionError if any proxied assertion objects threw
+   */
+  public void assertAll() {
+    List<String> errors = collector.errors();
+    if (!errors.isEmpty()) {
+      throw new SoftAssertionError(errors);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  protected <T, V> V proxy(Class<V> assertClass, Class<T> actualClass, T actual) {
+    Enhancer enhancer = new Enhancer();
+    enhancer.setSuperclass(assertClass);
+    enhancer.setCallback(collector);
+    return (V) enhancer.create(new Class[] { actualClass }, new Object[] { actual });
+  }
+
+  /** Creates a new </code>{@link SoftAssertions}</code>. */
+  public SoftAssertions() {
+  }
+
+}

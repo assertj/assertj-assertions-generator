@@ -171,6 +171,63 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   @Test
+  public void should_return_null_assertion_entry_point_file_if_null_classes_description_are_given() throws Exception {
+    // GIVEN no ClassDescription
+    // WHEN
+    final File assertionsEntryPointFile = assertionGenerator.generateAssertionsEntryPointFor(null);
+    // THEN
+    assertThat(assertionsEntryPointFile).isNull();
+  }
+
+  @Test
+  public void should_return_empty_assertion_entry_point_class_if_null_classes_description_are_given() throws Exception {
+    // GIVEN no ClassDescription
+    // WHEN
+    final String content = assertionGenerator.generateAssertionsEntryPointContentFor(null);
+    // THEN
+    assertThat(content).isEmpty();
+  }
+
+
+  @Test
+  public void should_return_null_bdd_assertion_entry_point_file_if_no_classes_description_are_given() throws Exception {
+    // GIVEN no ClassDescription
+    Set<ClassDescription> classDescriptionSet = newLinkedHashSet();
+    // WHEN
+    final File assertionsEntryPointFile = assertionGenerator.generateBddAssertionsEntryPointFor(classDescriptionSet);
+    // THEN
+    assertThat(assertionsEntryPointFile).isNull();
+  }
+
+  @Test
+  public void should_return_empty_bdd_assertion_entry_point_class_if_no_classes_description_are_given() throws Exception {
+    // GIVEN no ClassDescription
+    Set<ClassDescription> classDescriptionSet = newLinkedHashSet();
+    // WHEN
+    final String content = assertionGenerator.generateBddAssertionsEntryPointContentFor(classDescriptionSet);
+    // THEN
+    assertThat(content).isEmpty();
+  }
+
+  @Test
+  public void should_return_null_bdd_assertion_entry_point_file_if_null_classes_description_are_given() throws Exception {
+    // GIVEN no ClassDescription
+    // WHEN
+    final File assertionsEntryPointFile = assertionGenerator.generateBddAssertionsEntryPointFor(null);
+    // THEN
+    assertThat(assertionsEntryPointFile).isNull();
+  }
+
+  @Test
+  public void should_return_empty_bdd_assertion_entry_point_class_if_null_classes_description_are_given() throws Exception {
+    // GIVEN no ClassDescription
+    // WHEN
+    final String content = assertionGenerator.generateBddAssertionsEntryPointContentFor(null);
+    // THEN
+    assertThat(content).isEmpty();
+  }
+
+  @Test
   public void should_check_template_type() throws Exception {
     BaseAssertionGenerator assertionGenerator = new BaseAssertionGenerator();
     assertionGenerator.setHasAssertionTemplate(new Template(Template.Type.HAS, "template content"));

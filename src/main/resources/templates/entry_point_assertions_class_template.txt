@@ -8,7 +8,7 @@ ${imports}
 public class Assertions {
 ${all_assertions_entry_points}
   /**
-   * Creates a new </code>{@link Assertions}</code>.
+   * Creates a new <code>{@link Assertions}</code>.
    */
   protected Assertions() {
     // empty

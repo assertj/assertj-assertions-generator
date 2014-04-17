@@ -104,7 +104,7 @@ public class BddAssertions {
   }
 
   /**
-   * Creates a new </code>{@link BddAssertions}</code>.
+   * Creates a new <code>{@link BddAssertions}</code>.
    */
   protected BddAssertions() {
     // empty

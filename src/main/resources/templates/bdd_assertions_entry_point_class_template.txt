@@ -1,0 +1,16 @@
+package ${package};
+
+${imports}
+/**
+ * Entry point for BDD assertion of different data types. Each method in this class is a static factory for the
+ * type-specific assertion objects.
+ */
+public class BddAssertions {
+${all_assertions_entry_points}
+  /**
+   * Creates a new <code>{@link BddAssertions}</code>.
+   */
+  protected BddAssertions() {
+    // empty
+  }
+}

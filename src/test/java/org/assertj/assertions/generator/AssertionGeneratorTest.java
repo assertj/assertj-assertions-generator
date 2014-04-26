@@ -3,6 +3,8 @@ package org.assertj.assertions.generator;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.lang.reflect.Modifier.isPublic;
 import static org.apache.commons.io.FileUtils.readFileToString;
+import static org.assertj.assertions.generator.AssertionsEntryPointType.BDD;
+import static org.assertj.assertions.generator.AssertionsEntryPointType.SOFT;
 import static org.assertj.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_FILE_SUFFIX;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.core.api.Assertions.*;
@@ -133,10 +135,24 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
         Name.class, Player.class, Movie.class, TolkienCharacter.class, TreeEnum.class, Movie.PublicCategory.class);
     // WHEN
-    final File assertionsEntryPointFile = assertionGenerator.generateStandardAssertionsEntryPointClassFor(classDescriptionSet);
+    final File assertionsEntryPointFile = assertionGenerator.generateAssertionsEntryPointClassFor
+                                                               (classDescriptionSet,
+                                                                AssertionsEntryPointType.STANDARD, null);
     // THEN
     String expectedContent = readFileToString(new File("src/test/resources/Assertions.expected.txt"));
     assertThat(assertionsEntryPointFile).as("check entry point class content").hasContent(expectedContent);
+  }
+  
+  @Test
+  public void should_generate_assertion_entry_point_class_file_with_custom_package() throws Exception {
+    // GIVEN : classes we want to have entry point assertions for
+    Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
+        Name.class, Player.class, Movie.class, TolkienCharacter.class, TreeEnum.class, Movie.PublicCategory.class);
+    // WHEN
+    final File assertionsEntryPointFile = assertionGenerator.generateAssertionsEntryPointClassFor(classDescriptionSet, AssertionsEntryPointType.STANDARD, "my.custom.package");
+    // THEN
+    String expectedContent = readFileToString(new File("src/test/resources/AssertionsWithCustomPackage.expected.txt"));
+    assertThat(assertionsEntryPointFile).as("check entry point class content").hasContent(expectedContent).hasParent("target/my/custom/package");
   }
 
   @Test
@@ -145,7 +161,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
         Name.class, Player.class, Movie.class, TolkienCharacter.class, TreeEnum.class, Movie.PublicCategory.class);
     // WHEN
-    final File assertionsEntryPointFile = assertionGenerator.generateBddAssertionsEntryPointFor(classDescriptionSet);
+    final File assertionsEntryPointFile = assertionGenerator.generateAssertionsEntryPointClassFor(classDescriptionSet, BDD, null);
     // THEN
     String expectedContent = readFileToString(new File("src/test/resources/BddAssertions.expected.txt"));
     assertThat(assertionsEntryPointFile).as("check BDD entry point class content").hasContent(expectedContent);
@@ -162,7 +178,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
       classDescriptionSet.add(converter.convertToClassDescription(clazz));
     }
     // WHEN
-    final File assertionsEntryPointFile = assertionGenerator.generateSoftAssertionsEntryPointClassFor(classDescriptionSet);
+    final File assertionsEntryPointFile = assertionGenerator.generateAssertionsEntryPointClassFor(classDescriptionSet, SOFT, null);
     // THEN
     String expectedContent = readFileToString(new File("src/test/resources/SoftAssertions.expected.txt"));
     assertThat(assertionsEntryPointFile).as("check soft assertions entry point class content").hasContent(expectedContent);

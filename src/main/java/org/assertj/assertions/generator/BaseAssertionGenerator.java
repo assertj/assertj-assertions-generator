@@ -42,10 +42,12 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   static final String DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_PRIMITIVE = "has_assertion_template_for_primitive.txt";
   static final String DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE = "custom_assertion_class_template.txt";
   static final String DEFAULT_ASSERTIONS_ENTRY_POINT_CLASS_TEMPLATE = "standard_assertions_entry_point_class_template.txt";
-  static final String DEFAULT_ASSERTION_ENTRY_POINT_TEMPLATE = "standard_assertion_entry_point_method_template.txt";
+  static final String DEFAULT_ASSERTION_ENTRY_POINT_METHOD_TEMPLATE = "standard_assertion_entry_point_method_template.txt";
   static final String DEFAULT_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE =
     "soft_assertions_entry_point_class_template.txt";
-  static final String DEFAULT_SOFT_ENTRY_POINT_ASSERTION_TEMPLATE = "soft_assertion_entry_point_method_template.txt";
+  static final String DEFAULT_SOFT_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE = "soft_assertion_entry_point_method_template.txt";
+  static final String DEFAULT_BDD_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE = "bdd_assertions_entry_point_class_template.txt";
+  static final String DEFAULT_BDD_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE = "bdd_assertion_entry_point_method_template.txt";
   static final String ASSERT_CLASS_SUFFIX = "Assert";
   static final String ASSERT_CLASS_FILE_SUFFIX = ASSERT_CLASS_SUFFIX + ".java";
   static final String TEMPLATES_DIR = "templates" + File.separator;
@@ -62,9 +64,6 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   private static final String THROWS = "${throws}";
   private static final String THROWS_JAVADOC = "${throws_javadoc}";
   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-  private static final String BDD_ASSERTIONS_ENTRY_POINT_FILE = "BddAssertions.java";
-  private static final String STANDARD_ASSERTIONS_ENTRY_POINT_FILE = "Assertions.java";
-  private static final String SOFT_ASSERTIONS_ENTRY_POINT_FILE = "SoftAssertions.java";
   // assertions classes are generated in their package directory starting from targetBaseDirectory.
   // ex : com.nba.Player -> targetBaseDirectory/com/nba/PlayerAssert.java
   private String targetBaseDirectory = ".";
@@ -75,9 +74,11 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   private Template hasArrayElementsAssertionTemplate;
   private Template isAssertionTemplate;
   private Template standardAssertionsEntryPointClassTemplate;
-  private Template standardAssertionEntryPointTemplate;
+  private Template standardAssertionEntryPointMethodTemplate;
   private Template softAssertionsEntryPointClassTemplate;
-  private Template softAssertionEntryPointTemplate;
+  private Template softAssertionEntryPointMethodTemplate;
+  private Template bddAssertionsEntryPointClassTemplate;
+  private Template bddAssertionEntryPointMethodTemplate;
 
   /**
    * Creates a new </code>{@link BaseAssertionGenerator}</code> with default templates directory.
@@ -111,11 +112,15 @@ public class BaseAssertionGenerator implements AssertionGenerator {
           new Template(Type.ASSERTIONS_ENTRY_POINT_CLASS,
                        new File(templatesDirectory, DEFAULT_ASSERTIONS_ENTRY_POINT_CLASS_TEMPLATE)),
           new Template(Type.ASSERTION_ENTRY_POINT,
-                       new File(templatesDirectory, DEFAULT_ASSERTION_ENTRY_POINT_TEMPLATE)),
+                       new File(templatesDirectory, DEFAULT_ASSERTION_ENTRY_POINT_METHOD_TEMPLATE)),
           new Template(Type.SOFT_ASSERTIONS_ENTRY_POINT_CLASS,
                        new File(templatesDirectory, DEFAULT_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE)),
-          new Template(Type.SOFT_ENTRY_POINT_ASSERTION,
-                       new File(templatesDirectory, DEFAULT_SOFT_ENTRY_POINT_ASSERTION_TEMPLATE))
+          new Template(Type.SOFT_ENTRY_POINT_METHOD_ASSERTION,
+                       new File(templatesDirectory, DEFAULT_SOFT_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE)),
+          new Template(Type.BDD_ASSERTIONS_ENTRY_POINT_CLASS,
+                       new File(templatesDirectory, DEFAULT_BDD_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE)),
+          new Template(Type.BDD_ENTRY_POINT_METHOD_ASSERTION,
+                       new File(templatesDirectory, DEFAULT_BDD_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE))
     );
   }
 
@@ -127,7 +132,10 @@ public class BaseAssertionGenerator implements AssertionGenerator {
                                 Template entryPointAssertionsClassTemplate,
                                 Template entryPointAssertionTemplate,
                                 Template entryPointSoftAssertionsClassTemplate,
-                                Template entryPointSoftAssertionTemplate) {
+                                Template entryPointSoftAssertionTemplate,
+                                Template bddAssertionsEntryPointClassTemplate,
+                                Template bddAssertionEntryPointMethodTemplate) {
+
     this.setAssertionClassTemplate(classAssertionTemplate);
     this.setHasAssertionTemplate(hasAssertionTemplate);
     this.setHasAssertionTemplateForPrimitive(hasAssertionTemplateForPrimitive);
@@ -135,9 +143,11 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     this.setHasElementsAssertionForArrayTemplate(hasArrayElementsAssertionTemplate);
     this.setIsAssertionTemplate(isAssertionTemplate);
     this.setStandardAssertionsEntryPointClassTemplate(entryPointAssertionsClassTemplate);
-    this.setStandardAssertionEntryPointTemplate(entryPointAssertionTemplate);
+    this.setStandardAssertionEntryPointMethodTemplate(entryPointAssertionTemplate);
     this.setSoftAssertionsEntryPointClassTemplate(entryPointSoftAssertionsClassTemplate);
-    this.setSoftAssertionEntryPointTemplate(entryPointSoftAssertionTemplate);
+    this.setSoftAssertionEntryPointMethodTemplate(entryPointSoftAssertionTemplate);
+    this.setBddAssertionsEntryPointClassTemplate(bddAssertionsEntryPointClassTemplate);
+    this.setBddAssertionEntryPointMethodTemplate(bddAssertionEntryPointMethodTemplate);
   }
 
   /**
@@ -181,9 +191,9 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     this.standardAssertionsEntryPointClassTemplate = standardAssertionsEntryPointClassTemplate;
   }
 
-  public void setStandardAssertionEntryPointTemplate(final Template standardAssertionEntryPointTemplate) {
-    checkTemplateParameter(standardAssertionEntryPointTemplate, Type.ASSERTION_ENTRY_POINT);
-    this.standardAssertionEntryPointTemplate = standardAssertionEntryPointTemplate;
+  public void setStandardAssertionEntryPointMethodTemplate(final Template standardAssertionEntryPointMethodTemplate) {
+    checkTemplateParameter(standardAssertionEntryPointMethodTemplate, Type.ASSERTION_ENTRY_POINT);
+    this.standardAssertionEntryPointMethodTemplate = standardAssertionEntryPointMethodTemplate;
   }
 
   public void setDirectoryWhereAssertionFilesAreGenerated(String targetBaseDirectory) {
@@ -194,8 +204,16 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     this.softAssertionsEntryPointClassTemplate = softAssertionsEntryPointClassTemplate;
   }
 
-  public void setSoftAssertionEntryPointTemplate(final Template softAssertionEntryPointTemplate) {
-    this.softAssertionEntryPointTemplate = softAssertionEntryPointTemplate;
+  public void setSoftAssertionEntryPointMethodTemplate(final Template softAssertionEntryPointMethodTemplate) {
+    this.softAssertionEntryPointMethodTemplate = softAssertionEntryPointMethodTemplate;
+  }
+
+  public void setBddAssertionsEntryPointClassTemplate(final Template bddAssertionsEntryPointClassTemplate) {
+    this.bddAssertionsEntryPointClassTemplate = bddAssertionsEntryPointClassTemplate;
+  }
+
+  public void setBddAssertionEntryPointMethodTemplate(final Template bddAssertionEntryPointMethodTemplate) {
+    this.bddAssertionEntryPointMethodTemplate = bddAssertionEntryPointMethodTemplate;
   }
 
   @Override
@@ -243,26 +261,77 @@ public class BaseAssertionGenerator implements AssertionGenerator {
   }
 
   @Override
-  public String generateStandardAssertionsEntryPointClassContentFor(final Set<ClassDescription> classDescriptionSet) {
+  public String generateAssertionsEntryPointClassContentFor(final Set<ClassDescription> classDescriptionSet,
+                                                            AssertionsEntryPointType assertionsEntryPointType,
+                                                            String entryPointClassPackage) {
     if (noClassDescriptionsGiven(classDescriptionSet)) return "";
-    return generateAssertionsEntryPointClassContent(classDescriptionSet, standardAssertionsEntryPointClassTemplate,
-                                                    standardAssertionEntryPointTemplate);
+    Template assertionEntryPointTemplate = chooseAssertionEntryPointTemplate(assertionsEntryPointType);
+    Template assertionsEntryPointClassTemplate = chooseAssertionEntryPointClassTemplate(assertionsEntryPointType);
+    return generateAssertionsEntryPointClassContent(classDescriptionSet, assertionsEntryPointClassTemplate,
+                                                    assertionEntryPointTemplate, entryPointClassPackage);
+  }
+
+  private Template chooseAssertionEntryPointTemplate(final AssertionsEntryPointType assertionsEntryPointType) {
+    switch (assertionsEntryPointType) {
+      case SOFT : return softAssertionEntryPointMethodTemplate;
+      case BDD : return bddAssertionEntryPointMethodTemplate;
+      default: return standardAssertionEntryPointMethodTemplate;
+    }
+  }
+
+  private Template chooseAssertionEntryPointClassTemplate(final AssertionsEntryPointType assertionsEntryPointType) {
+    switch (assertionsEntryPointType) {
+      case SOFT : return softAssertionsEntryPointClassTemplate;
+      case BDD : return bddAssertionsEntryPointClassTemplate;
+      default: return standardAssertionsEntryPointClassTemplate;
+    }
   }
 
   @Override
-  public File generateStandardAssertionsEntryPointClassFor(final Set<ClassDescription> classDescriptionSet)
-    throws IOException {
+  public File generateAssertionsEntryPointClassFor(final Set<ClassDescription> classDescriptionSet,
+                                                   AssertionsEntryPointType assertionsEntryPointType,
+                                                   String entryPointClassPackage) throws IOException {
+    if (noClassDescriptionsGiven(classDescriptionSet)) return null;
+    String assertionsEntryPointFileContent = generateAssertionsEntryPointClassContentFor(classDescriptionSet, assertionsEntryPointType, entryPointClassPackage);
+    return createAssertionsFileFor(classDescriptionSet, assertionsEntryPointFileContent,
+                                   assertionsEntryPointType.getFileName(), entryPointClassPackage);
+  }
+
+  @Override
+  public String generateStandardAssertionsEntryPointClassContentFor(final Set<ClassDescription> classDescriptionSet) {
+    if (noClassDescriptionsGiven(classDescriptionSet)) return "";
+    return generateAssertionsEntryPointClassContent(classDescriptionSet, standardAssertionsEntryPointClassTemplate,
+                                                    standardAssertionEntryPointMethodTemplate, null);
+  }
+
+  @Override
+  public String generateStandardAssertionsEntryPointClassContentFor(final Set<ClassDescription> classDescriptionSet, String entryPointClassPackage) {
+    if (noClassDescriptionsGiven(classDescriptionSet)) return "";
+    return generateAssertionsEntryPointClassContent(classDescriptionSet, standardAssertionsEntryPointClassTemplate,
+                                                    standardAssertionEntryPointMethodTemplate, entryPointClassPackage);
+  }
+
+  @Override
+  public File generateStandardAssertionsEntryPointClassFor(final Set<ClassDescription> classDescriptionSet) throws IOException {
     if (noClassDescriptionsGiven(classDescriptionSet)) return null;
     String assertionsEntryPointFileContent = generateStandardAssertionsEntryPointClassContentFor(classDescriptionSet);
     return createAssertionsFileFor(classDescriptionSet, assertionsEntryPointFileContent,
-                                   STANDARD_ASSERTIONS_ENTRY_POINT_FILE);
+                                   AssertionsEntryPointType.STANDARD.getFileName(), null);
+  }
+
+  @Override
+  public File generateStandardAssertionsEntryPointClassFor(final Set<ClassDescription> classDescriptionSet, final String entryPointClassPackage) throws IOException {
+    if (noClassDescriptionsGiven(classDescriptionSet)) return null;
+    String assertionsEntryPointFileContent = generateStandardAssertionsEntryPointClassContentFor(classDescriptionSet, entryPointClassPackage);
+    return createAssertionsFileFor(classDescriptionSet, assertionsEntryPointFileContent,
+                                   AssertionsEntryPointType.STANDARD.getFileName(), entryPointClassPackage);
   }
 
   @Override
   public String generateSoftAssertionsEntryPointClassContentFor(final Set<ClassDescription> classDescriptionSet) {
     if (noClassDescriptionsGiven(classDescriptionSet)) return "";
     return generateAssertionsEntryPointClassContent(classDescriptionSet, softAssertionsEntryPointClassTemplate,
-                                                    softAssertionEntryPointTemplate);
+                                                    softAssertionEntryPointMethodTemplate, null);
   }
 
   @Override
@@ -270,41 +339,47 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     throws IOException {
     if (noClassDescriptionsGiven(classDescriptionSet)) return null;
     String softAssertionsFileContent = generateSoftAssertionsEntryPointClassContentFor(classDescriptionSet);
-    return createAssertionsFileFor(classDescriptionSet, softAssertionsFileContent, SOFT_ASSERTIONS_ENTRY_POINT_FILE);
+    return createAssertionsFileFor(classDescriptionSet, softAssertionsFileContent, AssertionsEntryPointType.SOFT.getFileName(),
+                                   null);
   }
 
   private String generateAssertionsEntryPointClassContent(final Set<ClassDescription> classDescriptionSet,
                                                           final Template entryPointAssertionsClassTemplate,
-                                                          final Template entryPointAssertionMethodTemplate1) {
+                                                          final Template entryPointAssertionMethodTemplate,
+                                                          String entryPointClassPackage) {
     String entryPointAssertionsClassContent = entryPointAssertionsClassTemplate.getContent();
     // resolve template markers
-    String softAssertionsClassPackage = determineBestEntryPointsAssertionsClassPackage(classDescriptionSet);
-    entryPointAssertionsClassContent = entryPointAssertionsClassContent.replaceAll(PACKAGE_REGEXP,
-                                                                                   softAssertionsClassPackage);
-    String softAssertionsImportsContent = generateEntryPointsAssertionsImportFor(classDescriptionSet,
-                                                                                 softAssertionsClassPackage);
+    String classPackage = isEmpty(entryPointClassPackage) ? determineBestEntryPointsAssertionsClassPackage(classDescriptionSet) : entryPointClassPackage;
+    entryPointAssertionsClassContent = entryPointAssertionsClassContent.replaceAll(PACKAGE_REGEXP, classPackage);
+
+    String softAssertionsImportsContent = generateEntryPointsAssertionsImportFor(classDescriptionSet, classPackage);
     entryPointAssertionsClassContent = entryPointAssertionsClassContent.replace(IMPORTS,
                                                                                 softAssertionsImportsContent);
     String allEntryPointsAssertionContent = generateAssertionEntryPointMethodsFor(classDescriptionSet,
-                                                                                  entryPointAssertionMethodTemplate1);
+                                                                                  entryPointAssertionMethodTemplate);
     entryPointAssertionsClassContent = entryPointAssertionsClassContent.replaceAll(ALL_ASSERTIONS_ENTRY_POINTS_REGEXP,
                                                                                    allEntryPointsAssertionContent);
     return entryPointAssertionsClassContent;
   }
 
   /**
-   * create the assertions entry point file, located in its package directory starting from targetBaseDirectory
+   * create the assertions entry point file, located in its package directory starting from targetBaseDirectory.
+   * <p>
+   * If assertionsClassPackage is not set, we use the common base package of the given classes,
+   * if some classe are in a.b.c package and others in a.b.c.d, then entry point class will be in a.b.c.
+   * </p>
    *
    * @param classDescriptionSet used to determine the assertions class package
    * @param fileContent assertions entry point file content
    * @param fileName assertions entry point file name
+   * @param assertionsClassPackage the entry point class package - automatically determined if null.
    * @return the created assertions entry point file
    * @throws IOException if file can't be created.
    */
   private File createAssertionsFileFor(final Set<ClassDescription> classDescriptionSet, final String fileContent,
-                                       final String fileName) throws IOException {
-    String assertionsClassPackage = determineBestEntryPointsAssertionsClassPackage(classDescriptionSet);
-    String assertionsDirectory = getDirectoryPathCorrespondingToPackage(assertionsClassPackage);
+                                       final String fileName, final String assertionsClassPackage) throws IOException {
+    String classPackage = isEmpty(assertionsClassPackage) ? determineBestEntryPointsAssertionsClassPackage(classDescriptionSet) : assertionsClassPackage;
+    String assertionsDirectory = getDirectoryPathCorrespondingToPackage(classPackage);
     // build any needed directories
     new File(assertionsDirectory).mkdirs();
     return createFile(fileContent, fileName, assertionsDirectory);
@@ -319,7 +394,7 @@ public class BaseAssertionGenerator implements AssertionGenerator {
     String targetDirectory = getDirectoryPathCorrespondingToPackage(entryPointBddAssertionsClassPackage);
     // build any needed directories
     new File(targetDirectory).mkdirs();
-    return createFile(bddAssertionsEntryPointFileContent, BDD_ASSERTIONS_ENTRY_POINT_FILE, targetDirectory);
+    return createFile(bddAssertionsEntryPointFileContent, AssertionsEntryPointType.BDD.getFileName(), targetDirectory);
   }
 
   @Override

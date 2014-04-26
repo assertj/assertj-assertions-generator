@@ -1,0 +1,124 @@
+package my.custom.package;
+
+import org.assertj.assertions.generator.data.ArtWork;
+import org.assertj.assertions.generator.data.ArtWorkAssert;
+import org.assertj.assertions.generator.data.Movie;
+import org.assertj.assertions.generator.data.MovieAssert;
+import org.assertj.assertions.generator.data.Name;
+import org.assertj.assertions.generator.data.NameAssert;
+import org.assertj.assertions.generator.data.Player;
+import org.assertj.assertions.generator.data.PlayerAssert;
+import org.assertj.assertions.generator.data.PublicCategory;
+import org.assertj.assertions.generator.data.PublicCategoryAssert;
+import org.assertj.assertions.generator.data.TreeEnum;
+import org.assertj.assertions.generator.data.TreeEnumAssert;
+import org.assertj.assertions.generator.data.lotr.Race;
+import org.assertj.assertions.generator.data.lotr.RaceAssert;
+import org.assertj.assertions.generator.data.lotr.Ring;
+import org.assertj.assertions.generator.data.lotr.RingAssert;
+import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
+import org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert;
+
+/**
+ * Entry point for assertion of different data types. Each method in this class is a static factory for the
+ * type-specific assertion objects.
+ */
+public class Assertions {
+
+  /**
+   * Creates a new instance of <code>{@link ArtWorkAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static ArtWorkAssert assertThat(ArtWork actual) {
+    return new ArtWorkAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link MovieAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static MovieAssert assertThat(Movie actual) {
+    return new MovieAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link NameAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static NameAssert assertThat(Name actual) {
+    return new NameAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link PlayerAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static PlayerAssert assertThat(Player actual) {
+    return new PlayerAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link PublicCategoryAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static PublicCategoryAssert assertThat(Movie.PublicCategory actual) {
+    return new PublicCategoryAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link RaceAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static RaceAssert assertThat(Race actual) {
+    return new RaceAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link RingAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static RingAssert assertThat(Ring actual) {
+    return new RingAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link TolkienCharacterAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static TolkienCharacterAssert assertThat(TolkienCharacter actual) {
+    return new TolkienCharacterAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link TreeEnumAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static TreeEnumAssert assertThat(TreeEnum actual) {
+    return new TreeEnumAssert(actual);
+  }
+
+  /**
+   * Creates a new <code>{@link Assertions}</code>.
+   */
+  protected Assertions() {
+    // empty
+  }
+}

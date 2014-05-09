@@ -6,6 +6,7 @@ import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.assertj.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_FILE_SUFFIX;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.util.Lists.newArrayList;
 
 import java.io.File;
 import java.io.IOException;
@@ -127,12 +128,12 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   @Test
-  public void should_generate_assertion_entry_point_class_file() throws Exception {
+  public void should_generate_standard_assertions_entry_point_class_file() throws Exception {
     // GIVEN : classes we want to have entry point assertions for
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
         Name.class, Player.class, Movie.class, TolkienCharacter.class, TreeEnum.class, Movie.PublicCategory.class);
     // WHEN
-    final File assertionsEntryPointFile = assertionGenerator.generateAssertionsEntryPointFor(classDescriptionSet);
+    final File assertionsEntryPointFile = assertionGenerator.generateStandardAssertionsEntryPointClassFor(classDescriptionSet);
     // THEN
     String expectedContent = readFileToString(new File("src/test/resources/Assertions.expected.txt"));
     assertThat(assertionsEntryPointFile).as("check entry point class content").hasContent(expectedContent);
@@ -151,11 +152,28 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   @Test
+  public void should_generate_soft_assertions_entry_point_class_file() throws Exception {
+    // GIVEN : classes we want to have entry point assertions for
+    //noinspection unchecked
+    List<Class<?>> classes = newArrayList(Ring.class, Race.class, ArtWork.class, Name.class, Player.class, Movie.class,
+                                          TolkienCharacter.class, TreeEnum.class, Movie.PublicCategory.class);
+    Set<ClassDescription> classDescriptionSet = new LinkedHashSet<ClassDescription>(classes.size());
+    for (Class<?> clazz : classes) {
+      classDescriptionSet.add(converter.convertToClassDescription(clazz));
+    }
+    // WHEN
+    final File assertionsEntryPointFile = assertionGenerator.generateSoftAssertionsEntryPointClassFor(classDescriptionSet);
+    // THEN
+    String expectedContent = readFileToString(new File("src/test/resources/SoftAssertions.expected.txt"));
+    assertThat(assertionsEntryPointFile).as("check soft assertions entry point class content").hasContent(expectedContent);
+  }
+
+  @Test
   public void should_return_null_assertion_entry_point_file_if_no_classes_description_are_given() throws Exception {
     // GIVEN no ClassDescription
     Set<ClassDescription> classDescriptionSet = newLinkedHashSet();
     // WHEN
-    final File assertionsEntryPointFile = assertionGenerator.generateAssertionsEntryPointFor(classDescriptionSet);
+    final File assertionsEntryPointFile = assertionGenerator.generateStandardAssertionsEntryPointClassFor(classDescriptionSet);
     // THEN
     assertThat(assertionsEntryPointFile).isNull();
   }
@@ -165,7 +183,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     // GIVEN no ClassDescription
     Set<ClassDescription> classDescriptionSet = newLinkedHashSet();
     // WHEN
-    final String content = assertionGenerator.generateAssertionsEntryPointContentFor(classDescriptionSet);
+    final String content = assertionGenerator.generateStandardAssertionsEntryPointClassContentFor(classDescriptionSet);
     // THEN
     assertThat(content).isEmpty();
   }
@@ -174,7 +192,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_return_null_assertion_entry_point_file_if_null_classes_description_are_given() throws Exception {
     // GIVEN no ClassDescription
     // WHEN
-    final File assertionsEntryPointFile = assertionGenerator.generateAssertionsEntryPointFor(null);
+    final File assertionsEntryPointFile = assertionGenerator.generateStandardAssertionsEntryPointClassFor(null);
     // THEN
     assertThat(assertionsEntryPointFile).isNull();
   }
@@ -183,7 +201,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_return_empty_assertion_entry_point_class_if_null_classes_description_are_given() throws Exception {
     // GIVEN no ClassDescription
     // WHEN
-    final String content = assertionGenerator.generateAssertionsEntryPointContentFor(null);
+    final String content = assertionGenerator.generateStandardAssertionsEntryPointClassContentFor(null);
     // THEN
     assertThat(content).isEmpty();
   }

@@ -1,0 +1,9 @@
+  /**
+   * Creates a new "soft" instance of <code>{@link ${class_to_assert}Assert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  public ${class_to_assert}Assert assertThat(${class_to_assert} actual) {
+    return proxy(${class_to_assert}Assert.class, ${class_to_assert}.class, actual);
+  }

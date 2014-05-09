@@ -161,14 +161,13 @@ public interface AssertionGenerator {
   /**
    * Returns the content of the assertions entry point class for the given {@link ClassDescription} set.
    * <p>
-   * The idea is to generate an equivalent of assertj-core Assertions class that gives easy access to all AssertJ Core
+   * The idea is to generate an equivalent of assertj-core Assertions class to give easy access to all generated
    * assertions.
    *
-   * @param classDescriptionSet the set of ClassDescription whose assertion calls will be in the generated entry point
-   *                            class content.
+   * @param classDescriptionSet the set of ClassDescription we want to generate entry point.
    * @return the assertions entry point class content
    */
-  String generateAssertionsEntryPointContentFor(Set<ClassDescription> classDescriptionSet);
+  String generateStandardAssertionsEntryPointClassContentFor(Set<ClassDescription> classDescriptionSet);
 
   /**
    * Returns the content of the BDD assertions entry point class for the given {@link ClassDescription} set.
@@ -185,15 +184,35 @@ public interface AssertionGenerator {
   /**
    * Returns the assertions entry point class file for the given {@link ClassDescription} set.
    * <p>
-   * The idea is to generate an equivalent of assertj-core Assertions class that gives easy access to all AssertJ Core
+   * The idea is to generate an equivalent of assertj-core Assertions class to give easy access to all generated
    * assertions.
    *
-   * @param classDescriptionSet the set of ClassDescription whose assertion calls will be in the generated entry point
-   *                            class.
+   * @param classDescriptionSet the set of ClassDescription we want to generate entry point.
    * @return the assertions entry point class file.
-   * @throws IOException if assertions entry point class file can't be created.
+   * @throws IOException if file can't be created.
    */
-  File generateAssertionsEntryPointFor(Set<ClassDescription> classDescriptionSet) throws IOException;
+  File generateStandardAssertionsEntryPointClassFor(Set<ClassDescription> classDescriptionSet) throws IOException;
+
+  /**
+   * Returns the content of the soft assertions entry point class for the given {@link ClassDescription} set.
+   * <p>
+   * The idea is to generate an equivalent of assertj-core SoftAssertions class for generated assertions.
+   *
+   * @param classDescriptionSet the set of ClassDescription we want to generate entry point.
+   * @return the assertions entry point class content
+   */
+  String generateSoftAssertionsEntryPointClassContentFor(Set<ClassDescription> classDescriptionSet);
+
+  /**
+   * Returns the soft assertions entry point class file for the given {@link ClassDescription} set.
+   * <p>
+   * The idea is to generate an equivalent of assertj-core SoftAssertions class for generated assertions.
+   *
+   * @param classDescriptionSet the set of ClassDescription we want to generate entry point.
+   * @return the soft assertions entry point class file.
+   * @throws IOException if file can't be created.
+   */
+  File generateSoftAssertionsEntryPointClassFor(Set<ClassDescription> classDescriptionSet) throws IOException;
 
   /**
    * Returns the BDD assertions entry point class file for the given {@link ClassDescription} set.

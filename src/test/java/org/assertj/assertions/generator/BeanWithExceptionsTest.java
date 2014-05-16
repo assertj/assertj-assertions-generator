@@ -3,6 +3,7 @@ package org.assertj.assertions.generator;
 import org.assertj.assertions.generator.data.BeanWithOneException;
 import org.assertj.assertions.generator.data.BeanWithTwoExceptions;
 import org.assertj.assertions.generator.description.TypeName;
+
 import org.junit.experimental.theories.DataPoint;
 
 import java.io.IOException;
@@ -66,7 +67,7 @@ public interface BeanWithExceptionsTest {
             return exceptions.toArray(new TypeName[exceptions.size()]);
         }
 
-        public Class getBeanClass() {
+        public Class<?> getBeanClass() {
             return beanClass;
         }
 

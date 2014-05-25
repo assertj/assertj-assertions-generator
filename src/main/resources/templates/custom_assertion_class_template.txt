@@ -11,7 +11,7 @@ ${imports}
 public class ${class_to_assert}Assert extends AbstractAssert<${class_to_assert}Assert, ${class_to_assert}> {
 
   /**
-   * Creates a new </code>{@link ${class_to_assert}Assert}</code> to make assertions on actual ${class_to_assert}.
+   * Creates a new <code>{@link ${class_to_assert}Assert}</code> to make assertions on actual ${class_to_assert}.
    * @param actual the ${class_to_assert} we want to make assertions on.
    */
   public ${class_to_assert}Assert(${class_to_assert} actual) {
@@ -20,9 +20,9 @@ public class ${class_to_assert}Assert extends AbstractAssert<${class_to_assert}A
 
   /**
    * An entry point for ${class_to_assert}Assert to follow AssertJ standard <code>assertThat()</code> statements.<br>
-   * With a static import, one's can write directly : <code>assertThat(my${class_to_assert})</code> and get specific assertion with code completion.
+   * With a static import, one can write directly: <code>assertThat(my${class_to_assert})</code> and get specific assertion with code completion.
    * @param actual the ${class_to_assert} we want to make assertions on.
-   * @return a new </code>{@link ${class_to_assert}Assert}</code>
+   * @return a new <code>{@link ${class_to_assert}Assert}</code>
    */
   public static ${class_to_assert}Assert assertThat(${class_to_assert} actual) {
     return new ${class_to_assert}Assert(actual);

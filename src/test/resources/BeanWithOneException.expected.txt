@@ -12,7 +12,7 @@ import java.io.IOException;
 public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExceptionAssert, BeanWithOneException> {
 
   /**
-   * Creates a new </code>{@link BeanWithOneExceptionAssert}</code> to make assertions on actual BeanWithOneException.
+   * Creates a new <code>{@link BeanWithOneExceptionAssert}</code> to make assertions on actual BeanWithOneException.
    * @param actual the BeanWithOneException we want to make assertions on.
    */
   public BeanWithOneExceptionAssert(BeanWithOneException actual) {
@@ -21,9 +21,9 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
 
   /**
    * An entry point for BeanWithOneExceptionAssert to follow AssertJ standard <code>assertThat()</code> statements.<br>
-   * With a static import, one's can write directly : <code>assertThat(myBeanWithOneException)</code> and get specific assertion with code completion.
+   * With a static import, one can write directly: <code>assertThat(myBeanWithOneException)</code> and get specific assertion with code completion.
    * @param actual the BeanWithOneException we want to make assertions on.
-   * @return a new </code>{@link BeanWithOneExceptionAssert}</code>
+   * @return a new <code>{@link BeanWithOneExceptionAssert}</code>
    */
   public static BeanWithOneExceptionAssert assertThat(BeanWithOneException actual) {
     return new BeanWithOneExceptionAssert(actual);

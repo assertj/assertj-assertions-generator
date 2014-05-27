@@ -4,7 +4,7 @@
    * @return this assertion object.
    * @throws AssertionError - if the actual ${class_to_assert} is not ${property}.${throws_javadoc}
    */
-  public ${class_to_assert}Assert is${Property}() ${throws}{
+  public ${custom_assertion_class} is${Property}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
@@ -22,7 +22,7 @@
    * @return this assertion object.
    * @throws AssertionError - if the actual ${class_to_assert} is ${property}.${throws_javadoc}
    */
-  public ${class_to_assert}Assert isNot${Property}() ${throws}{
+  public ${custom_assertion_class} isNot${Property}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 

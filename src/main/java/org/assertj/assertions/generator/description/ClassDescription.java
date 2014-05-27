@@ -48,6 +48,10 @@ public class ClassDescription {
     return classTypeName.getSimpleNameWithOuterClass();
   }
 
+  public String getClassNameWithOuterClassNotSeparatedByDots() {
+    return classTypeName.getSimpleNameWithOuterClassNotSeparatedByDots();
+  }
+  
   public String getPackageName() {
     return classTypeName.getPackageName();
   }

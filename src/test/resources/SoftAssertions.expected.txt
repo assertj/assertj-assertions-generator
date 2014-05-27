@@ -69,6 +69,16 @@ public class SoftAssertions {
   }
 
   /**
+   * Creates a new "soft" instance of <code>{@link MoviePublicCategoryAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  public MoviePublicCategoryAssert assertThat(Movie.PublicCategory actual) {
+    return proxy(MoviePublicCategoryAssert.class, Movie.PublicCategory.class, actual);
+  }
+
+  /**
    * Creates a new "soft" instance of <code>{@link NameAssert}</code>.
    *
    * @param actual the actual value.
@@ -86,16 +96,6 @@ public class SoftAssertions {
    */
   public PlayerAssert assertThat(Player actual) {
     return proxy(PlayerAssert.class, Player.class, actual);
-  }
-
-  /**
-   * Creates a new "soft" instance of <code>{@link PublicCategoryAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  public PublicCategoryAssert assertThat(Movie.PublicCategory actual) {
-    return proxy(PublicCategoryAssert.class, Movie.PublicCategory.class, actual);
   }
 
   /**

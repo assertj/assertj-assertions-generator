@@ -1,5 +1,6 @@
 package org.assertj.assertions.generator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.assertions.generator.data.OuterClass;
 import org.junit.experimental.theories.DataPoint;
 
@@ -31,6 +32,10 @@ public interface NestedClassesTest {
             return classNameWithOuterClass;
         }
 
+        public String getClassNameWithOuterClassNotSeparatedBytDots() {
+          return StringUtils.remove(classNameWithOuterClass, '.');
+        }
+        
         public Class<?> getNestedClass() {
             return nestedClass;
         }

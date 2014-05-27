@@ -30,7 +30,7 @@ import org.apache.commons.lang3.CharEncoding;
  * Template content example for <code>hasXXX</code> property assertion :
  * 
  * <pre>
- * public ${class_to_assert}Assert has${Property}(${propertyType} ${property}) {
+ * public ${custom_assertion_class} has${Property}(${propertyType} ${property}) {
  *   // check that actual ${class_to_assert} we want to make assertions on is not null.
  *   isNotNull();
  * 

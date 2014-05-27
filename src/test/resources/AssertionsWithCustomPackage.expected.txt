@@ -4,12 +4,12 @@ import org.assertj.assertions.generator.data.ArtWork;
 import org.assertj.assertions.generator.data.ArtWorkAssert;
 import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.MovieAssert;
+import org.assertj.assertions.generator.data.MoviePublicCategoryAssert;
 import org.assertj.assertions.generator.data.Name;
 import org.assertj.assertions.generator.data.NameAssert;
 import org.assertj.assertions.generator.data.Player;
 import org.assertj.assertions.generator.data.PlayerAssert;
 import org.assertj.assertions.generator.data.PublicCategory;
-import org.assertj.assertions.generator.data.PublicCategoryAssert;
 import org.assertj.assertions.generator.data.TreeEnum;
 import org.assertj.assertions.generator.data.TreeEnumAssert;
 import org.assertj.assertions.generator.data.lotr.Race;
@@ -46,6 +46,16 @@ public class Assertions {
   }
 
   /**
+   * Creates a new instance of <code>{@link MoviePublicCategoryAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static MoviePublicCategoryAssert assertThat(Movie.PublicCategory actual) {
+    return new MoviePublicCategoryAssert(actual);
+  }
+
+  /**
    * Creates a new instance of <code>{@link NameAssert}</code>.
    *
    * @param actual the actual value.
@@ -63,16 +73,6 @@ public class Assertions {
    */
   public static PlayerAssert assertThat(Player actual) {
     return new PlayerAssert(actual);
-  }
-
-  /**
-   * Creates a new instance of <code>{@link PublicCategoryAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created assertion object.
-   */
-  public static PublicCategoryAssert assertThat(Movie.PublicCategory actual) {
-    return new PublicCategoryAssert(actual);
   }
 
   /**

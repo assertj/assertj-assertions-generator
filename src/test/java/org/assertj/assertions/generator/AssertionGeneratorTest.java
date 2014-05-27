@@ -2,9 +2,10 @@ package org.assertj.assertions.generator;
 
 import static java.lang.reflect.Modifier.isPublic;
 import static org.apache.commons.io.FileUtils.readFileToString;
-
 import static org.assertj.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_FILE_SUFFIX;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
+import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
+import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClassNotSeparatedByDots;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
@@ -20,11 +21,9 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.assertj.assertions.generator.data.Player;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
-import org.assertj.assertions.generator.util.ClassUtil;
 
 @RunWith(Theories.class)
 public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExceptionsTest {
@@ -132,14 +131,14 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 
   private static String expectedContentFromTemplate(Class<?> clazz) throws IOException {
     String template = readFileToString(new File("src/test/resources/NestedClassAssert.template.expected.txt"));
-    String content = template.replace("${nestedClass}Assert", clazz.getSimpleName() + "Assert");
-    content = content.replace("${nestedClass}", ClassUtil.getSimpleNameWithOuterClass(clazz));
+    String content = template.replace("${nestedClass}Assert", getSimpleNameWithOuterClassNotSeparatedByDots(clazz) + "Assert");
+    content = content.replace("${nestedClass}", getSimpleNameWithOuterClass(clazz));
     return content;
   }
 
   private static File fileGeneratedFor(Class<?> clazz) {
     String dirName = TARGET_DIRECTORY + File.separatorChar + clazz.getPackage().getName().replace('.', File.separatorChar);
-    String generatedFileName = clazz.getSimpleName() + ASSERT_CLASS_FILE_SUFFIX;
+    String generatedFileName = getSimpleNameWithOuterClassNotSeparatedByDots(clazz) + ASSERT_CLASS_FILE_SUFFIX;
     return new File(dirName, generatedFileName);
   }
 

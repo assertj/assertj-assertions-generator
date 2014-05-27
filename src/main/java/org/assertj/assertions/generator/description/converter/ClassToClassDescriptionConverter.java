@@ -80,7 +80,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
       } else {
         // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486, try to change if java 7 and
         // a real array
-        Class internalClass = ClassUtil.getClass(parameterizedType.getActualTypeArguments()[0]);
+        Class<?> internalClass = ClassUtil.getClass(parameterizedType.getActualTypeArguments()[0]);
         if (internalClass.isArray()) {
           typeDescription.setElementTypeName(new TypeName(internalClass.getComponentType()));
           typeDescription.setArray(true);
@@ -114,7 +114,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
         } else {
           // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486, try to change if java 7 and
           // a real array
-          Class internalClass = ClassUtil.getClass(parameterizedType.getActualTypeArguments()[0]);
+          Class<?> internalClass = ClassUtil.getClass(parameterizedType.getActualTypeArguments()[0]);
           if (internalClass.isArray()) {
             classesToImport.add(internalClass.getComponentType());
           } else {

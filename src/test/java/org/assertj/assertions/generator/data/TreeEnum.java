@@ -20,7 +20,6 @@ public enum TreeEnum {
     this.parent = parent;
   }
 
-  @SuppressWarnings("UnusedDeclaration")
   public Collection<TreeEnum> getChildren() {
     return Collections2.filter(Lists.newArrayList(values()), new Predicate<TreeEnum>() {
       @Override

@@ -16,7 +16,6 @@ import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.description.TypeName;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
@@ -44,7 +43,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
 
   @Theory
   public void should_build_nestedclass_description(NestedClass nestedClass) throws Exception {
-    Class clazz = nestedClass.getNestedClass();
+    Class<?> clazz = nestedClass.getNestedClass();
     ClassDescription classDescription = converter.convertToClassDescription(clazz);
     assertThat(classDescription.getClassName()).isEqualTo(clazz.getSimpleName());
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo(nestedClass.getClassNameWithOuterClass());
@@ -55,7 +54,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
 
   @Theory
   public void should_build_getter_with_exception_description(GetterWithException getter) throws Exception {
-    Class clazz = getter.getBeanClass();
+    Class<?> clazz = getter.getBeanClass();
     ClassDescription classDescription = converter.convertToClassDescription(clazz);
     assertThat(classDescription.getClassName()).isEqualTo(clazz.getSimpleName());
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo(clazz.getSimpleName());
@@ -76,6 +75,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     class Type {
       List<int[]> scores;
 
+      @SuppressWarnings("unused")
       public List<int[]> getScores() {
         return scores;
       }
@@ -106,6 +106,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     // Given
     class Type {
       List<Player[]> players;
+      @SuppressWarnings("unused")
       public List<Player[]> getPlayers() {
         return players;
       }

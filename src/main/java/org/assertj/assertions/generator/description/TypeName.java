@@ -1,12 +1,12 @@
 package org.assertj.assertions.generator.description;
 
-import org.assertj.assertions.generator.util.ClassUtil;
-
 import static org.apache.commons.lang3.ArrayUtils.contains;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.substringAfterLast;
 import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
+
+import org.assertj.assertions.generator.util.ClassUtil;
 
 /**
  * Describes a type with package and class/interface simple name.
@@ -25,31 +25,37 @@ public class TypeName implements Comparable<TypeName> {
 
   private String typeSimpleName;
   private String typeSimpleNameWithOuterClass;
+  private String typeSimpleNameWithOuterClassNotSeparatedByDots;
   private String packageName;
 
   public TypeName(String typeSimpleName, String packageName) {
     super();
     if (typeSimpleName == null) throw new IllegalArgumentException("type simple name should not be null");
-    setTypeSimpleName(typeSimpleName);
+    this.typeSimpleName = typeSimpleName;
+    this.typeSimpleNameWithOuterClass = typeSimpleName;
+    this.typeSimpleNameWithOuterClassNotSeparatedByDots = typeSimpleName;
     setPackageName(packageName);
   }
 
   public TypeName(String typeName) {
     if (isBlank(typeName)) throw new IllegalArgumentException("type name should not be blank or null");
     if (typeName.contains(".")) {
-      setTypeSimpleName(substringAfterLast(typeName, "."));
+      this.typeSimpleName = substringAfterLast(typeName, ".");
       setPackageName(substringBeforeLast(typeName, "."));
     } else {
       // primitive type => no package
-      setTypeSimpleName(typeName);
+      this.typeSimpleName = typeName;
       setPackageName(NO_PACKAGE);
     }
+    this.typeSimpleNameWithOuterClass = typeSimpleName;
+    this.typeSimpleNameWithOuterClassNotSeparatedByDots = typeSimpleName;
   }
 
   public TypeName(Class<?> clazz) {
     super();
     this.typeSimpleName = clazz.getSimpleName();
     this.typeSimpleNameWithOuterClass = ClassUtil.getSimpleNameWithOuterClass(clazz);
+    this.typeSimpleNameWithOuterClassNotSeparatedByDots = ClassUtil.getSimpleNameWithOuterClassNotSeparatedByDots(clazz);
     this.packageName = clazz.getPackage() == null ? NO_PACKAGE : clazz.getPackage().getName();
   }
 
@@ -57,14 +63,14 @@ public class TypeName implements Comparable<TypeName> {
     return typeSimpleName;
   }
 
-  private void setTypeSimpleName(String typeSimpleName) {
-    this.typeSimpleName = typeSimpleName;
-  }
-
   public String getSimpleNameWithOuterClass() {
-    return (typeSimpleNameWithOuterClass == null) ? getSimpleName() : typeSimpleNameWithOuterClass;
+    return typeSimpleNameWithOuterClass;
   }
 
+  public String getSimpleNameWithOuterClassNotSeparatedByDots() {
+    return typeSimpleNameWithOuterClassNotSeparatedByDots;
+  }
+  
   public String getPackageName() {
     return packageName;
   }

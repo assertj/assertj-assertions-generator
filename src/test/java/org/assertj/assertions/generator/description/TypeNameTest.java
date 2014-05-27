@@ -25,6 +25,7 @@ public class TypeNameTest implements NestedClassesTest {
     typeName = new TypeName(Player.class);
     assertThat(typeName.getSimpleName()).isEqualTo("Player");
     assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo("Player");
+    assertThat(typeName.getSimpleNameWithOuterClassNotSeparatedByDots()).isEqualTo("Player");
     assertThat(typeName.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isFalse();
@@ -35,6 +36,7 @@ public class TypeNameTest implements NestedClassesTest {
     typeName = new TypeName(nestedClass.getNestedClass());
     assertThat(typeName.getSimpleName()).isEqualTo(nestedClass.getNestedClass().getSimpleName());
     assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo(nestedClass.getClassNameWithOuterClass());
+    assertThat(typeName.getSimpleNameWithOuterClassNotSeparatedByDots()).isEqualTo(nestedClass.getClassNameWithOuterClassNotSeparatedBytDots());
     assertThat(typeName.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isFalse();
@@ -45,6 +47,7 @@ public class TypeNameTest implements NestedClassesTest {
     typeName = new TypeName("Player", "org.assertj.assertions.generator.data");
     assertThat(typeName.getSimpleName()).isEqualTo("Player");
     assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo("Player");
+    assertThat(typeName.getSimpleNameWithOuterClassNotSeparatedByDots()).isEqualTo("Player");
     assertThat(typeName.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isFalse();
@@ -55,6 +58,7 @@ public class TypeNameTest implements NestedClassesTest {
     typeName = new TypeName("org.assertj.assertions.generator.data.Player");
     assertThat(typeName.getSimpleName()).isEqualTo("Player");
     assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo("Player");
+    assertThat(typeName.getSimpleNameWithOuterClassNotSeparatedByDots()).isEqualTo("Player");
     assertThat(typeName.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isFalse();
@@ -65,6 +69,7 @@ public class TypeNameTest implements NestedClassesTest {
     typeName = new TypeName(int.class);
     assertThat(typeName.getSimpleName()).isEqualTo("int");
     assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo("int");
+    assertThat(typeName.getSimpleNameWithOuterClassNotSeparatedByDots()).isEqualTo("int");
     assertThat(typeName.getPackageName()).isEmpty();
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isTrue();
@@ -75,6 +80,7 @@ public class TypeNameTest implements NestedClassesTest {
     typeName = new TypeName("int");
     assertThat(typeName.getSimpleName()).isEqualTo("int");
     assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo("int");
+    assertThat(typeName.getSimpleNameWithOuterClassNotSeparatedByDots()).isEqualTo("int");
     assertThat(typeName.getPackageName()).isEmpty();
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isTrue();
@@ -82,6 +88,7 @@ public class TypeNameTest implements NestedClassesTest {
     typeName = new TypeName("int", null);
     assertThat(typeName.getSimpleName()).isEqualTo("int");
     assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo("int");
+    assertThat(typeName.getSimpleNameWithOuterClassNotSeparatedByDots()).isEqualTo("int");
     assertThat(typeName.getPackageName()).isEmpty();
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isTrue();

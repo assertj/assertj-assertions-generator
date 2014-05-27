@@ -15,7 +15,6 @@ package org.assertj.assertions.generator.cli;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 

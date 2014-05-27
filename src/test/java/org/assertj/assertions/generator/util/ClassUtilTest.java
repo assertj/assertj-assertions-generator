@@ -8,7 +8,6 @@ import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
 import org.assertj.assertions.generator.data.lotr.Race;
 import org.assertj.assertions.generator.data.lotr.Ring;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
-
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
@@ -142,14 +141,26 @@ public class ClassUtilTest implements NestedClassesTest {
   }
 
   @Theory
-  public void testGetSimpleNameWithOuterClass(NestedClass nestedClass) throws Exception {
+  public void should_return_inner_class_name_with_outer_class_name(NestedClass nestedClass) {
     String actualName = getSimpleNameWithOuterClass(nestedClass.getNestedClass());
     assertThat(actualName).isEqualTo(nestedClass.getClassNameWithOuterClass());
   }
 
+  @Theory
+  public void should_return_inner_class_name_with_outer_class_name_not_separated_by_dots(NestedClass nestedClass) {
+    String actualName = getSimpleNameWithOuterClassNotSeparatedByDots(nestedClass.getNestedClass());
+    assertThat(actualName).isEqualTo(nestedClass.getClassNameWithOuterClassNotSeparatedBytDots());
+  }
+  
+  @Test
+  public void should_return_simple_class_name() {
+    String actualName = getSimpleNameWithOuterClassNotSeparatedByDots(Player.class);
+    assertThat(actualName).isEqualTo("Player");
+  }
+  
   @Test
   public void testGetSimpleNameWithOuterClass_notNestedClass() throws Exception {
-    assertThat(ClassUtil.getSimpleNameWithOuterClass(String.class)).isNull();
+    assertThat(ClassUtil.getSimpleNameWithOuterClass(String.class)).isEqualTo("String");
   }
 
   @Test
@@ -196,14 +207,17 @@ public class ClassUtilTest implements NestedClassesTest {
   }
 
   private static class Generic {
+    @SuppressWarnings("unused")
     public List<Integer> getListOfInteger() {
       return null;
     }
 
+    @SuppressWarnings("unused")
     public <T> T[] getGenericArray() {
       return null;
     }
 
+    @SuppressWarnings("unused")
     public List<? extends Integer> getListOfWildcardInteger() {
       return null;
     }

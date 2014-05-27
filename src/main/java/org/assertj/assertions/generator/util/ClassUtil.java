@@ -321,13 +321,41 @@ public class ClassUtil {
    * @return
    */
   public static String getSimpleNameWithOuterClass(Class<?> clazz) {
-    String nestedClassName = null;
-    if (clazz.getDeclaringClass() != null) {
-      nestedClassName = clazz.getName();
-      nestedClassName = nestedClassName.substring(clazz.getPackage().getName().length() + 1);
-      nestedClassName = nestedClassName.replace('$', '.');
+    if (isNotNestedClass(clazz)) {
+      return clazz.getSimpleName();
     }
+    String nestedClassName = null;
+    nestedClassName = clazz.getName();
+    nestedClassName = nestedClassName.substring(clazz.getPackage().getName().length() + 1);
+    nestedClassName = nestedClassName.replace('$', '.');
     return nestedClassName;
+  }
+  
+  /**
+   * Gets the simple name of the class but, unlike {@link Class#getSimpleName()}, it includes the name of the outer
+   * class when <code>clazz</code> is an inner class, both class names are concatenated.
+   * <p>
+   * Example:
+   * <pre>
+   * Outer.Inner -> OuterInner 
+   * </pre>
+   *
+   * @param clazz
+   * @return
+   */
+  public static String getSimpleNameWithOuterClassNotSeparatedByDots(Class<?> clazz) {
+    if (isNotNestedClass(clazz)) {
+      return clazz.getSimpleName();
+    }
+    String nestedClassName = null;
+    nestedClassName = clazz.getName();
+    nestedClassName = nestedClassName.substring(clazz.getPackage().getName().length() + 1);
+    nestedClassName = StringUtils.remove(nestedClassName, '$');
+    return nestedClassName;
+  }
+
+  private static boolean isNotNestedClass(Class<?> clazz) {
+    return clazz.getDeclaringClass() == null;
   }
 
   /**

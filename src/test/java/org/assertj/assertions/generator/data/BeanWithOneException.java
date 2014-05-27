@@ -1,7 +1,6 @@
 package org.assertj.assertions.generator.data;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 /**

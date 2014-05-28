@@ -244,19 +244,29 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // className could be a nested class like "OuterClass.NestedClass"
     String className = classDescription.getClassName();
 
-    // resolve template markers
     String assertionFileContent = assertionFileContentBuilder.toString();
-    assertionFileContent = assertionFileContent.replaceAll(PACKAGE_REGEXP, classDescription.getPackageName());
-    assertionFileContent = assertionFileContent.replaceAll(CLASS_TO_ASSERT_REGEXP + ASSERT_CLASS_SUFFIX,
-                                                           className + ASSERT_CLASS_SUFFIX);
-    // used for no package class.
-    assertionFileContent = assertionFileContent.replaceAll(PACKAGE_FULL_REGEXP,
-                                                           isEmpty(classDescription.getPackageName()) ? "" :
-                                                             "package " + classDescription.getPackageName() + ";");
-    assertionFileContent = assertionFileContent.replaceAll(CLASS_TO_ASSERT_REGEXP,
-                                                           classDescription.getClassNameWithOuterClass());
-    assertionFileContent = assertionFileContent.replace(IMPORTS, listImports(classDescription.getImports(),
-                                                                             classDescription.getPackageName()));
+
+    // Aggregate all necessary class imports to include together
+    TreeSet<TypeName> imports = new TreeSet<TypeName>(classDescription.getImports());
+
+    imports.add(new TypeName("org.assertj.core.api.AbstractAssert"));
+    if (assertionFileContent.contains("Assertions")) {
+      imports.add(new TypeName("org.assertj.core.api.Assertions"));
+    }
+    
+    // resolve template markers
+    assertionFileContent = assertionFileContent
+        .replaceAll(PACKAGE_REGEXP, classDescription.getPackageName())
+        .replaceAll(CLASS_TO_ASSERT_REGEXP + ASSERT_CLASS_SUFFIX,
+                    className + ASSERT_CLASS_SUFFIX)
+        // used for no package class.
+        .replaceAll(PACKAGE_FULL_REGEXP,
+                    isEmpty(classDescription.getPackageName()) ? "" :
+                    "package " + classDescription.getPackageName() + ";")
+        .replaceAll(CLASS_TO_ASSERT_REGEXP,
+                    classDescription.getClassNameWithOuterClass())
+        .replace(IMPORTS, listImports(imports,
+                                      classDescription.getPackageName()));
     return assertionFileContent;
   }
 

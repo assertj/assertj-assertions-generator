@@ -1,9 +1,8 @@
 package org.assertj.assertions.generator.data;
 
-import org.assertj.core.api.AbstractAssert;
-// Assertions is needed if an assertion for Iterable is generated
-import org.assertj.core.api.Assertions;
 import java.io.IOException;
+import org.assertj.core.api.AbstractAssert;
+import org.assertj.core.api.Assertions;
 
 
 /**

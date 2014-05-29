@@ -241,24 +241,31 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
     // close class with }
     assertionFileContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
+    String assertionFileContent = assertionFileContentBuilder.toString();
+
+    // Aggregate all necessary class imports to include together
+    TreeSet<TypeName> imports = new TreeSet<TypeName>(classDescription.getImports());
+    imports.add(new TypeName("org.assertj.core.api.AbstractAssert"));
+    if (assertionFileContent.contains("Assertions")) {
+      imports.add(new TypeName("org.assertj.core.api.Assertions"));
+    }
     
     // resolve template markers
-    String assertionFileContent = assertionFileContentBuilder.toString();
     assertionFileContent = assertionFileContent.replaceAll(PACKAGE_REGEXP, classDescription.getPackageName());
+    // className could be a nested class like "OuterClass.NestedClass", in that case assert class will be OuterClassNestedClass
     assertionFileContent = assertionFileContent.replaceAll(CUSTOM_ASSERTION_CLASS_REGEXP, assertClassNameOf(classDescription));
-    // used for no package class. TODO use directly classDescription.getPackageName() ?
+    // used for no package class.
     String packageDeclaration = isEmpty(classDescription.getPackageName()) ? "" :
         "package " + classDescription.getPackageName() + ";";
     assertionFileContent = assertionFileContent.replaceAll(PACKAGE_FULL_REGEXP, packageDeclaration);
-    // className could be a nested class like "OuterClass.NestedClass", in that case assert class will be OuterClassNestedClass
     assertionFileContent = assertionFileContent.replaceAll(CLASS_TO_ASSERT_REGEXP,
                                                            classDescription.getClassNameWithOuterClass());
-    assertionFileContent = assertionFileContent.replace(IMPORTS, listImports(classDescription.getImports(),
+    assertionFileContent = assertionFileContent.replace(IMPORTS, listImports(imports,
                                                                              classDescription.getPackageName()));
     return assertionFileContent;
   }
 
-  private String assertClassNameOf(ClassDescription classDescription) {
+  private static String assertClassNameOf(ClassDescription classDescription) {
     return classDescription.getClassNameWithOuterClassNotSeparatedByDots() + ASSERT_CLASS_SUFFIX;
   }
 

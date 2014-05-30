@@ -250,19 +250,13 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       imports.add(new TypeName("org.assertj.core.api.Assertions"));
     }
     
-    // resolve template markers
-    assertionFileContent = assertionFileContent.replaceAll(PACKAGE_REGEXP, classDescription.getPackageName());
-    // className could be a nested class like "OuterClass.NestedClass", in that case assert class will be OuterClassNestedClass
-    assertionFileContent = assertionFileContent.replaceAll(CUSTOM_ASSERTION_CLASS_REGEXP, assertClassNameOf(classDescription));
-    // used for no package class.
-    String packageDeclaration = isEmpty(classDescription.getPackageName()) ? "" :
-        "package " + classDescription.getPackageName() + ";";
-    assertionFileContent = assertionFileContent.replaceAll(PACKAGE_FULL_REGEXP, packageDeclaration);
-    assertionFileContent = assertionFileContent.replaceAll(CLASS_TO_ASSERT_REGEXP,
-                                                           classDescription.getClassNameWithOuterClass());
-    assertionFileContent = assertionFileContent.replace(IMPORTS, listImports(imports,
-                                                                             classDescription.getPackageName()));
-    return assertionFileContent;
+    // resolve template markers, in case of nested class like "Outer.Nested", assert class will be OuterNestedAssert
+    return assertionFileContent.replaceAll(PACKAGE_REGEXP, classDescription.getPackageName())
+                               .replaceAll(CUSTOM_ASSERTION_CLASS_REGEXP, assertClassNameOf(classDescription))
+                               .replaceAll(PACKAGE_FULL_REGEXP, isEmpty(classDescription.getPackageName()) ?
+                                   "" : "package " + classDescription.getPackageName() + ";")
+                               .replaceAll(CLASS_TO_ASSERT_REGEXP, classDescription.getClassNameWithOuterClass())
+                               .replace(IMPORTS, listImports(imports, classDescription.getPackageName()));
   }
 
   private static String assertClassNameOf(ClassDescription classDescription) {

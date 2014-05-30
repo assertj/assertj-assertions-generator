@@ -55,7 +55,6 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP = "\\$\\{Property\\}";
   private static final String PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP = "\\$\\{property\\}";
   private static final String PACKAGE_REGEXP = "\\$\\{package\\}";
-  private static final String PACKAGE_FULL_REGEXP = "\\$\\{package_full\\}";
   private static final String PROPERTY_TYPE_REGEXP = "\\$\\{propertyType\\}";
   private static final String CLASS_TO_ASSERT_REGEXP = "\\$\\{class_to_assert\\}";
   private static final String CUSTOM_ASSERTION_CLASS_REGEXP = "\\$\\{custom_assertion_class\\}";
@@ -253,8 +252,6 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // resolve template markers, in case of nested class like "Outer.Nested", assert class will be OuterNestedAssert
     return assertionFileContent.replaceAll(PACKAGE_REGEXP, classDescription.getPackageName())
                                .replaceAll(CUSTOM_ASSERTION_CLASS_REGEXP, assertClassNameOf(classDescription))
-                               .replaceAll(PACKAGE_FULL_REGEXP, isEmpty(classDescription.getPackageName()) ?
-                                   "" : "package " + classDescription.getPackageName() + ";")
                                .replaceAll(CLASS_TO_ASSERT_REGEXP, classDescription.getClassNameWithOuterClass())
                                .replace(IMPORTS, listImports(imports, classDescription.getPackageName()));
   }

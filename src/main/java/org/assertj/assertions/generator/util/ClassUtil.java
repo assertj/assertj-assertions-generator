@@ -269,7 +269,7 @@ public class ClassUtil {
   }
 
   public static List<Method> getterMethodsOf(Class<?> clazz) {
-    Method[] methods = clazz.getMethods();
+    Method[] methods = clazz.getDeclaredMethods();
     List<Method> getters = new ArrayList<Method>();
     for (Method method : methods) {
       if (isNotDefinedInObjectClass(method) && (isStandardGetter(method) || isBooleanGetter(method))) {

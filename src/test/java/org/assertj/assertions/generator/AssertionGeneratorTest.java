@@ -2,6 +2,7 @@ package org.assertj.assertions.generator;
 
 import static java.lang.reflect.Modifier.isPublic;
 import static org.apache.commons.io.FileUtils.readFileToString;
+import static org.assertj.assertions.generator.BaseAssertionGenerator.ABSTRACT_CLASS_PREFIX;
 import static org.assertj.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_FILE_SUFFIX;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
@@ -25,6 +26,12 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.assertj.assertions.generator.data.ArtWork;
+import org.assertj.assertions.generator.data.Movie;
+import org.assertj.assertions.generator.data.Player;
+import org.assertj.assertions.generator.description.ClassDescription;
+import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
 
 @RunWith(Theories.class)
 public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExceptionsTest {
@@ -57,6 +64,24 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_generate_assertion_for_class_with_public_fields() throws Exception {
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Team.class));
     assertThat(fileGeneratedFor(Team.class)).hasContentEqualTo(new File("src/test/resources/TeamAssert.expected.txt").getAbsoluteFile());
+  }
+
+  @Test
+  public void should_generate_hierarchical_assertion_for_movie_class() throws Exception {
+    assertionGenerator.generateHierarchicalCustomAssertionFor(converter.convertToClassDescription(Movie.class));
+    assertThat(fileGeneratedFor(Movie.class)).hasContentEqualTo(
+        new File("src/test/resources/MovieAssert.expected" + ".txt").getAbsoluteFile());
+    assertThat(abstractFileGeneratedFor(Movie.class)).hasContentEqualTo(
+        new File("src/test/resources/AbstractMovieAssert.expected" + ".txt").getAbsoluteFile());
+  }
+
+  @Test
+  public void should_generate_hierarchical_assertion_for_artwork_class() throws Exception {
+    assertionGenerator.generateHierarchicalCustomAssertionFor(converter.convertToClassDescription(ArtWork.class));
+    assertThat(fileGeneratedFor(ArtWork.class)).hasContentEqualTo(
+        new File("src/test/resources/ArtWorkAssert.expected" + ".txt").getAbsoluteFile());
+    assertThat(abstractFileGeneratedFor(ArtWork.class)).hasContentEqualTo(
+        new File("src/test/resources/AbstractArtWorkAssert.expected" + ".txt").getAbsoluteFile());
   }
 
   @Theory
@@ -147,6 +172,12 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     String dirName = TARGET_DIRECTORY + File.separatorChar + clazz.getPackage().getName().replace('.', File.separatorChar);
     String generatedFileName = getSimpleNameWithOuterClassNotSeparatedByDots(clazz) + ASSERT_CLASS_FILE_SUFFIX;
     return new File(dirName, generatedFileName);
+  }
+  
+  private static File abstractFileGeneratedFor(Class<?> clazz) {
+    String dirName = TARGET_DIRECTORY + File.separatorChar + clazz.getPackage().getName().replace('.', File.separatorChar);
+    String generatedFileName = ABSTRACT_CLASS_PREFIX + clazz.getSimpleName() + ASSERT_CLASS_FILE_SUFFIX;
+    return new File(dirName, generatedFileName);    
   }
 
   class MyClassLoader extends ClassLoader {

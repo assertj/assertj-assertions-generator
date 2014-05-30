@@ -83,6 +83,8 @@ public interface AssertionGenerator {
 
   File generateCustomAssertionFor(ClassDescription classDescription) throws IOException;
 
+  File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription) throws IOException;
+
   /**
    * Builds and returns the custom assertion java file content for the given {@link ClassDescription}.
    * <p>
@@ -151,10 +153,12 @@ public interface AssertionGenerator {
    *   }
    * </pre>
    *
-   * @param classDescription the {@link ClassDescription} used to generate tha assertions class.
+   * @param classDescription the {@link ClassDescription} used to generate the assertions class.
    * @return the custom assertion content.
    * @throws IOException if something went wrong when creating the assertion content.
    */
   String generateCustomAssertionContentFor(ClassDescription classDescription) throws IOException;
+
+  String[] generateHierarchicalCustomAssertionContentFor(ClassDescription classDescription) throws IOException;
 
 }

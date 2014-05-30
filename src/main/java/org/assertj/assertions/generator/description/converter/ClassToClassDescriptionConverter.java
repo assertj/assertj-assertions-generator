@@ -47,7 +47,12 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     classDescription.addGetterDescriptions(getterDescriptionsOf(clazz));
     classDescription.addFieldDescriptions(fieldDescriptionsOf(clazz));
     classDescription.addTypeToImport(getNeededImportsFor(clazz));
+    classDescription.setSuperType(getSuperTypeOf(clazz));
     return classDescription;
+  }
+
+  private TypeName getSuperTypeOf(Class<?> clazz) {
+    return new TypeName(clazz.getSuperclass());
   }
 
   @VisibleForTesting

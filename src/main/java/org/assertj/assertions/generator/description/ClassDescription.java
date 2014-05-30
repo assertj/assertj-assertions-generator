@@ -29,6 +29,7 @@ public class ClassDescription {
   private Set<GetterDescription> gettersDescriptions;
   private Set<FieldDescription> fieldsDescriptions;
   private TypeName classTypeName;
+  private TypeName superTypeName;
 
   public ClassDescription(TypeName typeName) {
     super();
@@ -102,5 +103,13 @@ public class ClassDescription {
   @Override
   public int hashCode() {
     return classTypeName != null ? classTypeName.hashCode() : 0;
+  }
+
+  public TypeName getSuperType() {
+    return superTypeName;
+  }
+
+  public void setSuperType(TypeName superTypeName) {
+    this.superTypeName = superTypeName;
   }
 }

@@ -2,11 +2,15 @@ package org.assertj.assertions.generator.description.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.assertj.assertions.generator.BeanWithExceptionsTest;
 import org.assertj.assertions.generator.NestedClassesTest;
+import org.assertj.assertions.generator.data.ArtWork;
+import org.assertj.assertions.generator.data.Movie;
+import org.assertj.assertions.generator.data.Movie.PublicCategory;
 import org.assertj.assertions.generator.data.Name;
 import org.assertj.assertions.generator.data.Player;
 import org.assertj.assertions.generator.data.Team;
@@ -40,6 +44,17 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(classDescription.getGettersDescriptions()).hasSize(9);
     assertThat(classDescription.getImports()).containsOnly(new TypeName(Player.class), new TypeName(Name.class));
+  }
+
+  @Test
+  public void should_build_movie_class_description() throws Exception {
+    ClassDescription classDescription = converter.convertToClassDescription(Movie.class);
+    assertThat(classDescription.getClassName()).isEqualTo("Movie");
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Movie");
+    assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
+    assertThat(classDescription.getGettersDescriptions()).hasSize(2);
+    assertThat(classDescription.getSuperType()).isEqualTo(new TypeName(ArtWork.class) );
+    assertThat(classDescription.getImports()).containsOnly(new TypeName(PublicCategory.class), new TypeName(Date.class));
   }
 
   @Theory

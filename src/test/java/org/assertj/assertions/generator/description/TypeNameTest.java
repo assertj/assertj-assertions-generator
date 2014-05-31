@@ -2,7 +2,6 @@ package org.assertj.assertions.generator.description;
 
 import org.assertj.assertions.generator.NestedClassesTest;
 import org.assertj.assertions.generator.data.Player;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
@@ -150,6 +149,12 @@ public class TypeNameTest implements NestedClassesTest {
     assertThat(typeNameA.compareTo(typeNameA)).isZero();
     assertThat(typeNameA.compareTo(typeNameB)).isNegative();
     assertThat(typeNameB.compareTo(typeNameA)).isPositive();
+  }
+
+  @Test
+  public void should_show_information_in_toString() {
+    assertThat(new TypeName("A", "org.mypackage").toString()).isEqualTo("org.mypackage.A");
+    assertThat(new TypeName(int.class).toString()).isEqualTo("int");
   }
 
 }

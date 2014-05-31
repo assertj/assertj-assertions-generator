@@ -14,6 +14,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.assertj.assertions.generator.data.Player;
+import org.assertj.assertions.generator.data.Team;
+import org.assertj.assertions.generator.description.ClassDescription;
+import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
@@ -21,9 +25,6 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.assertj.assertions.generator.data.Player;
-import org.assertj.assertions.generator.description.ClassDescription;
-import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
 
 @RunWith(Theories.class)
 public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExceptionsTest {
@@ -49,7 +50,13 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_generate_assertion_for_player_class() throws Exception {
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Player.class));
     assertThat(fileGeneratedFor(Player.class)).hasContentEqualTo(
-        new File("src/test/resources/PlayerAssert.expected" + ".txt").getAbsoluteFile());
+        new File("src/test/resources/PlayerAssert.expected.txt").getAbsoluteFile());
+  }
+  
+  @Test
+  public void should_generate_assertion_for_class_with_public_fields() throws Exception {
+    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Team.class));
+    assertThat(fileGeneratedFor(Team.class)).hasContentEqualTo(new File("src/test/resources/TeamAssert.expected.txt").getAbsoluteFile());
   }
 
   @Theory

@@ -43,6 +43,7 @@ public class ClassUtilTest implements NestedClassesTest {
     assertThat(classesInPackage).containsOnly(Player.class, ArtWork.class, Name.class, Movie.class,
                                               Movie.PublicCategory.class, Ring.class, Race.class,
                                               FellowshipOfTheRing.class, TolkienCharacter.class,
+                                              Team.class,
                                               TreeEnum.class,
                                               OuterClass.InnerPerson.IP_InnerPerson.class,
                                               OuterClass.InnerPerson.class,
@@ -173,16 +174,14 @@ public class ClassUtilTest implements NestedClassesTest {
   @Test
   public void getClass_on_parameterized_List_should_return_Integer_class() throws Exception {
     Method method = Generic.class.getMethod("getListOfInteger");
-    Class<?> clazz = ClassUtil.getClass(((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()
-                                          [0]);
+    Class<?> clazz = ClassUtil.getClass(((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0]);
     assertThat(clazz).isEqualTo(Integer.class);
   }
 
   @Test
   public void getClass_on_wildcard_List_should_return_Integer_class() throws Exception {
     Method method = Generic.class.getMethod("getListOfWildcardInteger");
-    Class<?> clazz = ClassUtil.getClass(((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()
-                                          [0]);
+    Class<?> clazz = ClassUtil.getClass(((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0]);
     assertThat(clazz).isEqualTo(Integer.class);
   }
 
@@ -195,14 +194,14 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Test
   public void getClassRelatedTo_on_non_generic_type_should_return_given_type() throws Exception {
-    Set<Class<?>> classes = ClassUtil.getClassesRelatedTo(String.class.getMethod("toString").getReturnType());
+    Set<Class<?>> classes = getClassesRelatedTo(String.class.getMethod("toString").getReturnType());
     assertThat(classes).containsOnly(String.class);
   }
 
   @Test
   public void getClassRelatedTo_on_generic_list_should_return_list_and_component_type() throws Exception {
     Method method = Generic.class.getMethod("getListOfInteger");
-    Set<Class<?>> classes = ClassUtil.getClassesRelatedTo(method.getGenericReturnType());
+    Set<Class<?>> classes = getClassesRelatedTo(method.getGenericReturnType());
     assertThat(classes).containsOnly(Integer.class, List.class);
   }
 

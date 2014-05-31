@@ -13,26 +13,39 @@
 package org.assertj.assertions.generator.description.converter;
 
 import static org.assertj.assertions.generator.description.TypeName.JAVA_LANG_PACKAGE;
-import static org.assertj.assertions.generator.util.ClassUtil.*;
+import static org.assertj.assertions.generator.util.ClassUtil.getClassesRelatedTo;
+import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
+import static org.assertj.assertions.generator.util.ClassUtil.isArray;
+import static org.assertj.assertions.generator.util.ClassUtil.isIterable;
+import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
+import static org.assertj.assertions.generator.util.ClassUtil.publicFieldsOf;
 
-import com.google.common.annotations.VisibleForTesting;
-
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.assertj.assertions.generator.description.ClassDescription;
+import org.assertj.assertions.generator.description.FieldDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.description.TypeDescription;
 import org.assertj.assertions.generator.description.TypeName;
 import org.assertj.assertions.generator.util.ClassUtil;
+
+import com.google.common.annotations.VisibleForTesting;
 
 public class ClassToClassDescriptionConverter implements ClassDescriptionConverter<Class<?>> {
 
   public ClassDescription convertToClassDescription(Class<?> clazz) {
     ClassDescription classDescription = new ClassDescription(new TypeName(clazz));
     classDescription.addGetterDescriptions(getterDescriptionsOf(clazz));
+    classDescription.addFieldDescriptions(fieldDescriptionsOf(clazz));
     classDescription.addTypeToImport(getNeededImportsFor(clazz));
     return classDescription;
   }
@@ -49,6 +62,16 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
       getterDescriptions.add(new GetterDescription(propertyNameOf(getter), typeDescription, exceptionsTypeNames));
     }
     return getterDescriptions;
+  }
+  
+  @VisibleForTesting
+  protected Set<FieldDescription> fieldDescriptionsOf(Class<?> clazz) {
+    Set<FieldDescription> fieldDescriptions = new TreeSet<FieldDescription>();
+    List<Field> fields = publicFieldsOf(clazz);
+    for (Field field : fields) {
+      fieldDescriptions.add(new FieldDescription(field.getName(), getTypeDescription(field)));
+    }
+    return fieldDescriptions;
   }
 
   private boolean isGetDeclaringClassEnumGetter(final Method getter, final Class<?> clazz) {
@@ -71,6 +94,36 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
       typeDescription.setArray(true);
     } else if (isIterable(propertyType)) {
       ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
+      if (parameterizedType.getActualTypeArguments()[0] instanceof GenericArrayType) {
+        GenericArrayType genericArrayType = (GenericArrayType) parameterizedType.getActualTypeArguments()[0];
+        Class<?> parameterClass = ClassUtil.getClass(genericArrayType.getGenericComponentType());
+        typeDescription.setElementTypeName(new TypeName(parameterClass));
+        typeDescription.setIterable(true);
+        typeDescription.setArray(true);
+      } else {
+        // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486, try to change if java 7 and
+        // a real array
+        Class<?> internalClass = ClassUtil.getClass(parameterizedType.getActualTypeArguments()[0]);
+        if (internalClass.isArray()) {
+          typeDescription.setElementTypeName(new TypeName(internalClass.getComponentType()));
+          typeDescription.setArray(true);
+        } else {
+          typeDescription.setElementTypeName(new TypeName(internalClass));
+        }
+      }
+      typeDescription.setIterable(true);
+    }
+    return typeDescription;
+  }
+  
+  protected TypeDescription getTypeDescription(Field field) { // TODO refactor
+    final Class<?> propertyType = field.getType();
+    final TypeDescription typeDescription = new TypeDescription(new TypeName(propertyType));
+    if (isArray(propertyType)) {
+      typeDescription.setElementTypeName(new TypeName(propertyType.getComponentType()));
+      typeDescription.setArray(true);
+    } else if (isIterable(propertyType)) {
+      ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
       if (parameterizedType.getActualTypeArguments()[0] instanceof GenericArrayType) {
         GenericArrayType genericArrayType = (GenericArrayType) parameterizedType.getActualTypeArguments()[0];
         Class<?> parameterClass = ClassUtil.getClass(genericArrayType.getGenericComponentType());

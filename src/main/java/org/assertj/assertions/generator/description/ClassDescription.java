@@ -27,6 +27,7 @@ public class ClassDescription {
 
   private Set<TypeName> typesToImports;
   private Set<GetterDescription> gettersDescriptions;
+  private Set<FieldDescription> fieldsDescriptions;
   private TypeName classTypeName;
 
   public ClassDescription(TypeName typeName) {
@@ -34,6 +35,7 @@ public class ClassDescription {
     this.classTypeName = typeName;
     this.typesToImports = new TreeSet<TypeName>();
     this.gettersDescriptions = new TreeSet<GetterDescription>();
+    this.fieldsDescriptions = new TreeSet<FieldDescription>();
   }
 
   public String getClassName() {
@@ -64,12 +66,20 @@ public class ClassDescription {
     this.typesToImports.addAll(typesToImport);
   }
 
-  public Set<GetterDescription> getGetters() {
+  public Set<GetterDescription> getGettersDescriptions() {
     return gettersDescriptions;
   }
 
   public void addGetterDescriptions(Collection<GetterDescription> getterDescriptions) {
-    gettersDescriptions.addAll(getterDescriptions);
+    this.gettersDescriptions.addAll(getterDescriptions);
+  }
+  
+  public void addFieldDescriptions(Set<FieldDescription> fieldDescriptions) {
+    this.fieldsDescriptions.addAll(fieldDescriptions);
+  }
+  
+  public Set<FieldDescription> getFieldsDescriptions() {
+    return fieldsDescriptions;
   }
 
   @Override

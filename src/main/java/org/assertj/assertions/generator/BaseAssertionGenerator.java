@@ -16,6 +16,7 @@ import static java.lang.String.format;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.remove;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -27,6 +28,7 @@ import java.util.TreeSet;
 
 import org.assertj.assertions.generator.Template.Type;
 import org.assertj.assertions.generator.description.ClassDescription;
+import org.assertj.assertions.generator.description.FieldDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.description.TypeName;
 
@@ -237,6 +239,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
     // generate assertion method for each property with a public getter
     assertionFileContentBuilder.append(generateAssertionsForGettersOf(classDescription));
+    assertionFileContentBuilder.append(generateAssertionsForPublicFieldsOf(classDescription));
 
     // close class with }
     assertionFileContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
@@ -418,7 +421,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
   protected String generateAssertionsForGettersOf(ClassDescription classDescription) {
     StringBuilder assertionsForGetters = new StringBuilder();
-    Set<GetterDescription> getters = classDescription.getGetters();
+    Set<GetterDescription> getters = classDescription.getGettersDescriptions();
     for (GetterDescription getter : getters) {
       String assertionContent = assertionContentFor(getter);
       assertionsForGetters.append(assertionContent).append(LINE_SEPARATOR);
@@ -426,6 +429,48 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     return assertionsForGetters.toString();
   }
 
+  protected String generateAssertionsForPublicFieldsOf(ClassDescription classDescription) {
+    StringBuilder assertionsForPublicFields = new StringBuilder();
+    Set<FieldDescription> fields = classDescription.getFieldsDescriptions();
+    for (FieldDescription field : fields) {
+      String assertionContent = assertionContentFor(field);
+      assertionsForPublicFields.append(assertionContent).append(LINE_SEPARATOR);
+    }
+    return assertionsForPublicFields.toString();
+  }
+  
+  private String assertionContentFor(FieldDescription field) {
+    String assertionContent = hasAssertionTemplate.getContent();
+    if (field.isBooleanPropertyType()) {
+      assertionContent = isAssertionTemplate.getContent();
+    } else if (field.isIterablePropertyType()) {
+      StringBuilder sb = new StringBuilder(field.getElementTypeName());
+      if (field.isArrayPropertyType()) {
+        sb.append("[]");
+      }
+      assertionContent = hasIterableElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
+                                                                                      sb.toString());
+    } else if (field.isArrayPropertyType()) {
+      assertionContent = hasArrayElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
+                                                                                   field.getElementTypeName());
+    } else if (field.isPrimitivePropertyType()) {
+      assertionContent = hasAssertionTemplateForPrimitive.getContent();
+    }
+
+    // we reuse template for properties to have consistent assertins for property and field but 
+    // - change the way we get the value since it's a field and not a property:
+    assertionContent = assertionContent.replace("get${Property}()", "${property}")
+                                       .replace("is${Property}()", "${property}");
+    // - remove also ${throws} and ${throws_javadoc} since it make no sense for a field
+    assertionContent = remove(assertionContent, "${throws}");
+    assertionContent = remove(assertionContent, "${throws_javadoc}");
+    
+    // replace ${Property} and ${property} by field name (starting with uppercase/lowercase)
+    return assertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, capitalize(field.getName()))
+                           .replaceAll(PROPERTY_TYPE_REGEXP, field.getPropertyTypeName())
+                           .replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP, field.getName());
+  }
+  
   private String assertionContentFor(GetterDescription getter) {
     // sets default content (most likely case)
     String assertionContent = hasAssertionTemplate.getContent();
@@ -444,9 +489,9 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     } else if (getter.isPrimitivePropertyType()) {
       assertionContent = hasAssertionTemplateForPrimitive.getContent();
     }
-
+    
     assertionContent = declareExceptions(getter, assertionContent);
-
+    
     String propertyName = getter.getPropertyName();
     assertionContent = assertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, capitalize(propertyName));
     assertionContent = assertionContent.replaceAll(PROPERTY_TYPE_REGEXP, getter.getPropertyTypeName());

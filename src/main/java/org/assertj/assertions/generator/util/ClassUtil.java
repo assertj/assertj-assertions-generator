@@ -15,8 +15,10 @@ import org.reflections.util.FilterBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -269,13 +271,27 @@ public class ClassUtil {
   public static List<Method> getterMethodsOf(Class<?> clazz) {
     Method[] methods = clazz.getMethods();
     List<Method> getters = new ArrayList<Method>();
-    for (int i = 0; i < methods.length; i++) {
-      Method method = methods[i];
+    for (Method method : methods) {
       if (isNotDefinedInObjectClass(method) && (isStandardGetter(method) || isBooleanGetter(method))) {
         getters.add(method);
       }
     }
     return getters;
+  }
+
+  public static List<Field> publicFieldsOf(Class<?> clazz) {
+    Field[] fields = clazz.getFields();
+    List<Field> nonStaticPublicFields = new ArrayList<Field>();
+    for (Field field : fields) {
+      if (isNotStaticPublicField(field)) {
+        nonStaticPublicFields.add(field);
+      }
+    }
+    return nonStaticPublicFields;
+  }
+  
+  private static boolean isNotStaticPublicField(Field field) {
+    return !Modifier.isStatic(field.getModifiers());
   }
 
   private static boolean isNotDefinedInObjectClass(Method method) {
@@ -302,8 +318,6 @@ public class ClassUtil {
         } else if (actualTypeArgument instanceof GenericArrayType) {
           classes.addAll(getClassesRelatedTo(actualTypeArgument));
         }
-        // throw new IllegalArgumentException("cannot find type " + actualTypeArgument);
-        // I'm almost sure we should not arrive here !
       }
       Type rawType = parameterizedType.getRawType();
       if (rawType instanceof Class) {

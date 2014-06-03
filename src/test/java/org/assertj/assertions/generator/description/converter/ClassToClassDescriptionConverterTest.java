@@ -43,7 +43,6 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Player");
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(classDescription.getGettersDescriptions()).hasSize(9);
-    assertThat(classDescription.getGettersDescriptions()).hasSize(9);
     assertThat(classDescription.getDeclaredGettersDescriptions()).hasSize(9);
     assertThat(classDescription.getImports()).containsOnly(new TypeName(Player.class), new TypeName(Name.class));
   }
@@ -55,7 +54,9 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Movie");
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(classDescription.getGettersDescriptions()).hasSize(3);
+    assertThat(classDescription.getFieldsDescriptions()).hasSize(2);
     assertThat(classDescription.getDeclaredGettersDescriptions()).hasSize(2);
+//    assertThat(classDescription.getDeclaredFieldsDescriptions()).hasSize(1);
     assertThat(classDescription.getSuperType()).isEqualTo(ArtWork.class);
     assertThat(classDescription.getImports()).containsOnly(new TypeName(PublicCategory.class), new TypeName(Date.class));
   }

@@ -280,7 +280,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
     // generate assertion method for each property with a public getter
     assertionFileContentBuilder.append(generateAssertionsForGetters(classDescription.getDeclaredGettersDescriptions()));
-//    assertionFileContentBuilder.append(generateAssertionsForPublicFields(classDescription.getDeclaredFields()));
+    assertionFileContentBuilder.append(generateAssertionsForPublicFields(classDescription.getDeclaredFieldsDescriptions()));
 
     // close class with }
     assertionFileContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
@@ -347,7 +347,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
     // generate assertion method for each property with a public getter
     assertionFileContentBuilder.append(generateAssertionsForGetters(classDescription.getGettersDescriptions()));
-
+    assertionFileContentBuilder.append(generateAssertionsForPublicFields(classDescription.getFieldsDescriptions()));
+    
     // close class with }
 
     assertionFileContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
@@ -541,8 +542,11 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   protected String generateAssertionsForPublicFieldsOf(ClassDescription classDescription) {
+    return generateAssertionsForPublicFields(classDescription.getFieldsDescriptions());
+  }
+
+  protected String generateAssertionsForPublicFields(Set<FieldDescription> fields) {
     StringBuilder assertionsForPublicFields = new StringBuilder();
-    Set<FieldDescription> fields = classDescription.getFieldsDescriptions();
     for (FieldDescription field : fields) {
       String assertionContent = assertionContentFor(field);
       assertionsForPublicFields.append(assertionContent).append(LINE_SEPARATOR);

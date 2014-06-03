@@ -91,10 +91,18 @@ public class ClassDescription {
     return declaredGettersDescriptions;
   }
 
-  public void addDeclaredGetterDescriptions(Collection<GetterDescription> declaredGetterDescriptions) {
-    declaredGettersDescriptions.addAll(declaredGetterDescriptions);
+  public Set<FieldDescription> getDeclaredFieldsDescriptions() {
+    return declaredFieldsDescriptions;
   }
 
+  public void addDeclaredGetterDescriptions(Collection<GetterDescription> declaredGetterDescriptions) {
+    this.declaredGettersDescriptions.addAll(declaredGetterDescriptions);
+  }
+
+  public void addDeclaredFieldDescriptions(Set<FieldDescription> declaredFieldDescriptions) {
+    this.declaredFieldsDescriptions.addAll(declaredFieldDescriptions);
+  }
+  
   @Override
   public String toString() {
     return "ClassDescription [classTypeName=" + classTypeName + ", typesToImports=" + typesToImports + "]";

@@ -298,8 +298,20 @@ public class ClassUtil {
     return nonStaticPublicFields;
   }
   
+  public static List<Field> declaredPublicFieldsOf(Class<?> clazz) {
+    Field[] fields = clazz.getDeclaredFields();
+    List<Field> nonStaticPublicFields = new ArrayList<Field>();
+    for (Field field : fields) {
+      if (isNotStaticPublicField(field)) {
+       nonStaticPublicFields.add(field);
+      }
+    }
+    return nonStaticPublicFields;
+  }
+  
   private static boolean isNotStaticPublicField(Field field) {
-    return !Modifier.isStatic(field.getModifiers());
+    final int modifiers = field.getModifiers();
+    return !Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers);
   }
 
   private static boolean isNotDefinedInObjectClass(Method method) {

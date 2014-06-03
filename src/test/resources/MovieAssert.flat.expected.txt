@@ -96,4 +96,50 @@ public class MovieAssert extends AbstractAssert<MovieAssert, Movie> {
     return this;
   }
 
+  /**
+   * Verifies that the actual Movie's creator is equal to the given one.
+   * @param creator the given creator to compare the actual Movie's creator to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie's creator is not equal to the given one.
+   */
+  public MovieAssert hasCreator(String creator) {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpected creator of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    
+    // null safe check
+    String actualCreator = actual.creator;
+    if (!org.assertj.core.util.Objects.areEqual(actualCreator, creator)) {
+      failWithMessage(assertjErrorMessage, actual, creator, actualCreator);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Movie's producer is equal to the given one.
+   * @param producer the given producer to compare the actual Movie's producer to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie's producer is not equal to the given one.
+   */
+  public MovieAssert hasProducer(String producer) {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpected producer of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    
+    // null safe check
+    String actualProducer = actual.producer;
+    if (!org.assertj.core.util.Objects.areEqual(actualProducer, producer)) {
+      failWithMessage(assertjErrorMessage, actual, producer, actualProducer);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
 }

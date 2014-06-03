@@ -20,6 +20,7 @@ import static org.assertj.assertions.generator.util.ClassUtil.isArray;
 import static org.assertj.assertions.generator.util.ClassUtil.isIterable;
 import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
 import static org.assertj.assertions.generator.util.ClassUtil.publicFieldsOf;
+import static org.assertj.assertions.generator.util.ClassUtil.declaredPublicFieldsOf;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -48,6 +49,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     classDescription.addGetterDescriptions(getterDescriptionsOf(clazz));
     classDescription.addFieldDescriptions(fieldDescriptionsOf(clazz));
     classDescription.addDeclaredGetterDescriptions(declaredGetterDescriptionsOf(clazz));
+    classDescription.addDeclaredFieldDescriptions(declaredFieldDescriptionsOf(clazz));
     classDescription.addTypeToImport(getNeededImportsFor(clazz));
     classDescription.setSuperType(clazz.getSuperclass());
     return classDescription;
@@ -76,15 +78,23 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
   }
   
   @VisibleForTesting
+  protected Set<FieldDescription> declaredFieldDescriptionsOf(Class<?> clazz) {
+    return doFieldDescriptionsOf(declaredPublicFieldsOf(clazz));
+  }
+
+  @VisibleForTesting
   protected Set<FieldDescription> fieldDescriptionsOf(Class<?> clazz) {
+    return doFieldDescriptionsOf(publicFieldsOf(clazz));
+  }
+
+  private Set<FieldDescription> doFieldDescriptionsOf(List<Field> fields) {
     Set<FieldDescription> fieldDescriptions = new TreeSet<FieldDescription>();
-    List<Field> fields = publicFieldsOf(clazz);
     for (Field field : fields) {
       fieldDescriptions.add(new FieldDescription(field.getName(), getTypeDescription(field)));
     }
     return fieldDescriptions;
   }
-
+  
   private boolean isGetDeclaringClassEnumGetter(final Method getter, final Class<?> clazz) {
     return clazz.isEnum() && getter.getName().equals("getDeclaringClass");
   }

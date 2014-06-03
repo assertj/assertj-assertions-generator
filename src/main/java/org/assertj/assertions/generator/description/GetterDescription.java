@@ -12,6 +12,7 @@
  */
 package org.assertj.assertions.generator.description;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,54 +37,26 @@ import java.util.List;
  * @author Joel Costigliola
  * 
  */
-public class GetterDescription implements Comparable<GetterDescription> {
+public class GetterDescription extends DataDescription implements Comparable<GetterDescription> {
 
-  private String propertyName;
-  private TypeDescription typeDescription;
   private final List<TypeName> exceptions;
 
   public GetterDescription(String propertyName, TypeDescription typeDescription, List<TypeName> exceptions) {
-    super();
-    this.propertyName = propertyName;
-    this.typeDescription = typeDescription;
+    super(propertyName, typeDescription);
     this.exceptions = new ArrayList<TypeName>(exceptions);
   }
 
   public String getPropertyName() {
-    return propertyName;
-  }
-
-  public String getPropertyTypeName() {
-    return typeDescription.getSimpleNameWithOuterClass();
-  }
-
-  public boolean isIterablePropertyType() {
-    return typeDescription.isIterable();
-  }
-
-  public boolean isArrayPropertyType() {
-    return typeDescription.isArray();
-  }
-
-  public boolean isPrimitivePropertyType() {
-    return typeDescription.isPrimitive();
-  }
-
-  public boolean isBooleanPropertyType() {
-    return typeDescription.isBoolean();
+    return getName();
   }
 
   public int compareTo(GetterDescription other) {
-    return propertyName.compareTo(other.propertyName);
-  }
-
-  public String getElementTypeName() {
-    return typeDescription.getElementTypeName() == null ? null : typeDescription.getElementTypeName().getSimpleNameWithOuterClass();
+    return getName().compareTo(other.getName());
   }
 
   @Override
   public String toString() {
-    return "GetterDescription [propertyName=" + propertyName + ", typeDescription=" + typeDescription + "]";
+    return "GetterDescription [propertyName=" + getName() + ", typeDescription=" + typeDescription + "]";
   }
 
   public List<TypeName> getExceptions() {
@@ -93,5 +66,5 @@ public class GetterDescription implements Comparable<GetterDescription> {
   public boolean isRealNumberType() {
     return typeDescription.isRealNumber();
   }
-  
+
 }

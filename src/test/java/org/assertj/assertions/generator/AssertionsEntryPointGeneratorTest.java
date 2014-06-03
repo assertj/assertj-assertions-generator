@@ -2,7 +2,6 @@ package org.assertj.assertions.generator;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static org.apache.commons.io.FileUtils.readFileToString;
-
 import static org.assertj.assertions.generator.AssertionsEntryPointType.BDD;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.SOFT;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.STANDARD;
@@ -15,15 +14,14 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import org.assertj.assertions.generator.data.ArtWork;
 import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.Name;
-import org.assertj.assertions.generator.data.Player;
 import org.assertj.assertions.generator.data.TreeEnum;
 import org.assertj.assertions.generator.data.lotr.Race;
 import org.assertj.assertions.generator.data.lotr.Ring;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
+import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
 

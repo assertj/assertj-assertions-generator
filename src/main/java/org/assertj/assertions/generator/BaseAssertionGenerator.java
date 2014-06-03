@@ -28,6 +28,7 @@ import java.util.TreeSet;
 
 import org.assertj.assertions.generator.Template.Type;
 import org.assertj.assertions.generator.description.ClassDescription;
+import org.assertj.assertions.generator.description.DataDescription;
 import org.assertj.assertions.generator.description.FieldDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.description.TypeName;
@@ -444,30 +445,26 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   protected String generateAssertionsForPublicFieldsOf(ClassDescription classDescription) {
     StringBuilder assertionsForPublicFields = new StringBuilder();
     Set<FieldDescription> fields = classDescription.getFieldsDescriptions();
-    for (FieldDescription field : fields) {
+    for (DataDescription field : fields) {
       String assertionContent = assertionContentFor(field);
       assertionsForPublicFields.append(assertionContent).append(LINE_SEPARATOR);
     }
     return assertionsForPublicFields.toString();
   }
   
-  private String assertionContentFor(FieldDescription field) {
+  private String assertionContentFor(DataDescription field) {
     String assertionContent = hasAssertionTemplate.getContent();
-    if (field.isBooleanPropertyType()) {
+    if (field.isBooleanType()) {
       assertionContent = isAssertionTemplate.getContent();
-    } else if (field.isIterablePropertyType()) {
-      StringBuilder sb = new StringBuilder(field.getElementTypeName());
-      if (field.isArrayPropertyType()) {
-        sb.append("[]");
-      }
-      assertionContent = hasIterableElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
-                                                                                      sb.toString());
-    } else if (field.isArrayPropertyType()) {
+    } else if (field.isIterableType()) {
+      assertionContent = hasIterableElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP, 
+                                                                                      field.getElementTypeName());
+    } else if (field.isArrayType()) {
       assertionContent = hasArrayElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
                                                                                    field.getElementTypeName());
     } else if (field.isRealNumberType()) {
       assertionContent = hasAssertionTemplateForRealNumber.getContent();
-    } else if (field.isPrimitivePropertyType()) {
+    } else if (field.isPrimitiveType()) {
       assertionContent = hasAssertionTemplateForPrimitive.getContent();
     }
 
@@ -481,28 +478,24 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     
     // replace ${Property} and ${property} by field name (starting with uppercase/lowercase)
     return assertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, capitalize(field.getName()))
-                           .replaceAll(PROPERTY_TYPE_REGEXP, field.getPropertyTypeName())
+                           .replaceAll(PROPERTY_TYPE_REGEXP, field.getTypeName())
                            .replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP, field.getName());
   }
   
   private String assertionContentFor(GetterDescription getter) { // TODO refatcor with assertionContentFor field
     // sets default content (most likely case)
     String assertionContent = hasAssertionTemplate.getContent();
-    if (getter.isBooleanPropertyType()) {
+    if (getter.isBooleanType()) {
       assertionContent = isAssertionTemplate.getContent();
-    } else if (getter.isIterablePropertyType()) {
-      StringBuilder sb = new StringBuilder(getter.getElementTypeName());
-      if (getter.isArrayPropertyType()) {
-        sb.append("[]");
-      }
+    } else if (getter.isIterableType()) {
       assertionContent = hasIterableElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
-                                                                                      sb.toString());
-    } else if (getter.isArrayPropertyType()) {
+                                                                                      getter.getElementTypeName());
+    } else if (getter.isArrayType()) {
       assertionContent = hasArrayElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
                                                                                    getter.getElementTypeName());
     } else if (getter.isRealNumberType()) {
       assertionContent = hasAssertionTemplateForRealNumber.getContent();
-    } else if (getter.isPrimitivePropertyType()) {
+    } else if (getter.isPrimitiveType()) {
       assertionContent = hasAssertionTemplateForPrimitive.getContent();
     }
     
@@ -510,7 +503,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     
     String propertyName = getter.getPropertyName();
     assertionContent = assertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, capitalize(propertyName));
-    assertionContent = assertionContent.replaceAll(PROPERTY_TYPE_REGEXP, getter.getPropertyTypeName());
+    assertionContent = assertionContent.replaceAll(PROPERTY_TYPE_REGEXP, getter.getTypeName());
     return assertionContent.replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP, propertyName);
   }
 
@@ -535,7 +528,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       String exceptionName = exception.getSimpleNameWithOuterClass();
       throwsClause.append(exceptionName);
       throwsJavaDoc.append(LINE_SEPARATOR).append("   * @throws ").append(exceptionName);
-      throwsJavaDoc.append(" if actual.").append(getter.isBooleanPropertyType() ? "is" : "get")
+      throwsJavaDoc.append(" if actual.").append(getter.isBooleanType() ? "is" : "get")
                    .append("${Property}() throws one.");
     }
     if (!getter.getExceptions().isEmpty()) {

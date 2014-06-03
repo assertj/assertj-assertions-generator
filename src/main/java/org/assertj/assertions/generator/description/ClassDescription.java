@@ -58,6 +58,10 @@ public class ClassDescription {
     return classTypeName.getPackageName();
   }
 
+  /**
+   * Return the type to import for the corresponding assertions class
+   * @return
+   */
   public Set<TypeName> getImports() {
     return typesToImports;
   }

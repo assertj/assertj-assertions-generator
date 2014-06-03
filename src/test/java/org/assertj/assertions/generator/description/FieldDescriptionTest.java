@@ -2,18 +2,18 @@ package org.assertj.assertions.generator.description;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.assertj.assertions.generator.data.Player;
+import org.assertj.assertions.generator.data.nba.Player;
 import org.junit.Test;
 
 public class FieldDescriptionTest {
 
-  private FieldDescription fieldDescription;
+  private DataDescription fieldDescription;
 
   @Test
   public void should_create_valid_typename_from_class() {
     fieldDescription = new FieldDescription("bestPlayer", new TypeDescription(new TypeName(Player.class)));
     assertThat(fieldDescription.getName()).isEqualTo("bestPlayer");
-    assertThat(fieldDescription.getPropertyTypeName()).isEqualTo("Player");
+    assertThat(fieldDescription.getTypeName()).isEqualTo("Player");
     assertThat(fieldDescription.getElementTypeName()).isNull();
   }
 
@@ -25,7 +25,6 @@ public class FieldDescriptionTest {
 
   @Test
   public void should_detect_real_number_correctly() throws Exception {
-    // TODO refactor FieldDescription / GetterDescription 
     fieldDescription = new FieldDescription("double", new TypeDescription(new TypeName(double.class)));
     assertThat(fieldDescription.isRealNumberType()).as("double").isTrue();
     fieldDescription = new FieldDescription("Double", new TypeDescription(new TypeName(Double.class)));

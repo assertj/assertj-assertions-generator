@@ -12,13 +12,15 @@
  * 
  * Copyright @2011 the original author or authors.
  */
-package org.assertj.assertions.generator.data;
+package org.assertj.assertions.generator.data.nba;
 
 import static java.lang.String.format;
 import static org.assertj.core.util.Objects.areEqual;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.assertj.assertions.generator.data.Name;
 
 /**
  * @author Joel Costigliola

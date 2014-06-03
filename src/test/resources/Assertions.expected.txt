@@ -6,6 +6,8 @@ import org.assertj.assertions.generator.data.lotr.Ring;
 import org.assertj.assertions.generator.data.lotr.RingAssert;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert;
+import org.assertj.assertions.generator.data.nba.Player;
+import org.assertj.assertions.generator.data.nba.PlayerAssert;
 
 /**
  * Entry point for assertion of different data types. Each method in this class is a static factory for the

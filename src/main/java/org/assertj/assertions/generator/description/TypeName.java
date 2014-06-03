@@ -138,4 +138,8 @@ public class TypeName implements Comparable<TypeName> {
   public int compareTo(TypeName o) {
     return toString().compareTo(o.toString());
   }
+
+  public boolean isArray() {
+    return typeSimpleName.contains("[]");
+  }
 }

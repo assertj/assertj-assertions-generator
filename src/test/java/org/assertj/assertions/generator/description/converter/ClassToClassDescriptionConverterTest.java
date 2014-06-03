@@ -8,12 +8,10 @@ import java.util.Map;
 import org.assertj.assertions.generator.BeanWithExceptionsTest;
 import org.assertj.assertions.generator.NestedClassesTest;
 import org.assertj.assertions.generator.data.Name;
-import org.assertj.assertions.generator.data.Player;
 import org.assertj.assertions.generator.data.Team;
 import org.assertj.assertions.generator.data.TreeEnum;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
-import org.assertj.assertions.generator.data.lotr.Race;
-import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
+import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.description.TypeName;
@@ -37,9 +35,9 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     ClassDescription classDescription = converter.convertToClassDescription(Player.class);
     assertThat(classDescription.getClassName()).isEqualTo("Player");
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Player");
-    assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
+    assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.nba");
     assertThat(classDescription.getGettersDescriptions()).hasSize(10);
-    assertThat(classDescription.getImports()).containsOnly(new TypeName(Player.class), new TypeName(Name.class));
+    assertThat(classDescription.getImports()).containsOnly(new TypeName(Name.class));
   }
 
   @Theory
@@ -72,7 +70,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Test
-  public void should_build_class_description_for_iterable_of_simple_type() throws Exception {
+  public void should_build_class_description_for_iterable_of_primitive_type_array() throws Exception {
     class Type {
       List<int[]> scores;
 
@@ -85,11 +83,30 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getClassName()).isEqualTo("Type");
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
-    assertThat(getterDescription.isIterablePropertyType()).as("getterDescription must be iterable").isTrue();
-    assertThat(getterDescription.getElementTypeName()).isEqualTo("int");
-    assertThat(getterDescription.isArrayPropertyType()).as("getterDescription must be an array").isTrue();
+    assertThat(getterDescription.isIterableType()).as("getterDescription must be iterable").isTrue();
+    assertThat(getterDescription.getElementTypeName()).isEqualTo("int[]");
+    assertThat(getterDescription.isArrayType()).as("getterDescription must not be an array").isFalse();
   }
 
+  @Test
+  public void should_build_class_description_for_array_of_primitive_type_array() throws Exception {
+    class Type {
+      int[][] scores;
+      
+      @SuppressWarnings("unused")
+      public int[][] getScores() {
+        return scores;
+      }
+    }
+    ClassDescription classDescription = converter.convertToClassDescription(Type.class);
+    assertThat(classDescription.getClassName()).isEqualTo("Type");
+    assertThat(classDescription.getGettersDescriptions()).hasSize(1);
+    GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
+    assertThat(getterDescription.isIterableType()).as("getterDescription is an iterable ?").isFalse();
+    assertThat(getterDescription.isArrayType()).as("getterDescription is an array ?").isTrue();
+    assertThat(getterDescription.getElementTypeName()).isEqualTo("int[]");
+  }
+  
   @Test
   public void should_build_class_description_for_enum_type() throws Exception {
     ClassDescription classDescription = converter.convertToClassDescription(TreeEnum.class);
@@ -97,9 +114,9 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     // should not contain getDeclaringClassGetter as we don't want to have hasDeclaringClass assertion
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
-    assertThat(getterDescription.isIterablePropertyType()).as("getterDescription must be iterable").isTrue();
+    assertThat(getterDescription.isIterableType()).as("getterDescription must be iterable").isTrue();
     assertThat(getterDescription.getElementTypeName()).isEqualTo("TreeEnum");
-    assertThat(getterDescription.isArrayPropertyType()).as("getterDescription must be an array").isFalse();
+    assertThat(getterDescription.isArrayType()).as("getterDescription must be an array").isFalse();
   }
 
   @Test
@@ -120,9 +137,9 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getClassName()).isEqualTo("Type");
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
-    assertThat(getterDescription.isIterablePropertyType()).as("getterDescription must be iterable").isTrue();
-    assertThat(getterDescription.getElementTypeName()).isEqualTo("Player");
-    assertThat(getterDescription.isArrayPropertyType()).as("getterDescription must be an array").isTrue();
+    assertThat(getterDescription.isIterableType()).as("getterDescription must be iterable").isTrue();
+    assertThat(getterDescription.getElementTypeName()).isEqualTo("Player[]");
+    assertThat(getterDescription.isArrayType()).as("getterDescription is not an array").isFalse();
     assertThat(classDescription.getImports()).extracting("simpleName").contains(Player.class.getSimpleName());
   }
 
@@ -134,19 +151,13 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getClassNameWithOuterClassNotSeparatedByDots()).isEqualTo("FellowshipOfTheRing");
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.lotr");
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
-    assertThat(classDescription.getImports()).containsOnly(new TypeName(Map.class), new TypeName(List.class),
-                                                           new TypeName(Race.class),
-                                                           new TypeName(TolkienCharacter.class));
+    assertThat(classDescription.getImports()).containsOnly(new TypeName(Map.class), new TypeName(List.class));
   }
 
   @Test
   public void should_handle_toString() {
     ClassDescription classDescription = converter.convertToClassDescription(FellowshipOfTheRing.class);
-    assertThat(classDescription.toString()).contains(FellowshipOfTheRing.class.getSimpleName(),
-                                                     "java.util.Map",
-                                                     "java.util.List",
-                                                     "org.assertj.assertions.generator.data.lotr.Race",
-                                                     "org.assertj.assertions.generator.data.lotr.TolkienCharacter");
+    assertThat(classDescription.toString()).contains(FellowshipOfTheRing.class.getSimpleName(), "java.util.Map", "java.util.List");
   }
 
   @Test
@@ -157,8 +168,15 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getClassNameWithOuterClassNotSeparatedByDots()).isEqualTo("Team");
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(classDescription.getGettersDescriptions()).extracting("propertyName").containsExactly("division");
-    assertThat(classDescription.getFieldsDescriptions()).extracting("name").containsOnly("name", "oldNames", "westCoast", "rank", "players", "points");
-    assertThat(classDescription.getImports()).isEmpty();
+    assertThat(classDescription.getFieldsDescriptions()).extracting("name").containsOnly("name", 
+                                                                                         "oldNames", 
+                                                                                         "westCoast", 
+                                                                                         "rank", 
+                                                                                         "players", 
+                                                                                         "points", 
+                                                                                         "victoryRatio");
+    // no List.class as it won't be needed in TeamAssert
+    assertThat(classDescription.getImports()).containsOnly(new TypeName(Player.class));
   }
 
 }

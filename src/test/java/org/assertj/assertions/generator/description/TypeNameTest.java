@@ -1,16 +1,16 @@
 package org.assertj.assertions.generator.description;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+
 import org.assertj.assertions.generator.NestedClassesTest;
-import org.assertj.assertions.generator.data.Player;
+import org.assertj.assertions.generator.data.nba.Player;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
 @RunWith(Theories.class)
 public class TypeNameTest implements NestedClassesTest {
@@ -25,7 +25,7 @@ public class TypeNameTest implements NestedClassesTest {
     assertThat(typeName.getSimpleName()).isEqualTo("Player");
     assertThat(typeName.getSimpleNameWithOuterClass()).isEqualTo("Player");
     assertThat(typeName.getSimpleNameWithOuterClassNotSeparatedByDots()).isEqualTo("Player");
-    assertThat(typeName.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
+    assertThat(typeName.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.nba");
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isFalse();
   }
@@ -61,6 +61,7 @@ public class TypeNameTest implements NestedClassesTest {
     assertThat(typeName.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isFalse();
+    assertThat(typeName.isRealNumber()).isFalse();
   }
 
   @Test
@@ -125,11 +126,13 @@ public class TypeNameTest implements NestedClassesTest {
     assertThat(new TypeName(char.class).isRealNumber()).isFalse();
     assertThat(new TypeName(byte.class).isRealNumber()).isFalse();
     assertThat(new TypeName(float.class).isRealNumber()).isTrue();
+    assertThat(new TypeName(Float.class).isRealNumber()).isTrue();
     assertThat(new TypeName(double.class).isRealNumber()).isTrue();
+    assertThat(new TypeName(Double.class).isRealNumber()).isTrue();
     assertThat(new TypeName(String.class).isRealNumber()).isFalse();
     assertThat(new TypeName("test.int").isRealNumber()).isFalse();
-    assertThat(new TypeName("test.boolean").isRealNumber()).isFalse();
-    assertThat(new TypeName("test.Boolean").isRealNumber()).isFalse();
+    assertThat(new TypeName("test.double").isRealNumber()).isFalse();
+    assertThat(new TypeName("test.Double").isRealNumber()).isFalse();
   }
   
   @Test
@@ -141,6 +144,14 @@ public class TypeNameTest implements NestedClassesTest {
     assertThat(new TypeName("test.boolean").isBoolean()).isFalse();
   }
 
+  @Test
+  public void should_detect_array_typename() {
+    assertThat(new TypeName(String[].class).isArray()).isTrue();
+    assertThat(new TypeName(int[].class).isArray()).isTrue();
+    assertThat(new TypeName(int.class).isArray()).isFalse();
+    assertThat(new TypeName(String.class).isArray()).isFalse();
+  }
+  
   @Test
   public void should_fail_if_type_simple_name_is_null() {
     try {

@@ -32,51 +32,14 @@ package org.assertj.assertions.generator.description;
  * 
  * @author Joel Costigliola
  */
-public class FieldDescription implements Comparable<FieldDescription> {
+public class FieldDescription extends DataDescription implements Comparable<FieldDescription> {
 
-  private String name;
-  private TypeDescription typeDescription;
-  
   public FieldDescription(String name, TypeDescription typeDescription) {
-    super();
-    this.name = name;
-    this.typeDescription = typeDescription;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getPropertyTypeName() {
-    return typeDescription.getSimpleNameWithOuterClass();
-  }
-
-  public boolean isIterablePropertyType() {
-    return typeDescription.isIterable();
-  }
-
-  public boolean isArrayPropertyType() {
-    return typeDescription.isArray();
-  }
-
-  public boolean isPrimitivePropertyType() {
-    return typeDescription.isPrimitive();
-  }
-
-  public boolean isRealNumberType() {
-    return typeDescription.isRealNumber();
-  }
-  
-  public boolean isBooleanPropertyType() {
-    return typeDescription.isBoolean();
+    super(name, typeDescription);
   }
 
   public int compareTo(FieldDescription other) {
     return name.compareTo(other.name);
-  }
-
-  public String getElementTypeName() {
-    return typeDescription.getElementTypeName() == null ? null : typeDescription.getElementTypeName().getSimpleNameWithOuterClass();
   }
 
   @Override

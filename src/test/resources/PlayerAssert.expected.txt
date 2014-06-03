@@ -1,5 +1,6 @@
-package org.assertj.assertions.generator.data;
+package org.assertj.assertions.generator.data.nba;
 
+import org.assertj.assertions.generator.data.Name;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 

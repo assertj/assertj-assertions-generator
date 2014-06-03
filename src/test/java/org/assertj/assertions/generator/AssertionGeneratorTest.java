@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.assertj.assertions.generator.data.Player;
 import org.assertj.assertions.generator.data.Team;
+import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
 import org.junit.Before;

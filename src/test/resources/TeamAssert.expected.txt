@@ -1,5 +1,6 @@
 package org.assertj.assertions.generator.data;
 
+import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 
@@ -232,6 +233,32 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     if (actualRank != rank) {
       failWithMessage(assertjErrorMessage, actual, rank, actualRank);
     }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Team's victoryRatio is close to the given value by less than the given offset.
+   * <p>
+   * If difference is equal to the offset value, assertion is considered successful.
+   * @param victoryRatio the value to compare the actual Team's victoryRatio to.
+   * @param offset the given offset.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Team's victoryRatio is not close enough to the given value.
+   */
+  public TeamAssert hasVictoryRatio(double victoryRatio, double offset) {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    double actualVictoryRatio = actual.victoryRatio;
+    
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = String.format("\nExpected victoryRatio:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+                                               actualVictoryRatio, victoryRatio, offset, Math.abs(victoryRatio - actualVictoryRatio));
+    
+    // check
+    Assertions.assertThat(actualVictoryRatio).overridingErrorMessage(assertjErrorMessage).isCloseTo(victoryRatio, Assertions.within(offset));
 
     // return the current assertion for method chaining
     return this;

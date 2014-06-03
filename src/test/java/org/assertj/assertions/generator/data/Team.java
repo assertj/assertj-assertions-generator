@@ -3,14 +3,15 @@ package org.assertj.assertions.generator.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.assertj.assertions.generator.data.nba.Player;
+
 public class Team {
 
   // to check that no assertion is created for public static field
   public static String staticField;
   
-  // public field to test that we generate assertions for public fields
   public String name;
-  
+  public double victoryRatio;
   public boolean westCoast;
   public int rank;
   public List<Player> players = new ArrayList<Player>();

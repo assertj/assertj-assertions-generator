@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -279,7 +280,7 @@ public class ClassUtil {
     return getters;
   }
 
-  public static List<Field> publicFieldsOf(Class<?> clazz) {
+  public static List<Field> nonStaticPublicFieldsOf(Class<?> clazz) {
     Field[] fields = clazz.getFields();
     List<Field> nonStaticPublicFields = new ArrayList<Field>();
     for (Field field : fields) {
@@ -289,6 +290,15 @@ public class ClassUtil {
     }
     return nonStaticPublicFields;
   }
+
+
+  public static List<Member> getterMethodsAndNonStaticPublicFieldsOf(Class<?> clazz) {
+    List<Member> methodsAndNonStaticPublicFields = new ArrayList<Member>();
+    methodsAndNonStaticPublicFields.addAll(getterMethodsOf(clazz));
+    methodsAndNonStaticPublicFields.addAll(nonStaticPublicFieldsOf(clazz));
+    return methodsAndNonStaticPublicFields;
+  }
+  
   
   private static boolean isNotStaticPublicField(Field field) {
     return !Modifier.isStatic(field.getModifiers());

@@ -14,14 +14,16 @@ package org.assertj.assertions.generator.description.converter;
 
 import static org.assertj.assertions.generator.description.TypeName.JAVA_LANG_PACKAGE;
 import static org.assertj.assertions.generator.util.ClassUtil.getClassesRelatedTo;
+import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsAndNonStaticPublicFieldsOf;
 import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
 import static org.assertj.assertions.generator.util.ClassUtil.isArray;
 import static org.assertj.assertions.generator.util.ClassUtil.isIterable;
 import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
-import static org.assertj.assertions.generator.util.ClassUtil.publicFieldsOf;
+import static org.assertj.assertions.generator.util.ClassUtil.nonStaticPublicFieldsOf;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -53,13 +55,13 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
   @VisibleForTesting
   protected Set<GetterDescription> getterDescriptionsOf(Class<?> clazz) {
     Set<GetterDescription> getterDescriptions = new TreeSet<GetterDescription>();
-    List<Method> getters = getterMethodsOf(clazz);
-    for (Method getter : getters) {
-      // ignore hasDeclaringClass if Enum
+    for (Method getter : getterMethodsOf(clazz)) {
+      // ignore getDeclaringClass if Enum
       if (isGetDeclaringClassEnumGetter(getter, clazz)) continue;
       final TypeDescription typeDescription = getTypeDescription(getter);
-      final List<TypeName> exceptionsTypeNames = getExceptionTypeNames(getter);
-      getterDescriptions.add(new GetterDescription(propertyNameOf(getter), typeDescription, exceptionsTypeNames));
+      final List<TypeName> exceptionTypeNames = getExceptionTypeNames(getter);
+      String propertyName = propertyNameOf(getter);
+      getterDescriptions.add(new GetterDescription(propertyName, typeDescription, exceptionTypeNames));
     }
     return getterDescriptions;
   }
@@ -67,8 +69,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
   @VisibleForTesting
   protected Set<FieldDescription> fieldDescriptionsOf(Class<?> clazz) {
     Set<FieldDescription> fieldDescriptions = new TreeSet<FieldDescription>();
-    List<Field> fields = publicFieldsOf(clazz);
-    for (Field field : fields) {
+    for (Field field : nonStaticPublicFieldsOf(clazz)) {
       fieldDescriptions.add(new FieldDescription(field.getName(), getTypeDescription(field)));
     }
     return fieldDescriptions;
@@ -86,71 +87,69 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     return exceptions;
   }
 
-  protected TypeDescription getTypeDescription(Method getter) {
-    final Class<?> propertyType = getter.getReturnType();
-    final TypeDescription typeDescription = new TypeDescription(new TypeName(propertyType));
-    if (isArray(propertyType)) {
-      typeDescription.setElementTypeName(new TypeName(propertyType.getComponentType()));
-      typeDescription.setArray(true);
-    } else if (isIterable(propertyType)) {
-      ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
+  private TypeDescription getTypeDescription(Member member) {
+    final Class<?> type = getTypeOf(member);
+    if (isArray(type)) return buildArrayTypeDescription(type);    
+
+    if (isIterable(type)) {
+      final TypeDescription typeDescription = new TypeDescription(new TypeName(type));
+      typeDescription.setIterable(true);
+      ParameterizedType parameterizedType = getParameterizedTypeOf(member);
       if (parameterizedType.getActualTypeArguments()[0] instanceof GenericArrayType) {
         GenericArrayType genericArrayType = (GenericArrayType) parameterizedType.getActualTypeArguments()[0];
         Class<?> parameterClass = ClassUtil.getClass(genericArrayType.getGenericComponentType());
         typeDescription.setElementTypeName(new TypeName(parameterClass));
-        typeDescription.setIterable(true);
-        typeDescription.setArray(true);
       } else {
-        // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486, try to change if java 7 and
-        // a real array
+        // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486, try to change if java 7 and a real array
         Class<?> internalClass = ClassUtil.getClass(parameterizedType.getActualTypeArguments()[0]);
-        if (internalClass.isArray()) {
-          typeDescription.setElementTypeName(new TypeName(internalClass.getComponentType()));
-          typeDescription.setArray(true);
-        } else {
-          typeDescription.setElementTypeName(new TypeName(internalClass));
-        }
+        typeDescription.setElementTypeName(new TypeName(internalClass));
       }
-      typeDescription.setIterable(true);
+      return typeDescription;
     }
+    // "simple" type
+    return new TypeDescription(new TypeName(type));
+  }
+
+  private static Class<?> getTypeOf(Member member) {
+    if (member instanceof Method) return ((Method)member).getReturnType();
+    if (member instanceof Field) return ((Field)member).getType();
+    throw new IllegalArgumentException("argument should be a Method or Field but was " + member.getClass());
+  }
+
+  private static ParameterizedType getParameterizedTypeOf(Member member) {
+    if (member instanceof Method) return (ParameterizedType) ((Method)member).getGenericReturnType();
+    if (member instanceof Field) return (ParameterizedType) ((Field)member).getGenericType();
+    throw new IllegalArgumentException("argument should be a Method or Field but was " + member.getClass());
+  }
+  
+  private static boolean hasParameterizedType(Member member) {
+    if (member instanceof Method) return ((Method)member).getGenericReturnType() instanceof ParameterizedType;
+    if (member instanceof Field) return ((Field)member).getGenericType() instanceof ParameterizedType ;
+    throw new IllegalArgumentException("argument should be a Method or Field but was " + member.getClass());
+  }
+  
+  private static Class<?>[] getExceptionTypesOf(Member member) {
+    if (member instanceof Method) return ((Method)member).getExceptionTypes();
+    return new Class<?>[0];
+  }
+  
+  private static TypeDescription buildArrayTypeDescription(final Class<?> arrayType) {
+    final TypeDescription typeDescription = new TypeDescription(new TypeName(arrayType));
+    typeDescription.setElementTypeName(new TypeName(arrayType.getComponentType()));
+    typeDescription.setArray(true);
     return typeDescription;
   }
   
-  protected TypeDescription getTypeDescription(Field field) { // TODO refactor
-    final Class<?> propertyType = field.getType();
-    final TypeDescription typeDescription = new TypeDescription(new TypeName(propertyType));
-    if (isArray(propertyType)) {
-      typeDescription.setElementTypeName(new TypeName(propertyType.getComponentType()));
-      typeDescription.setArray(true);
-    } else if (isIterable(propertyType)) {
-      ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
-      if (parameterizedType.getActualTypeArguments()[0] instanceof GenericArrayType) {
-        GenericArrayType genericArrayType = (GenericArrayType) parameterizedType.getActualTypeArguments()[0];
-        Class<?> parameterClass = ClassUtil.getClass(genericArrayType.getGenericComponentType());
-        typeDescription.setElementTypeName(new TypeName(parameterClass));
-        typeDescription.setIterable(true);
-        typeDescription.setArray(true);
-      } else {
-        // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486, try to change if java 7 and
-        // a real array
-        Class<?> internalClass = ClassUtil.getClass(parameterizedType.getActualTypeArguments()[0]);
-        if (internalClass.isArray()) {
-          typeDescription.setElementTypeName(new TypeName(internalClass.getComponentType()));
-          typeDescription.setArray(true);
-        } else {
-          typeDescription.setElementTypeName(new TypeName(internalClass));
-        }
-      }
-      typeDescription.setIterable(true);
-    }
-    return typeDescription;
-  }
-
-  protected Set<TypeName> getNeededImportsFor(Class<?> clazz) {
+  /**return the import needed for the assertion class corresponding to given class
+   * 
+   * @param clazz
+   * @return
+   */
+  private Set<TypeName> getNeededImportsFor(Class<?> clazz) {
     // collect property types
     Set<Class<?>> classesToImport = new HashSet<Class<?>>();
-    for (Method getter : getterMethodsOf(clazz)) {
-      Class<?> propertyType = getter.getReturnType();
+    for (Member getter : getterMethodsAndNonStaticPublicFieldsOf(clazz)) {
+      Class<?> propertyType = getTypeOf(getter);
       if (isArray(propertyType)) {
         // we only need the component type, that is T in T[] array
         classesToImport.add(propertyType.getComponentType());
@@ -158,15 +157,14 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
         // we need the Iterable parameter type, that is T in Iterable<T>
         // we don't need to import the Iterable since it does not appear directly in generated code, ex :
         // assertThat(actual.getTeamMates()).contains(teamMates); // teamMates -> List
-        ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
+        ParameterizedType parameterizedType = getParameterizedTypeOf(getter);
         if (parameterizedType.getActualTypeArguments()[0] instanceof GenericArrayType) {
           //
           GenericArrayType genericArrayType = (GenericArrayType) parameterizedType.getActualTypeArguments()[0];
           Class<?> parameterClass = ClassUtil.getClass(genericArrayType.getGenericComponentType());
           classesToImport.add(parameterClass);
         } else {
-          // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486, try to change if java 7 and
-          // a real array
+          // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486, try to change if java 7 and a real array
           Class<?> internalClass = ClassUtil.getClass(parameterizedType.getActualTypeArguments()[0]);
           if (internalClass.isArray()) {
             classesToImport.add(internalClass.getComponentType());
@@ -174,18 +172,27 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
             classesToImport.add(internalClass);
           }
         }
-      } else if (getter.getGenericReturnType() instanceof ParameterizedType) {
+      } else if (hasParameterizedType(getter)) {
         // return type is generic type, add it and all its parameters type.
-        ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
-        classesToImport.addAll(getClassesRelatedTo(parameterizedType));
+        classesToImport.addAll(getClassesRelatedTo(getParameterizedTypeOf(getter)));
       } else {
         // return type is not generic type, simply add it.
         classesToImport.add(propertyType);
       }
-      Collections.addAll(classesToImport, getter.getExceptionTypes());
+      Collections.addAll(classesToImport, getExceptionTypesOf(getter));
     }
     // convert to TypeName, excluding primitive or types in java.lang that don't need to be imported.
-    return resolveTypesToImport(classesToImport);
+    Set<TypeName> typeNamesToImport = resolveTypesToImport(classesToImport);
+    // remove typenames belonging to the given class package, they don't need to be imported since assertion class will be in that package
+    return removeTypeNamesInPackage(typeNamesToImport, clazz.getPackage().getName());
+  }
+
+  private Set<TypeName> removeTypeNamesInPackage(Set<TypeName> typeNamesToImport, String packageName) {
+    Set<TypeName> filteredTypeNames = new TreeSet<TypeName>();
+    for (TypeName typeName : typeNamesToImport) {
+      if (!typeName.getPackageName().equals(packageName)) filteredTypeNames.add(typeName);
+    }
+    return filteredTypeNames;
   }
 
   private Set<TypeName> resolveTypesToImport(Set<Class<?>> classesToImport) {

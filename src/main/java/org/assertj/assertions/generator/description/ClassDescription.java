@@ -28,8 +28,10 @@ public class ClassDescription {
   private Set<TypeName> typesToImports;
   private Set<GetterDescription> gettersDescriptions;
   private Set<FieldDescription> fieldsDescriptions;
+  private Set<GetterDescription> declaredGettersDescriptions;
+  private Set<FieldDescription> declaredFieldsDescriptions;
   private TypeName classTypeName;
-  private TypeName superTypeName;
+  private Class<?> superType;
 
   public ClassDescription(TypeName typeName) {
     super();
@@ -37,6 +39,8 @@ public class ClassDescription {
     this.typesToImports = new TreeSet<TypeName>();
     this.gettersDescriptions = new TreeSet<GetterDescription>();
     this.fieldsDescriptions = new TreeSet<FieldDescription>();
+    this.declaredGettersDescriptions = new TreeSet<GetterDescription>();
+    this.declaredFieldsDescriptions = new TreeSet<FieldDescription>();
   }
 
   public String getClassName() {
@@ -83,6 +87,14 @@ public class ClassDescription {
     return fieldsDescriptions;
   }
 
+  public Set<GetterDescription> getDeclaredGettersDescriptions() {
+    return declaredGettersDescriptions;
+  }
+
+  public void addDeclaredGetterDescriptions(Collection<GetterDescription> declaredGetterDescriptions) {
+    declaredGettersDescriptions.addAll(declaredGetterDescriptions);
+  }
+
   @Override
   public String toString() {
     return "ClassDescription [classTypeName=" + classTypeName + ", typesToImports=" + typesToImports + "]";
@@ -105,11 +117,11 @@ public class ClassDescription {
     return classTypeName != null ? classTypeName.hashCode() : 0;
   }
 
-  public TypeName getSuperType() {
-    return superTypeName;
+  public Class<?> getSuperType() {
+    return superType;
   }
 
-  public void setSuperType(TypeName superTypeName) {
-    this.superTypeName = superTypeName;
+  public void setSuperType(Class<?> superType) {
+    this.superType = superType;
   }
 }

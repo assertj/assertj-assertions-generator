@@ -15,6 +15,7 @@ package org.assertj.assertions.generator.description.converter;
 import static org.assertj.assertions.generator.description.TypeName.JAVA_LANG_PACKAGE;
 import static org.assertj.assertions.generator.util.ClassUtil.getClassesRelatedTo;
 import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
+import static org.assertj.assertions.generator.util.ClassUtil.declaredGetterMethodsOf;
 import static org.assertj.assertions.generator.util.ClassUtil.isArray;
 import static org.assertj.assertions.generator.util.ClassUtil.isIterable;
 import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
@@ -46,19 +47,24 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     ClassDescription classDescription = new ClassDescription(new TypeName(clazz));
     classDescription.addGetterDescriptions(getterDescriptionsOf(clazz));
     classDescription.addFieldDescriptions(fieldDescriptionsOf(clazz));
+    classDescription.addDeclaredGetterDescriptions(declaredGetterDescriptionsOf(clazz));
     classDescription.addTypeToImport(getNeededImportsFor(clazz));
-    classDescription.setSuperType(getSuperTypeOf(clazz));
+    classDescription.setSuperType(clazz.getSuperclass());
     return classDescription;
-  }
-
-  private TypeName getSuperTypeOf(Class<?> clazz) {
-    return new TypeName(clazz.getSuperclass());
   }
 
   @VisibleForTesting
   protected Set<GetterDescription> getterDescriptionsOf(Class<?> clazz) {
+    return doGetterDescriptionsOf(getterMethodsOf(clazz), clazz);
+  }
+  
+  @VisibleForTesting
+  protected Set<GetterDescription> declaredGetterDescriptionsOf(Class<?> clazz) {
+    return doGetterDescriptionsOf(declaredGetterMethodsOf(clazz), clazz);
+  }
+
+  private Set<GetterDescription> doGetterDescriptionsOf(List<Method> getters, Class<?> clazz) {
     Set<GetterDescription> getterDescriptions = new TreeSet<GetterDescription>();
-    List<Method> getters = getterMethodsOf(clazz);
     for (Method getter : getters) {
       // ignore hasDeclaringClass if Enum
       if (isGetDeclaringClassEnumGetter(getter, clazz)) continue;

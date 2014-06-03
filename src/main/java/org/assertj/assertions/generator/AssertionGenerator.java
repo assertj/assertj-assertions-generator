@@ -2,6 +2,7 @@ package org.assertj.assertions.generator;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 import org.assertj.assertions.generator.description.ClassDescription;
 
@@ -83,7 +84,7 @@ public interface AssertionGenerator {
 
   File generateCustomAssertionFor(ClassDescription classDescription) throws IOException;
 
-  File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription) throws IOException;
+  File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription, Set<Class<?>> allClasses) throws IOException;
 
   /**
    * Builds and returns the custom assertion java file content for the given {@link ClassDescription}.
@@ -159,6 +160,6 @@ public interface AssertionGenerator {
    */
   String generateCustomAssertionContentFor(ClassDescription classDescription) throws IOException;
 
-  String[] generateHierarchicalCustomAssertionContentFor(ClassDescription classDescription) throws IOException;
+  String[] generateHierarchicalCustomAssertionContentFor(ClassDescription classDescription, Set<Class<?>> allClasses) throws IOException;
 
 }

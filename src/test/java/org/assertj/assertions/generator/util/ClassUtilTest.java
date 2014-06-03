@@ -141,6 +141,13 @@ public class ClassUtilTest implements NestedClassesTest {
                                              ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }
 
+  @Test
+  public void should_not_return_inherited_getters_methods() throws Exception {
+    List<Method> playerGetterMethods = declaredGetterMethodsOf(Movie.class);
+    assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS))
+                                   .doesNotContain(ArtWork.class.getMethod("getTitle", NO_PARAMS));
+  }
+
   @Theory
   public void should_return_inner_class_name_with_outer_class_name(NestedClass nestedClass) {
     String actualName = getSimpleNameWithOuterClass(nestedClass.getNestedClass());

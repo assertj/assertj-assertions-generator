@@ -2,7 +2,7 @@ package org.assertj.assertions.generator;
 
 import static java.lang.reflect.Modifier.isPublic;
 import static org.apache.commons.io.FileUtils.readFileToString;
-import static org.assertj.assertions.generator.BaseAssertionGenerator.ABSTRACT_CLASS_PREFIX;
+import static org.assertj.assertions.generator.BaseAssertionGenerator.ABSTRACT_ASSERT_CLASS_PREFIX;
 import static org.assertj.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_FILE_SUFFIX;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
@@ -13,7 +13,10 @@ import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.assertions.generator.data.Player;
 import org.assertj.assertions.generator.data.Team;
@@ -26,7 +29,6 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.assertj.assertions.generator.data.ArtWork;
 import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.Player;
@@ -40,7 +42,8 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   private static final Logger logger = LoggerFactory.getLogger(AssertionGeneratorTest.class);
   private ClassToClassDescriptionConverter converter;
   private AssertionGenerator assertionGenerator;
-
+  private static final Set<Class<?>> allClasses = new HashSet<Class<?>>(Arrays.asList(new Class<?>[] {Movie.class, ArtWork.class}));
+  
   @Before
   public void beforeEachTest() throws IOException {
     converter = new ClassToClassDescriptionConverter();
@@ -67,8 +70,17 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   @Test
+  public void should_generate_flat_assertion_for_movie_class() throws Exception {
+    abstractFileGeneratedFor(Movie.class).delete();
+    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Movie.class));
+    assertThat(fileGeneratedFor(Movie.class)).hasContentEqualTo(
+        new File("src/test/resources/MovieAssert.flat.expected" + ".txt").getAbsoluteFile());
+    assertThat(abstractFileGeneratedFor(Movie.class)).doesNotExist();
+  }
+
+  @Test
   public void should_generate_hierarchical_assertion_for_movie_class() throws Exception {
-    assertionGenerator.generateHierarchicalCustomAssertionFor(converter.convertToClassDescription(Movie.class));
+    assertionGenerator.generateHierarchicalCustomAssertionFor(converter.convertToClassDescription(Movie.class), allClasses);
     assertThat(fileGeneratedFor(Movie.class)).hasContentEqualTo(
         new File("src/test/resources/MovieAssert.expected" + ".txt").getAbsoluteFile());
     assertThat(abstractFileGeneratedFor(Movie.class)).hasContentEqualTo(
@@ -77,7 +89,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 
   @Test
   public void should_generate_hierarchical_assertion_for_artwork_class() throws Exception {
-    assertionGenerator.generateHierarchicalCustomAssertionFor(converter.convertToClassDescription(ArtWork.class));
+    assertionGenerator.generateHierarchicalCustomAssertionFor(converter.convertToClassDescription(ArtWork.class), allClasses);
     assertThat(fileGeneratedFor(ArtWork.class)).hasContentEqualTo(
         new File("src/test/resources/ArtWorkAssert.expected" + ".txt").getAbsoluteFile());
     assertThat(abstractFileGeneratedFor(ArtWork.class)).hasContentEqualTo(
@@ -176,7 +188,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   
   private static File abstractFileGeneratedFor(Class<?> clazz) {
     String dirName = TARGET_DIRECTORY + File.separatorChar + clazz.getPackage().getName().replace('.', File.separatorChar);
-    String generatedFileName = ABSTRACT_CLASS_PREFIX + clazz.getSimpleName() + ASSERT_CLASS_FILE_SUFFIX;
+    String generatedFileName = ABSTRACT_ASSERT_CLASS_PREFIX + getSimpleNameWithOuterClassNotSeparatedByDots(clazz) + ASSERT_CLASS_FILE_SUFFIX;
     return new File(dirName, generatedFileName);    
   }
 

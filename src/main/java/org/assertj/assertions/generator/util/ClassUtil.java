@@ -268,11 +268,19 @@ public class ClassUtil {
            && name.startsWith(IS_PREFIX);
   }
 
+  public static List<Method> declaredGetterMethodsOf(Class<?> clazz) {
+    return filterGetterMethods(clazz.getDeclaredMethods());
+  }
+
   public static List<Method> getterMethodsOf(Class<?> clazz) {
-    Method[] methods = clazz.getDeclaredMethods();
-    List<Method> getters = new ArrayList<Method>();
-    for (Method method : methods) {
-      if (isNotDefinedInObjectClass(method) && (isStandardGetter(method) || isBooleanGetter(method))) {
+    return filterGetterMethods(clazz.getMethods());
+  }
+
+  private static List<Method> filterGetterMethods(Method[] methods) {
+    List<Method> getters = new ArrayList<Method>(methods.length);
+    for (int i = 0; i < methods.length; i++) {
+      Method method = methods[i];
+      if (isPublic(method.getModifiers()) && isNotDefinedInObjectClass(method) && (isStandardGetter(method) || isBooleanGetter(method))) {
         getters.add(method);
       }
     }

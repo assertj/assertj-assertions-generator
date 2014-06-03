@@ -250,6 +250,32 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
   }
 
   /**
+   * Verifies that the actual Player's size is close to the given value by less than the given offset.
+   * <p>
+   * If difference is equal to the offset value, assertion is considered successful.
+   * @param size the value to compare the actual Player's size to.
+   * @param offset the given offset.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's size is not close enough to the given value.
+   */
+  public PlayerAssert hasSize(float size, float offset) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    float actualSize = actual.getSize();
+    
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = String.format("\nExpected size:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+                                               actualSize, size, offset, Math.abs(size - actualSize));
+    
+    // check
+    Assertions.assertThat(actualSize).overridingErrorMessage(assertjErrorMessage).isCloseTo(size, Assertions.within(offset));
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Player's team is equal to the given one.
    * @param team the given team to compare the actual Player's team to.
    * @return this assertion object.

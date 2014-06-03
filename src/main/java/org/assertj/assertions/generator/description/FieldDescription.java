@@ -63,6 +63,10 @@ public class FieldDescription implements Comparable<FieldDescription> {
     return typeDescription.isPrimitive();
   }
 
+  public boolean isRealNumberType() {
+    return typeDescription.isRealNumber();
+  }
+  
   public boolean isBooleanPropertyType() {
     return typeDescription.isBoolean();
   }

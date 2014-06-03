@@ -117,6 +117,22 @@ public class TypeNameTest implements NestedClassesTest {
   }
 
   @Test
+  public void should_detect_real_numbers_typename() {
+    assertThat(new TypeName(int.class).isRealNumber()).isFalse();
+    assertThat(new TypeName(long.class).isRealNumber()).isFalse();
+    assertThat(new TypeName(short.class).isRealNumber()).isFalse();
+    assertThat(new TypeName(boolean.class).isRealNumber()).isFalse();
+    assertThat(new TypeName(char.class).isRealNumber()).isFalse();
+    assertThat(new TypeName(byte.class).isRealNumber()).isFalse();
+    assertThat(new TypeName(float.class).isRealNumber()).isTrue();
+    assertThat(new TypeName(double.class).isRealNumber()).isTrue();
+    assertThat(new TypeName(String.class).isRealNumber()).isFalse();
+    assertThat(new TypeName("test.int").isRealNumber()).isFalse();
+    assertThat(new TypeName("test.boolean").isRealNumber()).isFalse();
+    assertThat(new TypeName("test.Boolean").isRealNumber()).isFalse();
+  }
+  
+  @Test
   public void should_detect_boolean_typename() {
     assertThat(new TypeName(boolean.class).isBoolean()).isTrue();
     assertThat(new TypeName("boolean").isBoolean()).isTrue();

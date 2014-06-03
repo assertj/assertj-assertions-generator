@@ -1,0 +1,26 @@
+
+  /**
+   * Verifies that the actual ${class_to_assert}'s ${property} is close to the given value by less than the given offset.
+   * <p>
+   * If difference is equal to the offset value, assertion is considered successful.
+   * @param ${property} the value to compare the actual ${class_to_assert}'s ${property} to.
+   * @param offset the given offset.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ${class_to_assert}'s ${property} is not close enough to the given value.${throws_javadoc}
+   */
+  public ${custom_assertion_class} has${Property}(${propertyType} ${property}, ${propertyType} offset) ${throws}{
+    // check that actual ${class_to_assert} we want to make assertions on is not null.
+    isNotNull();
+
+    ${propertyType} actual${Property} = actual.get${Property}();
+    
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = String.format("\nExpected ${property}:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+                                               actual${Property}, ${property}, offset, Math.abs(${property} - actual${Property}));
+    
+    // check
+    Assertions.assertThat(actual${Property}).overridingErrorMessage(assertjErrorMessage).isCloseTo(${property}, Assertions.within(offset));
+
+    // return the current assertion for method chaining
+    return this;
+  }

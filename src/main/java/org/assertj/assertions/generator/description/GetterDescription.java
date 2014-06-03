@@ -89,4 +89,9 @@ public class GetterDescription implements Comparable<GetterDescription> {
   public List<TypeName> getExceptions() {
     return exceptions;
   }
+
+  public boolean isRealNumberType() {
+    return typeDescription.isRealNumber();
+  }
+  
 }

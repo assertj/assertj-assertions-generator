@@ -31,6 +31,7 @@ public class Player {
   private int assistsPerGame;
   private int reboundsPerGame;
   private String team;
+  private float size;
   private List<Player> teamMates = new ArrayList<Player>();
   private List<int[]> points = new ArrayList<int[]>();
   private String[] previousTeams = {};
@@ -140,6 +141,10 @@ public class Player {
   // for testing only
   public String isWithParam(String param) {
     return param;
+  }
+  
+  public float getSize() {
+    return size;
   }
 
   @Override

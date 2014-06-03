@@ -38,7 +38,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getClassName()).isEqualTo("Player");
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Player");
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
-    assertThat(classDescription.getGettersDescriptions()).hasSize(9);
+    assertThat(classDescription.getGettersDescriptions()).hasSize(10);
     assertThat(classDescription.getImports()).containsOnly(new TypeName(Player.class), new TypeName(Name.class));
   }
 

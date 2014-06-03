@@ -42,6 +42,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     "has_elements_assertion_template_for_iterable.txt";
   static final String DEFAULT_HAS_ASSERTION_TEMPLATE = "has_assertion_template.txt";
   static final String DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_PRIMITIVE = "has_assertion_template_for_primitive.txt";
+  static final String DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_REAL_NUMBER = "has_assertion_template_for_real_number.txt";
   static final String DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE = "custom_assertion_class_template.txt";
   static final String DEFAULT_ASSERTIONS_ENTRY_POINT_CLASS_TEMPLATE = "standard_assertions_entry_point_class_template.txt";
   static final String DEFAULT_ASSERTION_ENTRY_POINT_METHOD_TEMPLATE = "standard_assertion_entry_point_method_template.txt";
@@ -72,6 +73,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private Template classAssertionTemplate;
   private Template hasAssertionTemplate;
   private Template hasAssertionTemplateForPrimitive;
+  private Template hasAssertionTemplateForRealNumber;
   private Template hasIterableElementsAssertionTemplate;
   private Template hasArrayElementsAssertionTemplate;
   private Template isAssertionTemplate;
@@ -122,11 +124,14 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
           new Template(Type.BDD_ASSERTIONS_ENTRY_POINT_CLASS,
                        new File(templatesDirectory, DEFAULT_BDD_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE)),
           new Template(Type.BDD_ENTRY_POINT_METHOD_ASSERTION,
-                       new File(templatesDirectory, DEFAULT_BDD_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE))
+                       new File(templatesDirectory, DEFAULT_BDD_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE)),
+          new Template(Type.HAS_FOR_REAL_NUMBER,
+                       new File(templatesDirectory, DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_REAL_NUMBER))
     );
   }
 
-  public BaseAssertionGenerator(Template classAssertionTemplate, Template hasAssertionTemplate,
+  public BaseAssertionGenerator(Template classAssertionTemplate,
+                                Template hasAssertionTemplate,
                                 Template hasAssertionTemplateForPrimitive,
                                 Template hasIterableElementsAssertionTemplate,
                                 Template hasArrayElementsAssertionTemplate,
@@ -136,11 +141,13 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
                                 Template entryPointSoftAssertionsClassTemplate,
                                 Template entryPointSoftAssertionTemplate,
                                 Template bddAssertionsEntryPointClassTemplate,
-                                Template bddAssertionEntryPointMethodTemplate) {
+                                Template bddAssertionEntryPointMethodTemplate,
+                                Template hasAssertionTemplateForRealNumber) {
 
     this.setAssertionClassTemplate(classAssertionTemplate);
     this.setHasAssertionTemplate(hasAssertionTemplate);
     this.setHasAssertionTemplateForPrimitive(hasAssertionTemplateForPrimitive);
+    this.setHasAssertionTemplateForRealNumber(hasAssertionTemplateForRealNumber);
     this.setHasElementsAssertionForIterableTemplate(hasIterableElementsAssertionTemplate);
     this.setHasElementsAssertionForArrayTemplate(hasArrayElementsAssertionTemplate);
     this.setIsAssertionTemplate(isAssertionTemplate);
@@ -173,6 +180,11 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     this.hasAssertionTemplateForPrimitive = hasAssertionTemplateForPrimitive;
   }
 
+  public final void setHasAssertionTemplateForRealNumber(Template hasAssertionTemplateForRealNumber) {
+    checkTemplateParameter(hasAssertionTemplateForRealNumber, Template.Type.HAS_FOR_REAL_NUMBER);
+    this.hasAssertionTemplateForRealNumber = hasAssertionTemplateForRealNumber;
+  }
+  
   public final void setHasElementsAssertionForIterableTemplate(Template hasIterableElementsAssertionTemplate) {
     checkTemplateParameter(hasIterableElementsAssertionTemplate, Template.Type.HAS_FOR_ITERABLE);
     this.hasIterableElementsAssertionTemplate = hasIterableElementsAssertionTemplate;
@@ -453,6 +465,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     } else if (field.isArrayPropertyType()) {
       assertionContent = hasArrayElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
                                                                                    field.getElementTypeName());
+    } else if (field.isRealNumberType()) {
+      assertionContent = hasAssertionTemplateForRealNumber.getContent();
     } else if (field.isPrimitivePropertyType()) {
       assertionContent = hasAssertionTemplateForPrimitive.getContent();
     }
@@ -471,7 +485,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
                            .replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP, field.getName());
   }
   
-  private String assertionContentFor(GetterDescription getter) {
+  private String assertionContentFor(GetterDescription getter) { // TODO refatcor with assertionContentFor field
     // sets default content (most likely case)
     String assertionContent = hasAssertionTemplate.getContent();
     if (getter.isBooleanPropertyType()) {
@@ -486,6 +500,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     } else if (getter.isArrayPropertyType()) {
       assertionContent = hasArrayElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
                                                                                    getter.getElementTypeName());
+    } else if (getter.isRealNumberType()) {
+      assertionContent = hasAssertionTemplateForRealNumber.getContent();
     } else if (getter.isPrimitivePropertyType()) {
       assertionContent = hasAssertionTemplateForPrimitive.getContent();
     }

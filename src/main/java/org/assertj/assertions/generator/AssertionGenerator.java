@@ -77,13 +77,43 @@ public interface AssertionGenerator {
    *   }
    * </pre>
    *
-   * @param classDescription the {@link ClassDescription} used to generate tha assertions class.
+   * @param classDescription the {@link ClassDescription} used to generate the assertions class.
    * @return the custom assertion java file for the given class
    * @throws IOException if something went wrong when creating the assertion file.
    */
 
   File generateCustomAssertionFor(ClassDescription classDescription) throws IOException;
 
+  /**
+   * Generates hierarchical assertion classes for the class represented by the
+   * given classDescription. Two classes are generated:
+   * 
+   * <ul>
+   * <li>An abstract base class containing the assertion definitions, eg
+   * <code>public abstract class AbstractRaceAssert<S extends AbstractRaceAssert, T extends Race></code>
+   * </li>
+   * <li>A concrete final class which inherits from the abstract base class,
+   * eg
+   * <code>public final class RaceAssert extends AbstractRaceAssert<RaceAssert, Race></code>.</li>
+   * </ul>
+   * 
+   * If the <code>classDescription</code> has a supertype with a known assertion class,
+   * then the generated abstract assertion class will inherit from the
+   * superclass' abstract assertion class. Otherwise, it will inherit from
+   * <code>AbstractAssert<S, T></code>.
+   * 
+   * @param classDescription
+   *            the {@link ClassDescription} used to generate the assertions
+   *            class.
+   * @param allClasses
+   *            set of all classes that we are currently generating assertions
+   *            for. Used to find superclass assertions.
+   * @return two-element File array with the first containing the file for
+   *         the abstract base assertion and the second containing the
+   *         file for the concrete final assertion.
+   * @throws IOException
+   *             if something went wrong when creating the assertion files.
+   */
   File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription, Set<Class<?>> allClasses) throws IOException;
 
   /**
@@ -160,6 +190,36 @@ public interface AssertionGenerator {
    */
   String generateCustomAssertionContentFor(ClassDescription classDescription) throws IOException;
 
+  /**
+   * Generates hierarchical assertion classes for the class represented by the
+   * given classDescription. Two classes are generated:
+   * 
+   * <ul>
+   * <li>An abstract base class containing the assertion definitions, eg
+   * <code>public abstract class AbstractRaceAssert<S extends AbstractRaceAssert, T extends Race></code>
+   * </li>
+   * <li>A concrete final class which inherits from the abstract base class,
+   * eg
+   * <code>public final class RaceAssert extends AbstractRaceAssert<RaceAssert, Race></code>.</li>
+   * </ul>
+   * 
+   * If the <code>classDescription</code> has a supertype with a known assertion class,
+   * then the generated abstract assertion class will inherit from the
+   * superclass' abstract assertion class. Otherwise, it will inherit from
+   * <code>AbstractAssert<S, T></code>.
+   * 
+   * @param classDescription
+   *            the {@link ClassDescription} used to generate the assertions
+   *            class.
+   * @param allClasses
+   *            set of all classes that we are currently generating assertions
+   *            for. Used to find superclass assertions.
+   * @return two-element String array with the first containing the content of
+   *         the abstract base assertion and the second containing the
+   *         concrete final assertion.
+   * @throws IOException
+   *             if something went wrong when creating the assertion content.
+   */
   String[] generateHierarchicalCustomAssertionContentFor(ClassDescription classDescription, Set<Class<?>> allClasses) throws IOException;
 
 }

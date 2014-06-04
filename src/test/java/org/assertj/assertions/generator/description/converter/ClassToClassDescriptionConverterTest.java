@@ -178,5 +178,5 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     // no List.class as it won't be needed in TeamAssert
     assertThat(classDescription.getImports()).containsOnly(new TypeName(Player.class));
   }
-
+  
 }

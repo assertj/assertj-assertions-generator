@@ -56,7 +56,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getGettersDescriptions()).hasSize(3);
     assertThat(classDescription.getFieldsDescriptions()).hasSize(2);
     assertThat(classDescription.getDeclaredGettersDescriptions()).hasSize(2);
-//    assertThat(classDescription.getDeclaredFieldsDescriptions()).hasSize(1);
+    assertThat(classDescription.getDeclaredFieldsDescriptions()).hasSize(1);
     assertThat(classDescription.getSuperType()).isEqualTo(ArtWork.class);
     assertThat(classDescription.getImports()).containsOnly(new TypeName(PublicCategory.class), new TypeName(Date.class));
   }

@@ -4,7 +4,7 @@
    * @return this assertion object.
    * @throws AssertionError - if the actual ${class_to_assert} is not ${property}.${throws_javadoc}
    */
-  public ${custom_assertion_class} is${Property}() ${throws}{
+  public ${self_type} is${Property}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
@@ -14,7 +14,7 @@
     }
     
     // return the current assertion for method chaining
-    return this;
+    return ${myself};
   }
 
   /**
@@ -22,7 +22,7 @@
    * @return this assertion object.
    * @throws AssertionError - if the actual ${class_to_assert} is ${property}.${throws_javadoc}
    */
-  public ${custom_assertion_class} isNot${Property}() ${throws}{
+  public ${self_type} isNot${Property}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
@@ -32,5 +32,5 @@
     }
     
     // return the current assertion for method chaining
-    return this;
+    return ${myself};
   }

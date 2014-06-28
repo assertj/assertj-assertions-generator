@@ -5,7 +5,7 @@
    * @return this assertion object.
    * @throws AssertionError - if the actual ${class_to_assert}'s ${property} is not equal to the given one.${throws_javadoc}
    */
-  public ${custom_assertion_class} has${Property}(${propertyType} ${property}) ${throws}{
+  public ${self_type} has${Property}(${propertyType} ${property}) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
@@ -19,5 +19,5 @@
     }
 
     // return the current assertion for method chaining
-    return this;
+    return ${myself};
   }

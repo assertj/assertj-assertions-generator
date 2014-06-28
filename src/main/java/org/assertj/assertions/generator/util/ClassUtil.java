@@ -269,11 +269,19 @@ public class ClassUtil {
            && name.startsWith(IS_PREFIX);
   }
 
+  public static List<Method> declaredGetterMethodsOf(Class<?> clazz) {
+    return filterGetterMethods(clazz.getDeclaredMethods());
+  }
+
   public static List<Method> getterMethodsOf(Class<?> clazz) {
-    Method[] methods = clazz.getMethods();
-    List<Method> getters = new ArrayList<Method>();
-    for (Method method : methods) {
-      if (isNotDefinedInObjectClass(method) && (isStandardGetter(method) || isBooleanGetter(method))) {
+    return filterGetterMethods(clazz.getMethods());
+  }
+
+  private static List<Method> filterGetterMethods(Method[] methods) {
+    List<Method> getters = new ArrayList<Method>(methods.length);
+    for (int i = 0; i < methods.length; i++) {
+      Method method = methods[i];
+      if (isPublic(method.getModifiers()) && isNotDefinedInObjectClass(method) && (isStandardGetter(method) || isBooleanGetter(method))) {
         getters.add(method);
       }
     }
@@ -300,8 +308,20 @@ public class ClassUtil {
   }
   
   
+  public static List<Field> declaredPublicFieldsOf(Class<?> clazz) {
+    Field[] fields = clazz.getDeclaredFields();
+    List<Field> nonStaticPublicFields = new ArrayList<Field>();
+    for (Field field : fields) {
+      if (isNotStaticPublicField(field)) {
+       nonStaticPublicFields.add(field);
+      }
+    }
+    return nonStaticPublicFields;
+  }
+  
   private static boolean isNotStaticPublicField(Field field) {
-    return !Modifier.isStatic(field.getModifiers());
+    final int modifiers = field.getModifiers();
+    return !Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers);
   }
 
   private static boolean isNotDefinedInObjectClass(Method method) {

@@ -5,7 +5,7 @@
    * @return this assertion object.
    * @throws AssertionError if the actual ${class_to_assert}'s ${property} does not contain all given ${elementType} elements.${throws_javadoc}
    */
-  public ${custom_assertion_class} has${Property}(${elementType}... ${property}) ${throws}{
+  public ${self_type} has${Property}(${elementType}... ${property}) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
@@ -21,7 +21,7 @@
     // Assertions.assertThat(actual.get${Property}()).overridingErrorMessage("\nmy error message %s", "arg1").contains(${property});
     
     // return the current assertion for method chaining
-    return this;
+    return ${myself};
   }
 
   /**
@@ -29,7 +29,7 @@
    * @return this assertion object.
    * @throws AssertionError if the actual ${class_to_assert}'s ${property} is not empty.${throws_javadoc}
    */
-  public ${custom_assertion_class} hasNo${Property}() ${throws}{
+  public ${self_type} hasNo${Property}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
@@ -42,6 +42,6 @@
     }
     
     // return the current assertion for method chaining
-    return this;
+    return ${myself};
   }
   

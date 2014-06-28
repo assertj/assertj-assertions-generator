@@ -2,11 +2,14 @@ package org.assertj.assertions.generator.description.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.assertj.assertions.generator.BeanWithExceptionsTest;
 import org.assertj.assertions.generator.NestedClassesTest;
+import org.assertj.assertions.generator.data.ArtWork;
+import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.Name;
 import org.assertj.assertions.generator.data.Team;
 import org.assertj.assertions.generator.data.TreeEnum;
@@ -38,6 +41,20 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.nba");
     assertThat(classDescription.getGettersDescriptions()).hasSize(10);
     assertThat(classDescription.getImports()).containsOnly(new TypeName(Name.class));
+  }
+
+  @Test
+  public void should_build_movie_class_description() throws Exception {
+    ClassDescription classDescription = converter.convertToClassDescription(Movie.class);
+    assertThat(classDescription.getClassName()).isEqualTo("Movie");
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Movie");
+    assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
+    assertThat(classDescription.getGettersDescriptions()).hasSize(3);
+    assertThat(classDescription.getFieldsDescriptions()).hasSize(2);
+    assertThat(classDescription.getDeclaredGettersDescriptions()).hasSize(2);
+//    assertThat(classDescription.getDeclaredFieldsDescriptions()).hasSize(1);
+    assertThat(classDescription.getSuperType()).isEqualTo(ArtWork.class);
+    assertThat(classDescription.getImports()).containsOnly(new TypeName(Date.class));
   }
 
   @Theory

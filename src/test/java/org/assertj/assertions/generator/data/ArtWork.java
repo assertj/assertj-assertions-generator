@@ -3,7 +3,8 @@ package org.assertj.assertions.generator.data;
 public abstract class ArtWork {
 
   protected final String title;
-
+  public String creator;
+  
   protected ArtWork(String title) {
     super();
     this.title = title;

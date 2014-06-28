@@ -45,6 +45,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   static final String DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_PRIMITIVE = "has_assertion_template_for_primitive.txt";
   static final String DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_REAL_NUMBER = "has_assertion_template_for_real_number.txt";
   static final String DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE = "custom_assertion_class_template.txt";
+  static final String DEFAULT_CUSTOM_HIERARCHICAL_ASSERTION_CLASS_TEMPLATE = "custom_hierarchical_assertion_class_template.txt";
+  static final String DEFAULT_CUSTOM_ABSTRACT_ASSERTION_CLASS_TEMPLATE = "custom_abstract_assertion_class_template.txt";
   static final String DEFAULT_ASSERTIONS_ENTRY_POINT_CLASS_TEMPLATE = "standard_assertions_entry_point_class_template.txt";
   static final String DEFAULT_ASSERTION_ENTRY_POINT_METHOD_TEMPLATE = "standard_assertion_entry_point_method_template.txt";
   static final String DEFAULT_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE =
@@ -52,6 +54,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   static final String DEFAULT_SOFT_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE = "soft_assertion_entry_point_method_template.txt";
   static final String DEFAULT_BDD_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE = "bdd_assertions_entry_point_class_template.txt";
   static final String DEFAULT_BDD_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE = "bdd_assertion_entry_point_method_template.txt";
+  static final String ABSTRACT_ASSERT_CLASS_PREFIX = "Abstract";
   static final String ASSERT_CLASS_SUFFIX = "Assert";
   static final String ASSERT_CLASS_FILE_SUFFIX = ASSERT_CLASS_SUFFIX + ".java";
   static final String TEMPLATES_DIR = "templates" + File.separator;
@@ -62,6 +65,9 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String PROPERTY_TYPE_REGEXP = "\\$\\{propertyType\\}";
   private static final String CLASS_TO_ASSERT_REGEXP = "\\$\\{class_to_assert\\}";
   private static final String CUSTOM_ASSERTION_CLASS_REGEXP = "\\$\\{custom_assertion_class\\}";
+  private static final String SUPER_ASSERTION_CLASS_REGEXP = "\\$\\{super_assertion_class\\}";
+  private static final String SELF_TYPE_REGEXP = "\\$\\{self_type\\}";
+  private static final String MYSELF_REGEXP = "\\$\\{myself\\}";
   private static final String ELEMENT_TYPE_REGEXP = "\\$\\{elementType\\}";
   private static final String ALL_ASSERTIONS_ENTRY_POINTS_REGEXP = "\\$\\{all_assertions_entry_points\\}";
   private static final String IMPORTS = "${imports}";
@@ -72,6 +78,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   // ex : com.nba.Player -> targetBaseDirectory/com/nba/PlayerAssert.java
   private String targetBaseDirectory = ".";
   private Template classAssertionTemplate;
+  private Template hierarchicalClassAssertionTemplate;
+  private Template abstractClassAssertionTemplate;
   private Template hasAssertionTemplate;
   private Template hasAssertionTemplateForPrimitive;
   private Template hasAssertionTemplateForRealNumber;
@@ -104,6 +112,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     this(
          new Template(Template.Type.ASSERT_CLASS,
                       new File(templatesDirectory, DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE)),
+         new Template(Template.Type.HIERARCHICAL_ASSERT_CLASS,
+                      new File(templatesDirectory, DEFAULT_CUSTOM_HIERARCHICAL_ASSERTION_CLASS_TEMPLATE)),
+         new Template(Template.Type.ABSTRACT_ASSERT_CLASS,
+                      new File(templatesDirectory, DEFAULT_CUSTOM_ABSTRACT_ASSERTION_CLASS_TEMPLATE)),
          new Template(Template.Type.HAS,
                       new File(templatesDirectory, DEFAULT_HAS_ASSERTION_TEMPLATE)),
          new Template(Template.Type.HAS_FOR_PRIMITIVE,
@@ -131,6 +143,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   public BaseAssertionGenerator(Template classAssertionTemplate,
+                                Template hierarchicalClassAssertionTemplate,
+                                Template abstractClassAssertionTemplate,
                                 Template hasAssertionTemplate,
                                 Template hasAssertionTemplateForPrimitive,
                                 Template hasIterableElementsAssertionTemplate,
@@ -145,6 +159,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
                                 Template hasAssertionTemplateForRealNumber) {
 
     this.setAssertionClassTemplate(classAssertionTemplate);
+    this.setHierarchicalAssertionClassTemplate(hierarchicalClassAssertionTemplate);
+    this.setAbstractAssertionClassTemplate(abstractClassAssertionTemplate);
     this.setHasAssertionTemplate(hasAssertionTemplate);
     this.setHasAssertionTemplateForPrimitive(hasAssertionTemplateForPrimitive);
     this.setHasAssertionTemplateForRealNumber(hasAssertionTemplateForRealNumber);
@@ -168,6 +184,16 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   public final void setAssertionClassTemplate(Template assertionClassTemplate) {
     checkTemplateParameter(assertionClassTemplate, Template.Type.ASSERT_CLASS);
     this.classAssertionTemplate = assertionClassTemplate;
+  }
+
+  public final void setHierarchicalAssertionClassTemplate(Template hierarchicalAssertionClassTemplate) {
+    checkTemplateParameter(hierarchicalAssertionClassTemplate, Template.Type.HIERARCHICAL_ASSERT_CLASS);
+    this.hierarchicalClassAssertionTemplate = hierarchicalAssertionClassTemplate;
+  }
+
+  public final void setAbstractAssertionClassTemplate(Template abstractAssertionClassTemplate) {
+    checkTemplateParameter(abstractAssertionClassTemplate, Template.Type.ABSTRACT_ASSERT_CLASS);
+    this.abstractClassAssertionTemplate = abstractAssertionClassTemplate;
   }
 
   public final void setHasAssertionTemplate(Template hasAssertionTemplate) {
@@ -239,41 +265,118 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     String targetDirectory = getDirectoryPathCorrespondingToPackage(classDescription.getPackageName());
     // build any needed directories
     new File(targetDirectory).mkdirs();
-    return createFile(assertionFileContent,
-                      classDescription.getClassNameWithOuterClassNotSeparatedByDots() + ASSERT_CLASS_FILE_SUFFIX,
-                      targetDirectory);
+    return createFile(assertionFileContent, assertClassNameOf(classDescription) + ".java", targetDirectory);
   }
 
   @Override
-  public String generateCustomAssertionContentFor(ClassDescription classDescription) throws IOException {
+  public File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription, Set<Class<?>> allClasses) throws IOException {
+
+    // Assertion content
+    String[] assertionFileContent = generateHierarchicalCustomAssertionContentFor(classDescription, allClasses);
+    // finally create the assertion file, located in its package directory starting from targetBaseDirectory
+    String targetDirectory = getDirectoryPathCorrespondingToPackage(classDescription.getPackageName());
+    // build any needed directories
+    new File(targetDirectory).mkdirs();
+    File[] assertionClassesFile = new File[2];
+    final String concreteAsserClassFileName = assertClassNameOf(classDescription) + ".java";
+    final String abstractAsserClassFileName = abstractAssertClassNameOf(classDescription) + ".java";
+    assertionClassesFile[0] = createFile(assertionFileContent[0], abstractAsserClassFileName, targetDirectory);
+    assertionClassesFile[1] = createFile(assertionFileContent[1], concreteAsserClassFileName, targetDirectory);
+    return assertionClassesFile;
+  }
+  
+  @Override
+  public String[] generateHierarchicalCustomAssertionContentFor(ClassDescription classDescription, Set<Class<?>> allClasses) {
+    // use class template first
+    StringBuilder abstractAssertClassContentBuilder = new StringBuilder(abstractClassAssertionTemplate.getContent());
+
+    // generate assertion method for each property with a public getter
+    abstractAssertClassContentBuilder.append(generateAssertionsForGetters(classDescription.getDeclaredGettersDescriptions()));
+    abstractAssertClassContentBuilder.append(generateAssertionsForPublicFields(classDescription.getDeclaredFieldsDescriptions()));
+
+    // close class with }
+    abstractAssertClassContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
+
+    // use class template first
+    StringBuilder concreteAssertClassContentBuilder = new StringBuilder(hierarchicalClassAssertionTemplate.getContent());
+
+    String[] assertionClassesContent = new String[2];
+    assertionClassesContent[0] = fillAssertClassTemplate(abstractAssertClassContentBuilder.toString(), classDescription, allClasses, false);
+    assertionClassesContent[1] = fillAssertClassTemplate(concreteAssertClassContentBuilder.toString(), classDescription, null, true);
+    return assertionClassesContent;
+  }
+  
+  private String fillAssertClassTemplate(String template, ClassDescription classDescription,
+                                   Set<Class<?>> classesHierarchy, boolean concrete) {
+    // Add o.a.c.a.Assertions if needed
+    TreeSet<TypeName> imports = new TreeSet<TypeName>(classDescription.getImports());
+    if (template.contains("Assertions")) {
+      imports.add(new TypeName("org.assertj.core.api.Assertions"));
+    }
+
+    final Class<?> superType = classDescription.getSuperType();
+    final TypeName superTypeName = new TypeName(superType);
+    final TypeName superAssertionClass;
+
+    // Add assertion supertype to imports if needed
+    if (classesHierarchy == null || !classesHierarchy.contains(superType)) {
+      superAssertionClass = new TypeName("org.assertj.core.api.AbstractAssert");
+    } else {
+      superAssertionClass = new TypeName(abstractAssertClassNameOf(superTypeName), superTypeName.getPackageName());
+    }
+    imports.add(superAssertionClass);
+
+    final String customAssertionClass = concrete ? assertClassNameOf(classDescription) :
+        abstractAssertClassNameOf(classDescription);
+    final String selfType = concrete ? customAssertionClass : "S";
+    final String myself = concrete ? "this" : "myself";
+
+    return template.replaceAll(PACKAGE_REGEXP, classDescription.getPackageName())
+                   .replaceAll(CUSTOM_ASSERTION_CLASS_REGEXP, customAssertionClass)
+                   // className could be a nested class like "OuterClass.NestedClass",
+                   // in that case assert class will be OuterClassNestedClass
+                   .replaceAll(SUPER_ASSERTION_CLASS_REGEXP,
+                               superAssertionClass.getSimpleNameWithOuterClassNotSeparatedByDots())
+                   .replaceAll(CLASS_TO_ASSERT_REGEXP, classDescription.getClassNameWithOuterClass())
+                   .replaceAll(SELF_TYPE_REGEXP, selfType)
+                   .replaceAll(MYSELF_REGEXP, myself)
+                   .replace(IMPORTS, listImports(imports, classDescription.getPackageName()));
+  }
+
+  private String fillAssertClassTemplate(String template, ClassDescription classDescription) {
+    return fillAssertClassTemplate(template, classDescription, null, true);
+  }
+  
+  @Override
+  public String generateCustomAssertionContentFor(ClassDescription classDescription) {
 
     // use class template first
     StringBuilder assertionFileContentBuilder = new StringBuilder(classAssertionTemplate.getContent());
 
     // generate assertion method for each property with a public getter
-    assertionFileContentBuilder.append(generateAssertionsForGettersOf(classDescription));
-    assertionFileContentBuilder.append(generateAssertionsForPublicFieldsOf(classDescription));
-
+    assertionFileContentBuilder.append(generateAssertionsForGetters(classDescription.getGettersDescriptions()));
+    assertionFileContentBuilder.append(generateAssertionsForPublicFields(classDescription.getFieldsDescriptions()));
+    
     // close class with }
     assertionFileContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
-    String assertionFileContent = assertionFileContentBuilder.toString();
 
-    // Aggregate all necessary class imports to include together
-    TreeSet<TypeName> imports = new TreeSet<TypeName>(classDescription.getImports());
-    imports.add(new TypeName("org.assertj.core.api.AbstractAssert"));
-    if (assertionFileContent.contains("Assertions")) {
-      imports.add(new TypeName("org.assertj.core.api.Assertions"));
-    }
-
-    // resolve template markers, in case of nested class like "Outer.Nested", assert class will be OuterNestedAssert
-    return assertionFileContent.replaceAll(PACKAGE_REGEXP, classDescription.getPackageName())
-                               .replaceAll(CUSTOM_ASSERTION_CLASS_REGEXP, assertClassNameOf(classDescription))
-                               .replaceAll(CLASS_TO_ASSERT_REGEXP, classDescription.getClassNameWithOuterClass())
-                               .replace(IMPORTS, listImports(imports, classDescription.getPackageName()));
+    return fillAssertClassTemplate(assertionFileContentBuilder.toString(), classDescription);
   }
 
   private static String assertClassNameOf(ClassDescription classDescription) {
-    return classDescription.getClassNameWithOuterClassNotSeparatedByDots() + ASSERT_CLASS_SUFFIX;
+    return assertClassNameOf(classDescription.getTypeName());
+  }
+
+  private static String assertClassNameOf(TypeName type) {
+    return type.getSimpleNameWithOuterClassNotSeparatedByDots() + ASSERT_CLASS_SUFFIX;
+  }
+
+  private static String abstractAssertClassNameOf(ClassDescription classDescription) {
+    return abstractAssertClassNameOf(classDescription.getTypeName());
+  }
+
+  private static String abstractAssertClassNameOf(TypeName type) {
+    return ABSTRACT_ASSERT_CLASS_PREFIX + assertClassNameOf(type);
   }
 
   @Override
@@ -442,8 +545,11 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   protected String generateAssertionsForGettersOf(ClassDescription classDescription) {
+    return generateAssertionsForGetters(classDescription.getGettersDescriptions());
+  }
+
+  protected String generateAssertionsForGetters(Set<GetterDescription> getters) {
     StringBuilder assertionsForGetters = new StringBuilder();
-    Set<GetterDescription> getters = classDescription.getGettersDescriptions();
     for (GetterDescription getter : getters) {
       String assertionContent = assertionContentFor(getter);
       assertionsForGetters.append(assertionContent).append(LINE_SEPARATOR);
@@ -452,9 +558,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   protected String generateAssertionsForPublicFieldsOf(ClassDescription classDescription) {
+    return generateAssertionsForPublicFields(classDescription.getFieldsDescriptions());
+  }
+
+  protected String generateAssertionsForPublicFields(Set<FieldDescription> fields) {
     StringBuilder assertionsForPublicFields = new StringBuilder();
-    Set<FieldDescription> fields = classDescription.getFieldsDescriptions();
-    for (DataDescription field : fields) {
+    for (FieldDescription field : fields) {
       String assertionContent = assertionContentFor(field);
       assertionsForPublicFields.append(assertionContent).append(LINE_SEPARATOR);
     }

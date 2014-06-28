@@ -12,7 +12,6 @@
  */
 package org.assertj.assertions.generator.description;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 

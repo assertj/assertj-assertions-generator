@@ -114,36 +114,6 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     return new TypeDescription(new TypeName(type));
   }
   
-  protected TypeDescription getTypeDescription2(Method getter) {
-    final Class<?> propertyType = getter.getReturnType();
-    final TypeDescription typeDescription = new TypeDescription(new TypeName(propertyType));
-    if (isArray(propertyType)) {
-      typeDescription.setElementTypeName(new TypeName(propertyType.getComponentType()));
-      typeDescription.setArray(true);
-    } else if (isIterable(propertyType)) {
-      ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
-      if (parameterizedType.getActualTypeArguments()[0] instanceof GenericArrayType) {
-        GenericArrayType genericArrayType = (GenericArrayType) parameterizedType.getActualTypeArguments()[0];
-        Class<?> parameterClass = ClassUtil.getClass(genericArrayType.getGenericComponentType());
-        typeDescription.setElementTypeName(new TypeName(parameterClass));
-        typeDescription.setIterable(true);
-        typeDescription.setArray(true);
-      } else {
-        // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486, try to change if java 7 and
-        // a real array
-        Class<?> internalClass = ClassUtil.getClass(parameterizedType.getActualTypeArguments()[0]);
-        if (internalClass.isArray()) {
-          typeDescription.setElementTypeName(new TypeName(internalClass.getComponentType()));
-          typeDescription.setArray(true);
-        } else {
-          typeDescription.setElementTypeName(new TypeName(internalClass));
-        }
-      }
-      typeDescription.setIterable(true);
-    }
-    return typeDescription;
-  }  
-
   private static Class<?> getTypeOf(Member member) {
     if (member instanceof Method) return ((Method)member).getReturnType();
     if (member instanceof Field) return ((Field)member).getType();

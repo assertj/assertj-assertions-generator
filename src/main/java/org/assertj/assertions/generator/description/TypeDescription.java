@@ -13,12 +13,12 @@
 package org.assertj.assertions.generator.description;
 
 /**
- * Stores the information needed to generate an assertion for a getter method, and data related to the getter returned
- * type (mostly to import needed classes).
+ * Stores the information needed to generate an assertion for a field or a getter method, and data related to the field
+ * or getter returned type (mostly to import needed classes).
  * <p>
  * We need to know :
  * <ul>
- * <li>the property type</li>
+ * <li>the type</li>
  * <li>the involved generic types</li>
  * <li>the component type in case of property is an array</li>
  * </ul>
@@ -77,7 +77,7 @@ public class TypeDescription {
   public boolean isRealNumber() {
     return typeName.isRealNumber();
   }
-  
+
   public boolean isBoolean() {
     return typeName.isBoolean();
   }
@@ -101,7 +101,7 @@ public class TypeDescription {
   @Override
   public String toString() {
     return "TypeDescription[typeName=" + typeName + ", array=" + isArray + ", iterable=" + isIterable + ", primitive="
-        + isPrimitive() + ", boolean=" + isBoolean() + ", elementTypeName=" + elementTypeName + "]";
+           + isPrimitive() + ", boolean=" + isBoolean() + ", elementTypeName=" + elementTypeName + "]";
   }
 
 }

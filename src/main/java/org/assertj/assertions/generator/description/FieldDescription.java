@@ -25,8 +25,8 @@ package org.assertj.assertions.generator.description;
  * To generate <code>PersonAssert</code> <code>hasAge(int expectedAge)</code> assertion in <code>PersonAssert</code>, we
  * need to know :
  * <ul>
- * <li>the property name, here "age"</li>
- * <li>property type</li>
+ * <li>the field name, here "age"</li>
+ * <li>the field type</li>
  * </ul>
  * This class is immutable.
  * 
@@ -39,11 +39,11 @@ public class FieldDescription extends DataDescription implements Comparable<Fiel
   }
 
   public int compareTo(FieldDescription other) {
-    return name.compareTo(other.name);
+    return getName().compareTo(other.getName());
   }
 
   @Override
   public String toString() {
-    return "FieldDescription[name=" + name + ", typeDescription=" + typeDescription + "]";
+    return "FieldDescription[name=" + getName() + ", typeDescription=" + typeDescription + "]";
   }
 }

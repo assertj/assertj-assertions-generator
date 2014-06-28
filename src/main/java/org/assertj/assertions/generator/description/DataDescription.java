@@ -5,8 +5,8 @@ package org.assertj.assertions.generator.description;
  */
 public abstract class DataDescription {
 
-  protected String name;
-  protected TypeDescription typeDescription;
+  private final String name;
+  protected final TypeDescription typeDescription;
 
   public DataDescription(String name, TypeDescription typeDescription) {
     super();
@@ -46,9 +46,4 @@ public abstract class DataDescription {
     return typeDescription.getElementTypeName() == null ? null : typeDescription.getElementTypeName().getSimpleNameWithOuterClass();
   }
 
-  // TODO remove
-//  public boolean hasArrayElementType() {
-//    return typeDescription.getElementTypeName().isArray();
-//  }  
-  
 }

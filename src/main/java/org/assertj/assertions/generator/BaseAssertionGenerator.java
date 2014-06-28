@@ -1,13 +1,13 @@
 /*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
- *
+ * 
  * Copyright @2010-2011 the original author or authors.
  */
 package org.assertj.assertions.generator;
@@ -38,9 +38,9 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   // default file for templates
   static final String DEFAULT_IS_ASSERTION_TEMPLATE = "is_assertion_template.txt";
   static final String DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ARRAY =
-    "has_elements_assertion_template_for_array.txt";
+      "has_elements_assertion_template_for_array.txt";
   static final String DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ITERABLE =
-    "has_elements_assertion_template_for_iterable.txt";
+      "has_elements_assertion_template_for_iterable.txt";
   static final String DEFAULT_HAS_ASSERTION_TEMPLATE = "has_assertion_template.txt";
   static final String DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_PRIMITIVE = "has_assertion_template_for_primitive.txt";
   static final String DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_REAL_NUMBER = "has_assertion_template_for_real_number.txt";
@@ -48,7 +48,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   static final String DEFAULT_ASSERTIONS_ENTRY_POINT_CLASS_TEMPLATE = "standard_assertions_entry_point_class_template.txt";
   static final String DEFAULT_ASSERTION_ENTRY_POINT_METHOD_TEMPLATE = "standard_assertion_entry_point_method_template.txt";
   static final String DEFAULT_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE =
-    "soft_assertions_entry_point_class_template.txt";
+      "soft_assertions_entry_point_class_template.txt";
   static final String DEFAULT_SOFT_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE = "soft_assertion_entry_point_method_template.txt";
   static final String DEFAULT_BDD_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE = "bdd_assertions_entry_point_class_template.txt";
   static final String DEFAULT_BDD_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE = "bdd_assertion_entry_point_method_template.txt";
@@ -102,33 +102,32 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
    */
   public BaseAssertionGenerator(String templatesDirectory) throws IOException {
     this(
-          new Template(Template.Type.ASSERT_CLASS,
-                       new File(templatesDirectory, DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE)),
-          new Template(Template.Type.HAS,
-                       new File(templatesDirectory, DEFAULT_HAS_ASSERTION_TEMPLATE)),
-          new Template(Template.Type.HAS_FOR_PRIMITIVE,
-                       new File(templatesDirectory, DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_PRIMITIVE)),
-          new Template(Template.Type.HAS_FOR_ITERABLE,
-                       new File(templatesDirectory, DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ITERABLE)),
-          new Template(Template.Type.HAS_FOR_ARRAY,
-                       new File(templatesDirectory, DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ARRAY)),
-          new Template(Template.Type.IS,
-                       new File(templatesDirectory, DEFAULT_IS_ASSERTION_TEMPLATE)),
-          new Template(Type.ASSERTIONS_ENTRY_POINT_CLASS,
-                       new File(templatesDirectory, DEFAULT_ASSERTIONS_ENTRY_POINT_CLASS_TEMPLATE)),
-          new Template(Type.ASSERTION_ENTRY_POINT,
-                       new File(templatesDirectory, DEFAULT_ASSERTION_ENTRY_POINT_METHOD_TEMPLATE)),
-          new Template(Type.SOFT_ASSERTIONS_ENTRY_POINT_CLASS,
-                       new File(templatesDirectory, DEFAULT_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE)),
-          new Template(Type.SOFT_ENTRY_POINT_METHOD_ASSERTION,
-                       new File(templatesDirectory, DEFAULT_SOFT_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE)),
-          new Template(Type.BDD_ASSERTIONS_ENTRY_POINT_CLASS,
-                       new File(templatesDirectory, DEFAULT_BDD_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE)),
-          new Template(Type.BDD_ENTRY_POINT_METHOD_ASSERTION,
-                       new File(templatesDirectory, DEFAULT_BDD_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE)),
-          new Template(Type.HAS_FOR_REAL_NUMBER,
-                       new File(templatesDirectory, DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_REAL_NUMBER))
-    );
+         new Template(Template.Type.ASSERT_CLASS,
+                      new File(templatesDirectory, DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE)),
+         new Template(Template.Type.HAS,
+                      new File(templatesDirectory, DEFAULT_HAS_ASSERTION_TEMPLATE)),
+         new Template(Template.Type.HAS_FOR_PRIMITIVE,
+                      new File(templatesDirectory, DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_PRIMITIVE)),
+         new Template(Template.Type.HAS_FOR_ITERABLE,
+                      new File(templatesDirectory, DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ITERABLE)),
+         new Template(Template.Type.HAS_FOR_ARRAY,
+                      new File(templatesDirectory, DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ARRAY)),
+         new Template(Template.Type.IS,
+                      new File(templatesDirectory, DEFAULT_IS_ASSERTION_TEMPLATE)),
+         new Template(Type.ASSERTIONS_ENTRY_POINT_CLASS,
+                      new File(templatesDirectory, DEFAULT_ASSERTIONS_ENTRY_POINT_CLASS_TEMPLATE)),
+         new Template(Type.ASSERTION_ENTRY_POINT,
+                      new File(templatesDirectory, DEFAULT_ASSERTION_ENTRY_POINT_METHOD_TEMPLATE)),
+         new Template(Type.SOFT_ASSERTIONS_ENTRY_POINT_CLASS,
+                      new File(templatesDirectory, DEFAULT_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE)),
+         new Template(Type.SOFT_ENTRY_POINT_METHOD_ASSERTION,
+                      new File(templatesDirectory, DEFAULT_SOFT_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE)),
+         new Template(Type.BDD_ASSERTIONS_ENTRY_POINT_CLASS,
+                      new File(templatesDirectory, DEFAULT_BDD_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE)),
+         new Template(Type.BDD_ENTRY_POINT_METHOD_ASSERTION,
+                      new File(templatesDirectory, DEFAULT_BDD_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE)),
+         new Template(Type.HAS_FOR_REAL_NUMBER,
+                      new File(templatesDirectory, DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_REAL_NUMBER)));
   }
 
   public BaseAssertionGenerator(Template classAssertionTemplate,
@@ -185,7 +184,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     checkTemplateParameter(hasAssertionTemplateForRealNumber, Template.Type.HAS_FOR_REAL_NUMBER);
     this.hasAssertionTemplateForRealNumber = hasAssertionTemplateForRealNumber;
   }
-  
+
   public final void setHasElementsAssertionForIterableTemplate(Template hasIterableElementsAssertionTemplate) {
     checkTemplateParameter(hasIterableElementsAssertionTemplate, Template.Type.HAS_FOR_ITERABLE);
     this.hasIterableElementsAssertionTemplate = hasIterableElementsAssertionTemplate;
@@ -240,7 +239,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     String targetDirectory = getDirectoryPathCorrespondingToPackage(classDescription.getPackageName());
     // build any needed directories
     new File(targetDirectory).mkdirs();
-    return createFile(assertionFileContent, classDescription.getClassNameWithOuterClassNotSeparatedByDots() + ASSERT_CLASS_FILE_SUFFIX,
+    return createFile(assertionFileContent,
+                      classDescription.getClassNameWithOuterClassNotSeparatedByDots() + ASSERT_CLASS_FILE_SUFFIX,
                       targetDirectory);
   }
 
@@ -264,7 +264,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     if (assertionFileContent.contains("Assertions")) {
       imports.add(new TypeName("org.assertj.core.api.Assertions"));
     }
-    
+
     // resolve template markers, in case of nested class like "Outer.Nested", assert class will be OuterNestedAssert
     return assertionFileContent.replaceAll(PACKAGE_REGEXP, classDescription.getPackageName())
                                .replaceAll(CUSTOM_ASSERTION_CLASS_REGEXP, assertClassNameOf(classDescription))
@@ -289,17 +289,23 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
   private Template chooseAssertionEntryPointMethodTemplate(final AssertionsEntryPointType assertionsEntryPointType) {
     switch (assertionsEntryPointType) {
-      case SOFT : return softAssertionEntryPointMethodTemplate;
-      case BDD : return bddAssertionEntryPointMethodTemplate;
-      default: return standardAssertionEntryPointMethodTemplate;
+    case SOFT:
+      return softAssertionEntryPointMethodTemplate;
+    case BDD:
+      return bddAssertionEntryPointMethodTemplate;
+    default:
+      return standardAssertionEntryPointMethodTemplate;
     }
   }
 
   private Template chooseAssertionEntryPointClassTemplate(final AssertionsEntryPointType assertionsEntryPointType) {
     switch (assertionsEntryPointType) {
-      case SOFT : return softAssertionsEntryPointClassTemplate;
-      case BDD : return bddAssertionsEntryPointClassTemplate;
-      default: return standardAssertionsEntryPointClassTemplate;
+    case SOFT:
+      return softAssertionsEntryPointClassTemplate;
+    case BDD:
+      return bddAssertionsEntryPointClassTemplate;
+    default:
+      return standardAssertionsEntryPointClassTemplate;
     }
   }
 
@@ -308,11 +314,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
                                                    AssertionsEntryPointType assertionsEntryPointType,
                                                    String entryPointClassPackage) throws IOException {
     if (noClassDescriptionsGiven(classDescriptionSet)) return null;
-    String assertionsEntryPointFileContent = generateAssertionsEntryPointClassContentFor(classDescriptionSet, assertionsEntryPointType, entryPointClassPackage);
+    String assertionsEntryPointFileContent = generateAssertionsEntryPointClassContentFor(classDescriptionSet,
+                                                                                         assertionsEntryPointType,
+                                                                                         entryPointClassPackage);
     return createAssertionsFileFor(classDescriptionSet, assertionsEntryPointFileContent,
                                    assertionsEntryPointType.getFileName(), entryPointClassPackage);
   }
-
 
   private String generateAssertionsEntryPointClassContent(final Set<ClassDescription> classDescriptionSet,
                                                           final Template entryPointAssertionsClassTemplate,
@@ -320,7 +327,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
                                                           String entryPointClassPackage) {
     String entryPointAssertionsClassContent = entryPointAssertionsClassTemplate.getContent();
     // resolve template markers
-    String classPackage = isEmpty(entryPointClassPackage) ? determineBestEntryPointsAssertionsClassPackage(classDescriptionSet) : entryPointClassPackage;
+    String classPackage = isEmpty(entryPointClassPackage) ? determineBestEntryPointsAssertionsClassPackage(classDescriptionSet)
+        : entryPointClassPackage;
     entryPointAssertionsClassContent = entryPointAssertionsClassContent.replaceAll(PACKAGE_REGEXP, classPackage);
 
     String softAssertionsImportsContent = generateEntryPointsAssertionsImportFor(classDescriptionSet, classPackage);
@@ -336,8 +344,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   /**
    * create the assertions entry point file, located in its package directory starting from targetBaseDirectory.
    * <p>
-   * If assertionsClassPackage is not set, we use the common base package of the given classes,
-   * if some classe are in a.b.c package and others in a.b.c.d, then entry point class will be in a.b.c.
+   * If assertionsClassPackage is not set, we use the common base package of the given classes, if some classe are in
+   * a.b.c package and others in a.b.c.d, then entry point class will be in a.b.c.
    * </p>
    *
    * @param classDescriptionSet used to determine the assertions class package
@@ -349,7 +357,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
    */
   private File createAssertionsFileFor(final Set<ClassDescription> classDescriptionSet, final String fileContent,
                                        final String fileName, final String assertionsClassPackage) throws IOException {
-    String classPackage = isEmpty(assertionsClassPackage) ? determineBestEntryPointsAssertionsClassPackage(classDescriptionSet) : assertionsClassPackage;
+    String classPackage = isEmpty(assertionsClassPackage) ? determineBestEntryPointsAssertionsClassPackage(classDescriptionSet)
+        : assertionsClassPackage;
     String assertionsDirectory = getDirectoryPathCorrespondingToPackage(classPackage);
     // build any needed directories
     new File(assertionsDirectory).mkdirs();
@@ -360,12 +369,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
                                                        Template assertionEntryPointMethodTemplate) {
     // sort ClassDescription according to their class name.
     SortedSet<ClassDescription> sortedClassDescriptionSet =
-      new TreeSet<ClassDescription>(new Comparator<ClassDescription>() {
-        @Override
-        public int compare(final ClassDescription cd1, final ClassDescription cd2) {
-          return cd1.getClassNameWithOuterClass().compareTo(cd2.getClassNameWithOuterClass());
-        }
-      });
+        new TreeSet<ClassDescription>(new Comparator<ClassDescription>() {
+          @Override
+          public int compare(final ClassDescription cd1, final ClassDescription cd2) {
+            return cd1.getClassNameWithOuterClass().compareTo(cd2.getClassNameWithOuterClass());
+          }
+        });
     sortedClassDescriptionSet.addAll(classDescriptionSet);
     // generate for each classDescription the entry point method, e.g. assertThat(MyClass) or then(MyClass)
     StringBuilder allAssertThatsContentBuilder = new StringBuilder();
@@ -378,7 +387,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
                                                                                      assertClassNameOf(classDescription));
       // resolve class (ex: Player)
       // in case of inner classes like Movie.PublicCategory use class name with outer class i.e. Movie.PublicCategory.
-      assertionEntryPointMethodContent = 
+      assertionEntryPointMethodContent =
           assertionEntryPointMethodContent.replaceAll(CLASS_TO_ASSERT_REGEXP,
                                                       classDescription.getClassNameWithOuterClass());
       allAssertThatsContentBuilder.append(lineSeparator).append(assertionEntryPointMethodContent);
@@ -451,60 +460,60 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     }
     return assertionsForPublicFields.toString();
   }
-  
-  private String assertionContentFor(DataDescription field) {
-    String assertionContent = hasAssertionTemplate.getContent();
-    if (field.isBooleanType()) {
-      assertionContent = isAssertionTemplate.getContent();
-    } else if (field.isIterableType()) {
-      assertionContent = hasIterableElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP, 
-                                                                                      field.getElementTypeName());
-    } else if (field.isArrayType()) {
-      assertionContent = hasArrayElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
-                                                                                   field.getElementTypeName());
-    } else if (field.isRealNumberType()) {
-      assertionContent = hasAssertionTemplateForRealNumber.getContent();
-    } else if (field.isPrimitiveType()) {
-      assertionContent = hasAssertionTemplateForPrimitive.getContent();
-    }
 
-    // we reuse template for properties to have consistent assertins for property and field but 
+  private String assertionContentFor(DataDescription field) {
+    String assertionContent = baseAssertionContentFor(field);
+
+    // we reuse template for properties to have consistent assertions for property and field but
     // - change the way we get the value since it's a field and not a property:
     assertionContent = assertionContent.replace("get${Property}()", "${property}")
                                        .replace("is${Property}()", "${property}");
-    // - remove also ${throws} and ${throws_javadoc} since it make no sense for a field
+    // - remove also ${throws} and ${throws_javadoc} since it does not make any sense for a field
     assertionContent = remove(assertionContent, "${throws}");
     assertionContent = remove(assertionContent, "${throws_javadoc}");
-    
+
     // replace ${Property} and ${property} by field name (starting with uppercase/lowercase)
     return assertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, capitalize(field.getName()))
                            .replaceAll(PROPERTY_TYPE_REGEXP, field.getTypeName())
                            .replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP, field.getName());
   }
-  
-  private String assertionContentFor(GetterDescription getter) { // TODO refatcor with assertionContentFor field
-    // sets default content (most likely case)
-    String assertionContent = hasAssertionTemplate.getContent();
-    if (getter.isBooleanType()) {
-      assertionContent = isAssertionTemplate.getContent();
-    } else if (getter.isIterableType()) {
-      assertionContent = hasIterableElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
-                                                                                      getter.getElementTypeName());
-    } else if (getter.isArrayType()) {
-      assertionContent = hasArrayElementsAssertionTemplate.getContent().replaceAll(ELEMENT_TYPE_REGEXP,
-                                                                                   getter.getElementTypeName());
-    } else if (getter.isRealNumberType()) {
-      assertionContent = hasAssertionTemplateForRealNumber.getContent();
-    } else if (getter.isPrimitiveType()) {
-      assertionContent = hasAssertionTemplateForPrimitive.getContent();
-    }
-    
+
+  private String assertionContentFor(GetterDescription getter) {
+    String assertionContent = baseAssertionContentFor(getter);
+
     assertionContent = declareExceptions(getter, assertionContent);
-    
+
     String propertyName = getter.getPropertyName();
     assertionContent = assertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, capitalize(propertyName));
     assertionContent = assertionContent.replaceAll(PROPERTY_TYPE_REGEXP, getter.getTypeName());
     return assertionContent.replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP, propertyName);
+  }
+
+  /**
+   * The assertion content that is common to field and property (getter), the specific content partis handled
+   * afterwards.
+   * 
+   * @param fieldOrProperty
+   * @return the base assertion content
+   */
+  private String baseAssertionContentFor(DataDescription fieldOrProperty) {
+    String assertionContent = hasAssertionTemplate.getContent();
+    if (fieldOrProperty.isBooleanType()) {
+      assertionContent = isAssertionTemplate.getContent();
+    } else if (fieldOrProperty.isIterableType()) {
+      assertionContent = hasIterableElementsAssertionTemplate.getContent()
+                                                             .replaceAll(ELEMENT_TYPE_REGEXP,
+                                                                         fieldOrProperty.getElementTypeName());
+    } else if (fieldOrProperty.isArrayType()) {
+      assertionContent = hasArrayElementsAssertionTemplate.getContent()
+                                                          .replaceAll(ELEMENT_TYPE_REGEXP,
+                                                                      fieldOrProperty.getElementTypeName());
+    } else if (fieldOrProperty.isRealNumberType()) {
+      assertionContent = hasAssertionTemplateForRealNumber.getContent();
+    } else if (fieldOrProperty.isPrimitiveType()) {
+      assertionContent = hasAssertionTemplateForPrimitive.getContent();
+    }
+    return assertionContent;
   }
 
   /**

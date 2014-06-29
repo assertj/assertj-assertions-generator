@@ -108,6 +108,13 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   @Theory
+  public void should_generate_hierarchical_assertion_for_nested_class(NestedClass nestedClass) throws Exception {
+    Class<?> clazz = nestedClass.getNestedClass();
+    assertionGenerator.generateHierarchicalCustomAssertionFor(converter.convertToClassDescription(clazz), null);
+    assertThat(fileGeneratedFor(clazz)).hasContent(expectedContentFromTemplate(clazz, "NestedClassAssert.hierarchical.template.expected.txt"));
+  }
+  
+  @Theory
   public void should_generate_assertion_for_property_with_exception(Class<?> beanClass) throws Exception {
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(beanClass));
     String expectedContent = readFileToString(new File("src/test/resources/BeanWithOneException.expected.txt"));

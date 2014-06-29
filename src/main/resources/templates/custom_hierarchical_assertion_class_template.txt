@@ -13,7 +13,7 @@ public final class ${custom_assertion_class} extends Abstract${custom_assertion_
    * @param actual the ${class_to_assert} we want to make assertions on.
    */
   public ${custom_assertion_class}(${class_to_assert} actual) {
-    super(actual, ${class_to_assert}Assert.class);
+    super(actual, ${custom_assertion_class}.class);
   }
 
   /**

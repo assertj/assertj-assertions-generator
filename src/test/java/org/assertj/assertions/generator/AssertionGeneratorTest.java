@@ -21,6 +21,7 @@ import org.assertj.assertions.generator.data.ArtWork;
 import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.Team;
 import org.assertj.assertions.generator.data.nba.Player;
+import org.assertj.assertions.generator.data.nba.PlayerAgent;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
 import org.junit.Before;
@@ -60,6 +61,13 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
   
   @Test
+  public void should_generate_assertion_for_interface() throws Exception {
+    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(PlayerAgent.class));
+    assertThat(fileGeneratedFor(PlayerAgent.class)).hasContentEqualTo(
+               new File("src/test/resources/PlayerAgentAssert.expected.txt").getAbsoluteFile());
+  }
+  
+  @Test
   public void should_generate_assertion_for_class_with_public_fields() throws Exception {
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Team.class));
     assertThat(fileGeneratedFor(Team.class)).hasContentEqualTo(new File("src/test/resources/TeamAssert.expected.txt").getAbsoluteFile());
@@ -96,7 +104,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_generate_assertion_for_nested_class(NestedClass nestedClass) throws Exception {
     Class<?> clazz = nestedClass.getNestedClass();
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(clazz));
-    assertThat(fileGeneratedFor(clazz)).hasContent(expectedContentFromTemplate(clazz));
+    assertThat(fileGeneratedFor(clazz)).hasContent(expectedContentFromTemplate(clazz, "NestedClassAssert.template.expected.txt"));
   }
 
   @Theory
@@ -169,10 +177,10 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     }
   }
 
-  private static String expectedContentFromTemplate(Class<?> clazz) throws IOException {
-    String template = readFileToString(new File("src/test/resources/NestedClassAssert.template.expected.txt"));
-    String content = template.replace("${nestedClass}Assert", getSimpleNameWithOuterClassNotSeparatedByDots(clazz) + "Assert");
-    content = content.replace("${nestedClass}", getSimpleNameWithOuterClass(clazz));
+  private static String expectedContentFromTemplate(Class<?> clazz, String fileTemplate) throws IOException {
+    String template = readFileToString(new File("src/test/resources/" + fileTemplate));
+    String content = template.replaceAll("\\$\\{nestedClass\\}Assert", getSimpleNameWithOuterClassNotSeparatedByDots(clazz) + "Assert");
+    content = content.replaceAll("\\$\\{nestedClass\\}", getSimpleNameWithOuterClass(clazz));
     return content;
   }
 

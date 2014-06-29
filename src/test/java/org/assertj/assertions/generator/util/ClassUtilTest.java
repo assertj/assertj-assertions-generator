@@ -9,6 +9,7 @@ import org.assertj.assertions.generator.data.lotr.Race;
 import org.assertj.assertions.generator.data.lotr.Ring;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.data.nba.Player;
+import org.assertj.assertions.generator.data.nba.PlayerAgent;
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
@@ -41,7 +42,7 @@ public class ClassUtilTest implements NestedClassesTest {
   @Test
   public void should_get_classes_in_package_and_subpackages() throws ClassNotFoundException {
     List<Class<?>> classesInPackage = collectClasses("org.assertj.assertions.generator.data");
-    assertThat(classesInPackage).containsOnly(Player.class, ArtWork.class, Name.class, Movie.class,
+    assertThat(classesInPackage).containsOnly(Player.class, PlayerAgent.class, ArtWork.class, Name.class, Movie.class,
                                               Movie.PublicCategory.class, Ring.class, Race.class,
                                               FellowshipOfTheRing.class, TolkienCharacter.class,
                                               Team.class,

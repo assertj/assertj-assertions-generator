@@ -15,6 +15,7 @@ import org.assertj.assertions.generator.data.Team;
 import org.assertj.assertions.generator.data.TreeEnum;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
 import org.assertj.assertions.generator.data.nba.Player;
+import org.assertj.assertions.generator.data.nba.PlayerAgent;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.description.TypeName;
@@ -160,6 +161,23 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getImports()).extracting("simpleName").contains(Player.class.getSimpleName());
   }
 
+  @Test
+  public void should_build_class_description_for_interface() throws Exception {
+    // Given an interface     
+    // When
+    ClassDescription classDescription = converter.convertToClassDescription(PlayerAgent.class);
+    
+    // Then
+    assertThat(classDescription.getClassName()).isEqualTo("PlayerAgent");
+    assertThat(classDescription.getSuperType()).isNull();
+    assertThat(classDescription.getGettersDescriptions()).hasSize(1);
+    GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
+    assertThat(getterDescription.isIterableType()).as("getterDescription is not iterable").isFalse();
+    assertThat(getterDescription.getPropertyName()).isEqualTo("managedPlayer");
+    assertThat(getterDescription.getTypeName()).isEqualTo("Player");
+    assertThat(classDescription.getImports()).isEmpty();
+  }
+  
   @Test
   public void should_build_fellowshipOfTheRing_class_description() throws Exception {
     ClassDescription classDescription = converter.convertToClassDescription(FellowshipOfTheRing.class);

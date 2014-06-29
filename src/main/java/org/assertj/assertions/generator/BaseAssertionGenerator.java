@@ -314,14 +314,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       imports.add(new TypeName("org.assertj.core.api.Assertions"));
     }
 
-    final Class<?> superType = classDescription.getSuperType();
-    final TypeName superTypeName = new TypeName(superType);
     final TypeName superAssertionClass;
-
     // Add assertion supertype to imports if needed
-    if (classesHierarchy == null || !classesHierarchy.contains(superType)) {
+    if (classesHierarchy == null || !classesHierarchy.contains(classDescription.getSuperType())) {
       superAssertionClass = new TypeName("org.assertj.core.api.AbstractAssert");
     } else {
+      final TypeName superTypeName = new TypeName(classDescription.getSuperType());
       superAssertionClass = new TypeName(abstractAssertClassNameOf(superTypeName), superTypeName.getPackageName());
     }
     imports.add(superAssertionClass);

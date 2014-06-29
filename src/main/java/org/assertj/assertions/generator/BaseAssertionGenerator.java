@@ -549,7 +549,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   protected String generateAssertionsForGetters(Set<GetterDescription> getters) {
     StringBuilder assertionsForGetters = new StringBuilder();
     for (GetterDescription getter : getters) {
-      String assertionContent = assertionContentFor(getter);
+      String assertionContent = assertionContentForProperty(getter);
       assertionsForGetters.append(assertionContent).append(LINE_SEPARATOR);
     }
     return assertionsForGetters.toString();
@@ -562,13 +562,13 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   protected String generateAssertionsForPublicFields(Set<FieldDescription> fields) {
     StringBuilder assertionsForPublicFields = new StringBuilder();
     for (FieldDescription field : fields) {
-      String assertionContent = assertionContentFor(field);
+      String assertionContent = assertionContentForField(field);
       assertionsForPublicFields.append(assertionContent).append(LINE_SEPARATOR);
     }
     return assertionsForPublicFields.toString();
   }
 
-  private String assertionContentFor(DataDescription field) {
+  private String assertionContentForField(FieldDescription field) {
     String assertionContent = baseAssertionContentFor(field);
 
     // we reuse template for properties to have consistent assertions for property and field but
@@ -585,7 +585,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
                            .replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP, field.getName());
   }
 
-  private String assertionContentFor(GetterDescription getter) {
+  private String assertionContentForProperty(GetterDescription getter) {
     String assertionContent = baseAssertionContentFor(getter);
 
     assertionContent = declareExceptions(getter, assertionContent);

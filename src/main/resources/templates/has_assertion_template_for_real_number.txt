@@ -8,7 +8,7 @@
    * @return this assertion object.
    * @throws AssertionError - if the actual ${class_to_assert}'s ${property} is not close enough to the given value.${throws_javadoc}
    */
-  public ${custom_assertion_class} has${Property}(${propertyType} ${property}, ${propertyType} offset) ${throws}{
+  public ${self_type} has${Property}(${propertyType} ${property}, ${propertyType} offset) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
@@ -22,5 +22,5 @@
     Assertions.assertThat(actual${Property}).overridingErrorMessage(assertjErrorMessage).isCloseTo(${property}, Assertions.within(offset));
 
     // return the current assertion for method chaining
-    return this;
+    return ${myself};
   }

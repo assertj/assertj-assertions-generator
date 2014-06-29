@@ -2,6 +2,7 @@ package org.assertj.assertions.generator.data;
 
 import java.util.Date;
 import org.assertj.core.api.AbstractAssert;
+import org.assertj.core.api.Assertions;
 
 
 /**
@@ -137,6 +138,32 @@ public class MovieAssert extends AbstractAssert<MovieAssert, Movie> {
     if (!org.assertj.core.util.Objects.areEqual(actualProducer, producer)) {
       failWithMessage(assertjErrorMessage, actual, producer, actualProducer);
     }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Movie's rating is close to the given value by less than the given offset.
+   * <p>
+   * If difference is equal to the offset value, assertion is considered successful.
+   * @param rating the value to compare the actual Movie's rating to.
+   * @param offset the given offset.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie's rating is not close enough to the given value.
+   */
+  public MovieAssert hasRating(double rating, double offset) {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    double actualRating = actual.rating;
+    
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = String.format("\nExpected rating:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+                                               actualRating, rating, offset, Math.abs(rating - actualRating));
+    
+    // check
+    Assertions.assertThat(actualRating).overridingErrorMessage(assertjErrorMessage).isCloseTo(rating, Assertions.within(offset));
 
     // return the current assertion for method chaining
     return this;

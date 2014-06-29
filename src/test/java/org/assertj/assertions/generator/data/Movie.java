@@ -7,6 +7,7 @@ public class Movie extends ArtWork {
   private final Date releaseDate;
   private PublicCategory publicCategory;
   public String producer;
+  public double rating;
 
   public Movie(String title, Date releaseDate) {
     super(title);

@@ -1,7 +1,33 @@
 package org.assertj.assertions.generator.util;
 
+import static com.google.common.collect.Sets.newLinkedHashSet;
+import static java.lang.Character.isUpperCase;
+import static java.lang.reflect.Modifier.isPublic;
+import static org.apache.commons.lang3.StringUtils.substringAfter;
+import static org.apache.commons.lang3.StringUtils.uncapitalize;
+import static org.reflections.util.ClasspathHelper.forClassLoader;
+import static org.reflections.util.FilterBuilder.prefix;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -11,27 +37,6 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.*;
-
-import static java.lang.Character.isUpperCase;
-import static java.lang.reflect.Modifier.isPublic;
-import static org.apache.commons.lang3.StringUtils.substringAfter;
-import static org.apache.commons.lang3.StringUtils.uncapitalize;
-import static org.reflections.util.ClasspathHelper.forClassLoader;
-import static org.reflections.util.FilterBuilder.prefix;
 
 /**
  * Some utilities methods related to classes and packages.
@@ -48,7 +53,7 @@ public class ClassUtil {
    * Call {@link #collectClasses(ClassLoader, String...)} with <code>Thread.currentThread().getContextClassLoader()
    * </code>
    */
-  public static List<Class<?>> collectClasses(String... classOrPackageNames) throws ClassNotFoundException {
+  public static Set<Class<?>> collectClasses(String... classOrPackageNames) throws ClassNotFoundException {
     return collectClasses(Thread.currentThread().getContextClassLoader(), classOrPackageNames);
   }
 
@@ -56,16 +61,16 @@ public class ClassUtil {
    * Collects all the <b>public</b> classes from given classes names or classes belonging to given a package name
    * (recursively).
    * <p/>
-   * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the resulting list.
+   * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the returned classes.
    *
    * @param classLoader         {@link ClassLoader} used to load classes defines in classOrPackageNames
    * @param classOrPackageNames classes names or packages names we want to collect classes from (recursively for
    *                            packages)
-   * @return the list of {@link Class}es found
+   * @return the set of {@link Class}es found
    * @throws RuntimeException if any error occurs
    */
-  public static List<Class<?>> collectClasses(ClassLoader classLoader, String... classOrPackageNames) {
-    List<Class<?>> classes = new ArrayList<Class<?>>();
+  public static Set<Class<?>> collectClasses(ClassLoader classLoader, String... classOrPackageNames) {
+    Set<Class<?>> classes = newLinkedHashSet();
     for (String classOrPackageName : classOrPackageNames) {
       Class<?> clazz = tryToLoadClass(classOrPackageName, classLoader);
       if (clazz != null) {
@@ -127,7 +132,7 @@ public class ClassUtil {
       String packagePath = packageName.replace('.', File.separatorChar);
       // Ask for all resources for the path
       Enumeration<URL> resources = classLoader.getResources(packagePath);
-      Set<Class<?>> classes = new HashSet<Class<?>>();
+      Set<Class<?>> classes = newLinkedHashSet();
       while (resources.hasMoreElements()) {
         File directory = new File(URLDecoder.decode(resources.nextElement().getPath(), "UTF-8"));
         if (directory.canRead()) {
@@ -145,7 +150,7 @@ public class ClassUtil {
   /**
    * Get <b>public</b> classes in given directory (recursively).
    * <p/>
-   * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the resulting list.
+   * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the resulting set.
    *
    * @param directory   directory where to look for classes
    * @param packageName package name corresponding to directory
@@ -153,9 +158,9 @@ public class ClassUtil {
    * @return
    * @throws UnsupportedEncodingException
    */
-  private static List<Class<?>> getClassesInDirectory(File directory, String packageName, ClassLoader classLoader)
+  private static Set<Class<?>> getClassesInDirectory(File directory, String packageName, ClassLoader classLoader)
     throws UnsupportedEncodingException {
-    List<Class<?>> classes = new ArrayList<Class<?>>();
+    Set<Class<?>> classes = newLinkedHashSet();
     // Capture all the .class files in this directory
     // Get the list of the files contained in the package
     File[] files = directory.listFiles();
@@ -181,7 +186,7 @@ public class ClassUtil {
         // Ask for all resources for the path
         URL resource = classLoader.getResource(subPackageName.replace('.', File.separatorChar));
         File subDirectory = new File(URLDecoder.decode(resource.getPath(), "UTF-8"));
-        List<Class<?>> classesForSubPackage = getClassesInDirectory(subDirectory, subPackageName, classLoader);
+        Set<Class<?>> classesForSubPackage = getClassesInDirectory(subDirectory, subPackageName, classLoader);
         classes.addAll(classesForSubPackage);
       }
     }

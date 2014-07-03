@@ -14,7 +14,6 @@ import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Set;
 
 import org.assertj.assertions.generator.data.ArtWork;
@@ -145,7 +144,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 
   @Test
   public void should_generate_assertion_for_classes_in_package() throws Exception {
-    List<Class<?>> classes = collectClasses("org.assertj.assertions.generator.data");
+    Set<Class<?>> classes = collectClasses("org.assertj.assertions.generator.data");
     for (Class<?> clazz : classes) {
       assertThat(clazz.isAnonymousClass()).as("check that <" + clazz.getSimpleName() + "> is not anonymous").isFalse();
       assertThat(clazz.isLocalClass()).as("check that " + clazz.getSimpleName() + " is not local").isFalse();
@@ -160,7 +159,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   @Test
   public void should_generate_assertion_for_classes_in_package_using_provided_class_loader() throws Exception {
     ClassLoader customClassLoader = new MyClassLoader(Thread.currentThread().getContextClassLoader());
-    List<Class<?>> classes = collectClasses(customClassLoader, "org.assertj.assertions.generator.data");
+    Set<Class<?>> classes = collectClasses(customClassLoader, "org.assertj.assertions.generator.data");
     for (Class<?> clazz : classes) {
       assertThat(clazz.isAnonymousClass()).as("check that " + clazz.getSimpleName() + " is not anonymous").isFalse();
       assertThat(clazz.isLocalClass()).as("check that " + clazz.getSimpleName() + " is not local").isFalse();

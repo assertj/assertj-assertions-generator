@@ -12,12 +12,11 @@
  */
 package org.assertj.assertions.generator.cli;
 
+import static com.google.common.collect.Sets.newLinkedHashSet;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.cli.BasicParser;
@@ -52,7 +51,7 @@ public class AssertionGeneratorLauncher {
         return;
       }
 
-      List<Class<?>> classes = collectClasses(line.getArgs());
+      Set<Class<?>> classes = collectClasses(line.getArgs());
 
       if (line.hasOption('H')) {
         generateHierarchicalAssertions(classes);
@@ -72,9 +71,9 @@ public class AssertionGeneratorLauncher {
     help.printHelp(cmdLine, "Generate AssertJ-style assertions for the specified classes", options, "The list of classes can either be package names (which includes all packges in the class) or fully-qualified class names.");
   }
   
-  private static void generateHierarchicalAssertions(List<Class<?>> classes) throws IOException {
+  private static void generateHierarchicalAssertions(Set<Class<?>> classes) throws IOException {
     // Create a hashset of the classes for efficient lookup.
-    Set<Class<?>> classSet = new HashSet<Class<?>>(classes);
+    Set<Class<?>> classSet = newLinkedHashSet(classes);
     logger.info("Generating hierarchical assertions for classes {}", classes);
     BaseAssertionGenerator customAssertionGenerator = new BaseAssertionGenerator();
     
@@ -87,7 +86,7 @@ public class AssertionGeneratorLauncher {
     }
   }
   
-  private static void generateFlatAssertions(List<Class<?>> classes) throws IOException {
+  private static void generateFlatAssertions(Set<Class<?>> classes) throws IOException {
     logger.info("Generating assertions for classes {}", classes);
     BaseAssertionGenerator customAssertionGenerator = new BaseAssertionGenerator();
     

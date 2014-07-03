@@ -41,7 +41,7 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Test
   public void should_get_classes_in_package_and_subpackages() throws ClassNotFoundException {
-    List<Class<?>> classesInPackage = collectClasses("org.assertj.assertions.generator.data");
+    Set<Class<?>> classesInPackage = collectClasses("org.assertj.assertions.generator.data");
     assertThat(classesInPackage).containsOnly(Player.class, PlayerAgent.class, ArtWork.class, Name.class, Movie.class,
                                               Movie.PublicCategory.class, Ring.class, Race.class,
                                               FellowshipOfTheRing.class, TolkienCharacter.class,
@@ -59,7 +59,7 @@ public class ClassUtilTest implements NestedClassesTest {
   @Test
   public void should_get_classes_with_provided_class_loader() throws ClassNotFoundException {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-    List<Class<?>> classesInPackage = collectClasses(classLoader, "org.assertj.assertions.generator.data");
+    Set<Class<?>> classesInPackage = collectClasses(classLoader, "org.assertj.assertions.generator.data");
     assertThat(classesInPackage).contains(Player.class, ArtWork.class, Name.class, Movie.class, Ring.class, Race.class);
   }
 

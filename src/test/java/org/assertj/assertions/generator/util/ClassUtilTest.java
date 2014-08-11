@@ -216,9 +216,9 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Test
   public void getClass_on_generic_should_return_Number_class() throws Exception {
-	Method method = Generic.class.getMethod("getNumber");
-	Class<?> classes = ClassUtil.getClass(method.getGenericReturnType());
-	assertThat(classes).isEqualTo(Number.class);
+    Method method = Generic.class.getMethod("getNumber");
+    Class<?> classes = ClassUtil.getClass(method.getGenericReturnType());
+    assertThat(classes).isEqualTo(Number.class);
   }
 
   private static class Generic {

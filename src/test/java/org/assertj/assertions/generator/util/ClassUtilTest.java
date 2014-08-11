@@ -237,7 +237,7 @@ public class ClassUtilTest implements NestedClassesTest {
       return null;
     }
 
-	@SuppressWarnings("unused")
-	public <T extends Number> T getNumber() {return null;}
+    @SuppressWarnings("unused")
+    public <T extends Number> T getNumber() {return null;}
   }
 }

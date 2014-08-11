@@ -198,7 +198,7 @@ public class ClassUtilTest implements NestedClassesTest {
   public void getClass_on_variable_type_should_return_null() throws Exception {
     Method method = Generic.class.getMethod("getGenericArray");
     Class<?> clazz = ClassUtil.getClass((method.getGenericReturnType()));
-    assertThat(clazz).isNull();
+    assertThat(clazz).isEqualTo(Object[].class);
   }
 
   @Test
@@ -212,6 +212,13 @@ public class ClassUtilTest implements NestedClassesTest {
     Method method = Generic.class.getMethod("getListOfInteger");
     Set<Class<?>> classes = getClassesRelatedTo(method.getGenericReturnType());
     assertThat(classes).containsOnly(Integer.class, List.class);
+  }
+
+  @Test
+  public void getClass_on_generic_should_return_Number_class() throws Exception {
+	Method method = Generic.class.getMethod("getNumber");
+	Class<?> classes = ClassUtil.getClass(method.getGenericReturnType());
+	assertThat(classes).isEqualTo(Number.class);
   }
 
   private static class Generic {
@@ -229,5 +236,8 @@ public class ClassUtilTest implements NestedClassesTest {
     public List<? extends Integer> getListOfWildcardInteger() {
       return null;
     }
+
+	@SuppressWarnings("unused")
+	public <T extends Number> T getNumber() {return null;}
   }
 }

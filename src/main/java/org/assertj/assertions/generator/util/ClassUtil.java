@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -425,6 +426,10 @@ public class ClassUtil {
       final WildcardType wildcardType = (WildcardType) type;
       return wildcardType.getUpperBounds() != null ? getClass(wildcardType.getUpperBounds()[0])
                : wildcardType.getLowerBounds() != null ? getClass(wildcardType.getLowerBounds()[0]) : null;
+    } else if (type instanceof TypeVariable) {
+	  final TypeVariable typeVariable = (TypeVariable) type;
+	    final Type[] bounds = typeVariable.getBounds();
+	    return bounds.length > 0 ? getClass(bounds[0]) : Object.class;
     }
     return null;
   }

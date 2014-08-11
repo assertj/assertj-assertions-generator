@@ -427,9 +427,9 @@ public class ClassUtil {
       return wildcardType.getUpperBounds() != null ? getClass(wildcardType.getUpperBounds()[0])
                : wildcardType.getLowerBounds() != null ? getClass(wildcardType.getLowerBounds()[0]) : null;
     } else if (type instanceof TypeVariable) {
-	  final TypeVariable typeVariable = (TypeVariable) type;
-	    final Type[] bounds = typeVariable.getBounds();
-	    return bounds.length > 0 ? getClass(bounds[0]) : Object.class;
+      final TypeVariable typeVariable = (TypeVariable) type;
+      final Type[] bounds = typeVariable.getBounds();
+      return bounds.length > 0 ? getClass(bounds[0]) : Object.class;
     }
     return null;
   }

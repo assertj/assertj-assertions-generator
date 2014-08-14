@@ -5,8 +5,6 @@ import static java.lang.Character.isUpperCase;
 import static java.lang.reflect.Modifier.isPublic;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static org.apache.commons.lang3.StringUtils.uncapitalize;
-import static org.reflections.util.ClasspathHelper.forClassLoader;
-import static org.reflections.util.FilterBuilder.prefix;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,18 +24,15 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.ClassPath;
+import com.google.common.reflect.ClassPath.ClassInfo;
 
 /**
  * Some utilities methods related to classes and packages.
@@ -99,26 +94,21 @@ public class ClassUtil {
     // load classes from classpath file system, this won't load classes in jars
     Set<Class<?>> packageClasses = getPackageClassesFromClasspathFiles(packageName, classLoader);
     // load classes from classpath jars
-    Set<Class<?>> packageClassesFromClasspathJars = getPackageClassesFromClasspathJars(packageName, classLoader);
-    packageClasses.addAll(packageClassesFromClasspathJars);
+    try {
+      packageClasses.addAll(getPackageClassesFromClasspathJars(packageName, classLoader));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
     return packageClasses;
   }
 
-  private static Set<Class<?>> getPackageClassesFromClasspathJars(String packageName, ClassLoader classLoader) {
-    List<ClassLoader> classLoadersList = new LinkedList<ClassLoader>();
-    classLoadersList.add(ClasspathHelper.contextClassLoader());
-    classLoadersList.add(ClasspathHelper.staticClassLoader());
-    classLoadersList.add(classLoader);
-
-    final ConfigurationBuilder configuration = new ConfigurationBuilder()
-                                                 .setScanners(new SubTypesScanner(false /* don't exclude Object
-                                                                                            class */),
-                                                              new ResourcesScanner())
-                                                 .setUrls(forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
-                                                 .filterInputsBy(new FilterBuilder().include(prefix(packageName)));
-
-    Reflections reflections = new Reflections(configuration);
-    Set<Class<?>> classesInPackage = reflections.getSubTypesOf(Object.class);
+  private static Set<Class<?>> getPackageClassesFromClasspathJars(String packageName, ClassLoader classLoader) throws IOException {
+    ImmutableSet<ClassInfo> classesInfo= ClassPath.from(classLoader).getTopLevelClassesRecursive(packageName);
+    Set<Class<?>> classesInPackage = new HashSet<Class<?>>();
+    for (ClassInfo classInfo : classesInfo) {
+      classesInPackage.add(classInfo.load());
+    }
+    
     Set<Class<?>> filteredClassesInPackage = new HashSet<Class<?>>();
     for (Class<?> classFromJar : classesInPackage) {
       if (isClassCandidateToAssertionsGeneration(classFromJar)) {

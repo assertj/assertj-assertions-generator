@@ -7,7 +7,6 @@ import org.assertj.assertions.generator.data.MovieAssert;
 import org.assertj.assertions.generator.data.MoviePublicCategoryAssert;
 import org.assertj.assertions.generator.data.Name;
 import org.assertj.assertions.generator.data.NameAssert;
-import org.assertj.assertions.generator.data.PublicCategory;
 import org.assertj.assertions.generator.data.TreeEnum;
 import org.assertj.assertions.generator.data.TreeEnumAssert;
 import org.assertj.assertions.generator.data.lotr.Race;

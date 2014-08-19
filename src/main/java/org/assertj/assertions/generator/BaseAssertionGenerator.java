@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -323,6 +324,9 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       superAssertionClass = new TypeName(abstractAssertClassNameOf(superTypeName), superTypeName.getPackageName());
     }
     imports.add(superAssertionClass);
+    
+    // remove nested class import (eg Book.Title) if outer class import is present (eg Book)
+    removeNestedClassImportIfOuterClassImportIsThere(imports);
 
     final String customAssertionClass = concrete ? assertClassNameOf(classDescription) :
         abstractAssertClassNameOf(classDescription);
@@ -339,6 +343,16 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
                    .replaceAll(SELF_TYPE_REGEXP, selfType)
                    .replaceAll(MYSELF_REGEXP, myself)
                    .replace(IMPORTS, listImports(imports, classDescription.getPackageName()));
+  }
+
+  private void removeNestedClassImportIfOuterClassImportIsThere(Set<TypeName> imports) {
+    Iterator<TypeName> iterator = imports.iterator();
+    while (iterator.hasNext()){
+      TypeName typeName = iterator.next();
+      if (typeName.isNested() && imports.contains(typeName.getOuterClassTypeName())) {
+        iterator.remove();
+      }
+    }
   }
 
   private String fillAssertClassTemplate(String template, ClassDescription classDescription) {
@@ -504,6 +518,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       // add corresponding Assert class (NameAssert for class Name) to generate both Name and NameAssert import
       typeNameSet.add(new TypeName(assertClassNameOf(classDescription), classDescription.getPackageName()));
     }
+    
+    // remove nested class import (eg Book.Title) if outer class import is present (eg Book)
+    removeNestedClassImportIfOuterClassImportIsThere(typeNameSet);
+    
     return listImports(typeNameSet, entryPointAssertionsClassPackage);
   }
 

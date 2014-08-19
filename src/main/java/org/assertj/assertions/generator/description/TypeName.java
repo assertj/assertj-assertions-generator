@@ -1,10 +1,12 @@
 package org.assertj.assertions.generator.description;
 
 import static org.apache.commons.lang3.ArrayUtils.contains;
+import static org.apache.commons.lang3.StringUtils.indexOfAny;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.remove;
 import static org.apache.commons.lang3.StringUtils.substringAfterLast;
-import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
+import static org.apache.commons.lang3.StringUtils.substringBefore;
 
 import org.assertj.assertions.generator.util.ClassUtil;
 
@@ -18,6 +20,7 @@ import org.assertj.assertions.generator.util.ClassUtil;
  */
 public class TypeName implements Comparable<TypeName> {
 
+  private static final String CAPITAL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   private static final String BOOLEAN = "boolean";
   private static final String NO_PACKAGE = "";
   public static final String JAVA_LANG_PACKAGE = "java.lang";
@@ -39,18 +42,24 @@ public class TypeName implements Comparable<TypeName> {
     setPackageName(packageName);
   }
 
+  /**
+   * WARNING : does not work for nested class like com.books.Author.Name, 
+   * @param typeName
+   */
   public TypeName(String typeName) {
     if (isBlank(typeName)) throw new IllegalArgumentException("type name should not be blank or null");
-    if (typeName.contains(".")) {
-      this.typeSimpleName = substringAfterLast(typeName, ".");
-      setPackageName(substringBeforeLast(typeName, "."));
+    int indexOfClassName = indexOfAny(typeName, CAPITAL_LETTERS);
+    if (indexOfClassName > 0) {
+      this.typeSimpleNameWithOuterClass = typeName.substring(indexOfClassName);
+      setPackageName(remove(typeName, "." + typeSimpleNameWithOuterClass));
     } else {
       // primitive type => no package
-      this.typeSimpleName = typeName;
+      this.typeSimpleNameWithOuterClass = typeName;
       setPackageName(NO_PACKAGE);
     }
-    this.typeSimpleNameWithOuterClass = typeSimpleName;
-    this.typeSimpleNameWithOuterClassNotSeparatedByDots = typeSimpleName;
+    this.typeSimpleName = typeSimpleNameWithOuterClass.contains(".") ? 
+        substringAfterLast(typeSimpleNameWithOuterClass, ".") : typeSimpleNameWithOuterClass;
+    this.typeSimpleNameWithOuterClassNotSeparatedByDots = remove(typeSimpleNameWithOuterClass, ".");
   }
 
   public TypeName(Class<?> clazz) {
@@ -131,7 +140,7 @@ public class TypeName implements Comparable<TypeName> {
 
   @Override
   public String toString() {
-    return isEmpty(packageName) ? typeSimpleName : packageName + "." + typeSimpleName;
+    return isEmpty(packageName) ? typeSimpleNameWithOuterClass : packageName + "." + typeSimpleNameWithOuterClass;
   }
 
   @Override
@@ -141,5 +150,14 @@ public class TypeName implements Comparable<TypeName> {
 
   public boolean isArray() {
     return typeSimpleName.contains("[]");
+  }
+
+  public boolean isNested() {
+    return typeSimpleNameWithOuterClass.contains(".");
+  }
+  
+  public TypeName getOuterClassTypeName() {
+    if (!isNested()) return null;
+    return new TypeName(substringBefore(typeSimpleNameWithOuterClass, ".") , packageName);
   }
 }

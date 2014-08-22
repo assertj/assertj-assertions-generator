@@ -22,6 +22,7 @@ import org.assertj.assertions.generator.data.lotr.Race;
 import org.assertj.assertions.generator.data.lotr.Ring;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.data.nba.Player;
+import org.assertj.assertions.generator.data.nba.Team;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
 
@@ -46,6 +47,19 @@ public class AssertionsEntryPointGeneratorTest {
     // THEN
     String expectedContent = readFileToString(new File("src/test/resources/Assertions.expected.txt"));
     assertThat(assertionsEntryPointFile).as("check entry point class content").hasContent(expectedContent);
+  }
+
+  @Test
+  public void should_generate_correctly_standard_assertions_entry_point_class_for_classes_with_same_name()
+      throws Exception {
+    // GIVEN : classes we want to have entry point assertions for
+    Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Team.class,
+                                                                       org.assertj.assertions.generator.data.Team.class);
+    // WHEN
+    String assertionsEntryPointContent = generator.generateAssertionsEntryPointClassContentFor(classDescriptionSet, STANDARD, "org");
+    // THEN
+    String expectedContent = readFileToString(new File("src/test/resources/AssertionsForClassesWithSameName.expected.txt"));
+    assertThat(assertionsEntryPointContent).isEqualTo(expectedContent);
   }
 
   @Test

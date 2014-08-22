@@ -1,0 +1,35 @@
+package org;
+
+/**
+ * Entry point for assertions of different data types. Each method in this class is a static factory for the
+ * type-specific assertion objects.
+ */
+public class Assertions {
+
+  /**
+   * Creates a new instance of <code>{@link org.assertj.assertions.generator.data.TeamAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static org.assertj.assertions.generator.data.TeamAssert assertThat(org.assertj.assertions.generator.data.Team actual) {
+    return new org.assertj.assertions.generator.data.TeamAssert(actual);
+  }
+
+  /**
+   * Creates a new instance of <code>{@link org.assertj.assertions.generator.data.nba.TeamAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created assertion object.
+   */
+  public static org.assertj.assertions.generator.data.nba.TeamAssert assertThat(org.assertj.assertions.generator.data.nba.Team actual) {
+    return new org.assertj.assertions.generator.data.nba.TeamAssert(actual);
+  }
+
+  /**
+   * Creates a new <code>{@link Assertions}</code>.
+   */
+  protected Assertions() {
+    // empty
+  }
+}

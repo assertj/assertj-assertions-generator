@@ -270,7 +270,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   @Override
-  public File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription, Set<Class<?>> allClasses) throws IOException {
+  public File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription, Set<Class<?>> allClasses)
+      throws IOException {
 
     // Assertion content
     String[] assertionFileContent = generateHierarchicalCustomAssertionContentFor(classDescription, allClasses);
@@ -285,9 +286,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     assertionClassesFile[1] = createFile(assertionFileContent[1], concreteAsserClassFileName, targetDirectory);
     return assertionClassesFile;
   }
-  
+
   @Override
-  public String[] generateHierarchicalCustomAssertionContentFor(ClassDescription classDescription, Set<Class<?>> allClasses) {
+  public String[] generateHierarchicalCustomAssertionContentFor(ClassDescription classDescription,
+                                                                Set<Class<?>> allClasses) {
     // use class template first
     StringBuilder abstractAssertClassContentBuilder = new StringBuilder(abstractClassAssertionTemplate.getContent());
 
@@ -302,13 +304,15 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     StringBuilder concreteAssertClassContentBuilder = new StringBuilder(hierarchicalClassAssertionTemplate.getContent());
 
     String[] assertionClassesContent = new String[2];
-    assertionClassesContent[0] = fillAssertClassTemplate(abstractAssertClassContentBuilder.toString(), classDescription, allClasses, false);
-    assertionClassesContent[1] = fillAssertClassTemplate(concreteAssertClassContentBuilder.toString(), classDescription, null, true);
+    assertionClassesContent[0] = fillAssertClassTemplate(abstractAssertClassContentBuilder.toString(),
+                                                         classDescription, allClasses, false);
+    assertionClassesContent[1] = fillAssertClassTemplate(concreteAssertClassContentBuilder.toString(),
+                                                         classDescription, null, true);
     return assertionClassesContent;
   }
-  
+
   private String fillAssertClassTemplate(String template, ClassDescription classDescription,
-                                   Set<Class<?>> classesHierarchy, boolean concrete) {
+                                         Set<Class<?>> classesHierarchy, boolean concrete) {
     // Add o.a.c.a.Assertions if needed
     TreeSet<TypeName> imports = new TreeSet<TypeName>(classDescription.getImports());
     if (template.contains("Assertions")) {
@@ -324,9 +328,6 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       superAssertionClass = new TypeName(abstractAssertClassNameOf(superTypeName), superTypeName.getPackageName());
     }
     imports.add(superAssertionClass);
-    
-    // remove nested class import (eg Book.Title) if outer class import is present (eg Book)
-    removeNestedClassImportIfOuterClassImportIsThere(imports);
 
     final String customAssertionClass = concrete ? assertClassNameOf(classDescription) :
         abstractAssertClassNameOf(classDescription);
@@ -345,20 +346,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
                    .replace(IMPORTS, listImports(imports, classDescription.getPackageName()));
   }
 
-  private void removeNestedClassImportIfOuterClassImportIsThere(Set<TypeName> imports) {
-    Iterator<TypeName> iterator = imports.iterator();
-    while (iterator.hasNext()){
-      TypeName typeName = iterator.next();
-      if (typeName.isNested() && imports.contains(typeName.getOuterClassTypeName())) {
-        iterator.remove();
-      }
-    }
-  }
-
   private String fillAssertClassTemplate(String template, ClassDescription classDescription) {
     return fillAssertClassTemplate(template, classDescription, null, true);
   }
-  
+
   @Override
   public String generateCustomAssertionContentFor(ClassDescription classDescription) {
 
@@ -368,27 +359,11 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // generate assertion method for each property with a public getter
     assertionFileContentBuilder.append(generateAssertionsForGetters(classDescription.getGettersDescriptions()));
     assertionFileContentBuilder.append(generateAssertionsForPublicFields(classDescription.getFieldsDescriptions()));
-    
+
     // close class with }
     assertionFileContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
 
     return fillAssertClassTemplate(assertionFileContentBuilder.toString(), classDescription);
-  }
-
-  private static String assertClassNameOf(ClassDescription classDescription) {
-    return assertClassNameOf(classDescription.getTypeName());
-  }
-
-  private static String assertClassNameOf(TypeName type) {
-    return type.getSimpleNameWithOuterClassNotSeparatedByDots() + ASSERT_CLASS_SUFFIX;
-  }
-
-  private static String abstractAssertClassNameOf(ClassDescription classDescription) {
-    return abstractAssertClassNameOf(classDescription.getTypeName());
-  }
-
-  private static String abstractAssertClassNameOf(TypeName type) {
-    return ABSTRACT_ASSERT_CLASS_PREFIX + assertClassNameOf(type);
   }
 
   @Override
@@ -446,9 +421,6 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
         : entryPointClassPackage;
     entryPointAssertionsClassContent = entryPointAssertionsClassContent.replaceAll(PACKAGE_REGEXP, classPackage);
 
-    String softAssertionsImportsContent = generateEntryPointsAssertionsImportFor(classDescriptionSet, classPackage);
-    entryPointAssertionsClassContent = entryPointAssertionsClassContent.replace(IMPORTS,
-                                                                                softAssertionsImportsContent);
     String allEntryPointsAssertionContent = generateAssertionEntryPointMethodsFor(classDescriptionSet,
                                                                                   entryPointAssertionMethodTemplate);
     entryPointAssertionsClassContent = entryPointAssertionsClassContent.replaceAll(ALL_ASSERTIONS_ENTRY_POINTS_REGEXP,
@@ -483,14 +455,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private String generateAssertionEntryPointMethodsFor(final Set<ClassDescription> classDescriptionSet,
                                                        Template assertionEntryPointMethodTemplate) {
     // sort ClassDescription according to their class name.
-    SortedSet<ClassDescription> sortedClassDescriptionSet =
-        new TreeSet<ClassDescription>(new Comparator<ClassDescription>() {
-          @Override
-          public int compare(final ClassDescription cd1, final ClassDescription cd2) {
-            return cd1.getClassNameWithOuterClass().compareTo(cd2.getClassNameWithOuterClass());
-          }
-        });
-    sortedClassDescriptionSet.addAll(classDescriptionSet);
+    SortedSet<ClassDescription> sortedClassDescriptionSet = new TreeSet<ClassDescription>(classDescriptionSet);
     // generate for each classDescription the entry point method, e.g. assertThat(MyClass) or then(MyClass)
     StringBuilder allAssertThatsContentBuilder = new StringBuilder();
     final String lineSeparator = System.getProperty("line.separator");
@@ -499,30 +464,14 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       // resolve class assert (ex: PlayerAssert)
       // in case of inner classes like Movie.PublicCategory, class assert will be MoviePublicCategoryAssert
       assertionEntryPointMethodContent = assertionEntryPointMethodContent.replaceAll(CUSTOM_ASSERTION_CLASS_REGEXP,
-                                                                                     assertClassNameOf(classDescription));
+                                                                                     fullyQualifiedAssertClassName(classDescription));
       // resolve class (ex: Player)
       // in case of inner classes like Movie.PublicCategory use class name with outer class i.e. Movie.PublicCategory.
-      assertionEntryPointMethodContent =
-          assertionEntryPointMethodContent.replaceAll(CLASS_TO_ASSERT_REGEXP,
-                                                      classDescription.getClassNameWithOuterClass());
+      assertionEntryPointMethodContent = assertionEntryPointMethodContent.replaceAll(CLASS_TO_ASSERT_REGEXP,
+                                                                                     classDescription.getFullyQualifiedClassName());
       allAssertThatsContentBuilder.append(lineSeparator).append(assertionEntryPointMethodContent);
     }
     return allAssertThatsContentBuilder.toString();
-  }
-
-  private String generateEntryPointsAssertionsImportFor(final Set<ClassDescription> classDescriptionSet,
-                                                        final String entryPointAssertionsClassPackage) {
-    final Set<TypeName> typeNameSet = new TreeSet<TypeName>();
-    for (ClassDescription classDescription : classDescriptionSet) {
-      typeNameSet.add(classDescription.getTypeName());
-      // add corresponding Assert class (NameAssert for class Name) to generate both Name and NameAssert import
-      typeNameSet.add(new TypeName(assertClassNameOf(classDescription), classDescription.getPackageName()));
-    }
-    
-    // remove nested class import (eg Book.Title) if outer class import is present (eg Book)
-    removeNestedClassImportIfOuterClassImportIsThere(typeNameSet);
-    
-    return listImports(typeNameSet, entryPointAssertionsClassPackage);
   }
 
   private String determineBestEntryPointsAssertionsClassPackage(final Set<ClassDescription> classDescriptionSet) {
@@ -538,6 +487,27 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // takes the base package of all given classes assuming they all belong to a common package, i.e a.b.c. over a.b.c.d
     // this can certainly be improved ...
     return packages.first();
+  }
+
+  private static String assertClassNameOf(ClassDescription classDescription) {
+    return assertClassNameOf(classDescription.getTypeName());
+  }
+
+  private static String assertClassNameOf(TypeName type) {
+    return type.getSimpleNameWithOuterClassNotSeparatedByDots() + ASSERT_CLASS_SUFFIX;
+  }
+
+  private static String abstractAssertClassNameOf(ClassDescription classDescription) {
+    return abstractAssertClassNameOf(classDescription.getTypeName());
+  }
+
+  private static String abstractAssertClassNameOf(TypeName type) {
+    return ABSTRACT_ASSERT_CLASS_PREFIX + assertClassNameOf(type);
+  }
+
+  private static String fullyQualifiedAssertClassName(ClassDescription classDescription) {
+    return classDescription.getPackageName() + "." + classDescription.getClassNameWithOuterClassNotSeparatedByDots()
+           + ASSERT_CLASS_SUFFIX;
   }
 
   /**

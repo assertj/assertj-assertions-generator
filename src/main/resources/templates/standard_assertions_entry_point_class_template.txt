@@ -1,8 +1,7 @@
 package ${package};
 
-${imports}
 /**
- * Entry point for assertion of different data types. Each method in this class is a static factory for the
+ * Entry point for assertions of different data types. Each method in this class is a static factory for the
  * type-specific assertion objects.
  */
 public class Assertions {

@@ -140,12 +140,12 @@ public class TypeName implements Comparable<TypeName> {
 
   @Override
   public String toString() {
-    return isEmpty(packageName) ? typeSimpleNameWithOuterClass : packageName + "." + typeSimpleNameWithOuterClass;
+    return getFullyQualifiedClassName();
   }
 
   @Override
   public int compareTo(TypeName o) {
-    return toString().compareTo(o.toString());
+    return getFullyQualifiedClassName().compareTo(o.getFullyQualifiedClassName());
   }
 
   public boolean isArray() {
@@ -159,5 +159,9 @@ public class TypeName implements Comparable<TypeName> {
   public TypeName getOuterClassTypeName() {
     if (!isNested()) return null;
     return new TypeName(substringBefore(typeSimpleNameWithOuterClass, ".") , packageName);
+  }
+
+  public String getFullyQualifiedClassName() {
+    return isEmpty(packageName) ? typeSimpleNameWithOuterClass : packageName + "." + typeSimpleNameWithOuterClass;
   }
 }

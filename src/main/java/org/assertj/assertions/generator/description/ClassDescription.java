@@ -23,7 +23,7 @@ import java.util.TreeSet;
  * @author Joel Costigliola
  * 
  */
-public class ClassDescription {
+public class ClassDescription implements Comparable<ClassDescription> {
 
   private Set<TypeName> typesToImports;
   private Set<GetterDescription> gettersDescriptions;
@@ -45,6 +45,10 @@ public class ClassDescription {
 
   public String getClassName() {
     return classTypeName.getSimpleName();
+  }
+  
+  public String getFullyQualifiedClassName() {
+    return classTypeName.getFullyQualifiedClassName();
   }
 
   public TypeName getTypeName() {
@@ -118,15 +122,18 @@ public class ClassDescription {
     if (!(o instanceof ClassDescription)) return false;
 
     final ClassDescription that = (ClassDescription) o;
-
     if (classTypeName != null ? !classTypeName.equals(that.classTypeName) : that.classTypeName != null) return false;
-
     return true;
   }
 
   @Override
   public int hashCode() {
     return classTypeName != null ? classTypeName.hashCode() : 0;
+  }
+  
+  @Override
+  public int compareTo(ClassDescription o) {
+    return classTypeName.compareTo(o.classTypeName);
   }
 
   public Class<?> getSuperType() {

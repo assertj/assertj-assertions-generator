@@ -46,6 +46,7 @@ public class ClassUtilTest implements NestedClassesTest {
                                               Movie.PublicCategory.class, Ring.class, Race.class,
                                               FellowshipOfTheRing.class, TolkienCharacter.class,
                                               Team.class,
+                                              org.assertj.assertions.generator.data.nba.Team.class,
                                               TreeEnum.class,
                                               OuterClass.InnerPerson.IP_InnerPerson.class,
                                               OuterClass.InnerPerson.class,

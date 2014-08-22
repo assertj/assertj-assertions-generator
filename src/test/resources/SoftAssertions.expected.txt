@@ -8,17 +8,8 @@ import org.assertj.core.internal.cglib.proxy.Enhancer;
 import org.assertj.core.api.ErrorCollector;
 import org.assertj.core.api.SoftAssertionError;
 
-import org.assertj.assertions.generator.data.lotr.Race;
-import org.assertj.assertions.generator.data.lotr.RaceAssert;
-import org.assertj.assertions.generator.data.lotr.Ring;
-import org.assertj.assertions.generator.data.lotr.RingAssert;
-import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
-import org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert;
-import org.assertj.assertions.generator.data.nba.Player;
-import org.assertj.assertions.generator.data.nba.PlayerAssert;
-
 /**
- * Entry point for assertion of different data types. Each method in this class is a static factory for the
+ * Entry point for assertions of different data types. Each method in this class is a static factory for the
  * type-specific assertion objects.
  */
 public class SoftAssertions {
@@ -51,93 +42,93 @@ public class SoftAssertions {
   }
 
   /**
-   * Creates a new "soft" instance of <code>{@link ArtWorkAssert}</code>.
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.ArtWorkAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
-  public ArtWorkAssert assertThat(ArtWork actual) {
-    return proxy(ArtWorkAssert.class, ArtWork.class, actual);
+  public org.assertj.assertions.generator.data.ArtWorkAssert assertThat(org.assertj.assertions.generator.data.ArtWork actual) {
+    return proxy(org.assertj.assertions.generator.data.ArtWorkAssert.class, org.assertj.assertions.generator.data.ArtWork.class, actual);
   }
 
   /**
-   * Creates a new "soft" instance of <code>{@link MovieAssert}</code>.
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.MovieAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
-  public MovieAssert assertThat(Movie actual) {
-    return proxy(MovieAssert.class, Movie.class, actual);
+  public org.assertj.assertions.generator.data.MovieAssert assertThat(org.assertj.assertions.generator.data.Movie actual) {
+    return proxy(org.assertj.assertions.generator.data.MovieAssert.class, org.assertj.assertions.generator.data.Movie.class, actual);
   }
 
   /**
-   * Creates a new "soft" instance of <code>{@link MoviePublicCategoryAssert}</code>.
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.MoviePublicCategoryAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
-  public MoviePublicCategoryAssert assertThat(Movie.PublicCategory actual) {
-    return proxy(MoviePublicCategoryAssert.class, Movie.PublicCategory.class, actual);
+  public org.assertj.assertions.generator.data.MoviePublicCategoryAssert assertThat(org.assertj.assertions.generator.data.Movie.PublicCategory actual) {
+    return proxy(org.assertj.assertions.generator.data.MoviePublicCategoryAssert.class, org.assertj.assertions.generator.data.Movie.PublicCategory.class, actual);
   }
 
   /**
-   * Creates a new "soft" instance of <code>{@link NameAssert}</code>.
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.NameAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
-  public NameAssert assertThat(Name actual) {
-    return proxy(NameAssert.class, Name.class, actual);
+  public org.assertj.assertions.generator.data.NameAssert assertThat(org.assertj.assertions.generator.data.Name actual) {
+    return proxy(org.assertj.assertions.generator.data.NameAssert.class, org.assertj.assertions.generator.data.Name.class, actual);
   }
 
   /**
-   * Creates a new "soft" instance of <code>{@link PlayerAssert}</code>.
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.TreeEnumAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
-  public PlayerAssert assertThat(Player actual) {
-    return proxy(PlayerAssert.class, Player.class, actual);
+  public org.assertj.assertions.generator.data.TreeEnumAssert assertThat(org.assertj.assertions.generator.data.TreeEnum actual) {
+    return proxy(org.assertj.assertions.generator.data.TreeEnumAssert.class, org.assertj.assertions.generator.data.TreeEnum.class, actual);
   }
 
   /**
-   * Creates a new "soft" instance of <code>{@link RaceAssert}</code>.
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.lotr.RaceAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
-  public RaceAssert assertThat(Race actual) {
-    return proxy(RaceAssert.class, Race.class, actual);
+  public org.assertj.assertions.generator.data.lotr.RaceAssert assertThat(org.assertj.assertions.generator.data.lotr.Race actual) {
+    return proxy(org.assertj.assertions.generator.data.lotr.RaceAssert.class, org.assertj.assertions.generator.data.lotr.Race.class, actual);
   }
 
   /**
-   * Creates a new "soft" instance of <code>{@link RingAssert}</code>.
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.lotr.RingAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
-  public RingAssert assertThat(Ring actual) {
-    return proxy(RingAssert.class, Ring.class, actual);
+  public org.assertj.assertions.generator.data.lotr.RingAssert assertThat(org.assertj.assertions.generator.data.lotr.Ring actual) {
+    return proxy(org.assertj.assertions.generator.data.lotr.RingAssert.class, org.assertj.assertions.generator.data.lotr.Ring.class, actual);
   }
 
   /**
-   * Creates a new "soft" instance of <code>{@link TolkienCharacterAssert}</code>.
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
-  public TolkienCharacterAssert assertThat(TolkienCharacter actual) {
-    return proxy(TolkienCharacterAssert.class, TolkienCharacter.class, actual);
+  public org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert assertThat(org.assertj.assertions.generator.data.lotr.TolkienCharacter actual) {
+    return proxy(org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert.class, org.assertj.assertions.generator.data.lotr.TolkienCharacter.class, actual);
   }
 
   /**
-   * Creates a new "soft" instance of <code>{@link TreeEnumAssert}</code>.
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.nba.PlayerAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
-  public TreeEnumAssert assertThat(TreeEnum actual) {
-    return proxy(TreeEnumAssert.class, TreeEnum.class, actual);
+  public org.assertj.assertions.generator.data.nba.PlayerAssert assertThat(org.assertj.assertions.generator.data.nba.Player actual) {
+    return proxy(org.assertj.assertions.generator.data.nba.PlayerAssert.class, org.assertj.assertions.generator.data.nba.Player.class, actual);
   }
 
 }

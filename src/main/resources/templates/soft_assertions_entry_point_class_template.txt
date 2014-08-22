@@ -8,9 +8,8 @@ import org.assertj.core.internal.cglib.proxy.Enhancer;
 import org.assertj.core.api.ErrorCollector;
 import org.assertj.core.api.SoftAssertionError;
 
-${imports}
 /**
- * Entry point for assertion of different data types. Each method in this class is a static factory for the
+ * Entry point for assertions of different data types. Each method in this class is a static factory for the
  * type-specific assertion objects.
  */
 public class SoftAssertions {

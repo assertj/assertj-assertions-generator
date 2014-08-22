@@ -169,4 +169,40 @@ public class MovieAssert extends AbstractAssert<MovieAssert, Movie> {
     return this;
   }
 
+  /**
+   * Verifies that the actual Movie is xrated.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie is not xrated.
+   */
+  public MovieAssert isXrated() {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    // check
+    if (!actual.xrated) {
+      failWithMessage("\nExpected actual Movie to be xrated but was not.");
+    }
+    
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Movie is not xrated.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie is xrated.
+   */
+  public MovieAssert isNotXrated() {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    // check
+    if (actual.xrated) {
+      failWithMessage("\nExpected actual Movie not to be xrated but was.");
+    }
+    
+    // return the current assertion for method chaining
+    return this;
+  }
+
 }

@@ -51,9 +51,9 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Movie");
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(classDescription.getGettersDescriptions()).hasSize(3);
-    assertThat(classDescription.getFieldsDescriptions()).hasSize(3);
+    assertThat(classDescription.getFieldsDescriptions()).hasSize(4);
     assertThat(classDescription.getDeclaredGettersDescriptions()).hasSize(2);
-//    assertThat(classDescription.getDeclaredFieldsDescriptions()).hasSize(1);
+    assertThat(classDescription.getDeclaredFieldsDescriptions()).hasSize(3);
     assertThat(classDescription.getSuperType()).isEqualTo(ArtWork.class);
     assertThat(classDescription.getImports()).containsOnly(new TypeName(Date.class));
   }

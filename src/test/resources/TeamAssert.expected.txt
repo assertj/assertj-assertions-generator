@@ -269,7 +269,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Team is not westCoast.
    */
-  public TeamAssert westCoast {
+  public TeamAssert isWestCoast() {
     // check that actual Team we want to make assertions on is not null.
     isNotNull();
 

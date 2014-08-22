@@ -559,10 +559,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private String assertionContentForField(FieldDescription field) {
     String assertionContent = baseAssertionContentFor(field);
 
-    // we reuse template for properties to have consistent assertions for property and field but
-    // - change the way we get the value since it's a field and not a property:
+    // we reuse template for properties to have consistent assertions for property and field but change the way we get
+    // the value since it's a field and not a property:
     assertionContent = assertionContent.replace("get${Property}()", "${property}")
-                                       .replace("is${Property}()", "${property}");
+                                       .replace("is${Property}())", "${property})");
     // - remove also ${throws} and ${throws_javadoc} since it does not make any sense for a field
     assertionContent = remove(assertionContent, "${throws}");
     assertionContent = remove(assertionContent, "${throws_javadoc}");

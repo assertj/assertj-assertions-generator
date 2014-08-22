@@ -8,6 +8,7 @@ public class Movie extends ArtWork {
   private PublicCategory publicCategory;
   public String producer;
   public double rating;
+  public boolean xrated;
 
   public Movie(String title, Date releaseDate) {
     super(title);

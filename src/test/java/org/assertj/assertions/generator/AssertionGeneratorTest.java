@@ -3,6 +3,7 @@ package org.assertj.assertions.generator;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.reflect.Modifier.isPublic;
 import static org.apache.commons.io.FileUtils.readFileToString;
+import static org.apache.commons.lang3.StringUtils.replace;
 import static org.assertj.assertions.generator.BaseAssertionGenerator.ABSTRACT_ASSERT_CLASS_PREFIX;
 import static org.assertj.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_FILE_SUFFIX;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
@@ -185,8 +186,8 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 
   private static String expectedContentFromTemplate(Class<?> clazz, String fileTemplate) throws IOException {
     String template = readFileToString(new File("src/test/resources/" + fileTemplate));
-    String content = template.replaceAll("\\$\\{nestedClass\\}Assert", getSimpleNameWithOuterClassNotSeparatedByDots(clazz) + "Assert");
-    content = content.replaceAll("\\$\\{nestedClass\\}", getSimpleNameWithOuterClass(clazz));
+    String content = replace(template, "${nestedClass}Assert", getSimpleNameWithOuterClassNotSeparatedByDots(clazz) + "Assert");
+    content = replace(content, "${nestedClass}", getSimpleNameWithOuterClass(clazz));
     return content;
   }
 

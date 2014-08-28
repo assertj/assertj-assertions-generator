@@ -17,12 +17,12 @@ import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.remove;
+import static org.apache.commons.lang3.StringUtils.replace;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -60,17 +60,17 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   static final String ASSERT_CLASS_FILE_SUFFIX = ASSERT_CLASS_SUFFIX + ".java";
   static final String TEMPLATES_DIR = "templates" + File.separator;
   private static final String IMPORT_LINE = "import %s;%s";
-  private static final String PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP = "\\$\\{Property\\}";
-  private static final String PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP = "\\$\\{property\\}";
-  private static final String PACKAGE_REGEXP = "\\$\\{package\\}";
-  private static final String PROPERTY_TYPE_REGEXP = "\\$\\{propertyType\\}";
-  private static final String CLASS_TO_ASSERT_REGEXP = "\\$\\{class_to_assert\\}";
-  private static final String CUSTOM_ASSERTION_CLASS_REGEXP = "\\$\\{custom_assertion_class\\}";
-  private static final String SUPER_ASSERTION_CLASS_REGEXP = "\\$\\{super_assertion_class\\}";
-  private static final String SELF_TYPE_REGEXP = "\\$\\{self_type\\}";
-  private static final String MYSELF_REGEXP = "\\$\\{myself\\}";
-  private static final String ELEMENT_TYPE_REGEXP = "\\$\\{elementType\\}";
-  private static final String ALL_ASSERTIONS_ENTRY_POINTS_REGEXP = "\\$\\{all_assertions_entry_points\\}";
+  private static final String PROPERTY_WITH_UPPERCASE_FIRST_CHAR = "${Property}";
+  private static final String PROPERTY_WITH_LOWERCASE_FIRST_CHAR = "${property}";
+  private static final String PACKAGE = "${package}";
+  private static final String PROPERTY_TYPE = "${propertyType}";
+  private static final String CLASS_TO_ASSERT = "${class_to_assert}";
+  private static final String CUSTOM_ASSERTION_CLASS = "${custom_assertion_class}";
+  private static final String SUPER_ASSERTION_CLASS = "${super_assertion_class}";
+  private static final String SELF_TYPE = "${self_type}";
+  private static final String MYSELF = "${myself}";
+  private static final String ELEMENT_TYPE = "${elementType}";
+  private static final String ALL_ASSERTIONS_ENTRY_POINTS = "${all_assertions_entry_points}";
   private static final String IMPORTS = "${imports}";
   private static final String THROWS = "${throws}";
   private static final String THROWS_JAVADOC = "${throws_javadoc}";
@@ -334,16 +334,18 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     final String selfType = concrete ? customAssertionClass : "S";
     final String myself = concrete ? "this" : "myself";
 
-    return template.replaceAll(PACKAGE_REGEXP, classDescription.getPackageName())
-                   .replaceAll(CUSTOM_ASSERTION_CLASS_REGEXP, customAssertionClass)
-                   // className could be a nested class like "OuterClass.NestedClass",
-                   // in that case assert class will be OuterClassNestedClass
-                   .replaceAll(SUPER_ASSERTION_CLASS_REGEXP,
-                               superAssertionClass.getSimpleNameWithOuterClassNotSeparatedByDots())
-                   .replaceAll(CLASS_TO_ASSERT_REGEXP, classDescription.getClassNameWithOuterClass())
-                   .replaceAll(SELF_TYPE_REGEXP, selfType)
-                   .replaceAll(MYSELF_REGEXP, myself)
-                   .replace(IMPORTS, listImports(imports, classDescription.getPackageName()));
+    template = replace(template, PACKAGE, classDescription.getPackageName());
+    template = replace(template, CUSTOM_ASSERTION_CLASS, customAssertionClass);
+    // className could be a nested class like "OuterClass.NestedClass", in that case assert class will be
+    // OuterClassNestedClass
+    template = replace(template, SUPER_ASSERTION_CLASS,
+                       superAssertionClass.getSimpleNameWithOuterClassNotSeparatedByDots());
+    template = replace(template, CLASS_TO_ASSERT, classDescription.getClassNameWithOuterClass());
+    template = replace(template, SELF_TYPE, selfType);
+    template = replace(template, MYSELF, myself);
+    template = replace(template, IMPORTS, listImports(imports, classDescription.getPackageName()));
+
+    return template;
   }
 
   private String fillAssertClassTemplate(String template, ClassDescription classDescription) {
@@ -419,12 +421,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // resolve template markers
     String classPackage = isEmpty(entryPointClassPackage) ? determineBestEntryPointsAssertionsClassPackage(classDescriptionSet)
         : entryPointClassPackage;
-    entryPointAssertionsClassContent = entryPointAssertionsClassContent.replaceAll(PACKAGE_REGEXP, classPackage);
+    entryPointAssertionsClassContent = replace(entryPointAssertionsClassContent, PACKAGE, classPackage);
 
     String allEntryPointsAssertionContent = generateAssertionEntryPointMethodsFor(classDescriptionSet,
                                                                                   entryPointAssertionMethodTemplate);
-    entryPointAssertionsClassContent = entryPointAssertionsClassContent.replaceAll(ALL_ASSERTIONS_ENTRY_POINTS_REGEXP,
-                                                                                   allEntryPointsAssertionContent);
+    entryPointAssertionsClassContent = replace(entryPointAssertionsClassContent, ALL_ASSERTIONS_ENTRY_POINTS,
+                                               allEntryPointsAssertionContent);
     return entryPointAssertionsClassContent;
   }
 
@@ -463,12 +465,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       String assertionEntryPointMethodContent = assertionEntryPointMethodTemplate.getContent();
       // resolve class assert (ex: PlayerAssert)
       // in case of inner classes like Movie.PublicCategory, class assert will be MoviePublicCategoryAssert
-      assertionEntryPointMethodContent = assertionEntryPointMethodContent.replaceAll(CUSTOM_ASSERTION_CLASS_REGEXP,
-                                                                                     fullyQualifiedAssertClassName(classDescription));
+      assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CUSTOM_ASSERTION_CLASS,
+                                                 fullyQualifiedAssertClassName(classDescription));
       // resolve class (ex: Player)
       // in case of inner classes like Movie.PublicCategory use class name with outer class i.e. Movie.PublicCategory.
-      assertionEntryPointMethodContent = assertionEntryPointMethodContent.replaceAll(CLASS_TO_ASSERT_REGEXP,
-                                                                                     classDescription.getFullyQualifiedClassName());
+      assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CLASS_TO_ASSERT,
+                                                 classDescription.getFullyQualifiedClassName());
       allAssertThatsContentBuilder.append(lineSeparator).append(assertionEntryPointMethodContent);
     }
     return allAssertThatsContentBuilder.toString();
@@ -568,9 +570,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     assertionContent = remove(assertionContent, "${throws_javadoc}");
 
     // replace ${Property} and ${property} by field name (starting with uppercase/lowercase)
-    return assertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, capitalize(field.getName()))
-                           .replaceAll(PROPERTY_TYPE_REGEXP, field.getTypeName())
-                           .replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP, field.getName());
+    assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(field.getName()));
+    assertionContent = replace(assertionContent, PROPERTY_TYPE, field.getTypeName());
+    assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, field.getName());
+    return assertionContent;
   }
 
   private String assertionContentForProperty(GetterDescription getter) {
@@ -579,9 +582,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     assertionContent = declareExceptions(getter, assertionContent);
 
     String propertyName = getter.getPropertyName();
-    assertionContent = assertionContent.replaceAll(PROPERTY_WITH_UPPERCASE_FIRST_CHAR_REGEXP, capitalize(propertyName));
-    assertionContent = assertionContent.replaceAll(PROPERTY_TYPE_REGEXP, getter.getTypeName());
-    return assertionContent.replaceAll(PROPERTY_WITH_LOWERCASE_FIRST_CHAR_REGEXP, propertyName);
+    assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(propertyName));
+    assertionContent = replace(assertionContent, PROPERTY_TYPE, getter.getTypeName());
+    assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, propertyName);
+    return assertionContent;
   }
 
   /**
@@ -596,13 +600,11 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     if (fieldOrProperty.isBooleanType()) {
       assertionContent = isAssertionTemplate.getContent();
     } else if (fieldOrProperty.isIterableType()) {
-      assertionContent = hasIterableElementsAssertionTemplate.getContent()
-                                                             .replaceAll(ELEMENT_TYPE_REGEXP,
-                                                                         fieldOrProperty.getElementTypeName());
+      assertionContent = replace(hasIterableElementsAssertionTemplate.getContent(), ELEMENT_TYPE,
+                                 fieldOrProperty.getElementTypeName());
     } else if (fieldOrProperty.isArrayType()) {
-      assertionContent = hasArrayElementsAssertionTemplate.getContent()
-                                                          .replaceAll(ELEMENT_TYPE_REGEXP,
-                                                                      fieldOrProperty.getElementTypeName());
+      assertionContent = replace(hasArrayElementsAssertionTemplate.getContent(), ELEMENT_TYPE,
+                                 fieldOrProperty.getElementTypeName());
     } else if (fieldOrProperty.isRealNumberType()) {
       assertionContent = hasAssertionTemplateForRealNumber.getContent();
     } else if (fieldOrProperty.isPrimitiveType()) {
@@ -638,6 +640,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     if (!getter.getExceptions().isEmpty()) {
       throwsClause.append(' ');
     }
+
     assertionContent = assertionContent.replace(THROWS_JAVADOC, throwsJavaDoc.toString());
     assertionContent = assertionContent.replace(THROWS, throwsClause.toString());
     return assertionContent;

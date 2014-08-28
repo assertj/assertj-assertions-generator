@@ -42,19 +42,20 @@ public class ClassUtilTest implements NestedClassesTest {
   @Test
   public void should_get_classes_in_package_and_subpackages() throws ClassNotFoundException {
     Set<Class<?>> classesInPackage = collectClasses("org.assertj.assertions.generator.data");
-    assertThat(classesInPackage).containsOnly(Player.class, PlayerAgent.class, ArtWork.class, Name.class, Movie.class,
-                                              Movie.PublicCategory.class, Ring.class, Race.class,
-                                              FellowshipOfTheRing.class, TolkienCharacter.class,
-                                              Team.class,
-                                              org.assertj.assertions.generator.data.nba.Team.class,
-                                              TreeEnum.class,
-                                              OuterClass.InnerPerson.IP_InnerPerson.class,
-                                              OuterClass.InnerPerson.class,
-                                              OuterClass.class,
-                                              StaticNestedPerson.SNP_InnerPerson.class,
-                                              StaticNestedPerson.class,
-                                              StaticNestedPerson.SNP_StaticNestedPerson.class,
-                                              BeanWithOneException.class, BeanWithTwoExceptions.class);
+    assertThat(classesInPackage).contains(Player.class, PlayerAgent.class, ArtWork.class, Name.class, Movie.class,
+                                          Movie.PublicCategory.class, Ring.class, Race.class,
+                                          FellowshipOfTheRing.class, TolkienCharacter.class,
+                                          Team.class,
+                                          Dollar$.class,
+                                          org.assertj.assertions.generator.data.nba.Team.class,
+                                          TreeEnum.class,
+                                          OuterClass.InnerPerson.IP_InnerPerson.class,
+                                          OuterClass.InnerPerson.class,
+                                          OuterClass.class,
+                                          StaticNestedPerson.SNP_InnerPerson.class,
+                                          StaticNestedPerson.class,
+                                          StaticNestedPerson.SNP_StaticNestedPerson.class,
+                                          BeanWithOneException.class, BeanWithTwoExceptions.class);
   }
 
   @Test
@@ -94,7 +95,7 @@ public class ClassUtilTest implements NestedClassesTest {
   public void should_return_false_if_method_is_not_a_standard_getter() throws Exception {
     assertThat(isStandardGetter(Player.class.getMethod("isRookie", NO_PARAMS))).isFalse();
     assertThat(isStandardGetter(Player.class.getMethod("getVoid", NO_PARAMS))).isFalse();
-    assertThat(isStandardGetter(Player.class.getMethod("getWithParam", new Class[]{String.class}))).isFalse();
+    assertThat(isStandardGetter(Player.class.getMethod("getWithParam", new Class[] { String.class }))).isFalse();
   }
 
   @Test
@@ -106,7 +107,7 @@ public class ClassUtilTest implements NestedClassesTest {
   public void should_return_false_if_method_is_not_a_boolean_getter() throws Exception {
     assertThat(isBooleanGetter(Player.class.getMethod("getTeam", NO_PARAMS))).isFalse();
     assertThat(isStandardGetter(Player.class.getMethod("isVoid", NO_PARAMS))).isFalse();
-    assertThat(isStandardGetter(Player.class.getMethod("isWithParam", new Class[]{String.class}))).isFalse();
+    assertThat(isStandardGetter(Player.class.getMethod("isWithParam", new Class[] { String.class }))).isFalse();
   }
 
   @Test
@@ -134,7 +135,7 @@ public class ClassUtilTest implements NestedClassesTest {
   public void should_return_getters_methods_only() throws Exception {
     List<Method> playerGetterMethods = getterMethodsOf(Player.class);
     assertThat(playerGetterMethods).contains(Player.class.getMethod("getTeam", NO_PARAMS))
-      .doesNotContain(Player.class.getMethod("isInTeam", String.class));
+                                   .doesNotContain(Player.class.getMethod("isInTeam", String.class));
   }
 
   @Test
@@ -162,13 +163,13 @@ public class ClassUtilTest implements NestedClassesTest {
     String actualName = getSimpleNameWithOuterClassNotSeparatedByDots(nestedClass.getNestedClass());
     assertThat(actualName).isEqualTo(nestedClass.getClassNameWithOuterClassNotSeparatedBytDots());
   }
-  
+
   @Test
   public void should_return_simple_class_name() {
     String actualName = getSimpleNameWithOuterClassNotSeparatedByDots(Player.class);
     assertThat(actualName).isEqualTo("Player");
   }
-  
+
   @Test
   public void testGetSimpleNameWithOuterClass_notNestedClass() throws Exception {
     assertThat(ClassUtil.getSimpleNameWithOuterClass(String.class)).isEqualTo("String");
@@ -239,6 +240,8 @@ public class ClassUtilTest implements NestedClassesTest {
     }
 
     @SuppressWarnings("unused")
-    public <T extends Number> T getNumber() {return null;}
+    public <T extends Number> T getNumber() {
+      return null;
+    }
   }
 }

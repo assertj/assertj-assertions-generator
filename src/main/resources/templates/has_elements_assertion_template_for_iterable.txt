@@ -32,7 +32,7 @@
     String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
     
     // check
-    if (!actual.get${Property}().isEmpty()) {
+    if (actual.get${Property}().iterator().hasNext()) {
       failWithMessage(assertjErrorMessage, actual, actual.get${Property}());
     }
     

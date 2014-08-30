@@ -150,7 +150,7 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
     String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have iterablePropertyThrowsException but had :\n  <%s>";
     
     // check
-    if (!actual.getIterablePropertyThrowsException().isEmpty()) {
+    if (actual.getIterablePropertyThrowsException().iterator().hasNext()) {
       failWithMessage(assertjErrorMessage, actual, actual.getIterablePropertyThrowsException());
     }
     

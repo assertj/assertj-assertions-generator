@@ -154,7 +154,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have players but had :\n  <%s>";
     
     // check
-    if (!actual.players.isEmpty()) {
+    if (actual.players.iterator().hasNext()) {
       failWithMessage(assertjErrorMessage, actual, actual.players);
     }
     
@@ -196,7 +196,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have points but had :\n  <%s>";
     
     // check
-    if (!actual.points.isEmpty()) {
+    if (actual.points.iterator().hasNext()) {
       failWithMessage(assertjErrorMessage, actual, actual.points);
     }
     

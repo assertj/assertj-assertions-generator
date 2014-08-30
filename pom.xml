@@ -8,14 +8,14 @@
     <version>1.2.5</version>
   </parent>
   <artifactId>assertj-assertions-generator</artifactId>
-  <version>1.4.0-SNAPSHOT</version>
+  <version>1.4.0</version>
   <name>AssertJ Assertions Generator</name>
 
   <scm>
     <developerConnection>scm:git:git@github.com:joel-costigliola/assertj-assertions-generator.git</developerConnection>
     <connection>scm:git:git@github.com:joel-costigliola/assertj-assertions-generator.git</connection>
     <url>git@github.com:joel-costigliola/assertj-assertions-generator</url>
-    <tag>HEAD</tag>
+    <tag>assertj-assertions-generator-1.4.0</tag>
   </scm>
 
   <dependencies>

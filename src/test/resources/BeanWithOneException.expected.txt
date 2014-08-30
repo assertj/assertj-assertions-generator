@@ -129,13 +129,8 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
     // check that given String varargs is not null.
     if (iterablePropertyThrowsException == null) throw new AssertionError("Expecting iterablePropertyThrowsException parameter not to be null.");
     
-    // check with standard error message (see commented below to set your own message).
-    Assertions.assertThat(actual.getIterablePropertyThrowsException()).contains(iterablePropertyThrowsException);
-
-    // To override the standard error message :
-    // - remove the previous call to Assertions.assertThat(actual.getIterablePropertyThrowsException().contains(iterablePropertyThrowsException)
-    // - uncomment the line below and set your error message:
-    // Assertions.assertThat(actual.getIterablePropertyThrowsException()).overridingErrorMessage("\nmy error message %s", "arg1").contains(iterablePropertyThrowsException);
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    org.assertj.core.internal.Iterables.instance().assertContains(info, actual.getIterablePropertyThrowsException(), iterablePropertyThrowsException);
 
     // return the current assertion for method chaining
     return this;

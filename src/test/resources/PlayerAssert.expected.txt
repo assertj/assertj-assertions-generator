@@ -87,13 +87,8 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     // check that given int[] varargs is not null.
     if (points == null) throw new AssertionError("Expecting points parameter not to be null.");
     
-    // check with standard error message (see commented below to set your own message).
-    Assertions.assertThat(actual.getPoints()).contains(points);
-
-    // To override the standard error message :
-    // - remove the previous call to Assertions.assertThat(actual.getPoints().contains(points)
-    // - uncomment the line below and set your error message:
-    // Assertions.assertThat(actual.getPoints()).overridingErrorMessage("\nmy error message %s", "arg1").contains(points);
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    org.assertj.core.internal.Iterables.instance().assertContains(info, actual.getPoints(), points);
 
     // return the current assertion for method chaining
     return this;
@@ -312,13 +307,8 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     // check that given Player varargs is not null.
     if (teamMates == null) throw new AssertionError("Expecting teamMates parameter not to be null.");
     
-    // check with standard error message (see commented below to set your own message).
-    Assertions.assertThat(actual.getTeamMates()).contains(teamMates);
-
-    // To override the standard error message :
-    // - remove the previous call to Assertions.assertThat(actual.getTeamMates().contains(teamMates)
-    // - uncomment the line below and set your error message:
-    // Assertions.assertThat(actual.getTeamMates()).overridingErrorMessage("\nmy error message %s", "arg1").contains(teamMates);
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    org.assertj.core.internal.Iterables.instance().assertContains(info, actual.getTeamMates(), teamMates);
 
     // return the current assertion for method chaining
     return this;

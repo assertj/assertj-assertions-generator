@@ -12,13 +12,8 @@
     // check that given ${elementType} varargs is not null.
     if (${property} == null) throw new AssertionError("Expecting ${property} parameter not to be null.");
     
-    // check with standard error message (see commented below to set your own message).
-    Assertions.assertThat(actual.get${Property}()).contains(${property});
-
-    // To override the standard error message :
-    // - remove the previous call to Assertions.assertThat(actual.get${Property}().contains(${property})
-    // - uncomment the line below and set your error message:
-    // Assertions.assertThat(actual.get${Property}()).overridingErrorMessage("\nmy error message %s", "arg1").contains(${property});
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    org.assertj.core.internal.Iterables.instance().assertContains(info, actual.get${Property}(), ${property});
 
     // return the current assertion for method chaining
     return ${myself};

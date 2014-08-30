@@ -134,13 +134,8 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     // check that given Player varargs is not null.
     if (players == null) throw new AssertionError("Expecting players parameter not to be null.");
     
-    // check with standard error message (see commented below to set your own message).
-    Assertions.assertThat(actual.players).contains(players);
-
-    // To override the standard error message :
-    // - remove the previous call to Assertions.assertThat(actual.players.contains(players)
-    // - uncomment the line below and set your error message:
-    // Assertions.assertThat(actual.players).overridingErrorMessage("\nmy error message %s", "arg1").contains(players);
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    org.assertj.core.internal.Iterables.instance().assertContains(info, actual.players, players);
 
     // return the current assertion for method chaining
     return this;
@@ -181,13 +176,8 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     // check that given int[] varargs is not null.
     if (points == null) throw new AssertionError("Expecting points parameter not to be null.");
     
-    // check with standard error message (see commented below to set your own message).
-    Assertions.assertThat(actual.points).contains(points);
-
-    // To override the standard error message :
-    // - remove the previous call to Assertions.assertThat(actual.points.contains(points)
-    // - uncomment the line below and set your error message:
-    // Assertions.assertThat(actual.points).overridingErrorMessage("\nmy error message %s", "arg1").contains(points);
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    org.assertj.core.internal.Iterables.instance().assertContains(info, actual.points, points);
 
     // return the current assertion for method chaining
     return this;

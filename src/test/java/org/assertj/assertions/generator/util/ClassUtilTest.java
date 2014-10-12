@@ -12,10 +12,36 @@
  */
 package org.assertj.assertions.generator.util;
 
+import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
+import static org.assertj.assertions.generator.util.ClassUtil.declaredGetterMethodsOf;
+import static org.assertj.assertions.generator.util.ClassUtil.getClassesRelatedTo;
+import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
+import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClassNotSeparatedByDots;
+import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
+import static org.assertj.assertions.generator.util.ClassUtil.inheritsCollectionOrIsIterable;
+import static org.assertj.assertions.generator.util.ClassUtil.isBooleanGetter;
+import static org.assertj.assertions.generator.util.ClassUtil.isStandardGetter;
+import static org.assertj.assertions.generator.util.ClassUtil.isValidGetterName;
+import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import org.assertj.assertions.generator.NestedClassesTest;
-import org.assertj.assertions.generator.data.*;
+import org.assertj.assertions.generator.data.ArtWork;
+import org.assertj.assertions.generator.data.BeanWithOneException;
+import org.assertj.assertions.generator.data.BeanWithTwoExceptions;
+import org.assertj.assertions.generator.data.Dollar$;
+import org.assertj.assertions.generator.data.Movie;
+import org.assertj.assertions.generator.data.Name;
+import org.assertj.assertions.generator.data.OuterClass;
+import org.assertj.assertions.generator.data.OuterClass.StaticNestedPerson;
+import org.assertj.assertions.generator.data.Team;
+import org.assertj.assertions.generator.data.TreeEnum;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
 import org.assertj.assertions.generator.data.lotr.Race;
 import org.assertj.assertions.generator.data.lotr.Ring;
@@ -26,15 +52,6 @@ import org.junit.Test;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
-
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
-import static org.assertj.assertions.generator.data.OuterClass.StaticNestedPerson;
-import static org.assertj.assertions.generator.util.ClassUtil.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Theories.class)
 public class ClassUtilTest implements NestedClassesTest {
@@ -92,10 +109,10 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Test
   public void should_return_true_if_class_implements_iterable_interface() {
-    assertThat(isIterable(Iterable.class)).isTrue();
-    assertThat(isIterable(Collection.class)).isTrue();
-    assertThat(isIterable(List.class)).isTrue();
-    assertThat(isIterable(String.class)).isFalse();
+    assertThat(inheritsCollectionOrIsIterable(Iterable.class)).isTrue();
+    assertThat(inheritsCollectionOrIsIterable(Collection.class)).isTrue();
+    assertThat(inheritsCollectionOrIsIterable(List.class)).isTrue();
+    assertThat(inheritsCollectionOrIsIterable(String.class)).isFalse();
   }
 
   @Test
@@ -145,21 +162,21 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Test
   public void should_return_getters_methods_only() throws Exception {
-    List<Method> playerGetterMethods = getterMethodsOf(Player.class);
+	Set<Method> playerGetterMethods = getterMethodsOf(Player.class);
     assertThat(playerGetterMethods).contains(Player.class.getMethod("getTeam", NO_PARAMS))
                                    .doesNotContain(Player.class.getMethod("isInTeam", String.class));
   }
 
   @Test
   public void should_also_return_inherited_getters_methods() throws Exception {
-    List<Method> playerGetterMethods = getterMethodsOf(Movie.class);
+    Set<Method> playerGetterMethods = getterMethodsOf(Movie.class);
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS),
                                              ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }
 
   @Test
   public void should_not_return_inherited_getters_methods() throws Exception {
-    List<Method> playerGetterMethods = declaredGetterMethodsOf(Movie.class);
+	Set<Method> playerGetterMethods = declaredGetterMethodsOf(Movie.class);
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS))
                                    .doesNotContain(ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }

@@ -25,7 +25,6 @@ import java.util.TreeSet;
  */
 public class ClassDescription implements Comparable<ClassDescription> {
 
-  private Set<TypeName> typesToImports;
   private Set<GetterDescription> gettersDescriptions;
   private Set<FieldDescription> fieldsDescriptions;
   private Set<GetterDescription> declaredGettersDescriptions;
@@ -36,7 +35,6 @@ public class ClassDescription implements Comparable<ClassDescription> {
   public ClassDescription(TypeName typeName) {
     super();
     this.classTypeName = typeName;
-    this.typesToImports = new TreeSet<TypeName>();
     this.gettersDescriptions = new TreeSet<GetterDescription>();
     this.fieldsDescriptions = new TreeSet<FieldDescription>();
     this.declaredGettersDescriptions = new TreeSet<GetterDescription>();
@@ -65,18 +63,6 @@ public class ClassDescription implements Comparable<ClassDescription> {
   
   public String getPackageName() {
     return classTypeName.getPackageName();
-  }
-
-  /**
-   * Return the type to import for the corresponding assertions class
-   * @return
-   */
-  public Set<TypeName> getImports() {
-    return typesToImports;
-  }
-
-  public void addTypeToImport(Collection<TypeName> typesToImport) {
-    this.typesToImports.addAll(typesToImport);
   }
 
   public Set<GetterDescription> getGettersDescriptions() {
@@ -113,7 +99,7 @@ public class ClassDescription implements Comparable<ClassDescription> {
   
   @Override
   public String toString() {
-    return "ClassDescription [classTypeName=" + classTypeName + ", typesToImports=" + typesToImports + "]";
+    return "ClassDescription [classTypeName=" + classTypeName + "]";
   }
 
   @Override

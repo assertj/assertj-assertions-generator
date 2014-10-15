@@ -26,7 +26,7 @@ public class FieldDescriptionTest {
     fieldDescription = new FieldDescription("bestPlayer", new TypeDescription(new TypeName(Player.class)));
     assertThat(fieldDescription.getName()).isEqualTo("bestPlayer");
     assertThat(fieldDescription.getTypeName()).isEqualTo("Player");
-    assertThat(fieldDescription.getElementTypeName()).isNull();
+    assertThat(fieldDescription.getElementTypeName(Player.class.getPackage().getName())).isNull();
   }
 
   @Test

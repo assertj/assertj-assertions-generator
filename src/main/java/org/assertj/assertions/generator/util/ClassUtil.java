@@ -24,7 +24,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -322,15 +321,6 @@ public class ClassUtil {
     return nonStaticPublicFields;
   }
 
-
-  public static List<Member> getterMethodsAndNonStaticPublicFieldsOf(Class<?> clazz) {
-    List<Member> methodsAndNonStaticPublicFields = new ArrayList<Member>();
-    methodsAndNonStaticPublicFields.addAll(getterMethodsOf(clazz));
-    methodsAndNonStaticPublicFields.addAll(nonStaticPublicFieldsOf(clazz));
-    return methodsAndNonStaticPublicFields;
-  }
-  
-  
   public static List<Field> declaredPublicFieldsOf(Class<?> clazz) {
     Field[] fields = clazz.getDeclaredFields();
     List<Field> nonStaticPublicFields = new ArrayList<Field>();

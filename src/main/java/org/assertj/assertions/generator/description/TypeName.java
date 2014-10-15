@@ -12,6 +12,7 @@
  */
 package org.assertj.assertions.generator.description;
 
+import static com.google.common.base.Objects.equal;
 import static org.apache.commons.lang3.ArrayUtils.contains;
 import static org.apache.commons.lang3.StringUtils.indexOfAny;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -176,4 +177,9 @@ public class TypeName implements Comparable<TypeName> {
   public String getFullyQualifiedClassName() {
     return isEmpty(packageName) ? typeSimpleNameWithOuterClass : packageName + "." + typeSimpleNameWithOuterClass;
   }
+  
+  public String getFullyQualifiedTypeNameIfNeeded(String targetPackage) {
+	return belongsToJavaLangPackage() || equal(targetPackage, packageName) ? getSimpleNameWithOuterClass() : getFullyQualifiedClassName();
+  }
+  
 }

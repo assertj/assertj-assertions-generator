@@ -1,6 +1,5 @@
 package org.assertj.assertions.generator.data;
 
-import java.io.IOException;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 
@@ -33,9 +32,9 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
    * @param arrayPropertyThrowsException the given elements that should be contained in actual BeanWithOneException's arrayPropertyThrowsException.
    * @return this assertion object.
    * @throws AssertionError if the actual BeanWithOneException's arrayPropertyThrowsException does not contain all given String elements.
-   * @throws IOException if actual.getArrayPropertyThrowsException() throws one.
+   * @throws java.io.IOException if actual.getArrayPropertyThrowsException() throws one.
    */
-  public BeanWithOneExceptionAssert hasArrayPropertyThrowsException(String... arrayPropertyThrowsException) throws IOException {
+  public BeanWithOneExceptionAssert hasArrayPropertyThrowsException(String... arrayPropertyThrowsException) throws java.io.IOException {
     // check that actual BeanWithOneException we want to make assertions on is not null.
     isNotNull();
 
@@ -58,9 +57,9 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
    * Verifies that the actual BeanWithOneException has no arrayPropertyThrowsException.
    * @return this assertion object.
    * @throws AssertionError if the actual BeanWithOneException's arrayPropertyThrowsException is not empty.
-   * @throws IOException if actual.getArrayPropertyThrowsException() throws one.
+   * @throws java.io.IOException if actual.getArrayPropertyThrowsException() throws one.
    */
-  public BeanWithOneExceptionAssert hasNoArrayPropertyThrowsException() throws IOException {
+  public BeanWithOneExceptionAssert hasNoArrayPropertyThrowsException() throws java.io.IOException {
     // check that actual BeanWithOneException we want to make assertions on is not null.
     isNotNull();
 
@@ -81,9 +80,9 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
    * Verifies that the actual BeanWithOneException is booleanPropertyThrowsException.
    * @return this assertion object.
    * @throws AssertionError - if the actual BeanWithOneException is not booleanPropertyThrowsException.
-   * @throws IOException if actual.isBooleanPropertyThrowsException() throws one.
+   * @throws java.io.IOException if actual.isBooleanPropertyThrowsException() throws one.
    */
-  public BeanWithOneExceptionAssert isBooleanPropertyThrowsException() throws IOException {
+  public BeanWithOneExceptionAssert isBooleanPropertyThrowsException() throws java.io.IOException {
     // check that actual BeanWithOneException we want to make assertions on is not null.
     isNotNull();
 
@@ -100,9 +99,9 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
    * Verifies that the actual BeanWithOneException is not booleanPropertyThrowsException.
    * @return this assertion object.
    * @throws AssertionError - if the actual BeanWithOneException is booleanPropertyThrowsException.
-   * @throws IOException if actual.isBooleanPropertyThrowsException() throws one.
+   * @throws java.io.IOException if actual.isBooleanPropertyThrowsException() throws one.
    */
-  public BeanWithOneExceptionAssert isNotBooleanPropertyThrowsException() throws IOException {
+  public BeanWithOneExceptionAssert isNotBooleanPropertyThrowsException() throws java.io.IOException {
     // check that actual BeanWithOneException we want to make assertions on is not null.
     isNotNull();
 
@@ -120,9 +119,9 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
    * @param iterablePropertyThrowsException the given elements that should be contained in actual BeanWithOneException's iterablePropertyThrowsException.
    * @return this assertion object.
    * @throws AssertionError if the actual BeanWithOneException's iterablePropertyThrowsException does not contain all given String elements.
-   * @throws IOException if actual.getIterablePropertyThrowsException() throws one.
+   * @throws java.io.IOException if actual.getIterablePropertyThrowsException() throws one.
    */
-  public BeanWithOneExceptionAssert hasIterablePropertyThrowsException(String... iterablePropertyThrowsException) throws IOException {
+  public BeanWithOneExceptionAssert hasIterablePropertyThrowsException(String... iterablePropertyThrowsException) throws java.io.IOException {
     // check that actual BeanWithOneException we want to make assertions on is not null.
     isNotNull();
 
@@ -140,9 +139,9 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
    * Verifies that the actual BeanWithOneException has no iterablePropertyThrowsException.
    * @return this assertion object.
    * @throws AssertionError if the actual BeanWithOneException's iterablePropertyThrowsException is not empty.
-   * @throws IOException if actual.getIterablePropertyThrowsException() throws one.
+   * @throws java.io.IOException if actual.getIterablePropertyThrowsException() throws one.
    */
-  public BeanWithOneExceptionAssert hasNoIterablePropertyThrowsException() throws IOException {
+  public BeanWithOneExceptionAssert hasNoIterablePropertyThrowsException() throws java.io.IOException {
     // check that actual BeanWithOneException we want to make assertions on is not null.
     isNotNull();
 
@@ -164,9 +163,9 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
    * @param stringPropertyThrowsException the given stringPropertyThrowsException to compare the actual BeanWithOneException's stringPropertyThrowsException to.
    * @return this assertion object.
    * @throws AssertionError - if the actual BeanWithOneException's stringPropertyThrowsException is not equal to the given one.
-   * @throws IOException if actual.getStringPropertyThrowsException() throws one.
+   * @throws java.io.IOException if actual.getStringPropertyThrowsException() throws one.
    */
-  public BeanWithOneExceptionAssert hasStringPropertyThrowsException(String stringPropertyThrowsException) throws IOException {
+  public BeanWithOneExceptionAssert hasStringPropertyThrowsException(String stringPropertyThrowsException) throws java.io.IOException {
     // check that actual BeanWithOneException we want to make assertions on is not null.
     isNotNull();
 

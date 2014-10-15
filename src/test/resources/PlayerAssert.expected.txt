@@ -1,6 +1,5 @@
 package org.assertj.assertions.generator.data.nba;
 
-import org.assertj.assertions.generator.data.Name;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 
@@ -57,7 +56,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Player's name is not equal to the given one.
    */
-  public PlayerAssert hasName(Name name) {
+  public PlayerAssert hasName(org.assertj.assertions.generator.data.Name name) {
     // check that actual Player we want to make assertions on is not null.
     isNotNull();
 
@@ -65,7 +64,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     String assertjErrorMessage = "\nExpected name of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
-    Name actualName = actual.getName();
+    org.assertj.assertions.generator.data.Name actualName = actual.getName();
     if (!org.assertj.core.util.Objects.areEqual(actualName, name)) {
       failWithMessage(assertjErrorMessage, actual, name, actualName);
     }

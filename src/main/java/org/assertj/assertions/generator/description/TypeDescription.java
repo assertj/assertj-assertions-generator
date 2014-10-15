@@ -50,58 +50,62 @@ public class TypeDescription {
   private TypeName elementTypeName;
 
   public TypeDescription(TypeName typeName) {
-    super();
-    if (typeName == null) throw new IllegalArgumentException("typeName must not be null.");
-    this.typeName = typeName;
-    this.isArray = false;
-    this.isIterable = false;
-    this.elementTypeName = null;
+	super();
+	if (typeName == null) throw new IllegalArgumentException("typeName must not be null.");
+	this.typeName = typeName;
+	this.isArray = false;
+	this.isIterable = false;
+	this.elementTypeName = null;
   }
 
   public String getSimpleNameWithOuterClass() {
-    return typeName.getSimpleNameWithOuterClass();
+	return typeName.getSimpleNameWithOuterClass();
   }
 
   public boolean isArray() {
-    return isArray;
+	return isArray;
   }
 
   public void setArray(boolean isArray) {
-    this.isArray = isArray;
+	this.isArray = isArray;
   }
 
   public boolean isPrimitive() {
-    return typeName.isPrimitive();
+	return typeName.isPrimitive();
   }
 
   public boolean isRealNumber() {
-    return typeName.isRealNumber();
+	return typeName.isRealNumber();
   }
 
   public boolean isBoolean() {
-    return typeName.isBoolean();
+	return typeName.isBoolean();
   }
 
   public TypeName getElementTypeName() {
-    return elementTypeName;
+	return elementTypeName;
   }
 
   public void setElementTypeName(TypeName elementTypeName) {
-    this.elementTypeName = elementTypeName;
+	this.elementTypeName = elementTypeName;
   }
 
   public boolean isIterable() {
-    return isIterable;
+	return isIterable;
   }
 
   public void setIterable(boolean isIterable) {
-    this.isIterable = isIterable;
+	this.isIterable = isIterable;
   }
 
   @Override
   public String toString() {
-    return "TypeDescription[typeName=" + typeName + ", array=" + isArray + ", iterable=" + isIterable + ", primitive="
-           + isPrimitive() + ", boolean=" + isBoolean() + ", elementTypeName=" + elementTypeName + "]";
+	return "TypeDescription[typeName=" + typeName + ", array=" + isArray + ", iterable=" + isIterable + ", primitive="
+	       + isPrimitive() + ", boolean=" + isBoolean() + ", elementTypeName=" + elementTypeName + "]";
+  }
+
+  public String getFullyQualifiedTypeNameIfNeeded(String packageName) {
+	return typeName.getFullyQualifiedTypeNameIfNeeded(packageName);
   }
 
 }

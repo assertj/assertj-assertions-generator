@@ -46,4 +46,5 @@ public class FieldDescription extends DataDescription implements Comparable<Fiel
   public String toString() {
     return "FieldDescription[name=" + getName() + ", typeDescription=" + typeDescription + "]";
   }
+
 }

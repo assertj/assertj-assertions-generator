@@ -31,7 +31,7 @@ public class GetterDescriptionTest {
     getterDescription = new GetterDescription("bestPlayer", new TypeDescription(new TypeName(Player.class)), Collections.<TypeName>emptyList());
     assertThat(getterDescription.getPropertyName()).isEqualTo("bestPlayer");
     assertThat(getterDescription.getTypeName()).isEqualTo("Player");
-    assertThat(getterDescription.getElementTypeName()).isNull();
+    assertThat(getterDescription.getElementTypeName(Player.class.getPackage().getName())).isNull();
   }
 
   @Test

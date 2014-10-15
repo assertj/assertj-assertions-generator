@@ -21,41 +21,54 @@ public abstract class DataDescription {
   protected final TypeDescription typeDescription;
 
   public DataDescription(String name, TypeDescription typeDescription) {
-    super();
-    this.name = name;
-    this.typeDescription = typeDescription;
+	super();
+	this.name = name;
+	this.typeDescription = typeDescription;
   }
 
   public String getName() {
-    return name;
+	return name;
   }
 
   public String getTypeName() {
-    return typeDescription.getSimpleNameWithOuterClass();
+	return typeDescription.getSimpleNameWithOuterClass();
   }
 
   public boolean isIterableType() {
-    return typeDescription.isIterable();
+	return typeDescription.isIterable();
   }
 
   public boolean isArrayType() {
-    return typeDescription.isArray();
+	return typeDescription.isArray();
   }
 
   public boolean isPrimitiveType() {
-    return typeDescription.isPrimitive();
+	return typeDescription.isPrimitive();
   }
 
   public boolean isRealNumberType() {
-    return typeDescription.isRealNumber();
+	return typeDescription.isRealNumber();
   }
 
   public boolean isBooleanType() {
-    return typeDescription.isBoolean();
+	return typeDescription.isBoolean();
   }
 
-  public String getElementTypeName() {
-    return typeDescription.getElementTypeName() == null ? null : typeDescription.getElementTypeName().getSimpleNameWithOuterClass();
+  /**
+   * return the simple element type name if etement type belongs to given the package and the fully qualified element
+   * type name ortherwise.
+   * 
+   * @param packageName typically the package of the enclosing Class
+   * @return the simple element type name if etement type belongs to given the package and the fully qualified element
+   * type name ortherwise.
+   */
+  public String getElementTypeName(String packageName) {
+	return typeDescription.getElementTypeName() == null ? null
+	    : typeDescription.getElementTypeName().getFullyQualifiedTypeNameIfNeeded(packageName);
+  }
+
+  public String getFullyQualifiedTypeNameIfNeeded(String packageName) {
+	return typeDescription.getFullyQualifiedTypeNameIfNeeded(packageName);
   }
 
 }

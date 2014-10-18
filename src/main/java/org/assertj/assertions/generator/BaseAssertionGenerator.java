@@ -316,7 +316,9 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	// Add any AssertJ needed imports only, other types are used with their fully qualifed names to avoid a compilation
 	// error when two types have the same
 	TreeSet<TypeName> assertjImports = new TreeSet<TypeName>();
-	if (template.contains("Assertions")) assertjImports.add(new TypeName("org.assertj.core.api.Assertions"));
+	if (template.contains("Assertions.")) assertjImports.add(new TypeName("org.assertj.core.api.Assertions"));
+	if (template.contains("Objects.")) assertjImports.add(new TypeName("org.assertj.core.util.Objects"));
+	if (template.contains("Iterables.")) assertjImports.add(new TypeName("org.assertj.core.internal.Iterables"));
 
 	final TypeName superAssertionClass;
 	// Add assertion supertype to imports if needed

@@ -14,7 +14,7 @@
     
     // null safe check
     ${propertyType} actual${Property} = actual.get${Property}();
-    if (!org.assertj.core.util.Objects.areEqual(actual${Property}, ${property})) {
+    if (!Objects.areEqual(actual${Property}, ${property})) {
       failWithMessage(assertjErrorMessage, actual, ${property}, actual${Property});
     }
 

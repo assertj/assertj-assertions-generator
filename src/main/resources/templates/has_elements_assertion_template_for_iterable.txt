@@ -13,7 +13,7 @@
     if (${property} == null) throw new AssertionError("Expecting ${property} parameter not to be null.");
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
-    org.assertj.core.internal.Iterables.instance().assertContains(info, actual.get${Property}(), ${property});
+    Iterables.instance().assertContains(info, actual.get${Property}(), ${property});
 
     // return the current assertion for method chaining
     return ${myself};

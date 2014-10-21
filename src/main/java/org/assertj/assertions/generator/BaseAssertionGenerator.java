@@ -52,6 +52,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   static final String DEFAULT_ASSERTION_ENTRY_POINT_METHOD_TEMPLATE = "standard_assertion_entry_point_method_template.txt";
   static final String DEFAULT_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE =
 	  "soft_assertions_entry_point_class_template.txt";
+  static final String DEFAULT_JUNIT_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE =
+	  "junit_soft_assertions_entry_point_class_template.txt";
   static final String DEFAULT_SOFT_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE = "soft_assertion_entry_point_method_template.txt";
   static final String DEFAULT_BDD_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE = "bdd_assertions_entry_point_class_template.txt";
   static final String DEFAULT_BDD_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE = "bdd_assertion_entry_point_method_template.txt";
@@ -90,6 +92,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private Template standardAssertionsEntryPointClassTemplate;
   private Template standardAssertionEntryPointMethodTemplate;
   private Template softAssertionsEntryPointClassTemplate;
+  private Template junitSoftAssertionsEntryPointClassTemplate;
   private Template softAssertionEntryPointMethodTemplate;
   private Template bddAssertionsEntryPointClassTemplate;
   private Template bddAssertionEntryPointMethodTemplate;
@@ -133,6 +136,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	                  new File(templatesDirectory, DEFAULT_ASSERTION_ENTRY_POINT_METHOD_TEMPLATE)),
 	     new Template(Type.SOFT_ASSERTIONS_ENTRY_POINT_CLASS,
 	                  new File(templatesDirectory, DEFAULT_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE)),
+	     new Template(Type.JUNIT_SOFT_ASSERTIONS_ENTRY_POINT_CLASS,
+	                  new File(templatesDirectory, DEFAULT_JUNIT_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE)),
 	     new Template(Type.SOFT_ENTRY_POINT_METHOD_ASSERTION,
 	                  new File(templatesDirectory, DEFAULT_SOFT_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE)),
 	     new Template(Type.BDD_ASSERTIONS_ENTRY_POINT_CLASS,
@@ -154,6 +159,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	                            Template entryPointAssertionsClassTemplate,
 	                            Template entryPointAssertionTemplate,
 	                            Template entryPointSoftAssertionsClassTemplate,
+	                            Template entryPointJUnitSoftAssertionsClassTemplate,
 	                            Template entryPointSoftAssertionTemplate,
 	                            Template bddAssertionsEntryPointClassTemplate,
 	                            Template bddAssertionEntryPointMethodTemplate,
@@ -171,6 +177,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	this.setStandardAssertionsEntryPointClassTemplate(entryPointAssertionsClassTemplate);
 	this.setStandardAssertionEntryPointMethodTemplate(entryPointAssertionTemplate);
 	this.setSoftAssertionsEntryPointClassTemplate(entryPointSoftAssertionsClassTemplate);
+	this.setJUnitSoftAssertionsEntryPointClassTemplate(entryPointJUnitSoftAssertionsClassTemplate);
 	this.setSoftAssertionEntryPointMethodTemplate(entryPointSoftAssertionTemplate);
 	this.setBddAssertionsEntryPointClassTemplate(bddAssertionsEntryPointClassTemplate);
 	this.setBddAssertionEntryPointMethodTemplate(bddAssertionEntryPointMethodTemplate);
@@ -243,6 +250,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
   public void setSoftAssertionsEntryPointClassTemplate(final Template softAssertionsEntryPointClassTemplate) {
 	this.softAssertionsEntryPointClassTemplate = softAssertionsEntryPointClassTemplate;
+  }
+
+  public void setJUnitSoftAssertionsEntryPointClassTemplate(final Template junitSoftAssertionsEntryPointClassTemplate) {
+	this.junitSoftAssertionsEntryPointClassTemplate = junitSoftAssertionsEntryPointClassTemplate;
   }
 
   public void setSoftAssertionEntryPointMethodTemplate(final Template softAssertionEntryPointMethodTemplate) {
@@ -383,6 +394,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private Template chooseAssertionEntryPointMethodTemplate(final AssertionsEntryPointType assertionsEntryPointType) {
 	switch (assertionsEntryPointType) {
 	case SOFT:
+	case JUNIT_SOFT:
 	  return softAssertionEntryPointMethodTemplate;
 	case BDD:
 	  return bddAssertionEntryPointMethodTemplate;
@@ -395,6 +407,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	switch (assertionsEntryPointType) {
 	case SOFT:
 	  return softAssertionsEntryPointClassTemplate;
+	case JUNIT_SOFT:
+	  return junitSoftAssertionsEntryPointClassTemplate;
 	case BDD:
 	  return bddAssertionsEntryPointClassTemplate;
 	default:

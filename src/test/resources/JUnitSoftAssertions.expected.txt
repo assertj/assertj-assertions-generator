@@ -1,0 +1,137 @@
+package org.assertj.assertions.generator.data;
+
+import org.assertj.core.internal.cglib.proxy.Enhancer;
+
+import org.assertj.core.api.ErrorCollector;
+
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
+import org.junit.runners.model.MultipleFailureException;
+import org.junit.runners.model.Statement;
+
+/**
+ * Entry point for assertions of different data types. Each method in this class is a static factory for the
+ * type-specific assertion objects.
+ */
+public class JUnitSoftAssertions implements TestRule {
+
+  /** Collects error messages of all AssertionErrors thrown by the proxied method. */
+  protected final ErrorCollector collector = new ErrorCollector();
+
+  /** Creates a new </code>{@link JUnitSoftAssertions}</code>. */
+  public JUnitSoftAssertions() {
+    super();
+  }
+
+  /**
+   * TestRule implementation that verifies that no proxied assertion methods have failed.
+   */
+  public Statement apply(final Statement base, Description description) {
+    return new Statement() {
+      @Override
+      public void evaluate() throws Throwable {
+        base.evaluate();
+        MultipleFailureException.assertEmpty(collector.errors());
+      }
+    };
+  }
+  
+  @SuppressWarnings("unchecked")
+  protected <T, V> V proxy(Class<V> assertClass, Class<T> actualClass, T actual) {
+    Enhancer enhancer = new Enhancer();
+    enhancer.setSuperclass(assertClass);
+    enhancer.setCallback(collector);
+    return (V) enhancer.create(new Class[] { actualClass }, new Object[] { actual });
+  }
+
+  /**
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.ArtWorkAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  public org.assertj.assertions.generator.data.ArtWorkAssert assertThat(org.assertj.assertions.generator.data.ArtWork actual) {
+    return proxy(org.assertj.assertions.generator.data.ArtWorkAssert.class, org.assertj.assertions.generator.data.ArtWork.class, actual);
+  }
+
+  /**
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.MovieAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  public org.assertj.assertions.generator.data.MovieAssert assertThat(org.assertj.assertions.generator.data.Movie actual) {
+    return proxy(org.assertj.assertions.generator.data.MovieAssert.class, org.assertj.assertions.generator.data.Movie.class, actual);
+  }
+
+  /**
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.MoviePublicCategoryAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  public org.assertj.assertions.generator.data.MoviePublicCategoryAssert assertThat(org.assertj.assertions.generator.data.Movie.PublicCategory actual) {
+    return proxy(org.assertj.assertions.generator.data.MoviePublicCategoryAssert.class, org.assertj.assertions.generator.data.Movie.PublicCategory.class, actual);
+  }
+
+  /**
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.NameAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  public org.assertj.assertions.generator.data.NameAssert assertThat(org.assertj.assertions.generator.data.Name actual) {
+    return proxy(org.assertj.assertions.generator.data.NameAssert.class, org.assertj.assertions.generator.data.Name.class, actual);
+  }
+
+  /**
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.TreeEnumAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  public org.assertj.assertions.generator.data.TreeEnumAssert assertThat(org.assertj.assertions.generator.data.TreeEnum actual) {
+    return proxy(org.assertj.assertions.generator.data.TreeEnumAssert.class, org.assertj.assertions.generator.data.TreeEnum.class, actual);
+  }
+
+  /**
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.lotr.RaceAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  public org.assertj.assertions.generator.data.lotr.RaceAssert assertThat(org.assertj.assertions.generator.data.lotr.Race actual) {
+    return proxy(org.assertj.assertions.generator.data.lotr.RaceAssert.class, org.assertj.assertions.generator.data.lotr.Race.class, actual);
+  }
+
+  /**
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.lotr.RingAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  public org.assertj.assertions.generator.data.lotr.RingAssert assertThat(org.assertj.assertions.generator.data.lotr.Ring actual) {
+    return proxy(org.assertj.assertions.generator.data.lotr.RingAssert.class, org.assertj.assertions.generator.data.lotr.Ring.class, actual);
+  }
+
+  /**
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  public org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert assertThat(org.assertj.assertions.generator.data.lotr.TolkienCharacter actual) {
+    return proxy(org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert.class, org.assertj.assertions.generator.data.lotr.TolkienCharacter.class, actual);
+  }
+
+  /**
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.nba.PlayerAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  public org.assertj.assertions.generator.data.nba.PlayerAssert assertThat(org.assertj.assertions.generator.data.nba.Player actual) {
+    return proxy(org.assertj.assertions.generator.data.nba.PlayerAssert.class, org.assertj.assertions.generator.data.nba.Player.class, actual);
+  }
+
+}

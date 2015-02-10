@@ -1,11 +1,11 @@
 
   /**
    * Verifies that the actual ${class_to_assert}'s ${property} is equal to the given one.
-   * @param ${property} the given ${property} to compare the actual ${class_to_assert}'s ${property} to.
+   * @param ${property_safe} the given ${property} to compare the actual ${class_to_assert}'s ${property} to.
    * @return this assertion object.
    * @throws AssertionError - if the actual ${class_to_assert}'s ${property} is not equal to the given one.${throws_javadoc}
    */
-  public ${self_type} has${Property}(${propertyType} ${property}) ${throws}{
+  public ${self_type} has${Property}(${propertyType} ${property_safe}) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
@@ -14,8 +14,8 @@
     
     // null safe check
     ${propertyType} actual${Property} = actual.get${Property}();
-    if (!Objects.areEqual(actual${Property}, ${property})) {
-      failWithMessage(assertjErrorMessage, actual, ${property}, actual${Property});
+    if (!Objects.areEqual(actual${Property}, ${property_safe})) {
+      failWithMessage(assertjErrorMessage, actual, ${property_safe}, actual${Property});
     }
 
     // return the current assertion for method chaining

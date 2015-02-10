@@ -1,19 +1,19 @@
 
   /**
    * Verifies that the actual ${class_to_assert}'s ${property} contains the given ${elementType} elements.
-   * @param ${property} the given elements that should be contained in actual ${class_to_assert}'s ${property}.
+   * @param ${property_safe} the given elements that should be contained in actual ${class_to_assert}'s ${property}.
    * @return this assertion object.
    * @throws AssertionError if the actual ${class_to_assert}'s ${property} does not contain all given ${elementType} elements.${throws_javadoc}
    */
-  public ${self_type} has${Property}(${elementType}... ${property}) ${throws}{
+  public ${self_type} has${Property}(${elementType}... ${property_safe}) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
     // check that given ${elementType} varargs is not null.
-    if (${property} == null) throw new AssertionError("Expecting ${property} parameter not to be null.");
+    if (${property_safe} == null) throw new AssertionError("Expecting ${property} parameter not to be null.");
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
-    Iterables.instance().assertContains(info, actual.get${Property}(), ${property});
+    Iterables.instance().assertContains(info, actual.get${Property}(), ${property_safe});
 
     // return the current assertion for method chaining
     return ${myself};

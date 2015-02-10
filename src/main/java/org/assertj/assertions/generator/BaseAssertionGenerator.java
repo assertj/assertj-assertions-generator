@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -64,6 +65,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String IMPORT_LINE = "import %s;%s";
   private static final String PROPERTY_WITH_UPPERCASE_FIRST_CHAR = "${Property}";
   private static final String PROPERTY_WITH_LOWERCASE_FIRST_CHAR = "${property}";
+  private static final String PROPERTY_WITH_SAFE = "${property_safe}";
   private static final String PACKAGE = "${package}";
   private static final String PROPERTY_TYPE = "${propertyType}";
   private static final String CLASS_TO_ASSERT = "${class_to_assert}";
@@ -597,9 +599,79 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	assertionContent = replace(assertionContent, PROPERTY_TYPE,
 	                           field.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
 	assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, field.getName());
+	// It should not be possible to have a field that is a keyword - compiler won't allow it.
+	assertionContent = replace(assertionContent, PROPERTY_WITH_SAFE, field.getName());
 	return assertionContent;
   }
 
+  static private final Set<String> KEYWORDS = new HashSet<String>();
+
+  static {
+	String[] keywords = new String[] {
+		"abstract",
+		"assert",
+		"boolean",
+		"break",
+		"byte",
+		"case",
+		"catch",
+		"char",
+		// This one's not strictly required because you can't have a property called "class" 
+		"class",
+		"const",
+		"continue",
+		"default",
+		"do",
+		"double",
+		"else",
+		"enum",
+		"extends",
+		"false",
+		"final",
+		"finally",
+		"float",
+		"for",
+		"goto",
+		"if",
+		"implements",
+		"import",
+		"instanceof",
+		"int",
+		"interface",
+		"long",
+		"native",
+		"new",
+		"null",
+		"package",
+		"protected",
+		"private",
+		"public",
+		"return",
+		"short",
+		"static",
+		"strictfp",
+		"super",
+		"switch",
+		"synchronized",
+		"this",
+		"throw",
+		"throws",
+		"transient",
+		"true",
+		"try",
+		"void",
+		"volatile",
+		"while",
+	};
+	for (String keyword : keywords) {
+	  KEYWORDS.add(keyword);
+	}
+  }
+
+  static private final String getSafeProperty(String unsafe) {
+	return KEYWORDS.contains(unsafe) ? "expected" + capitalize(unsafe) : unsafe;
+  }
+  
   private String assertionContentForProperty(GetterDescription getter, ClassDescription classDescription) {
 	String assertionContent = baseAssertionContentFor(getter, classDescription);
 
@@ -610,6 +682,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	assertionContent = replace(assertionContent, PROPERTY_TYPE,
 	                           getter.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
 	assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, propertyName);
+	assertionContent = replace(assertionContent, PROPERTY_WITH_SAFE, getSafeProperty(propertyName));
 	return assertionContent;
   }
 

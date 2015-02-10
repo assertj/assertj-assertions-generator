@@ -1,24 +1,24 @@
 
   /**
    * Verifies that the actual ${class_to_assert}'s ${property} contains the given ${elementType} elements.
-   * @param ${property} the given elements that should be contained in actual ${class_to_assert}'s ${property}.
+   * @param ${property_safe} the given elements that should be contained in actual ${class_to_assert}'s ${property}.
    * @return this assertion object.
    * @throws AssertionError if the actual ${class_to_assert}'s ${property} does not contain all given ${elementType} elements.${throws_javadoc}
    */
-  public ${self_type} has${Property}(${elementType}... ${property}) ${throws}{
+  public ${self_type} has${Property}(${elementType}... ${property_safe}) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
     // check that given ${elementType} varargs is not null.
-    if (${property} == null) throw new AssertionError("Expecting ${property} parameter not to be null.");
+    if (${property_safe} == null) throw new AssertionError("Expecting ${property} parameter not to be null.");
     
     // check with standard error message (see commented below to set your own message).
-    Assertions.assertThat(actual.get${Property}()).contains(${property});
+    Assertions.assertThat(actual.get${Property}()).contains(${property_safe});
 
     // To override the standard error message :
-    // - remove the previous call to Assertions.assertThat(actual.get${Property}().contains(${property})
+    // - remove the previous call to Assertions.assertThat(actual.get${Property}().contains(${property_safe})
     // - uncomment the line below and set your error message:
-    // Assertions.assertThat(actual.get${Property}()).overridingErrorMessage("\nmy error message %s", "arg1").contains(${property});
+    // Assertions.assertThat(actual.get${Property}()).overridingErrorMessage("\nmy error message %s", "arg1").contains(${property_safe});
     
     // return the current assertion for method chaining
     return ${myself};

@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.util.Set;
 
 import org.assertj.assertions.generator.data.ArtWork;
+import org.assertj.assertions.generator.data.BooleanPredicates;
 import org.assertj.assertions.generator.data.Keywords;
 import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.Team;
@@ -88,6 +89,12 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_generate_assertion_for_class_with_properties_that_clash_with_keywords() throws Exception {
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Keywords.class));
     assertGeneratedAssertClass(Keywords.class, "Keywords.expected.txt");
+  }
+
+  @Test
+  public void should_generate_assertion_for_class_with_predicates() throws Exception {
+    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(BooleanPredicates.class));
+    assertGeneratedAssertClass(BooleanPredicates.class, "BooleanPredicates.expected.txt");
   }
 
   @Test

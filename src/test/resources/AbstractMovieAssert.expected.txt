@@ -112,9 +112,9 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
   }
 
   /**
-   * Verifies that the actual Movie is xrated.
+   * Verifies that the actual Movie isXrated.
    * @return this assertion object.
-   * @throws AssertionError - if the actual Movie is not xrated.
+   * @throws AssertionError - if the actual Movie isNotXrated.
    */
   public S isXrated() {
     // check that actual Movie we want to make assertions on is not null.
@@ -122,7 +122,7 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
 
     // check
     if (!actual.xrated) {
-      failWithMessage("\nExpected actual Movie to be xrated but was not.");
+      failWithMessage("\nExpected that actual Movie isXrated but it isNotXrated.");
     }
     
     // return the current assertion for method chaining
@@ -130,9 +130,9 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
   }
 
   /**
-   * Verifies that the actual Movie is not xrated.
+   * Verifies that the actual Movie isNotXrated.
    * @return this assertion object.
-   * @throws AssertionError - if the actual Movie is xrated.
+   * @throws AssertionError - if the actual Movie isXrated.
    */
   public S isNotXrated() {
     // check that actual Movie we want to make assertions on is not null.
@@ -140,7 +140,7 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
 
     // check
     if (actual.xrated) {
-      failWithMessage("\nExpected actual Movie not to be xrated but was.");
+      failWithMessage("\nExpected that actual Movie isNotXrated but it isXrated.");
     }
     
     // return the current assertion for method chaining

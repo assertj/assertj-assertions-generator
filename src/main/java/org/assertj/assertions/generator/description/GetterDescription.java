@@ -15,6 +15,8 @@ package org.assertj.assertions.generator.description;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.assertj.assertions.generator.util.ClassUtil;
+
 /**
  * Stores the information needed to generate an assertion for a getter method.
  * <p>
@@ -40,8 +42,8 @@ public class GetterDescription extends DataDescription implements Comparable<Get
 
   private final List<TypeName> exceptions;
 
-  public GetterDescription(String propertyName, TypeDescription typeDescription, List<TypeName> exceptions) {
-    super(propertyName, typeDescription);
+  public GetterDescription(String propertyName, String origMethodName, TypeDescription typeDescription, List<TypeName> exceptions) {
+    super(propertyName, origMethodName, typeDescription);
     this.exceptions = new ArrayList<TypeName>(exceptions);
   }
 
@@ -50,7 +52,7 @@ public class GetterDescription extends DataDescription implements Comparable<Get
   }
 
   public int compareTo(GetterDescription other) {
-    return getName().compareTo(other.getName());
+    return getOriginalMember().compareTo(other.getOriginalMember());
   }
 
   @Override
@@ -62,8 +64,8 @@ public class GetterDescription extends DataDescription implements Comparable<Get
     return exceptions;
   }
 
-  public boolean isRealNumberType() {
-    return typeDescription.isRealNumber();
+  @Override
+  public boolean isPredicate() {
+    return typeDescription.isBoolean() && ClassUtil.isValidPredicateName(originalMember);
   }
-
 }

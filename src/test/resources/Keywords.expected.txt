@@ -257,42 +257,6 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
-   * Verifies that the actual Keywords is class.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual Keywords is not class.
-   */
-  public KeywordsAssert isClass() {
-    // check that actual Keywords we want to make assertions on is not null.
-    isNotNull();
-
-    // check
-    if (!actual.isClass()) {
-      failWithMessage("\nExpected actual Keywords to be class but was not.");
-    }
-    
-    // return the current assertion for method chaining
-    return this;
-  }
-
-  /**
-   * Verifies that the actual Keywords is not class.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual Keywords is class.
-   */
-  public KeywordsAssert isNotClass() {
-    // check that actual Keywords we want to make assertions on is not null.
-    isNotNull();
-
-    // check
-    if (actual.isClass()) {
-      failWithMessage("\nExpected actual Keywords not to be class but was.");
-    }
-    
-    // return the current assertion for method chaining
-    return this;
-  }
-
-  /**
    * Verifies that the actual Keywords's const is equal to the given one.
    * @param expectedConst the given const to compare the actual Keywords's const to.
    * @return this assertion object.
@@ -1355,6 +1319,42 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
       failWithMessage(assertjErrorMessage, actual, expectedWhile, actualWhile);
     }
 
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Keywords isClass.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords isNotClass.
+   */
+  public KeywordsAssert isClass() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check
+    if (!actual.isClass()) {
+      failWithMessage("\nExpected that actual Keywords isClass but it isNotClass.");
+    }
+    
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Keywords isNotClass.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords isClass.
+   */
+  public KeywordsAssert isNotClass() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check
+    if (actual.isClass()) {
+      failWithMessage("\nExpected that actual Keywords isNotClass but it isClass.");
+    }
+    
     // return the current assertion for method chaining
     return this;
   }

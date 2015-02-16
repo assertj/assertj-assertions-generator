@@ -70,7 +70,7 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
 	  final TypeDescription typeDescription = getTypeDescription(getter);
 	  final List<TypeName> exceptionTypeNames = getExceptionTypeNames(getter);
 	  String propertyName = propertyNameOf(getter);
-	  getterDescriptions.add(new GetterDescription(propertyName, typeDescription, exceptionTypeNames));
+	  getterDescriptions.add(new GetterDescription(propertyName, getter.getName(), typeDescription, exceptionTypeNames));
 	}
 	return getterDescriptions;
   }

@@ -15,11 +15,12 @@ package org.assertj.assertions.generator.util;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.assertions.generator.util.ClassUtil.declaredGetterMethodsOf;
 import static org.assertj.assertions.generator.util.ClassUtil.getClassesRelatedTo;
+import static org.assertj.assertions.generator.util.ClassUtil.getNegativePredicateFor;
 import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
 import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClassNotSeparatedByDots;
 import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
 import static org.assertj.assertions.generator.util.ClassUtil.inheritsCollectionOrIsIterable;
-import static org.assertj.assertions.generator.util.ClassUtil.isBooleanGetter;
+import static org.assertj.assertions.generator.util.ClassUtil.isPredicate;
 import static org.assertj.assertions.generator.util.ClassUtil.isStandardGetter;
 import static org.assertj.assertions.generator.util.ClassUtil.isValidGetterName;
 import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
@@ -129,35 +130,41 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Test
   public void should_return_true_if_method_is_a_boolean_getter() throws Exception {
-    assertThat(isBooleanGetter(Player.class.getMethod("isRookie", NO_PARAMS))).isTrue();
+    assertThat(isPredicate(Player.class.getMethod("isRookie", NO_PARAMS))).isTrue();
   }
 
   @Test
   public void should_return_false_if_method_is_not_a_boolean_getter() throws Exception {
-    assertThat(isBooleanGetter(Player.class.getMethod("getTeam", NO_PARAMS))).isFalse();
-    assertThat(isStandardGetter(Player.class.getMethod("isVoid", NO_PARAMS))).isFalse();
-    assertThat(isStandardGetter(Player.class.getMethod("isWithParam", new Class[] { String.class }))).isFalse();
+    assertThat(isPredicate(Player.class.getMethod("getTeam", NO_PARAMS))).isFalse();
+    assertThat(isPredicate(Player.class.getMethod("isVoid", NO_PARAMS))).isFalse();
+    assertThat(isPredicate(Player.class.getMethod("isWithParam", new Class[] { String.class }))).isFalse();
   }
 
+  @Test
+  public void should_return_negative_predicate() {
+	for (String[] pair : new String[][] {
+		{ "isADog", "isNotADog" },
+		{ "canRun", "cannotRun" },
+		{ "hasAHandle", "doesNotHaveAHandle" },
+		}) {
+	  assertThat(getNegativePredicateFor(pair[0])).as(pair[0]).isEqualTo(pair[1]);
+	  assertThat(getNegativePredicateFor(pair[1])).as(pair[1]).isEqualTo(pair[0]);
+	}
+  }
+  
   @Test
   public void should_return_true_if_string_follows_getter_name_pattern() throws Exception {
-    assertThat(isValidGetterName("isRookie")).isTrue();
-    assertThat(isValidGetterName("getTeam")).isTrue();
-  }
-
-  @Test
-  public void should_return_false_if_string_follows_getter_name_pattern() throws Exception {
-    assertThat(isValidGetterName("isrookie")).isFalse();
-    assertThat(isValidGetterName("get")).isFalse();
+    for (String name : new String[] { "isRookie", "getTeam", "wasTeam", "canRun", "shouldWin",
+        "hasTrophy", "doesNotHaveFun", "cannotWin", "shouldNotPlay" }) {
+      assertThat(isValidGetterName(name)).as(name).isTrue();
+    }
   }
 
   @Test
   public void should_return_false_if_string_does_not_follow_getter_name_pattern() throws Exception {
-    assertThat(isValidGetterName("isrookie")).isFalse();
-    assertThat(isValidGetterName("getteam")).isFalse();
-    assertThat(isValidGetterName("GetTeam")).isFalse();
-    assertThat(isValidGetterName("get")).isFalse();
-    assertThat(isValidGetterName("is")).isFalse();
+    for (String name : new String[] { "isrookie", "getteam", "GetTeam", "get", "is", "wascool", "hastRophy", "shouldnotWin" }) {
+      assertThat(isValidGetterName(name)).as(name).isFalse();
+    }
   }
 
   @Test

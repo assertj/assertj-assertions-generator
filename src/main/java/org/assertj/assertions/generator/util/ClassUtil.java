@@ -13,7 +13,6 @@
 package org.assertj.assertions.generator.util;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
-import static java.lang.Character.isUpperCase;
 import static java.lang.reflect.Modifier.isPublic;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static org.apache.commons.lang3.StringUtils.uncapitalize;
@@ -34,12 +33,17 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -244,7 +248,7 @@ public class ClassUtil {
    * @return the property name of given getter method
    */
   public static String propertyNameOf(Method getter) {
-    String prefixToRemove = isBooleanGetter(getter) ? IS_PREFIX : GET_PREFIX;
+    String prefixToRemove = isPredicate(getter) ? IS_PREFIX : GET_PREFIX;
     String propertyWithCapitalLetter = substringAfter(getter.getName(), prefixToRemove);
     return uncapitalize(propertyWithCapitalLetter);
   }
@@ -263,28 +267,71 @@ public class ClassUtil {
            && method.getParameterTypes().length == 0;
   }
 
-  public static boolean isBooleanGetter(Method method) {
-    return isValidBooleanGetterName(method.getName())
+  public static boolean isPredicate(Method method) {
+    return isValidPredicateName(method.getName())
            && Boolean.TYPE.equals(method.getReturnType())
            && method.getParameterTypes().length == 0;
   }
 
   public static boolean isValidGetterName(String methodName) {
-    return isValidStandardGetterName(methodName) || isValidBooleanGetterName(methodName);
+    return PREFIX_PATTERN.matcher(methodName).find();
   }
 
+  static private final Pattern PREFIX_PATTERN;
+  
+  static private final Map<String,String> PREDICATE_PREFIXES;
+  
+  static private final Comparator<String> LONGEST_TO_SHORTEST = new Comparator<String>() {
+	@Override
+	public int compare(String o1, String o2) {
+	  final int lengthComp = o2.length() - o1.length();
+	  return lengthComp == 0 ? o1.compareTo(o2) : lengthComp;
+	}
+  };
+  
+  static {
+	String[][] predicates = new String[][] {
+		{ "is", "isNot" },
+		{ "was", "wasNot" },
+		{ "can", "cannot" },
+		{ "should", "shouldNot" },
+		{ "has", "doesNotHave" },
+		{ "will", "willNot" },
+	};
+	StringBuilder pattern = new StringBuilder("^(?:get");
+	HashMap<String,String> map = new HashMap<String,String>();
+	for (String[] pair : predicates) {
+	  map.put(pair[0], pair[1]);
+	  map.put(pair[1], pair[0]);
+	}
+	TreeSet<String> sort = new TreeSet<String>(LONGEST_TO_SHORTEST);
+	sort.addAll(map.keySet());
+	for (String prefix : sort) {
+	  pattern.append('|').append(prefix);
+	}
+	pattern.append(")(?=\\p{Upper})");
+	PREFIX_PATTERN = Pattern.compile(pattern.toString());
+	PREDICATE_PREFIXES = Collections.unmodifiableMap(map);
+  }
+  
   private static boolean isValidStandardGetterName(String name) {
-    return name.length() >= GET_PREFIX.length() + 1
-           && isUpperCase(name.charAt(GET_PREFIX.length()))
-           && name.startsWith(GET_PREFIX);
+	Matcher m = PREFIX_PATTERN.matcher(name);
+	return m.find() && m.group().equals(GET_PREFIX);
   }
 
-  private static boolean isValidBooleanGetterName(String name) {
-    return name.length() >= IS_PREFIX.length() + 1
-           && isUpperCase(name.charAt(IS_PREFIX.length()))
-           && name.startsWith(IS_PREFIX);
+  public static boolean isValidPredicateName(String name) {
+	Matcher m = PREFIX_PATTERN.matcher(name);
+	return m.find() && PREDICATE_PREFIXES.containsKey(m.group());
   }
 
+  public static String getNegativePredicateFor(String name) {
+	Matcher m = PREFIX_PATTERN.matcher(name);
+	if (m.find()) {
+	  return m.replaceFirst(PREDICATE_PREFIXES.get(m.group()));
+	}
+	return null;
+  }
+  
   public static Set<Method> declaredGetterMethodsOf(Class<?> clazz) {
     return filterGetterMethods(clazz.getDeclaredMethods());
   }
@@ -307,7 +354,7 @@ public class ClassUtil {
   }
 
   private static boolean isGetter(Method method) {
-	return isStandardGetter(method) || isBooleanGetter(method);
+	return isStandardGetter(method) || isPredicate(method);
   }
 
   public static List<Field> nonStaticPublicFieldsOf(Class<?> clazz) {

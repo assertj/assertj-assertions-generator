@@ -1,16 +1,16 @@
 
   /**
-   * Verifies that the actual ${class_to_assert} is ${property}.
+   * Verifies that the actual ${class_to_assert} ${predicate}.
    * @return this assertion object.
-   * @throws AssertionError - if the actual ${class_to_assert} is not ${property}.${throws_javadoc}
+   * @throws AssertionError - if the actual ${class_to_assert} ${neg_predicate}.${throws_javadoc}
    */
-  public ${self_type} is${Property}() ${throws}{
+  public ${self_type} ${predicate}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
     // check
-    if (!actual.is${Property}()) {
-      failWithMessage("\nExpected actual ${class_to_assert} to be ${property} but was not.");
+    if (!actual.${predicate}()) {
+      failWithMessage("\nExpected that actual ${class_to_assert} ${predicate} but it ${neg_predicate}.");
     }
     
     // return the current assertion for method chaining
@@ -18,17 +18,17 @@
   }
 
   /**
-   * Verifies that the actual ${class_to_assert} is not ${property}.
+   * Verifies that the actual ${class_to_assert} ${neg_predicate}.
    * @return this assertion object.
-   * @throws AssertionError - if the actual ${class_to_assert} is ${property}.${throws_javadoc}
+   * @throws AssertionError - if the actual ${class_to_assert} ${predicate}.${throws_javadoc}
    */
-  public ${self_type} isNot${Property}() ${throws}{
+  public ${self_type} ${neg_predicate}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
     // check
-    if (actual.is${Property}()) {
-      failWithMessage("\nExpected actual ${class_to_assert} not to be ${property} but was.");
+    if (actual.${predicate}()) {
+      failWithMessage("\nExpected that actual ${class_to_assert} ${neg_predicate} but it ${predicate}.");
     }
     
     // return the current assertion for method chaining

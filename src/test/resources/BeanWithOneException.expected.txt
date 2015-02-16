@@ -78,44 +78,6 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
   
 
   /**
-   * Verifies that the actual BeanWithOneException is booleanPropertyThrowsException.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual BeanWithOneException is not booleanPropertyThrowsException.
-   * @throws java.io.IOException if actual.isBooleanPropertyThrowsException() throws one.
-   */
-  public BeanWithOneExceptionAssert isBooleanPropertyThrowsException() throws java.io.IOException {
-    // check that actual BeanWithOneException we want to make assertions on is not null.
-    isNotNull();
-
-    // check
-    if (!actual.isBooleanPropertyThrowsException()) {
-      failWithMessage("\nExpected actual BeanWithOneException to be booleanPropertyThrowsException but was not.");
-    }
-    
-    // return the current assertion for method chaining
-    return this;
-  }
-
-  /**
-   * Verifies that the actual BeanWithOneException is not booleanPropertyThrowsException.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual BeanWithOneException is booleanPropertyThrowsException.
-   * @throws java.io.IOException if actual.isBooleanPropertyThrowsException() throws one.
-   */
-  public BeanWithOneExceptionAssert isNotBooleanPropertyThrowsException() throws java.io.IOException {
-    // check that actual BeanWithOneException we want to make assertions on is not null.
-    isNotNull();
-
-    // check
-    if (actual.isBooleanPropertyThrowsException()) {
-      failWithMessage("\nExpected actual BeanWithOneException not to be booleanPropertyThrowsException but was.");
-    }
-    
-    // return the current assertion for method chaining
-    return this;
-  }
-
-  /**
    * Verifies that the actual BeanWithOneException's iterablePropertyThrowsException contains the given String elements.
    * @param iterablePropertyThrowsException the given elements that should be contained in actual BeanWithOneException's iterablePropertyThrowsException.
    * @return this assertion object.
@@ -179,6 +141,44 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
       failWithMessage(assertjErrorMessage, actual, stringPropertyThrowsException, actualStringPropertyThrowsException);
     }
 
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual BeanWithOneException isBooleanPropertyThrowsException.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual BeanWithOneException isNotBooleanPropertyThrowsException.
+   * @throws java.io.IOException if actual.isBooleanPropertyThrowsException() throws one.
+   */
+  public BeanWithOneExceptionAssert isBooleanPropertyThrowsException() throws java.io.IOException {
+    // check that actual BeanWithOneException we want to make assertions on is not null.
+    isNotNull();
+
+    // check
+    if (!actual.isBooleanPropertyThrowsException()) {
+      failWithMessage("\nExpected that actual BeanWithOneException isBooleanPropertyThrowsException but it isNotBooleanPropertyThrowsException.");
+    }
+    
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual BeanWithOneException isNotBooleanPropertyThrowsException.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual BeanWithOneException isBooleanPropertyThrowsException.
+   * @throws java.io.IOException if actual.isBooleanPropertyThrowsException() throws one.
+   */
+  public BeanWithOneExceptionAssert isNotBooleanPropertyThrowsException() throws java.io.IOException {
+    // check that actual BeanWithOneException we want to make assertions on is not null.
+    isNotNull();
+
+    // check
+    if (actual.isBooleanPropertyThrowsException()) {
+      failWithMessage("\nExpected that actual BeanWithOneException isNotBooleanPropertyThrowsException but it isBooleanPropertyThrowsException.");
+    }
+    
     // return the current assertion for method chaining
     return this;
   }

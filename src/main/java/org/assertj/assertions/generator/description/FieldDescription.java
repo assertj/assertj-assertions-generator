@@ -12,6 +12,8 @@
  */
 package org.assertj.assertions.generator.description;
 
+import static org.apache.commons.lang3.StringUtils.capitalize;
+
 
 /**
  * Stores the information needed to generate an assertion for a public field.
@@ -35,7 +37,7 @@ package org.assertj.assertions.generator.description;
 public class FieldDescription extends DataDescription implements Comparable<FieldDescription> {
 
   public FieldDescription(String name, TypeDescription typeDescription) {
-    super(name, typeDescription);
+    super(name, name, typeDescription);
   }
 
   public int compareTo(FieldDescription other) {
@@ -47,4 +49,20 @@ public class FieldDescription extends DataDescription implements Comparable<Fiel
     return "FieldDescription[name=" + getName() + ", typeDescription=" + typeDescription + "]";
   }
 
+  @Override
+  public boolean isPredicate() {
+    return typeDescription.isBoolean();
+  }
+
+  @Override
+  public String getPredicate() {
+	final String retval = super.getNegativePredicate();
+	return retval == null ? "is" + capitalize(originalMember) : originalMember;
+  }
+  
+  @Override
+  public String getNegativePredicate() {
+	final String retval = super.getNegativePredicate();
+	return retval == null ? "isNot" + capitalize(originalMember) : retval;
+  }
 }

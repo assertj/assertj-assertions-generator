@@ -53,4 +53,27 @@ public class FieldDescriptionTest {
     fieldDescription = new FieldDescription("String", new TypeDescription(new TypeName(String.class)));
     assertThat(fieldDescription.isRealNumberType()).as("String").isFalse();
   }
+  
+  @Test
+  public void should_detect_predicate_correctly() throws Exception {
+    TypeDescription boolDesc = new TypeDescription(new TypeName(boolean.class));
+    String[] list = new String[] { "anything", "isSomething", "somethingElse" };
+    for (String p : list) {
+      fieldDescription = new FieldDescription(p, boolDesc);
+      assertThat(fieldDescription.isPredicate()).as(p + ":bool").isTrue();
+    }
+    TypeDescription floatDesc = new TypeDescription(new TypeName(float.class));
+    for (String p : list) {
+      fieldDescription = new FieldDescription(p, floatDesc);
+      assertThat(fieldDescription.isPredicate()).as(p + ":float").isFalse();
+    }
+  }
+  
+  @Test
+  public void should_generate_default_predicate_correctly() throws Exception {
+    TypeDescription boolDesc = new TypeDescription(new TypeName(boolean.class));
+    fieldDescription = new FieldDescription("bad", boolDesc);
+    assertThat(fieldDescription.getNegativePredicate()).as("negative").isEqualTo("isNotBad");
+    assertThat(fieldDescription.getPredicate()).as("positive").isEqualTo("isBad");
+  }
 }

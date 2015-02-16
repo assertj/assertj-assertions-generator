@@ -28,7 +28,7 @@ public class GetterDescriptionTest {
 
   @Test
   public void should_create_valid_typename_from_class() {
-    getterDescription = new GetterDescription("bestPlayer", new TypeDescription(new TypeName(Player.class)), Collections.<TypeName>emptyList());
+    getterDescription = new GetterDescription("bestPlayer", "getBestPlayer", new TypeDescription(new TypeName(Player.class)), Collections.<TypeName>emptyList());
     assertThat(getterDescription.getPropertyName()).isEqualTo("bestPlayer");
     assertThat(getterDescription.getTypeName()).isEqualTo("Player");
     assertThat(getterDescription.getElementTypeName(Player.class.getPackage().getName())).isNull();
@@ -36,7 +36,23 @@ public class GetterDescriptionTest {
 
   @Test
   public void should_show_information_in_toString() {
-    getterDescription = new GetterDescription("bestPlayer", new TypeDescription(new TypeName(Player.class)), Collections.<TypeName>emptyList());
+    getterDescription = new GetterDescription("bestPlayer", "getBestPlayer", new TypeDescription(new TypeName(Player.class)), Collections.<TypeName>emptyList());
     assertThat(getterDescription.toString()).contains("bestPlayer").contains(Player.class.getName());
+  }
+  
+  @Test
+  public void get__should_not_be_predicate() {
+    getterDescription = new GetterDescription("bestPlayer", "getBestPlayer", new TypeDescription(new TypeName(Player.class)), Collections.<TypeName>emptyList());
+    assertThat(getterDescription.isPredicate()).as("bestPlayer").isFalse();
+    getterDescription = new GetterDescription("runFlag", "getRunFlag", new TypeDescription(new TypeName(boolean.class)), Collections.<TypeName>emptyList());
+    assertThat(getterDescription.isPredicate()).as("runFlag").isFalse();
+  }
+  
+  @Test
+  public void is_et_al__should_be_predicates() {
+    for (String p: new String[] { "is", "can", "was", "has" }) {
+      getterDescription = new GetterDescription("bestPlayer", p + "BestPlayer", new TypeDescription(new TypeName(boolean.class)), Collections.<TypeName>emptyList());
+      assertThat(getterDescription.isPredicate()).as(p).isTrue();
+    }
   }
 }

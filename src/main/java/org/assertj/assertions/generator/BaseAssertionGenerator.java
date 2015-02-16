@@ -22,6 +22,7 @@ import static org.apache.commons.lang3.StringUtils.replace;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
@@ -63,6 +64,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   static final String ASSERT_CLASS_FILE_SUFFIX = ASSERT_CLASS_SUFFIX + ".java";
   static final String TEMPLATES_DIR = "templates" + File.separator;
   private static final String IMPORT_LINE = "import %s;%s";
+  private static final String PREDICATE = "${predicate}";
+  private static final String PREDICATE_NEG = "${neg_predicate}";
   private static final String PROPERTY_WITH_UPPERCASE_FIRST_CHAR = "${Property}";
   private static final String PROPERTY_WITH_LOWERCASE_FIRST_CHAR = "${property}";
   private static final String PROPERTY_WITH_SAFE = "${property_safe}";
@@ -588,13 +591,18 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
 	// we reuse template for properties to have consistent assertions for property and field but change the way we get
 	// the value since it's a field and not a property:
-	assertionContent = assertionContent.replace("get${Property}()", "${property}")
-	                                   .replace("is${Property}())", "${property})");
+	assertionContent = assertionContent.replace("get${Property}()", "${property}");
 	// - remove also ${throws} and ${throws_javadoc} since it does not make any sense for a field
 	assertionContent = remove(assertionContent, "${throws}");
 	assertionContent = remove(assertionContent, "${throws_javadoc}");
 
 	// replace ${Property} and ${property} by field name (starting with uppercase/lowercase)
+	if (field.isPredicate()) {
+	  final String predicate = field.getPredicate();
+	  assertionContent = assertionContent.replace("actual." + PREDICATE + "()", "actual." + field.getOriginalMember());
+	  assertionContent = replace(assertionContent, PREDICATE, predicate);
+	  assertionContent = replace(assertionContent, PREDICATE_NEG, field.getNegativePredicate());
+	}
 	assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(field.getName()));
 	assertionContent = replace(assertionContent, PROPERTY_TYPE,
 	                           field.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
@@ -678,6 +686,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	assertionContent = declareExceptions(getter, assertionContent, classDescription);
 
 	String propertyName = getter.getPropertyName();
+	if (getter.isPredicate()) {
+	  assertionContent = replace(assertionContent, PREDICATE, getter.getOriginalMember());
+	  assertionContent = replace(assertionContent, PREDICATE_NEG, getter.getNegativePredicate());
+	}
 	assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(propertyName));
 	assertionContent = replace(assertionContent, PROPERTY_TYPE,
 	                           getter.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
@@ -687,7 +699,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   /**
-   * The assertion content that is common to field and property (getter), the specific content partis handled
+   * The assertion content that is common to field and property (getter), the specific content part is handled
    * afterwards.
    * 
    * @param fieldOrProperty
@@ -695,7 +707,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
    */
   private String baseAssertionContentFor(DataDescription fieldOrProperty, ClassDescription classDescription) {
 	String assertionContent = hasAssertionTemplate.getContent();
-	if (fieldOrProperty.isBooleanType()) {
+	if (fieldOrProperty.isPredicate()) {
 	  assertionContent = isAssertionTemplate.getContent();
 	} else if (fieldOrProperty.isIterableType()) {
 	  assertionContent = replace(hasIterableElementsAssertionTemplate.getContent(), ELEMENT_TYPE,
@@ -730,7 +742,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	  String exceptionName = exception.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName());
 	  throwsClause.append(exceptionName);
 	  throwsJavaDoc.append(LINE_SEPARATOR).append("   * @throws ").append(exceptionName);
-	  throwsJavaDoc.append(" if actual.").append(getter.isBooleanType() ? "is" : "get")
+	  throwsJavaDoc.append(" if actual.").append(getter.isPredicate() ? "is" : "get")
 		           .append("${Property}() throws one.");
 	}
 	if (!getter.getExceptions().isEmpty()) throwsClause.append(' ');

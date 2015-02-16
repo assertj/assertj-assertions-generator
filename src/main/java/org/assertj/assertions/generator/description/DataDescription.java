@@ -12,17 +12,21 @@
  */
 package org.assertj.assertions.generator.description;
 
+import static org.assertj.assertions.generator.util.ClassUtil.getNegativePredicateFor;
+
 /**
  * base class to describe a field or a property/getter
  */
 public abstract class DataDescription {
 
   private final String name;
+  protected final String originalMember;
   protected final TypeDescription typeDescription;
 
-  public DataDescription(String name, TypeDescription typeDescription) {
+  public DataDescription(String name, String originalMember, TypeDescription typeDescription) {
 	super();
 	this.name = name;
+	this.originalMember = originalMember;
 	this.typeDescription = typeDescription;
   }
 
@@ -30,6 +34,10 @@ public abstract class DataDescription {
 	return name;
   }
 
+  public String getOriginalMember() {
+	return originalMember;
+  }
+  
   public String getTypeName() {
 	return typeDescription.getSimpleNameWithOuterClass();
   }
@@ -50,17 +58,23 @@ public abstract class DataDescription {
 	return typeDescription.isRealNumber();
   }
 
-  public boolean isBooleanType() {
-	return typeDescription.isBoolean();
-  }
+  public abstract boolean isPredicate();
 
+  public String getPredicate() {
+	return originalMember;
+  }
+  
+  public String getNegativePredicate() {
+	return getNegativePredicateFor(originalMember);
+  }
+  
   /**
-   * return the simple element type name if etement type belongs to given the package and the fully qualified element
-   * type name ortherwise.
+   * return the simple element type name if element type belongs to given the package and the fully qualified element
+   * type name otherwise.
    * 
    * @param packageName typically the package of the enclosing Class
-   * @return the simple element type name if etement type belongs to given the package and the fully qualified element
-   * type name ortherwise.
+   * @return the simple element type name if element type belongs to given the package and the fully qualified element
+   * type name otherwise.
    */
   public String getElementTypeName(String packageName) {
 	return typeDescription.getElementTypeName() == null ? null

@@ -37,6 +37,10 @@ public abstract class DataDescription {
   public String getOriginalMember() {
 	return originalMember;
   }
+
+  public TypeDescription getTypeDescription() {
+	return typeDescription;
+  }
   
   public String getTypeName() {
 	return typeDescription.getSimpleNameWithOuterClass();

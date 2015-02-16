@@ -587,6 +587,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private String assertionContentForField(FieldDescription field, ClassDescription classDescription) {
+    final String fieldName = field.getName();
+    final String fieldNameCap = capitalize(field.getName());
+	if (classDescription.getGettersDescriptions().contains(
+    	new GetterDescription(fieldName, "get" + fieldNameCap, field.getTypeDescription(), Collections.<TypeName>emptyList()))) {
+	  return "";
+	}
 	String assertionContent = baseAssertionContentFor(field, classDescription);
 
 	// we reuse template for properties to have consistent assertions for property and field but change the way we get
@@ -603,12 +609,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	  assertionContent = replace(assertionContent, PREDICATE, predicate);
 	  assertionContent = replace(assertionContent, PREDICATE_NEG, field.getNegativePredicate());
 	}
-	assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(field.getName()));
+	assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, fieldNameCap);
 	assertionContent = replace(assertionContent, PROPERTY_TYPE,
 	                           field.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
-	assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, field.getName());
+	assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, fieldName);
 	// It should not be possible to have a field that is a keyword - compiler won't allow it.
-	assertionContent = replace(assertionContent, PROPERTY_WITH_SAFE, field.getName());
+	assertionContent = replace(assertionContent, PROPERTY_WITH_SAFE, fieldName);
 	return assertionContent;
   }
 

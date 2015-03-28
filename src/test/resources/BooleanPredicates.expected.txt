@@ -26,9 +26,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates canBeGood.
+   * Verifies that the actual BooleanPredicates can be good.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates cannotBeGood.
+   * @throws AssertionError - if the actual BooleanPredicates cannot be good.
    */
   public BooleanPredicatesAssert canBeGood() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -36,7 +36,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (!actual.canBeGood()) {
-      failWithMessage("\nExpected that actual BooleanPredicates canBeGood but it cannotBeGood.");
+      failWithMessage("\nExpecting that actual BooleanPredicates can be good but cannot.");
     }
     
     // return the current assertion for method chaining
@@ -44,9 +44,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates cannotBeGood.
+   * Verifies that the actual BooleanPredicates cannot be good.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates canBeGood.
+   * @throws AssertionError - if the actual BooleanPredicates can be good.
    */
   public BooleanPredicatesAssert cannotBeGood() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -54,7 +54,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (actual.canBeGood()) {
-      failWithMessage("\nExpected that actual BooleanPredicates cannotBeGood but it canBeGood.");
+      failWithMessage("\nExpecting that actual BooleanPredicates cannot be good but can.");
     }
     
     // return the current assertion for method chaining
@@ -85,9 +85,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates hasGood.
+   * Verifies that the actual BooleanPredicates has good.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates doesNotHaveGood.
+   * @throws AssertionError - if the actual BooleanPredicates does not have good.
    */
   public BooleanPredicatesAssert hasGood() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -95,7 +95,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (!actual.hasGood()) {
-      failWithMessage("\nExpected that actual BooleanPredicates hasGood but it doesNotHaveGood.");
+      failWithMessage("\nExpecting that actual BooleanPredicates has good but does not have.");
     }
     
     // return the current assertion for method chaining
@@ -103,9 +103,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates doesNotHaveGood.
+   * Verifies that the actual BooleanPredicates does not have good.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates hasGood.
+   * @throws AssertionError - if the actual BooleanPredicates has good.
    */
   public BooleanPredicatesAssert doesNotHaveGood() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -113,7 +113,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (actual.hasGood()) {
-      failWithMessage("\nExpected that actual BooleanPredicates doesNotHaveGood but it hasGood.");
+      failWithMessage("\nExpecting that actual BooleanPredicates does not have good but has.");
     }
     
     // return the current assertion for method chaining
@@ -121,9 +121,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates isGood.
+   * Verifies that the actual BooleanPredicates is good.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates isNotGood.
+   * @throws AssertionError - if the actual BooleanPredicates is not good.
    */
   public BooleanPredicatesAssert isGood() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -131,7 +131,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (!actual.isGood()) {
-      failWithMessage("\nExpected that actual BooleanPredicates isGood but it isNotGood.");
+      failWithMessage("\nExpecting that actual BooleanPredicates is good but is not.");
     }
     
     // return the current assertion for method chaining
@@ -139,9 +139,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates isNotGood.
+   * Verifies that the actual BooleanPredicates is not good.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates isGood.
+   * @throws AssertionError - if the actual BooleanPredicates is good.
    */
   public BooleanPredicatesAssert isNotGood() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -149,7 +149,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (actual.isGood()) {
-      failWithMessage("\nExpected that actual BooleanPredicates isNotGood but it isGood.");
+      failWithMessage("\nExpecting that actual BooleanPredicates is not good but is.");
     }
     
     // return the current assertion for method chaining
@@ -157,9 +157,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates shouldBeGood.
+   * Verifies that the actual BooleanPredicates should be good.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates shouldNotBeGood.
+   * @throws AssertionError - if the actual BooleanPredicates should not be good.
    */
   public BooleanPredicatesAssert shouldBeGood() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -167,7 +167,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (!actual.shouldBeGood()) {
-      failWithMessage("\nExpected that actual BooleanPredicates shouldBeGood but it shouldNotBeGood.");
+      failWithMessage("\nExpecting that actual BooleanPredicates should be good but should not.");
     }
     
     // return the current assertion for method chaining
@@ -175,9 +175,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates shouldNotBeGood.
+   * Verifies that the actual BooleanPredicates should not be good.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates shouldBeGood.
+   * @throws AssertionError - if the actual BooleanPredicates should be good.
    */
   public BooleanPredicatesAssert shouldNotBeGood() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -185,7 +185,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (actual.shouldBeGood()) {
-      failWithMessage("\nExpected that actual BooleanPredicates shouldNotBeGood but it shouldBeGood.");
+      failWithMessage("\nExpecting that actual BooleanPredicates should not be good but should.");
     }
     
     // return the current assertion for method chaining
@@ -193,9 +193,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates wasGood.
+   * Verifies that the actual BooleanPredicates was good.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates wasNotGood.
+   * @throws AssertionError - if the actual BooleanPredicates was not good.
    */
   public BooleanPredicatesAssert wasGood() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -203,7 +203,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (!actual.wasGood()) {
-      failWithMessage("\nExpected that actual BooleanPredicates wasGood but it wasNotGood.");
+      failWithMessage("\nExpecting that actual BooleanPredicates was good but was not.");
     }
     
     // return the current assertion for method chaining
@@ -211,9 +211,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates wasNotGood.
+   * Verifies that the actual BooleanPredicates was not good.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates wasGood.
+   * @throws AssertionError - if the actual BooleanPredicates was good.
    */
   public BooleanPredicatesAssert wasNotGood() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -221,7 +221,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (actual.wasGood()) {
-      failWithMessage("\nExpected that actual BooleanPredicates wasNotGood but it wasGood.");
+      failWithMessage("\nExpecting that actual BooleanPredicates was not good but was.");
     }
     
     // return the current assertion for method chaining
@@ -229,9 +229,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates willBeGood.
+   * Verifies that the actual BooleanPredicates will be good.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates willNotBeGood.
+   * @throws AssertionError - if the actual BooleanPredicates will not be good.
    */
   public BooleanPredicatesAssert willBeGood() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -239,7 +239,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (!actual.willBeGood()) {
-      failWithMessage("\nExpected that actual BooleanPredicates willBeGood but it willNotBeGood.");
+      failWithMessage("\nExpecting that actual BooleanPredicates will be good but will not.");
     }
     
     // return the current assertion for method chaining
@@ -247,9 +247,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates willNotBeGood.
+   * Verifies that the actual BooleanPredicates will not be good.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates willBeGood.
+   * @throws AssertionError - if the actual BooleanPredicates will be good.
    */
   public BooleanPredicatesAssert willNotBeGood() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -257,7 +257,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (actual.willBeGood()) {
-      failWithMessage("\nExpected that actual BooleanPredicates willNotBeGood but it willBeGood.");
+      failWithMessage("\nExpecting that actual BooleanPredicates will not be good but will.");
     }
     
     // return the current assertion for method chaining
@@ -265,9 +265,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates isBad.
+   * Verifies that the actual BooleanPredicates is bad.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates isNotBad.
+   * @throws AssertionError - if the actual BooleanPredicates is not bad.
    */
   public BooleanPredicatesAssert isBad() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -275,7 +275,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (!actual.bad) {
-      failWithMessage("\nExpected that actual BooleanPredicates isBad but it isNotBad.");
+      failWithMessage("\nExpecting that actual BooleanPredicates is bad but is not.");
     }
     
     // return the current assertion for method chaining
@@ -283,9 +283,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates isNotBad.
+   * Verifies that the actual BooleanPredicates is not bad.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates isBad.
+   * @throws AssertionError - if the actual BooleanPredicates is bad.
    */
   public BooleanPredicatesAssert isNotBad() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -293,7 +293,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (actual.bad) {
-      failWithMessage("\nExpected that actual BooleanPredicates isNotBad but it isBad.");
+      failWithMessage("\nExpecting that actual BooleanPredicates is not bad but is.");
     }
     
     // return the current assertion for method chaining
@@ -301,9 +301,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates canBeGoodField.
+   * Verifies that the actual BooleanPredicates can be good field.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates cannotBeGoodField.
+   * @throws AssertionError - if the actual BooleanPredicates cannot be good field.
    */
   public BooleanPredicatesAssert canBeGoodField() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -311,7 +311,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (!actual.canBeGoodField) {
-      failWithMessage("\nExpected that actual BooleanPredicates canBeGoodField but it cannotBeGoodField.");
+      failWithMessage("\nExpecting that actual BooleanPredicates can be good field but cannot.");
     }
     
     // return the current assertion for method chaining
@@ -319,9 +319,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates cannotBeGoodField.
+   * Verifies that the actual BooleanPredicates cannot be good field.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates canBeGoodField.
+   * @throws AssertionError - if the actual BooleanPredicates can be good field.
    */
   public BooleanPredicatesAssert cannotBeGoodField() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -329,7 +329,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (actual.canBeGoodField) {
-      failWithMessage("\nExpected that actual BooleanPredicates cannotBeGoodField but it canBeGoodField.");
+      failWithMessage("\nExpecting that actual BooleanPredicates cannot be good field but can.");
     }
     
     // return the current assertion for method chaining
@@ -337,9 +337,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates hasGoodField.
+   * Verifies that the actual BooleanPredicates has good field.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates doesNotHaveGoodField.
+   * @throws AssertionError - if the actual BooleanPredicates does not have good field.
    */
   public BooleanPredicatesAssert hasGoodField() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -347,7 +347,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (!actual.hasGoodField) {
-      failWithMessage("\nExpected that actual BooleanPredicates hasGoodField but it doesNotHaveGoodField.");
+      failWithMessage("\nExpecting that actual BooleanPredicates has good field but does not have.");
     }
     
     // return the current assertion for method chaining
@@ -355,9 +355,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates doesNotHaveGoodField.
+   * Verifies that the actual BooleanPredicates does not have good field.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates hasGoodField.
+   * @throws AssertionError - if the actual BooleanPredicates has good field.
    */
   public BooleanPredicatesAssert doesNotHaveGoodField() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -365,7 +365,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (actual.hasGoodField) {
-      failWithMessage("\nExpected that actual BooleanPredicates doesNotHaveGoodField but it hasGoodField.");
+      failWithMessage("\nExpecting that actual BooleanPredicates does not have good field but has.");
     }
     
     // return the current assertion for method chaining
@@ -373,9 +373,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates isGoodField.
+   * Verifies that the actual BooleanPredicates is good field.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates isNotGoodField.
+   * @throws AssertionError - if the actual BooleanPredicates is not good field.
    */
   public BooleanPredicatesAssert isGoodField() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -383,7 +383,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (!actual.isGoodField) {
-      failWithMessage("\nExpected that actual BooleanPredicates isGoodField but it isNotGoodField.");
+      failWithMessage("\nExpecting that actual BooleanPredicates is good field but is not.");
     }
     
     // return the current assertion for method chaining
@@ -391,9 +391,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates isNotGoodField.
+   * Verifies that the actual BooleanPredicates is not good field.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates isGoodField.
+   * @throws AssertionError - if the actual BooleanPredicates is good field.
    */
   public BooleanPredicatesAssert isNotGoodField() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -401,7 +401,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (actual.isGoodField) {
-      failWithMessage("\nExpected that actual BooleanPredicates isNotGoodField but it isGoodField.");
+      failWithMessage("\nExpecting that actual BooleanPredicates is not good field but is.");
     }
     
     // return the current assertion for method chaining
@@ -409,9 +409,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates shouldBeGoodField.
+   * Verifies that the actual BooleanPredicates should be good field.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates shouldNotBeGoodField.
+   * @throws AssertionError - if the actual BooleanPredicates should not be good field.
    */
   public BooleanPredicatesAssert shouldBeGoodField() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -419,7 +419,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (!actual.shouldBeGoodField) {
-      failWithMessage("\nExpected that actual BooleanPredicates shouldBeGoodField but it shouldNotBeGoodField.");
+      failWithMessage("\nExpecting that actual BooleanPredicates should be good field but should not.");
     }
     
     // return the current assertion for method chaining
@@ -427,9 +427,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates shouldNotBeGoodField.
+   * Verifies that the actual BooleanPredicates should not be good field.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates shouldBeGoodField.
+   * @throws AssertionError - if the actual BooleanPredicates should be good field.
    */
   public BooleanPredicatesAssert shouldNotBeGoodField() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -437,7 +437,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (actual.shouldBeGoodField) {
-      failWithMessage("\nExpected that actual BooleanPredicates shouldNotBeGoodField but it shouldBeGoodField.");
+      failWithMessage("\nExpecting that actual BooleanPredicates should not be good field but should.");
     }
     
     // return the current assertion for method chaining
@@ -445,9 +445,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates wasGoodField.
+   * Verifies that the actual BooleanPredicates was good field.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates wasNotGoodField.
+   * @throws AssertionError - if the actual BooleanPredicates was not good field.
    */
   public BooleanPredicatesAssert wasGoodField() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -455,7 +455,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (!actual.wasGoodField) {
-      failWithMessage("\nExpected that actual BooleanPredicates wasGoodField but it wasNotGoodField.");
+      failWithMessage("\nExpecting that actual BooleanPredicates was good field but was not.");
     }
     
     // return the current assertion for method chaining
@@ -463,9 +463,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates wasNotGoodField.
+   * Verifies that the actual BooleanPredicates was not good field.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates wasGoodField.
+   * @throws AssertionError - if the actual BooleanPredicates was good field.
    */
   public BooleanPredicatesAssert wasNotGoodField() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -473,7 +473,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (actual.wasGoodField) {
-      failWithMessage("\nExpected that actual BooleanPredicates wasNotGoodField but it wasGoodField.");
+      failWithMessage("\nExpecting that actual BooleanPredicates was not good field but was.");
     }
     
     // return the current assertion for method chaining
@@ -481,9 +481,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates willBeGoodField.
+   * Verifies that the actual BooleanPredicates will be good field.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates willNotBeGoodField.
+   * @throws AssertionError - if the actual BooleanPredicates will not be good field.
    */
   public BooleanPredicatesAssert willBeGoodField() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -491,7 +491,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (!actual.willBeGoodField) {
-      failWithMessage("\nExpected that actual BooleanPredicates willBeGoodField but it willNotBeGoodField.");
+      failWithMessage("\nExpecting that actual BooleanPredicates will be good field but will not.");
     }
     
     // return the current assertion for method chaining
@@ -499,9 +499,9 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
   }
 
   /**
-   * Verifies that the actual BooleanPredicates willNotBeGoodField.
+   * Verifies that the actual BooleanPredicates will not be good field.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BooleanPredicates willBeGoodField.
+   * @throws AssertionError - if the actual BooleanPredicates will be good field.
    */
   public BooleanPredicatesAssert willNotBeGoodField() {
     // check that actual BooleanPredicates we want to make assertions on is not null.
@@ -509,7 +509,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
 
     // check
     if (actual.willBeGoodField) {
-      failWithMessage("\nExpected that actual BooleanPredicates willNotBeGoodField but it willBeGoodField.");
+      failWithMessage("\nExpecting that actual BooleanPredicates will not be good field but will.");
     }
     
     // return the current assertion for method chaining

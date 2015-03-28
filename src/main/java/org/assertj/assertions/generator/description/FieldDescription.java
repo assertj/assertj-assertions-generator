@@ -40,6 +40,7 @@ public class FieldDescription extends DataDescription implements Comparable<Fiel
     super(name, name, typeDescription);
   }
 
+  @Override
   public int compareTo(FieldDescription other) {
     return getName().compareTo(other.getName());
   }
@@ -65,4 +66,5 @@ public class FieldDescription extends DataDescription implements Comparable<Fiel
 	final String retval = super.getNegativePredicate();
 	return retval == null ? "isNot" + capitalize(originalMember) : retval;
   }
+
 }

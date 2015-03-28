@@ -20,6 +20,7 @@ import org.junit.Test;
 public class FieldDescriptionTest {
 
   private DataDescription fieldDescription;
+  private TypeDescription boolDesc;
 
   @Test
   public void should_create_valid_typename_from_class() {
@@ -27,6 +28,7 @@ public class FieldDescriptionTest {
     assertThat(fieldDescription.getName()).isEqualTo("bestPlayer");
     assertThat(fieldDescription.getTypeName()).isEqualTo("Player");
     assertThat(fieldDescription.getElementTypeName(Player.class.getPackage().getName())).isNull();
+    boolDesc = new TypeDescription(new TypeName(boolean.class));
   }
 
   @Test
@@ -71,9 +73,26 @@ public class FieldDescriptionTest {
   
   @Test
   public void should_generate_default_predicate_correctly() throws Exception {
-    TypeDescription boolDesc = new TypeDescription(new TypeName(boolean.class));
     fieldDescription = new FieldDescription("bad", boolDesc);
     assertThat(fieldDescription.getNegativePredicate()).as("negative").isEqualTo("isNotBad");
     assertThat(fieldDescription.getPredicate()).as("positive").isEqualTo("isBad");
+  }
+
+  @Test
+  public void should_generate_readable_predicate_for_javadoc() {
+    fieldDescription = new FieldDescription("bad", boolDesc);
+    assertThat(fieldDescription.getPredicateForJavadoc()).isEqualTo("is bad");
+    assertThat(fieldDescription.getNegativePredicateForJavadoc()).isEqualTo("is not bad");
+  }
+
+  @Test
+  public void should_generate_readable_predicate_for_error_message() {
+    fieldDescription = new FieldDescription("bad", boolDesc);
+    assertThat(fieldDescription.getPredicateForErrorMessagePart1()).isEqualTo("is bad");
+    assertThat(fieldDescription.getPredicateForErrorMessagePart2()).isEqualTo("is not");
+
+    fieldDescription = new FieldDescription("canBeGood", boolDesc);
+    assertThat(fieldDescription.getPredicateForErrorMessagePart1()).isEqualTo("can be good");
+    assertThat(fieldDescription.getPredicateForErrorMessagePart2()).isEqualTo("cannot");
   }
 }

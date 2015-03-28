@@ -52,4 +52,5 @@ public class BooleanPredicates {
   public boolean getGood() {
 	return true;
   }
+
 }

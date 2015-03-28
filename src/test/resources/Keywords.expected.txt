@@ -1324,9 +1324,9 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
-   * Verifies that the actual Keywords isClass.
+   * Verifies that the actual Keywords is class.
    * @return this assertion object.
-   * @throws AssertionError - if the actual Keywords isNotClass.
+   * @throws AssertionError - if the actual Keywords is not class.
    */
   public KeywordsAssert isClass() {
     // check that actual Keywords we want to make assertions on is not null.
@@ -1334,7 +1334,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
 
     // check
     if (!actual.isClass()) {
-      failWithMessage("\nExpected that actual Keywords isClass but it isNotClass.");
+      failWithMessage("\nExpecting that actual Keywords is class but is not.");
     }
     
     // return the current assertion for method chaining
@@ -1342,9 +1342,9 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
-   * Verifies that the actual Keywords isNotClass.
+   * Verifies that the actual Keywords is not class.
    * @return this assertion object.
-   * @throws AssertionError - if the actual Keywords isClass.
+   * @throws AssertionError - if the actual Keywords is class.
    */
   public KeywordsAssert isNotClass() {
     // check that actual Keywords we want to make assertions on is not null.
@@ -1352,7 +1352,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
 
     // check
     if (actual.isClass()) {
-      failWithMessage("\nExpected that actual Keywords isNotClass but it isClass.");
+      failWithMessage("\nExpecting that actual Keywords is not class but is.");
     }
     
     // return the current assertion for method chaining

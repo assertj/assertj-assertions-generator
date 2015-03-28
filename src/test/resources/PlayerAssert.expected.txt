@@ -301,9 +301,9 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
   
 
   /**
-   * Verifies that the actual Player isRookie.
+   * Verifies that the actual Player is rookie.
    * @return this assertion object.
-   * @throws AssertionError - if the actual Player isNotRookie.
+   * @throws AssertionError - if the actual Player is not rookie.
    */
   public PlayerAssert isRookie() {
     // check that actual Player we want to make assertions on is not null.
@@ -311,7 +311,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
 
     // check
     if (!actual.isRookie()) {
-      failWithMessage("\nExpected that actual Player isRookie but it isNotRookie.");
+      failWithMessage("\nExpecting that actual Player is rookie but is not.");
     }
     
     // return the current assertion for method chaining
@@ -319,9 +319,9 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
   }
 
   /**
-   * Verifies that the actual Player isNotRookie.
+   * Verifies that the actual Player is not rookie.
    * @return this assertion object.
-   * @throws AssertionError - if the actual Player isRookie.
+   * @throws AssertionError - if the actual Player is rookie.
    */
   public PlayerAssert isNotRookie() {
     // check that actual Player we want to make assertions on is not null.
@@ -329,7 +329,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
 
     // check
     if (actual.isRookie()) {
-      failWithMessage("\nExpected that actual Player isNotRookie but it isRookie.");
+      failWithMessage("\nExpecting that actual Player is not rookie but is.");
     }
     
     // return the current assertion for method chaining

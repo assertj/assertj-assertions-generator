@@ -146,9 +146,9 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
   }
 
   /**
-   * Verifies that the actual BeanWithOneException isBooleanPropertyThrowsException.
+   * Verifies that the actual BeanWithOneException is boolean property throws exception.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BeanWithOneException isNotBooleanPropertyThrowsException.
+   * @throws AssertionError - if the actual BeanWithOneException is not boolean property throws exception.
    * @throws java.io.IOException if actual.isBooleanPropertyThrowsException() throws one.
    */
   public BeanWithOneExceptionAssert isBooleanPropertyThrowsException() throws java.io.IOException {
@@ -157,7 +157,7 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
 
     // check
     if (!actual.isBooleanPropertyThrowsException()) {
-      failWithMessage("\nExpected that actual BeanWithOneException isBooleanPropertyThrowsException but it isNotBooleanPropertyThrowsException.");
+      failWithMessage("\nExpecting that actual BeanWithOneException is boolean property throws exception but is not.");
     }
     
     // return the current assertion for method chaining
@@ -165,9 +165,9 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
   }
 
   /**
-   * Verifies that the actual BeanWithOneException isNotBooleanPropertyThrowsException.
+   * Verifies that the actual BeanWithOneException is not boolean property throws exception.
    * @return this assertion object.
-   * @throws AssertionError - if the actual BeanWithOneException isBooleanPropertyThrowsException.
+   * @throws AssertionError - if the actual BeanWithOneException is boolean property throws exception.
    * @throws java.io.IOException if actual.isBooleanPropertyThrowsException() throws one.
    */
   public BeanWithOneExceptionAssert isNotBooleanPropertyThrowsException() throws java.io.IOException {
@@ -176,7 +176,7 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
 
     // check
     if (actual.isBooleanPropertyThrowsException()) {
-      failWithMessage("\nExpected that actual BeanWithOneException isNotBooleanPropertyThrowsException but it isBooleanPropertyThrowsException.");
+      failWithMessage("\nExpecting that actual BeanWithOneException is not boolean property throws exception but is.");
     }
     
     // return the current assertion for method chaining

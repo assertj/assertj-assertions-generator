@@ -63,9 +63,9 @@ public class ClassUtil {
   public static final String GET_PREFIX = "get";
   private static final String CLASS_SUFFIX = ".class";
   private static final Comparator<Method> GETTER_COMPARATOR = new Comparator<Method>() {
-	@Override
+    @Override
     public int compare(Method m1, Method m2) {
-	  return m1.getName().compareTo(m2.getName());
+      return m1.getName().compareTo(m2.getName());
     }
   };
 
@@ -83,9 +83,9 @@ public class ClassUtil {
    * <p/>
    * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the returned classes.
    *
-   * @param classLoader         {@link ClassLoader} used to load classes defines in classOrPackageNames
+   * @param classLoader {@link ClassLoader} used to load classes defines in classOrPackageNames
    * @param classOrPackageNames classes names or packages names we want to collect classes from (recursively for
-   *                            packages)
+   *          packages)
    * @return the set of {@link Class}es found
    * @throws RuntimeException if any error occurs
    */
@@ -126,13 +126,14 @@ public class ClassUtil {
     return packageClasses;
   }
 
-  private static Set<Class<?>> getPackageClassesFromClasspathJars(String packageName, ClassLoader classLoader) throws IOException {
-    ImmutableSet<ClassInfo> classesInfo= ClassPath.from(classLoader).getTopLevelClassesRecursive(packageName);
+  private static Set<Class<?>> getPackageClassesFromClasspathJars(String packageName, ClassLoader classLoader)
+      throws IOException {
+    ImmutableSet<ClassInfo> classesInfo = ClassPath.from(classLoader).getTopLevelClassesRecursive(packageName);
     Set<Class<?>> classesInPackage = new HashSet<Class<?>>();
     for (ClassInfo classInfo : classesInfo) {
       classesInPackage.add(classInfo.load());
     }
-    
+
     Set<Class<?>> filteredClassesInPackage = new HashSet<Class<?>>();
     for (Class<?> classFromJar : classesInPackage) {
       if (isClassCandidateToAssertionsGeneration(classFromJar)) {
@@ -167,14 +168,14 @@ public class ClassUtil {
    * <p/>
    * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the resulting set.
    *
-   * @param directory   directory where to look for classes
+   * @param directory directory where to look for classes
    * @param packageName package name corresponding to directory
    * @param classLoader used classloader
    * @return
    * @throws UnsupportedEncodingException
    */
   private static Set<Class<?>> getClassesInDirectory(File directory, String packageName, ClassLoader classLoader)
-    throws UnsupportedEncodingException {
+      throws UnsupportedEncodingException {
     Set<Class<?>> classes = newLinkedHashSet();
     // Capture all the .class files in this directory
     // Get the list of the files contained in the package
@@ -236,10 +237,12 @@ public class ClassUtil {
   /**
    * Returns the property name of given getter method, examples :
    * <p/>
+   * 
    * <pre>
    * getName -> name
    * </pre>
    * <p/>
+   * 
    * <pre>
    * isMostValuablePlayer -> mostValuablePlayer
    * </pre>
@@ -278,60 +281,66 @@ public class ClassUtil {
   }
 
   static private final Pattern PREFIX_PATTERN;
-  
-  static private final Map<String,String> PREDICATE_PREFIXES;
-  
+
+  static private final Map<String, String> PREDICATE_PREFIXES;
+
   static private final Comparator<String> LONGEST_TO_SHORTEST = new Comparator<String>() {
-	@Override
-	public int compare(String o1, String o2) {
-	  final int lengthComp = o2.length() - o1.length();
-	  return lengthComp == 0 ? o1.compareTo(o2) : lengthComp;
-	}
+    @Override
+    public int compare(String o1, String o2) {
+      final int lengthComp = o2.length() - o1.length();
+      return lengthComp == 0 ? o1.compareTo(o2) : lengthComp;
+    }
   };
-  
+
   static {
-	String[][] predicates = new String[][] {
-		{ "is", "isNot" },
-		{ "was", "wasNot" },
-		{ "can", "cannot" },
-		{ "should", "shouldNot" },
-		{ "has", "doesNotHave" },
-		{ "will", "willNot" },
-	};
-	StringBuilder pattern = new StringBuilder("^(?:get");
-	HashMap<String,String> map = new HashMap<String,String>();
-	for (String[] pair : predicates) {
-	  map.put(pair[0], pair[1]);
-	  map.put(pair[1], pair[0]);
-	}
-	TreeSet<String> sort = new TreeSet<String>(LONGEST_TO_SHORTEST);
-	sort.addAll(map.keySet());
-	for (String prefix : sort) {
-	  pattern.append('|').append(prefix);
-	}
-	pattern.append(")(?=\\p{Upper})");
-	PREFIX_PATTERN = Pattern.compile(pattern.toString());
-	PREDICATE_PREFIXES = Collections.unmodifiableMap(map);
+    String[][] predicates = new String[][] {
+        { "is", "isNot" },
+        { "was", "wasNot" },
+        { "can", "cannot" },
+        { "should", "shouldNot" },
+        { "has", "doesNotHave" },
+        { "will", "willNot" },
+    };
+    StringBuilder pattern = new StringBuilder("^(?:get");
+    Map<String, String> map = new HashMap<String, String>();
+    for (String[] pair : predicates) {
+      map.put(pair[0], pair[1]);
+      map.put(pair[1], pair[0]);
+    }
+    TreeSet<String> sort = new TreeSet<String>(LONGEST_TO_SHORTEST);
+    sort.addAll(map.keySet());
+    for (String prefix : sort) {
+      pattern.append('|').append(prefix);
+    }
+    // next should be an Upper case letter
+    pattern.append(")(?=\\p{Upper})");
+    PREFIX_PATTERN = Pattern.compile(pattern.toString());
+    PREDICATE_PREFIXES = Collections.unmodifiableMap(map);
   }
-  
+
   private static boolean isValidStandardGetterName(String name) {
-	Matcher m = PREFIX_PATTERN.matcher(name);
-	return m.find() && m.group().equals(GET_PREFIX);
+    Matcher m = PREFIX_PATTERN.matcher(name);
+    return m.find() && m.group().equals(GET_PREFIX);
+  }
+
+  public static String getPredicatePrefix(String name) {
+    Matcher m = PREFIX_PATTERN.matcher(name);
+    return m.find() ? m.group() : null;
   }
 
   public static boolean isValidPredicateName(String name) {
-	Matcher m = PREFIX_PATTERN.matcher(name);
-	return m.find() && PREDICATE_PREFIXES.containsKey(m.group());
+    Matcher m = PREFIX_PATTERN.matcher(name);
+    return m.find() && PREDICATE_PREFIXES.containsKey(m.group());
   }
 
   public static String getNegativePredicateFor(String name) {
-	Matcher m = PREFIX_PATTERN.matcher(name);
-	if (m.find()) {
-	  return m.replaceFirst(PREDICATE_PREFIXES.get(m.group()));
-	}
-	return null;
+    Matcher m = PREFIX_PATTERN.matcher(name);
+    if (m.find()) {
+      return m.replaceFirst(PREDICATE_PREFIXES.get(m.group()));
+    }
+    return null;
   }
-  
+
   public static Set<Method> declaredGetterMethodsOf(Class<?> clazz) {
     return filterGetterMethods(clazz.getDeclaredMethods());
   }
@@ -344,9 +353,9 @@ public class ClassUtil {
     Set<Method> getters = new TreeSet<Method>(GETTER_COMPARATOR);
     for (int i = 0; i < methods.length; i++) {
       Method method = methods[i];
-      if (isPublic(method.getModifiers()) 
-    	  && isNotDefinedInObjectClass(method) 
-    	  && isGetter(method)) {
+      if (isPublic(method.getModifiers())
+          && isNotDefinedInObjectClass(method)
+          && isGetter(method)) {
         getters.add(method);
       }
     }
@@ -354,7 +363,7 @@ public class ClassUtil {
   }
 
   private static boolean isGetter(Method method) {
-	return isStandardGetter(method) || isPredicate(method);
+    return isStandardGetter(method) || isPredicate(method);
   }
 
   public static List<Field> nonStaticPublicFieldsOf(Class<?> clazz) {
@@ -373,12 +382,12 @@ public class ClassUtil {
     List<Field> nonStaticPublicFields = new ArrayList<Field>();
     for (Field field : fields) {
       if (isNotStaticPublicField(field)) {
-       nonStaticPublicFields.add(field);
+        nonStaticPublicFields.add(field);
       }
     }
     return nonStaticPublicFields;
   }
-  
+
   private static boolean isNotStaticPublicField(Field field) {
     final int modifiers = field.getModifiers();
     return !Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers);
@@ -434,12 +443,13 @@ public class ClassUtil {
     nestedClassName = nestedClassName.replace('$', '.');
     return nestedClassName;
   }
-  
+
   /**
    * Gets the simple name of the class but, unlike {@link Class#getSimpleName()}, it includes the name of the outer
    * class when <code>clazz</code> is an inner class, both class names are concatenated.
    * <p>
    * Example:
+   * 
    * <pre>
    * Outer.Inner -> OuterInner 
    * </pre>
@@ -479,7 +489,7 @@ public class ClassUtil {
     } else if (type instanceof WildcardType) {
       final WildcardType wildcardType = (WildcardType) type;
       return wildcardType.getUpperBounds() != null ? getClass(wildcardType.getUpperBounds()[0])
-               : wildcardType.getLowerBounds() != null ? getClass(wildcardType.getLowerBounds()[0]) : null;
+          : wildcardType.getLowerBounds() != null ? getClass(wildcardType.getLowerBounds()[0]) : null;
     } else if (type instanceof TypeVariable) {
       final TypeVariable<?> typeVariable = (TypeVariable<?>) type;
       final Type[] bounds = typeVariable.getBounds();

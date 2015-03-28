@@ -66,6 +66,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String IMPORT_LINE = "import %s;%s";
   private static final String PREDICATE = "${predicate}";
   private static final String PREDICATE_NEG = "${neg_predicate}";
+  private static final String PREDICATE_FOR_JAVADOC = "${predicate_for_javadoc}";
+  private static final String NEGATIVE_PREDICATE_FOR_JAVADOC = "${negative_predicate_for_javadoc}";
+  private static final String PREDICATE_FOR_FOR_ERROR_MESSAGE_PART1 = "${predicate_for_error_message_part1}";
+  private static final String PREDICATE_FOR_FOR_ERROR_MESSAGE_PART2 = "${predicate_for_error_message_part2}";
+  private static final String NEGATIVE_PREDICATE_FOR_FOR_ERROR_MESSAGE_PART1 = "${negative_predicate_for_error_message_part1}";
+  private static final String NEGATIVE_PREDICATE_FOR_FOR_ERROR_MESSAGE_PART2 = "${negative_predicate_for_error_message_part2}";
   private static final String PROPERTY_WITH_UPPERCASE_FIRST_CHAR = "${Property}";
   private static final String PROPERTY_WITH_LOWERCASE_FIRST_CHAR = "${property}";
   private static final String PROPERTY_WITH_SAFE = "${property_safe}";
@@ -604,10 +610,21 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
 	// replace ${Property} and ${property} by field name (starting with uppercase/lowercase)
 	if (field.isPredicate()) {
-	  final String predicate = field.getPredicate();
 	  assertionContent = assertionContent.replace("actual." + PREDICATE + "()", "actual." + field.getOriginalMember());
-	  assertionContent = replace(assertionContent, PREDICATE, predicate);
-	  assertionContent = replace(assertionContent, PREDICATE_NEG, field.getNegativePredicate());
+      assertionContent = assertionContent.replace(PREDICATE_FOR_JAVADOC,
+                                                  field.getPredicateForJavadoc());
+      assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_JAVADOC,
+                                                  field.getNegativePredicateForJavadoc());
+      assertionContent = assertionContent.replace(PREDICATE_FOR_FOR_ERROR_MESSAGE_PART1,
+                                                  field.getPredicateForErrorMessagePart1());
+      assertionContent = assertionContent.replace(PREDICATE_FOR_FOR_ERROR_MESSAGE_PART2,
+                                                  field.getPredicateForErrorMessagePart2());
+      assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_FOR_ERROR_MESSAGE_PART1,
+                                                  field.getNegativePredicateForErrorMessagePart1());
+      assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_FOR_ERROR_MESSAGE_PART2,
+                                                  field.getNegativePredicateForErrorMessagePart2());
+      assertionContent = replace(assertionContent, PREDICATE, field.getPredicate());
+      assertionContent = replace(assertionContent, PREDICATE_NEG, field.getNegativePredicate());
 	}
 	assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, fieldNameCap);
 	assertionContent = replace(assertionContent, PROPERTY_TYPE,
@@ -618,7 +635,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	return assertionContent;
   }
 
-  static private final Set<String> KEYWORDS = new HashSet<String>();
+  static private final Set<String> JAVA_KEYWORDS = new HashSet<String>();
 
   static {
 	String[] keywords = new String[] {
@@ -678,12 +695,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 		"while",
 	};
 	for (String keyword : keywords) {
-	  KEYWORDS.add(keyword);
+	  JAVA_KEYWORDS.add(keyword);
 	}
   }
 
   static private final String getSafeProperty(String unsafe) {
-	return KEYWORDS.contains(unsafe) ? "expected" + capitalize(unsafe) : unsafe;
+	return JAVA_KEYWORDS.contains(unsafe) ? "expected" + capitalize(unsafe) : unsafe;
   }
   
   private String assertionContentForProperty(GetterDescription getter, ClassDescription classDescription) {
@@ -693,8 +710,20 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
 	String propertyName = getter.getPropertyName();
 	if (getter.isPredicate()) {
-	  assertionContent = replace(assertionContent, PREDICATE, getter.getOriginalMember());
-	  assertionContent = replace(assertionContent, PREDICATE_NEG, getter.getNegativePredicate());
+      assertionContent = assertionContent.replace(PREDICATE_FOR_JAVADOC,
+                                                  getter.getPredicateForJavadoc());
+      assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_JAVADOC,
+                                                  getter.getNegativePredicateForJavadoc());
+      assertionContent = assertionContent.replace(PREDICATE_FOR_FOR_ERROR_MESSAGE_PART1,
+                                                  getter.getPredicateForErrorMessagePart1());
+      assertionContent = assertionContent.replace(PREDICATE_FOR_FOR_ERROR_MESSAGE_PART2,
+                                                  getter.getPredicateForErrorMessagePart2());
+      assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_FOR_ERROR_MESSAGE_PART1,
+                                                  getter.getNegativePredicateForErrorMessagePart1());
+      assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_FOR_ERROR_MESSAGE_PART2,
+                                                  getter.getNegativePredicateForErrorMessagePart2());
+      assertionContent = replace(assertionContent, PREDICATE, getter.getOriginalMember());
+      assertionContent = replace(assertionContent, PREDICATE_NEG, getter.getNegativePredicate());
 	}
 	assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(propertyName));
 	assertionContent = replace(assertionContent, PROPERTY_TYPE,

@@ -16,6 +16,7 @@ import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.assertions.generator.util.ClassUtil.declaredGetterMethodsOf;
 import static org.assertj.assertions.generator.util.ClassUtil.getClassesRelatedTo;
 import static org.assertj.assertions.generator.util.ClassUtil.getNegativePredicateFor;
+import static org.assertj.assertions.generator.util.ClassUtil.getPredicatePrefix;
 import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
 import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClassNotSeparatedByDots;
 import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
@@ -158,6 +159,18 @@ public class ClassUtilTest implements NestedClassesTest {
         "hasTrophy", "doesNotHaveFun", "cannotWin", "shouldNotPlay" }) {
       assertThat(isValidGetterName(name)).as(name).isTrue();
     }
+  }
+
+  @Test
+  public void should_return_predicate_prefix() throws Exception {
+    assertThat(getPredicatePrefix("isRookie")).isEqualTo("is");
+    assertThat(getPredicatePrefix("wasTeam")).isEqualTo("was");
+    assertThat(getPredicatePrefix("canRun")).isEqualTo("can");
+    assertThat(getPredicatePrefix("shouldWin")).isEqualTo("should");
+    assertThat(getPredicatePrefix("hasTrophy")).isEqualTo("has");
+    assertThat(getPredicatePrefix("doesNotHaveFun")).isEqualTo("doesNotHave");
+    assertThat(getPredicatePrefix("cannotWin")).isEqualTo("cannot");
+    assertThat(getPredicatePrefix("shouldNotPlay")).isEqualTo("shouldNot");
   }
 
   @Test

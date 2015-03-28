@@ -42,7 +42,8 @@ public class GetterDescription extends DataDescription implements Comparable<Get
 
   private final List<TypeName> exceptions;
 
-  public GetterDescription(String propertyName, String origMethodName, TypeDescription typeDescription, List<TypeName> exceptions) {
+  public GetterDescription(String propertyName, String origMethodName, TypeDescription typeDescription,
+                           List<TypeName> exceptions) {
     super(propertyName, origMethodName, typeDescription);
     this.exceptions = new ArrayList<TypeName>(exceptions);
   }
@@ -51,6 +52,7 @@ public class GetterDescription extends DataDescription implements Comparable<Get
     return getName();
   }
 
+  @Override
   public int compareTo(GetterDescription other) {
     return getOriginalMember().compareTo(other.getOriginalMember());
   }
@@ -68,4 +70,5 @@ public class GetterDescription extends DataDescription implements Comparable<Get
   public boolean isPredicate() {
     return typeDescription.isBoolean() && ClassUtil.isValidPredicateName(originalMember);
   }
+
 }

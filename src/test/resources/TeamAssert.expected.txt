@@ -255,9 +255,9 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
   }
 
   /**
-   * Verifies that the actual Team isWestCoast.
+   * Verifies that the actual Team is westCoast.
    * @return this assertion object.
-   * @throws AssertionError - if the actual Team isNotWestCoast.
+   * @throws AssertionError - if the actual Team is not westCoast.
    */
   public TeamAssert isWestCoast() {
     // check that actual Team we want to make assertions on is not null.
@@ -265,7 +265,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
 
     // check
     if (!actual.westCoast) {
-      failWithMessage("\nExpected that actual Team isWestCoast but it isNotWestCoast.");
+      failWithMessage("\nExpecting that actual Team is westCoast but is not.");
     }
     
     // return the current assertion for method chaining
@@ -273,9 +273,9 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
   }
 
   /**
-   * Verifies that the actual Team isNotWestCoast.
+   * Verifies that the actual Team is not westCoast.
    * @return this assertion object.
-   * @throws AssertionError - if the actual Team isWestCoast.
+   * @throws AssertionError - if the actual Team is westCoast.
    */
   public TeamAssert isNotWestCoast() {
     // check that actual Team we want to make assertions on is not null.
@@ -283,7 +283,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
 
     // check
     if (actual.westCoast) {
-      failWithMessage("\nExpected that actual Team isNotWestCoast but it isWestCoast.");
+      failWithMessage("\nExpecting that actual Team is not westCoast but is.");
     }
     
     // return the current assertion for method chaining

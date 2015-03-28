@@ -15,7 +15,7 @@
     ${propertyType} actual${Property} = actual.get${Property}();
     
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = String.format("\nExpected ${property}:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+    String assertjErrorMessage = String.format("\nExpecting ${property}:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
                                                actual${Property}, ${property_safe}, offset, Math.abs(${property_safe} - actual${Property}));
     
     // check

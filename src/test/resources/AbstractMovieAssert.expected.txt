@@ -27,7 +27,7 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected publicCategory of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting publicCategory of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Movie.PublicCategory actualPublicCategory = actual.getPublicCategory();
@@ -50,7 +50,7 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected releaseDate of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting releaseDate of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     java.util.Date actualReleaseDate = actual.getReleaseDate();
@@ -73,7 +73,7 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected producer of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting producer of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     String actualProducer = actual.producer;
@@ -101,7 +101,7 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
     double actualRating = actual.rating;
     
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = String.format("\nExpected rating:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+    String assertjErrorMessage = String.format("\nExpecting rating:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
                                                actualRating, rating, offset, Math.abs(rating - actualRating));
     
     // check

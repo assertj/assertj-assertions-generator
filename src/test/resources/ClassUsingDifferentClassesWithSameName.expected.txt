@@ -37,7 +37,7 @@ public class ClassUsingDifferentClassesWithSameNameAssert extends AbstractAssert
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected nbaTeam of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting nbaTeam of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     org.assertj.assertions.generator.data.nba.Team actualNbaTeam = actual.getNbaTeam();
@@ -60,7 +60,7 @@ public class ClassUsingDifferentClassesWithSameNameAssert extends AbstractAssert
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected team of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting team of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     org.assertj.assertions.generator.data.Team actualTeam = actual.getTeam();

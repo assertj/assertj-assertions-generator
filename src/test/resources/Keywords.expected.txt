@@ -40,7 +40,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected abstract of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting abstract of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     String actualAbstract = actual.getAbstract();
@@ -63,7 +63,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected assert of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting assert of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualAssert = actual.getAssert();
@@ -86,7 +86,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected boolean of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting boolean of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Boolean actualBoolean = actual.getBoolean();
@@ -128,7 +128,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have break but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have break but had :\n  <%s>";
     
     // check
     if (actual.getBreak().iterator().hasNext()) {
@@ -151,7 +151,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected byte of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting byte of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Byte actualByte = actual.getByte();
@@ -198,7 +198,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have case but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have case but had :\n  <%s>";
     
     // check
     if (actual.getCase().length > 0)  {
@@ -221,7 +221,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected catch of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting catch of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualCatch = actual.getCatch();
@@ -244,7 +244,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected char of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting char of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // check
     char actualChar = actual.getChar();
@@ -267,7 +267,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected const of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting const of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Class actualConst = actual.getConst();
@@ -290,7 +290,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected continue of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting continue of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     String actualContinue = actual.getContinue();
@@ -334,7 +334,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have default but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have default but had :\n  <%s>";
     
     // check
     if (actual.getDefault().iterator().hasNext()) {
@@ -357,7 +357,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected do of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting do of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualDo = actual.getDo();
@@ -385,7 +385,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     double actualDouble = actual.getDouble();
     
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = String.format("\nExpected double:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+    String assertjErrorMessage = String.format("\nExpecting double:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
                                                actualDouble, expectedDouble, offset, Math.abs(expectedDouble - actualDouble));
     
     // check
@@ -406,7 +406,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected else of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting else of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualElse = actual.getElse();
@@ -429,7 +429,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected enum of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting enum of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualEnum = actual.getEnum();
@@ -452,7 +452,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected extends of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting extends of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualExtends = actual.getExtends();
@@ -475,7 +475,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected false of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting false of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualFalse = actual.getFalse();
@@ -498,7 +498,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected final of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting final of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualFinal = actual.getFinal();
@@ -521,7 +521,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected finally of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting finally of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualFinally = actual.getFinally();
@@ -549,7 +549,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     float actualFloat = actual.getFloat();
     
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = String.format("\nExpected float:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+    String assertjErrorMessage = String.format("\nExpecting float:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
                                                actualFloat, expectedFloat, offset, Math.abs(expectedFloat - actualFloat));
     
     // check
@@ -571,7 +571,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected for of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting for of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualFor = actual.getFor();
@@ -594,7 +594,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected goto of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting goto of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualGoto = actual.getGoto();
@@ -617,7 +617,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected if of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting if of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualIf = actual.getIf();
@@ -640,7 +640,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected implements of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting implements of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualImplements = actual.getImplements();
@@ -663,7 +663,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected import of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting import of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualImport = actual.getImport();
@@ -686,7 +686,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected instanceof of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting instanceof of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualInstanceof = actual.getInstanceof();
@@ -710,7 +710,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected int of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting int of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // check
     int actualInt = actual.getInt();
@@ -733,7 +733,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected interface of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting interface of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualInterface = actual.getInterface();
@@ -756,7 +756,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected long of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting long of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // check
     long actualLong = actual.getLong();
@@ -779,7 +779,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected native of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting native of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualNative = actual.getNative();
@@ -802,7 +802,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected new of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting new of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualNew = actual.getNew();
@@ -825,7 +825,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected null of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting null of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualNull = actual.getNull();
@@ -848,7 +848,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected package of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting package of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualPackage = actual.getPackage();
@@ -871,7 +871,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected private of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting private of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualPrivate = actual.getPrivate();
@@ -894,7 +894,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected protected of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting protected of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualProtected = actual.getProtected();
@@ -917,7 +917,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected public of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting public of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualPublic = actual.getPublic();
@@ -940,7 +940,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected return of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting return of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualReturn = actual.getReturn();
@@ -963,7 +963,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected short of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting short of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // check
     short actualShort = actual.getShort();
@@ -986,7 +986,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected static of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting static of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualStatic = actual.getStatic();
@@ -1009,7 +1009,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected strictfp of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting strictfp of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualStrictfp = actual.getStrictfp();
@@ -1032,7 +1032,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected super of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting super of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualSuper = actual.getSuper();
@@ -1081,7 +1081,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have switch but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have switch but had :\n  <%s>";
     
     // check
     if (actual.getSwitch().length > 0)  {
@@ -1104,7 +1104,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected synchronized of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting synchronized of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualSynchronized = actual.getSynchronized();
@@ -1127,7 +1127,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected this of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting this of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualThis = actual.getThis();
@@ -1150,7 +1150,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected throw of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting throw of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualThrow = actual.getThrow();
@@ -1173,7 +1173,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected throws of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting throws of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualThrows = actual.getThrows();
@@ -1196,7 +1196,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected transient of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting transient of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualTransient = actual.getTransient();
@@ -1219,7 +1219,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected true of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting true of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualTrue = actual.getTrue();
@@ -1242,7 +1242,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected try of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting try of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualTry = actual.getTry();
@@ -1265,7 +1265,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected void of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting void of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Void actualVoid = actual.getVoid();
@@ -1288,7 +1288,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected volatile of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting volatile of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualVolatile = actual.getVolatile();
@@ -1311,7 +1311,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected while of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting while of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Object actualWhile = actual.getWhile();

@@ -39,7 +39,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected division of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting division of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     String actualDivision = actual.getDivision();
@@ -62,7 +62,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected name of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting name of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     String actualName = actual.name;
@@ -109,7 +109,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have oldNames but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have oldNames but had :\n  <%s>";
     
     // check
     if (actual.oldNames.length > 0)  {
@@ -151,7 +151,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have players but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have players but had :\n  <%s>";
     
     // check
     if (actual.players.iterator().hasNext()) {
@@ -193,7 +193,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have points but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have points but had :\n  <%s>";
     
     // check
     if (actual.points.iterator().hasNext()) {
@@ -216,7 +216,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected rank of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting rank of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // check
     int actualRank = actual.rank;
@@ -244,7 +244,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     double actualVictoryRatio = actual.victoryRatio;
     
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = String.format("\nExpected victoryRatio:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+    String assertjErrorMessage = String.format("\nExpecting victoryRatio:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
                                                actualVictoryRatio, victoryRatio, offset, Math.abs(victoryRatio - actualVictoryRatio));
     
     // check

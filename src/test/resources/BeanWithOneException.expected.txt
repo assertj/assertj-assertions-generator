@@ -65,7 +65,7 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have arrayPropertyThrowsException but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have arrayPropertyThrowsException but had :\n  <%s>";
     
     // check
     if (actual.getArrayPropertyThrowsException().length > 0)  {
@@ -109,7 +109,7 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have iterablePropertyThrowsException but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have iterablePropertyThrowsException but had :\n  <%s>";
     
     // check
     if (actual.getIterablePropertyThrowsException().iterator().hasNext()) {
@@ -133,7 +133,7 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected stringPropertyThrowsException of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting stringPropertyThrowsException of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     String actualStringPropertyThrowsException = actual.getStringPropertyThrowsException();

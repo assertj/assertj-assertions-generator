@@ -39,7 +39,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected assistsPerGame of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting assistsPerGame of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // check
     int actualAssistsPerGame = actual.getAssistsPerGame();
@@ -62,7 +62,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected name of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting name of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     org.assertj.assertions.generator.data.Name actualName = actual.getName();
@@ -104,7 +104,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have points but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have points but had :\n  <%s>";
     
     // check
     if (actual.getPoints().iterator().hasNext()) {
@@ -127,7 +127,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected pointsPerGame of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting pointsPerGame of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // check
     int actualPointsPerGame = actual.getPointsPerGame();
@@ -174,7 +174,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have previousTeams but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have previousTeams but had :\n  <%s>";
     
     // check
     if (actual.getPreviousTeams().length > 0)  {
@@ -197,7 +197,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected reboundsPerGame of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting reboundsPerGame of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // check
     int actualReboundsPerGame = actual.getReboundsPerGame();
@@ -225,7 +225,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     float actualSize = actual.getSize();
     
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = String.format("\nExpected size:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+    String assertjErrorMessage = String.format("\nExpecting size:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
                                                actualSize, size, offset, Math.abs(size - actualSize));
     
     // check
@@ -246,7 +246,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected team of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting team of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     String actualTeam = actual.getTeam();
@@ -288,7 +288,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have teamMates but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have teamMates but had :\n  <%s>";
     
     // check
     if (actual.getTeamMates().iterator().hasNext()) {

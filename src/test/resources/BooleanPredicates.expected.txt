@@ -72,7 +72,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected good of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting good of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // check
     boolean actualGood = actual.getGood();

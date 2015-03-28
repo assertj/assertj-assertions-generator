@@ -37,7 +37,7 @@ public class PlayerAgentAssert extends AbstractAssert<PlayerAgentAssert, PlayerA
     isNotNull();
 
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected managedPlayer of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = "\nExpecting managedPlayer of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // null safe check
     Player actualManagedPlayer = actual.getManagedPlayer();

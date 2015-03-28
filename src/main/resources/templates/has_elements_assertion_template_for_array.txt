@@ -34,7 +34,7 @@
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
     
     // check
     if (actual.get${Property}().length > 0)  {

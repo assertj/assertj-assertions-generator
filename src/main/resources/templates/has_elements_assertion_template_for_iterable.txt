@@ -10,7 +10,7 @@
     isNotNull();
 
     // check that given ${elementType} varargs is not null.
-    if (${property_safe} == null) throw new AssertionError("Expecting ${property} parameter not to be null.");
+    if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.get${Property}(), ${property_safe});

@@ -109,7 +109,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // check that given Object varargs is not null.
-    if (expectedBreak == null) throw new AssertionError("Expecting break parameter not to be null.");
+    if (expectedBreak == null) failWithMessage("Expecting break parameter not to be null.");
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.getBreak(), expectedBreak);
@@ -174,16 +174,11 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // check that given Object varargs is not null.
-    if (expectedCase == null) throw new AssertionError("Expecting case parameter not to be null.");
+    if (expectedCase == null) failWithMessage("Expecting case parameter not to be null.");
     
-    // check with standard error message (see commented below to set your own message).
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.getCase()).contains(expectedCase);
 
-    // To override the standard error message :
-    // - remove the previous call to Assertions.assertThat(actual.getCase().contains(expectedCase)
-    // - uncomment the line below and set your error message:
-    // Assertions.assertThat(actual.getCase()).overridingErrorMessage("\nmy error message %s", "arg1").contains(expectedCase);
-    
     // return the current assertion for method chaining
     return this;
   }
@@ -314,7 +309,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // check that given String varargs is not null.
-    if (expectedDefault == null) throw new AssertionError("Expecting default parameter not to be null.");
+    if (expectedDefault == null) failWithMessage("Expecting default parameter not to be null.");
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.getDefault(), expectedDefault);
@@ -1056,16 +1051,11 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     isNotNull();
 
     // check that given String varargs is not null.
-    if (expectedSwitch == null) throw new AssertionError("Expecting switch parameter not to be null.");
+    if (expectedSwitch == null) failWithMessage("Expecting switch parameter not to be null.");
     
-    // check with standard error message (see commented below to set your own message).
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.getSwitch()).contains(expectedSwitch);
 
-    // To override the standard error message :
-    // - remove the previous call to Assertions.assertThat(actual.getSwitch().contains(expectedSwitch)
-    // - uncomment the line below and set your error message:
-    // Assertions.assertThat(actual.getSwitch()).overridingErrorMessage("\nmy error message %s", "arg1").contains(expectedSwitch);
-    
     // return the current assertion for method chaining
     return this;
   }

@@ -85,16 +85,11 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     isNotNull();
 
     // check that given String varargs is not null.
-    if (oldNames == null) throw new AssertionError("Expecting oldNames parameter not to be null.");
+    if (oldNames == null) failWithMessage("Expecting oldNames parameter not to be null.");
     
-    // check with standard error message (see commented below to set your own message).
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.oldNames).contains(oldNames);
 
-    // To override the standard error message :
-    // - remove the previous call to Assertions.assertThat(actual.oldNames.contains(oldNames)
-    // - uncomment the line below and set your error message:
-    // Assertions.assertThat(actual.oldNames).overridingErrorMessage("\nmy error message %s", "arg1").contains(oldNames);
-    
     // return the current assertion for method chaining
     return this;
   }
@@ -132,7 +127,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     isNotNull();
 
     // check that given org.assertj.assertions.generator.data.nba.Player varargs is not null.
-    if (players == null) throw new AssertionError("Expecting players parameter not to be null.");
+    if (players == null) failWithMessage("Expecting players parameter not to be null.");
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.players, players);
@@ -174,7 +169,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     isNotNull();
 
     // check that given int[] varargs is not null.
-    if (points == null) throw new AssertionError("Expecting points parameter not to be null.");
+    if (points == null) failWithMessage("Expecting points parameter not to be null.");
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.points, points);

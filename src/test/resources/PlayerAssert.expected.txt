@@ -85,7 +85,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // check that given int[] varargs is not null.
-    if (points == null) throw new AssertionError("Expecting points parameter not to be null.");
+    if (points == null) failWithMessage("Expecting points parameter not to be null.");
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.getPoints(), points);
@@ -150,16 +150,11 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // check that given String varargs is not null.
-    if (previousTeams == null) throw new AssertionError("Expecting previousTeams parameter not to be null.");
+    if (previousTeams == null) failWithMessage("Expecting previousTeams parameter not to be null.");
     
-    // check with standard error message (see commented below to set your own message).
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.getPreviousTeams()).contains(previousTeams);
 
-    // To override the standard error message :
-    // - remove the previous call to Assertions.assertThat(actual.getPreviousTeams().contains(previousTeams)
-    // - uncomment the line below and set your error message:
-    // Assertions.assertThat(actual.getPreviousTeams()).overridingErrorMessage("\nmy error message %s", "arg1").contains(previousTeams);
-    
     // return the current assertion for method chaining
     return this;
   }
@@ -269,7 +264,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     isNotNull();
 
     // check that given Player varargs is not null.
-    if (teamMates == null) throw new AssertionError("Expecting teamMates parameter not to be null.");
+    if (teamMates == null) failWithMessage("Expecting teamMates parameter not to be null.");
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.getTeamMates(), teamMates);

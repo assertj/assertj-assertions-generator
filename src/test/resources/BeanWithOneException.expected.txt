@@ -40,16 +40,11 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
     isNotNull();
 
     // check that given String varargs is not null.
-    if (arrayPropertyThrowsException == null) throw new AssertionError("Expecting arrayPropertyThrowsException parameter not to be null.");
+    if (arrayPropertyThrowsException == null) failWithMessage("Expecting arrayPropertyThrowsException parameter not to be null.");
     
-    // check with standard error message (see commented below to set your own message).
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.getArrayPropertyThrowsException()).contains(arrayPropertyThrowsException);
 
-    // To override the standard error message :
-    // - remove the previous call to Assertions.assertThat(actual.getArrayPropertyThrowsException().contains(arrayPropertyThrowsException)
-    // - uncomment the line below and set your error message:
-    // Assertions.assertThat(actual.getArrayPropertyThrowsException()).overridingErrorMessage("\nmy error message %s", "arg1").contains(arrayPropertyThrowsException);
-    
     // return the current assertion for method chaining
     return this;
   }
@@ -89,7 +84,7 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
     isNotNull();
 
     // check that given String varargs is not null.
-    if (iterablePropertyThrowsException == null) throw new AssertionError("Expecting iterablePropertyThrowsException parameter not to be null.");
+    if (iterablePropertyThrowsException == null) failWithMessage("Expecting iterablePropertyThrowsException parameter not to be null.");
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.getIterablePropertyThrowsException(), iterablePropertyThrowsException);

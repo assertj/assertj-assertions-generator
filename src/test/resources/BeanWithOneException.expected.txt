@@ -50,6 +50,50 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
   }
 
   /**
+   * Verifies that the actual BeanWithOneException's arrayPropertyThrowsException contains <b>only<b> the given String elements and nothing else in whatever order.
+   * 
+   * @param arrayPropertyThrowsException the given elements that should be contained in actual BeanWithOneException's arrayPropertyThrowsException.
+   * @return this assertion object.
+   * @throws AssertionError if the actual BeanWithOneException's arrayPropertyThrowsException does not contain all given String elements and nothing else.
+   * @throws java.io.IOException if actual.getArrayPropertyThrowsException() throws one.
+   */
+  public BeanWithOneExceptionAssert hasOnlyArrayPropertyThrowsException(String... arrayPropertyThrowsException) throws java.io.IOException {
+    // check that actual BeanWithOneException we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String varargs is not null.
+    if (arrayPropertyThrowsException == null) failWithMessage("Expecting arrayPropertyThrowsException parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Assertions.assertThat(actual.getArrayPropertyThrowsException()).containsOnly(arrayPropertyThrowsException);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual BeanWithOneException's arrayPropertyThrowsException does not contain the given String elements.
+   *
+   * @param arrayPropertyThrowsException the given elements that should not be in actual BeanWithOneException's arrayPropertyThrowsException.
+   * @return this assertion object.
+   * @throws AssertionError if the actual BeanWithOneException's arrayPropertyThrowsException contains any given String elements.
+   * @throws java.io.IOException if actual.getArrayPropertyThrowsException() throws one.
+   */
+  public BeanWithOneExceptionAssert doesNotHaveArrayPropertyThrowsException(String... arrayPropertyThrowsException) throws java.io.IOException {
+    // check that actual BeanWithOneException we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String varargs is not null.
+    if (arrayPropertyThrowsException == null) failWithMessage("Expecting arrayPropertyThrowsException parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Assertions.assertThat(actual.getArrayPropertyThrowsException()).doesNotContain(arrayPropertyThrowsException);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual BeanWithOneException has no arrayPropertyThrowsException.
    * @return this assertion object.
    * @throws AssertionError if the actual BeanWithOneException's arrayPropertyThrowsException is not empty.
@@ -88,6 +132,49 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.getIterablePropertyThrowsException(), iterablePropertyThrowsException);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual BeanWithOneException's iterablePropertyThrowsException contains <b>only<b> the given String elements and nothing else in whatever order.
+   * @param iterablePropertyThrowsException the given elements that should be contained in actual BeanWithOneException's iterablePropertyThrowsException.
+   * @return this assertion object.
+   * @throws AssertionError if the actual BeanWithOneException's iterablePropertyThrowsException does not contain all given String elements.
+   * @throws java.io.IOException if actual.getIterablePropertyThrowsException() throws one.
+   */
+  public BeanWithOneExceptionAssert hasOnlyIterablePropertyThrowsException(String... iterablePropertyThrowsException) throws java.io.IOException {
+    // check that actual BeanWithOneException we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String varargs is not null.
+    if (iterablePropertyThrowsException == null) failWithMessage("Expecting iterablePropertyThrowsException parameter not to be null.");
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.getIterablePropertyThrowsException(), iterablePropertyThrowsException);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual BeanWithOneException's iterablePropertyThrowsException does not contain the given String elements.
+   *
+   * @param iterablePropertyThrowsException the given elements that should not be in actual BeanWithOneException's iterablePropertyThrowsException.
+   * @return this assertion object.
+   * @throws AssertionError if the actual BeanWithOneException's iterablePropertyThrowsException contains any given String elements.
+   * @throws java.io.IOException if actual.getIterablePropertyThrowsException() throws one.
+   */
+  public BeanWithOneExceptionAssert doesNotHaveIterablePropertyThrowsException(String... iterablePropertyThrowsException) throws java.io.IOException {
+    // check that actual BeanWithOneException we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String varargs is not null.
+    if (iterablePropertyThrowsException == null) failWithMessage("Expecting iterablePropertyThrowsException parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.getIterablePropertyThrowsException(), iterablePropertyThrowsException);
 
     // return the current assertion for method chaining
     return this;

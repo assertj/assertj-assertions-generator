@@ -20,6 +20,47 @@
   }
 
   /**
+   * Verifies that the actual ${class_to_assert}'s ${property} contains <b>only<b> the given ${elementType} elements and nothing else in whatever order.
+   * @param ${property_safe} the given elements that should be contained in actual ${class_to_assert}'s ${property}.
+   * @return this assertion object.
+   * @throws AssertionError if the actual ${class_to_assert}'s ${property} does not contain all given ${elementType} elements.${throws_javadoc}
+   */
+  public ${self_type} hasOnly${Property}(${elementType}... ${property_safe}) ${throws}{
+    // check that actual ${class_to_assert} we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given ${elementType} varargs is not null.
+    if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.get${Property}(), ${property_safe});
+
+    // return the current assertion for method chaining
+    return ${myself};
+  }
+
+  /**
+   * Verifies that the actual ${class_to_assert}'s ${property} does not contain the given ${elementType} elements.
+   *
+   * @param ${property_safe} the given elements that should not be in actual ${class_to_assert}'s ${property}.
+   * @return this assertion object.
+   * @throws AssertionError if the actual ${class_to_assert}'s ${property} contains any given ${elementType} elements.${throws_javadoc}
+   */
+  public ${self_type} doesNotHave${Property}(${elementType}... ${property_safe}) ${throws}{
+    // check that actual ${class_to_assert} we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given ${elementType} varargs is not null.
+    if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.get${Property}(), ${property_safe});
+
+    // return the current assertion for method chaining
+    return ${myself};
+  }
+
+  /**
    * Verifies that the actual ${class_to_assert} has no ${property}.
    * @return this assertion object.
    * @throws AssertionError if the actual ${class_to_assert}'s ${property} is not empty.${throws_javadoc}

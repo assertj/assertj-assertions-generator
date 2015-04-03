@@ -95,6 +95,48 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
   }
 
   /**
+   * Verifies that the actual Team's oldNames contains <b>only<b> the given String elements and nothing else in whatever order.
+   * 
+   * @param oldNames the given elements that should be contained in actual Team's oldNames.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Team's oldNames does not contain all given String elements and nothing else.
+   */
+  public TeamAssert hasOnlyOldNames(String... oldNames) {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String varargs is not null.
+    if (oldNames == null) failWithMessage("Expecting oldNames parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Assertions.assertThat(actual.oldNames).containsOnly(oldNames);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Team's oldNames does not contain the given String elements.
+   *
+   * @param oldNames the given elements that should not be in actual Team's oldNames.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Team's oldNames contains any given String elements.
+   */
+  public TeamAssert doesNotHaveOldNames(String... oldNames) {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String varargs is not null.
+    if (oldNames == null) failWithMessage("Expecting oldNames parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Assertions.assertThat(actual.oldNames).doesNotContain(oldNames);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Team has no oldNames.
    * @return this assertion object.
    * @throws AssertionError if the actual Team's oldNames is not empty.
@@ -137,6 +179,47 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
   }
 
   /**
+   * Verifies that the actual Team's players contains <b>only<b> the given org.assertj.assertions.generator.data.nba.Player elements and nothing else in whatever order.
+   * @param players the given elements that should be contained in actual Team's players.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Team's players does not contain all given org.assertj.assertions.generator.data.nba.Player elements.
+   */
+  public TeamAssert hasOnlyPlayers(org.assertj.assertions.generator.data.nba.Player... players) {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given org.assertj.assertions.generator.data.nba.Player varargs is not null.
+    if (players == null) failWithMessage("Expecting players parameter not to be null.");
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.players, players);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Team's players does not contain the given org.assertj.assertions.generator.data.nba.Player elements.
+   *
+   * @param players the given elements that should not be in actual Team's players.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Team's players contains any given org.assertj.assertions.generator.data.nba.Player elements.
+   */
+  public TeamAssert doesNotHavePlayers(org.assertj.assertions.generator.data.nba.Player... players) {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given org.assertj.assertions.generator.data.nba.Player varargs is not null.
+    if (players == null) failWithMessage("Expecting players parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.players, players);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Team has no players.
    * @return this assertion object.
    * @throws AssertionError if the actual Team's players is not empty.
@@ -173,6 +256,47 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.points, points);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Team's points contains <b>only<b> the given int[] elements and nothing else in whatever order.
+   * @param points the given elements that should be contained in actual Team's points.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Team's points does not contain all given int[] elements.
+   */
+  public TeamAssert hasOnlyPoints(int[]... points) {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given int[] varargs is not null.
+    if (points == null) failWithMessage("Expecting points parameter not to be null.");
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.points, points);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Team's points does not contain the given int[] elements.
+   *
+   * @param points the given elements that should not be in actual Team's points.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Team's points contains any given int[] elements.
+   */
+  public TeamAssert doesNotHavePoints(int[]... points) {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given int[] varargs is not null.
+    if (points == null) failWithMessage("Expecting points parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.points, points);
 
     // return the current assertion for method chaining
     return this;

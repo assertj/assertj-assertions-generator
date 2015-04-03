@@ -95,6 +95,47 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
   }
 
   /**
+   * Verifies that the actual Player's points contains <b>only<b> the given int[] elements and nothing else in whatever order.
+   * @param points the given elements that should be contained in actual Player's points.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's points does not contain all given int[] elements.
+   */
+  public PlayerAssert hasOnlyPoints(int[]... points) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given int[] varargs is not null.
+    if (points == null) failWithMessage("Expecting points parameter not to be null.");
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.getPoints(), points);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's points does not contain the given int[] elements.
+   *
+   * @param points the given elements that should not be in actual Player's points.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's points contains any given int[] elements.
+   */
+  public PlayerAssert doesNotHavePoints(int[]... points) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given int[] varargs is not null.
+    if (points == null) failWithMessage("Expecting points parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.getPoints(), points);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Player has no points.
    * @return this assertion object.
    * @throws AssertionError if the actual Player's points is not empty.
@@ -154,6 +195,48 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.getPreviousTeams()).contains(previousTeams);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's previousTeams contains <b>only<b> the given String elements and nothing else in whatever order.
+   * 
+   * @param previousTeams the given elements that should be contained in actual Player's previousTeams.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousTeams does not contain all given String elements and nothing else.
+   */
+  public PlayerAssert hasOnlyPreviousTeams(String... previousTeams) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String varargs is not null.
+    if (previousTeams == null) failWithMessage("Expecting previousTeams parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Assertions.assertThat(actual.getPreviousTeams()).containsOnly(previousTeams);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's previousTeams does not contain the given String elements.
+   *
+   * @param previousTeams the given elements that should not be in actual Player's previousTeams.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousTeams contains any given String elements.
+   */
+  public PlayerAssert doesNotHavePreviousTeams(String... previousTeams) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String varargs is not null.
+    if (previousTeams == null) failWithMessage("Expecting previousTeams parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Assertions.assertThat(actual.getPreviousTeams()).doesNotContain(previousTeams);
 
     // return the current assertion for method chaining
     return this;
@@ -268,6 +351,47 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.getTeamMates(), teamMates);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's teamMates contains <b>only<b> the given Player elements and nothing else in whatever order.
+   * @param teamMates the given elements that should be contained in actual Player's teamMates.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's teamMates does not contain all given Player elements.
+   */
+  public PlayerAssert hasOnlyTeamMates(Player... teamMates) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given Player varargs is not null.
+    if (teamMates == null) failWithMessage("Expecting teamMates parameter not to be null.");
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.getTeamMates(), teamMates);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's teamMates does not contain the given Player elements.
+   *
+   * @param teamMates the given elements that should not be in actual Player's teamMates.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's teamMates contains any given Player elements.
+   */
+  public PlayerAssert doesNotHaveTeamMates(Player... teamMates) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given Player varargs is not null.
+    if (teamMates == null) failWithMessage("Expecting teamMates parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.getTeamMates(), teamMates);
 
     // return the current assertion for method chaining
     return this;

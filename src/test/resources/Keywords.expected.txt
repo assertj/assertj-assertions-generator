@@ -119,6 +119,47 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
+   * Verifies that the actual Keywords's break contains <b>only<b> the given Object elements and nothing else in whatever order.
+   * @param expectedBreak the given elements that should be contained in actual Keywords's break.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Keywords's break does not contain all given Object elements.
+   */
+  public KeywordsAssert hasOnlyBreak(Object... expectedBreak) {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given Object varargs is not null.
+    if (expectedBreak == null) failWithMessage("Expecting break parameter not to be null.");
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.getBreak(), expectedBreak);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Keywords's break does not contain the given Object elements.
+   *
+   * @param expectedBreak the given elements that should not be in actual Keywords's break.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Keywords's break contains any given Object elements.
+   */
+  public KeywordsAssert doesNotHaveBreak(Object... expectedBreak) {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given Object varargs is not null.
+    if (expectedBreak == null) failWithMessage("Expecting break parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.getBreak(), expectedBreak);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Keywords has no break.
    * @return this assertion object.
    * @throws AssertionError if the actual Keywords's break is not empty.
@@ -178,6 +219,48 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.getCase()).contains(expectedCase);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Keywords's case contains <b>only<b> the given Object elements and nothing else in whatever order.
+   * 
+   * @param expectedCase the given elements that should be contained in actual Keywords's case.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Keywords's case does not contain all given Object elements and nothing else.
+   */
+  public KeywordsAssert hasOnlyCase(Object... expectedCase) {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given Object varargs is not null.
+    if (expectedCase == null) failWithMessage("Expecting case parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Assertions.assertThat(actual.getCase()).containsOnly(expectedCase);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Keywords's case does not contain the given Object elements.
+   *
+   * @param expectedCase the given elements that should not be in actual Keywords's case.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Keywords's case contains any given Object elements.
+   */
+  public KeywordsAssert doesNotHaveCase(Object... expectedCase) {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given Object varargs is not null.
+    if (expectedCase == null) failWithMessage("Expecting case parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Assertions.assertThat(actual.getCase()).doesNotContain(expectedCase);
 
     // return the current assertion for method chaining
     return this;
@@ -313,6 +396,49 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.getDefault(), expectedDefault);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Keywords's default contains <b>only<b> the given String elements and nothing else in whatever order.
+   * @param expectedDefault the given elements that should be contained in actual Keywords's default.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Keywords's default does not contain all given String elements.
+   * @throws java.io.IOException if actual.getDefault() throws one.
+   */
+  public KeywordsAssert hasOnlyDefault(String... expectedDefault) throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String varargs is not null.
+    if (expectedDefault == null) failWithMessage("Expecting default parameter not to be null.");
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.getDefault(), expectedDefault);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Keywords's default does not contain the given String elements.
+   *
+   * @param expectedDefault the given elements that should not be in actual Keywords's default.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Keywords's default contains any given String elements.
+   * @throws java.io.IOException if actual.getDefault() throws one.
+   */
+  public KeywordsAssert doesNotHaveDefault(String... expectedDefault) throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String varargs is not null.
+    if (expectedDefault == null) failWithMessage("Expecting default parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.getDefault(), expectedDefault);
 
     // return the current assertion for method chaining
     return this;
@@ -1055,6 +1181,50 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.getSwitch()).contains(expectedSwitch);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Keywords's switch contains <b>only<b> the given String elements and nothing else in whatever order.
+   * 
+   * @param expectedSwitch the given elements that should be contained in actual Keywords's switch.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Keywords's switch does not contain all given String elements and nothing else.
+   * @throws java.io.IOException if actual.getSwitch() throws one.
+   */
+  public KeywordsAssert hasOnlySwitch(String... expectedSwitch) throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String varargs is not null.
+    if (expectedSwitch == null) failWithMessage("Expecting switch parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Assertions.assertThat(actual.getSwitch()).containsOnly(expectedSwitch);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Keywords's switch does not contain the given String elements.
+   *
+   * @param expectedSwitch the given elements that should not be in actual Keywords's switch.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Keywords's switch contains any given String elements.
+   * @throws java.io.IOException if actual.getSwitch() throws one.
+   */
+  public KeywordsAssert doesNotHaveSwitch(String... expectedSwitch) throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String varargs is not null.
+    if (expectedSwitch == null) failWithMessage("Expecting switch parameter not to be null.");
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Assertions.assertThat(actual.getSwitch()).doesNotContain(expectedSwitch);
 
     // return the current assertion for method chaining
     return this;

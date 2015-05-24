@@ -325,27 +325,76 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
   
 
   /**
-   * Verifies that the actual Team's rank is equal to the given one.
-   * @param rank the given rank to compare the actual Team's rank to.
+     * Verifies that the actual Team's rank is equal to the given one.
+     * @param rank the given rank to compare the actual Team's rank to.
+     * @return this assertion object.
+     * @throws AssertionError - if the actual Team's rank is not equal to the given one.
+     */
+    public TeamAssert hasRank(int rank) {
+      // check that actual Team we want to make assertions on is not null.
+      isNotNull();
+
+      // overrides the default error message with a more explicit one
+      String assertjErrorMessage = "\nExpecting rank of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+      // check
+      int actualRank = actual.rank;
+      if (actualRank != rank) {
+        failWithMessage(assertjErrorMessage, actual, rank, actualRank);
+      }
+
+      // return the current assertion for method chaining
+      return this;
+    }
+
+  /**
+   * Verifies that the actual Team's rank is close to the given value by less than the given offset.
+   * <p>
+   * If difference is equal to the offset value, assertion is considered successful.
+   * @param rank the value to compare the actual Team's rank to.
+   * @param offset the given offset.
    * @return this assertion object.
-   * @throws AssertionError - if the actual Team's rank is not equal to the given one.
+   * @throws AssertionError - if the actual Team's rank is not close enough to the given value.
    */
-  public TeamAssert hasRank(int rank) {
+  public TeamAssert hasRank(int rank, int offset) {
     // check that actual Team we want to make assertions on is not null.
     isNotNull();
 
+    int actualRank = actual.rank;
+    
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting rank of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = String.format("\nExpecting rank:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+                                               actualRank, rank, offset, Math.abs(rank - actualRank));
     
     // check
-    int actualRank = actual.rank;
-    if (actualRank != rank) {
-      failWithMessage(assertjErrorMessage, actual, rank, actualRank);
-    }
+    Assertions.assertThat(actualRank).overridingErrorMessage(assertjErrorMessage).isCloseTo(rank, Assertions.within(offset));
 
     // return the current assertion for method chaining
     return this;
   }
+
+  /**
+     * Verifies that the actual Team's victoryRatio is equal to the given one.
+     * @param victoryRatio the given victoryRatio to compare the actual Team's victoryRatio to.
+     * @return this assertion object.
+     * @throws AssertionError - if the actual Team's victoryRatio is not equal to the given one.
+     */
+    public TeamAssert hasVictoryRatio(double victoryRatio) {
+      // check that actual Team we want to make assertions on is not null.
+      isNotNull();
+
+      // overrides the default error message with a more explicit one
+      String assertjErrorMessage = "\nExpecting victoryRatio of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+      // check
+      double actualVictoryRatio = actual.victoryRatio;
+      if (actualVictoryRatio != victoryRatio) {
+        failWithMessage(assertjErrorMessage, actual, victoryRatio, actualVictoryRatio);
+      }
+
+      // return the current assertion for method chaining
+      return this;
+    }
 
   /**
    * Verifies that the actual Team's victoryRatio is close to the given value by less than the given offset.

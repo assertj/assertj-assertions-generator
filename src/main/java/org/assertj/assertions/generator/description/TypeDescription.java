@@ -74,8 +74,8 @@ public class TypeDescription {
 	return typeName.isPrimitive();
   }
 
-  public boolean isRealNumber() {
-	return typeName.isRealNumber();
+  public boolean isNumber() {
+	return typeName.isNumber();
   }
 
   public boolean isBoolean() {

@@ -18,6 +18,7 @@ import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.remove;
 import static org.apache.commons.lang3.StringUtils.replace;
+import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -38,27 +39,6 @@ import org.assertj.assertions.generator.description.TypeName;
 
 public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEntryPointGenerator {
 
-  // default file for templates
-  static final String DEFAULT_IS_ASSERTION_TEMPLATE = "is_assertion_template.txt";
-  static final String DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ARRAY =
-	  "has_elements_assertion_template_for_array.txt";
-  static final String DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ITERABLE =
-	  "has_elements_assertion_template_for_iterable.txt";
-  static final String DEFAULT_HAS_ASSERTION_TEMPLATE = "has_assertion_template.txt";
-  static final String DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_PRIMITIVE = "has_assertion_template_for_primitive.txt";
-  static final String DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_REAL_NUMBER = "has_assertion_template_for_real_number.txt";
-  static final String DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE = "custom_assertion_class_template.txt";
-  static final String DEFAULT_CUSTOM_HIERARCHICAL_ASSERTION_CLASS_TEMPLATE = "custom_hierarchical_assertion_class_template.txt";
-  static final String DEFAULT_CUSTOM_ABSTRACT_ASSERTION_CLASS_TEMPLATE = "custom_abstract_assertion_class_template.txt";
-  static final String DEFAULT_ASSERTIONS_ENTRY_POINT_CLASS_TEMPLATE = "standard_assertions_entry_point_class_template.txt";
-  static final String DEFAULT_ASSERTION_ENTRY_POINT_METHOD_TEMPLATE = "standard_assertion_entry_point_method_template.txt";
-  static final String DEFAULT_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE =
-	  "soft_assertions_entry_point_class_template.txt";
-  static final String DEFAULT_JUNIT_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE =
-	  "junit_soft_assertions_entry_point_class_template.txt";
-  static final String DEFAULT_SOFT_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE = "soft_assertion_entry_point_method_template.txt";
-  static final String DEFAULT_BDD_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE = "bdd_assertions_entry_point_class_template.txt";
-  static final String DEFAULT_BDD_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE = "bdd_assertion_entry_point_method_template.txt";
   static final String ABSTRACT_ASSERT_CLASS_PREFIX = "Abstract";
   static final String ASSERT_CLASS_SUFFIX = "Assert";
   static final String ASSERT_CLASS_FILE_SUFFIX = ASSERT_CLASS_SUFFIX + ".java";
@@ -91,22 +71,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   // assertions classes are generated in their package directory starting from targetBaseDirectory.
   // ex : com.nba.Player -> targetBaseDirectory/com/nba/PlayerAssert.java
   private String targetBaseDirectory = ".";
-  private Template classAssertionTemplate;
-  private Template hierarchicalClassAssertionTemplate;
-  private Template abstractClassAssertionTemplate;
-  private Template hasAssertionTemplate;
-  private Template hasAssertionTemplateForPrimitive;
-  private Template hasAssertionTemplateForRealNumber;
-  private Template hasIterableElementsAssertionTemplate;
-  private Template hasArrayElementsAssertionTemplate;
-  private Template isAssertionTemplate;
-  private Template standardAssertionsEntryPointClassTemplate;
-  private Template standardAssertionEntryPointMethodTemplate;
-  private Template softAssertionsEntryPointClassTemplate;
-  private Template junitSoftAssertionsEntryPointClassTemplate;
-  private Template softAssertionEntryPointMethodTemplate;
-  private Template bddAssertionsEntryPointClassTemplate;
-  private Template bddAssertionEntryPointMethodTemplate;
+  private TemplateRegistry templateRegistry;
 
   /**
    * Creates a new </code>{@link BaseAssertionGenerator}</code> with default templates directory.
@@ -124,159 +89,11 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
    * @throws IOException if some template file could not be found or read
    */
   public BaseAssertionGenerator(String templatesDirectory) throws IOException {
-	this(
-	     new Template(Template.Type.ASSERT_CLASS,
-	                  new File(templatesDirectory, DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE)),
-	     new Template(Template.Type.HIERARCHICAL_ASSERT_CLASS,
-	                  new File(templatesDirectory, DEFAULT_CUSTOM_HIERARCHICAL_ASSERTION_CLASS_TEMPLATE)),
-	     new Template(Template.Type.ABSTRACT_ASSERT_CLASS,
-	                  new File(templatesDirectory, DEFAULT_CUSTOM_ABSTRACT_ASSERTION_CLASS_TEMPLATE)),
-	     new Template(Template.Type.HAS,
-	                  new File(templatesDirectory, DEFAULT_HAS_ASSERTION_TEMPLATE)),
-	     new Template(Template.Type.HAS_FOR_PRIMITIVE,
-	                  new File(templatesDirectory, DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_PRIMITIVE)),
-	     new Template(Template.Type.HAS_FOR_ITERABLE,
-	                  new File(templatesDirectory, DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ITERABLE)),
-	     new Template(Template.Type.HAS_FOR_ARRAY,
-	                  new File(templatesDirectory, DEFAULT_HAS_ELEMENTS_ASSERTION_TEMPLATE_FOR_ARRAY)),
-	     new Template(Template.Type.IS,
-	                  new File(templatesDirectory, DEFAULT_IS_ASSERTION_TEMPLATE)),
-	     new Template(Type.ASSERTIONS_ENTRY_POINT_CLASS,
-	                  new File(templatesDirectory, DEFAULT_ASSERTIONS_ENTRY_POINT_CLASS_TEMPLATE)),
-	     new Template(Type.ASSERTION_ENTRY_POINT,
-	                  new File(templatesDirectory, DEFAULT_ASSERTION_ENTRY_POINT_METHOD_TEMPLATE)),
-	     new Template(Type.SOFT_ASSERTIONS_ENTRY_POINT_CLASS,
-	                  new File(templatesDirectory, DEFAULT_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE)),
-	     new Template(Type.JUNIT_SOFT_ASSERTIONS_ENTRY_POINT_CLASS,
-	                  new File(templatesDirectory, DEFAULT_JUNIT_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE)),
-	     new Template(Type.SOFT_ENTRY_POINT_METHOD_ASSERTION,
-	                  new File(templatesDirectory, DEFAULT_SOFT_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE)),
-	     new Template(Type.BDD_ASSERTIONS_ENTRY_POINT_CLASS,
-	                  new File(templatesDirectory, DEFAULT_BDD_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE)),
-	     new Template(Type.BDD_ENTRY_POINT_METHOD_ASSERTION,
-	                  new File(templatesDirectory, DEFAULT_BDD_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE)),
-	     new Template(Type.HAS_FOR_REAL_NUMBER,
-	                  new File(templatesDirectory, DEFAULT_HAS_ASSERTION_TEMPLATE_FOR_REAL_NUMBER)));
-  }
-
-  public BaseAssertionGenerator(Template classAssertionTemplate,
-	                            Template hierarchicalClassAssertionTemplate,
-	                            Template abstractClassAssertionTemplate,
-	                            Template hasAssertionTemplate,
-	                            Template hasAssertionTemplateForPrimitive,
-	                            Template hasIterableElementsAssertionTemplate,
-	                            Template hasArrayElementsAssertionTemplate,
-	                            Template isAssertionTemplate,
-	                            Template entryPointAssertionsClassTemplate,
-	                            Template entryPointAssertionTemplate,
-	                            Template entryPointSoftAssertionsClassTemplate,
-	                            Template entryPointJUnitSoftAssertionsClassTemplate,
-	                            Template entryPointSoftAssertionTemplate,
-	                            Template bddAssertionsEntryPointClassTemplate,
-	                            Template bddAssertionEntryPointMethodTemplate,
-	                            Template hasAssertionTemplateForRealNumber) {
-
-	this.setAssertionClassTemplate(classAssertionTemplate);
-	this.setHierarchicalAssertionClassTemplate(hierarchicalClassAssertionTemplate);
-	this.setAbstractAssertionClassTemplate(abstractClassAssertionTemplate);
-	this.setHasAssertionTemplate(hasAssertionTemplate);
-	this.setHasAssertionTemplateForPrimitive(hasAssertionTemplateForPrimitive);
-	this.setHasAssertionTemplateForRealNumber(hasAssertionTemplateForRealNumber);
-	this.setHasElementsAssertionForIterableTemplate(hasIterableElementsAssertionTemplate);
-	this.setHasElementsAssertionForArrayTemplate(hasArrayElementsAssertionTemplate);
-	this.setIsAssertionTemplate(isAssertionTemplate);
-	this.setStandardAssertionsEntryPointClassTemplate(entryPointAssertionsClassTemplate);
-	this.setStandardAssertionEntryPointMethodTemplate(entryPointAssertionTemplate);
-	this.setSoftAssertionsEntryPointClassTemplate(entryPointSoftAssertionsClassTemplate);
-	this.setJUnitSoftAssertionsEntryPointClassTemplate(entryPointJUnitSoftAssertionsClassTemplate);
-	this.setSoftAssertionEntryPointMethodTemplate(entryPointSoftAssertionTemplate);
-	this.setBddAssertionsEntryPointClassTemplate(bddAssertionsEntryPointClassTemplate);
-	this.setBddAssertionEntryPointMethodTemplate(bddAssertionEntryPointMethodTemplate);
-  }
-
-  /**
-   * Setter to define your own {@link Template} for assertion class general skeleton (see
-   * custom_assertion_class_template.txt as an example).
-   *
-   * @param assertionClassTemplate the {@link Template} to use for assertion class general skeleton.
-   */
-  public final void setAssertionClassTemplate(Template assertionClassTemplate) {
-	checkTemplateParameter(assertionClassTemplate, Template.Type.ASSERT_CLASS);
-	this.classAssertionTemplate = assertionClassTemplate;
-  }
-
-  public final void setHierarchicalAssertionClassTemplate(Template hierarchicalAssertionClassTemplate) {
-	checkTemplateParameter(hierarchicalAssertionClassTemplate, Template.Type.HIERARCHICAL_ASSERT_CLASS);
-	this.hierarchicalClassAssertionTemplate = hierarchicalAssertionClassTemplate;
-  }
-
-  public final void setAbstractAssertionClassTemplate(Template abstractAssertionClassTemplate) {
-	checkTemplateParameter(abstractAssertionClassTemplate, Template.Type.ABSTRACT_ASSERT_CLASS);
-	this.abstractClassAssertionTemplate = abstractAssertionClassTemplate;
-  }
-
-  public final void setHasAssertionTemplate(Template hasAssertionTemplate) {
-	checkTemplateParameter(hasAssertionTemplate, Template.Type.HAS);
-	this.hasAssertionTemplate = hasAssertionTemplate;
-  }
-
-  public final void setHasAssertionTemplateForPrimitive(Template hasAssertionTemplateForPrimitive) {
-	checkTemplateParameter(hasAssertionTemplateForPrimitive, Template.Type.HAS_FOR_PRIMITIVE);
-	this.hasAssertionTemplateForPrimitive = hasAssertionTemplateForPrimitive;
-  }
-
-  public final void setHasAssertionTemplateForRealNumber(Template hasAssertionTemplateForRealNumber) {
-	checkTemplateParameter(hasAssertionTemplateForRealNumber, Template.Type.HAS_FOR_REAL_NUMBER);
-	this.hasAssertionTemplateForRealNumber = hasAssertionTemplateForRealNumber;
-  }
-
-  public final void setHasElementsAssertionForIterableTemplate(Template hasIterableElementsAssertionTemplate) {
-	checkTemplateParameter(hasIterableElementsAssertionTemplate, Template.Type.HAS_FOR_ITERABLE);
-	this.hasIterableElementsAssertionTemplate = hasIterableElementsAssertionTemplate;
-  }
-
-  public final void setHasElementsAssertionForArrayTemplate(Template hasArrayElementsAssertionTemplate) {
-	checkTemplateParameter(hasArrayElementsAssertionTemplate, Template.Type.HAS_FOR_ARRAY);
-	this.hasArrayElementsAssertionTemplate = hasArrayElementsAssertionTemplate;
-  }
-
-  public final void setIsAssertionTemplate(Template isAssertionTemplate) {
-	checkTemplateParameter(isAssertionTemplate, Template.Type.IS);
-	this.isAssertionTemplate = isAssertionTemplate;
-  }
-
-  public void setStandardAssertionsEntryPointClassTemplate(final Template standardAssertionsEntryPointClassTemplate) {
-	checkTemplateParameter(standardAssertionsEntryPointClassTemplate, Type.ASSERTIONS_ENTRY_POINT_CLASS);
-	this.standardAssertionsEntryPointClassTemplate = standardAssertionsEntryPointClassTemplate;
-  }
-
-  public void setStandardAssertionEntryPointMethodTemplate(final Template standardAssertionEntryPointMethodTemplate) {
-	checkTemplateParameter(standardAssertionEntryPointMethodTemplate, Type.ASSERTION_ENTRY_POINT);
-	this.standardAssertionEntryPointMethodTemplate = standardAssertionEntryPointMethodTemplate;
+      templateRegistry = DefaultTemplateRegistryProducer.create(templatesDirectory);
   }
 
   public void setDirectoryWhereAssertionFilesAreGenerated(String targetBaseDirectory) {
 	this.targetBaseDirectory = targetBaseDirectory;
-  }
-
-  public void setSoftAssertionsEntryPointClassTemplate(final Template softAssertionsEntryPointClassTemplate) {
-	this.softAssertionsEntryPointClassTemplate = softAssertionsEntryPointClassTemplate;
-  }
-
-  public void setJUnitSoftAssertionsEntryPointClassTemplate(final Template junitSoftAssertionsEntryPointClassTemplate) {
-	this.junitSoftAssertionsEntryPointClassTemplate = junitSoftAssertionsEntryPointClassTemplate;
-  }
-
-  public void setSoftAssertionEntryPointMethodTemplate(final Template softAssertionEntryPointMethodTemplate) {
-	this.softAssertionEntryPointMethodTemplate = softAssertionEntryPointMethodTemplate;
-  }
-
-  public void setBddAssertionsEntryPointClassTemplate(final Template bddAssertionsEntryPointClassTemplate) {
-	this.bddAssertionsEntryPointClassTemplate = bddAssertionsEntryPointClassTemplate;
-  }
-
-  public void setBddAssertionEntryPointMethodTemplate(final Template bddAssertionEntryPointMethodTemplate) {
-	this.bddAssertionEntryPointMethodTemplate = bddAssertionEntryPointMethodTemplate;
   }
 
   @Override
@@ -313,7 +130,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   public String[] generateHierarchicalCustomAssertionContentFor(ClassDescription classDescription,
 	                                                            Set<Class<?>> allClasses) {
 	// use class template first
-	StringBuilder abstractAssertClassContentBuilder = new StringBuilder(abstractClassAssertionTemplate.getContent());
+	StringBuilder abstractAssertClassContentBuilder = new StringBuilder(templateRegistry.getTemplate(Type.ABSTRACT_ASSERT_CLASS).getContent());
 
 	// generate assertion method for each property with a public getter
 	abstractAssertClassContentBuilder.append(generateAssertionsForDeclaredGettersOf(classDescription));
@@ -323,7 +140,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	abstractAssertClassContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
 
 	// use class template first
-	StringBuilder concreteAssertClassContentBuilder = new StringBuilder(hierarchicalClassAssertionTemplate.getContent());
+	StringBuilder concreteAssertClassContentBuilder = new StringBuilder(templateRegistry.getTemplate(Type.HIERARCHICAL_ASSERT_CLASS).getContent());
 
 	String[] assertionClassesContent = new String[2];
 	assertionClassesContent[0] = fillAssertClassTemplate(abstractAssertClassContentBuilder.toString(),
@@ -379,7 +196,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   public String generateCustomAssertionContentFor(ClassDescription classDescription) {
 
 	// use class template first
-	StringBuilder assertionFileContentBuilder = new StringBuilder(classAssertionTemplate.getContent());
+	StringBuilder assertionFileContentBuilder = new StringBuilder(templateRegistry.getTemplate(ASSERT_CLASS).getContent());
 
 	// generate assertion method for each property with a public getter
 	assertionFileContentBuilder.append(generateAssertionsForGettersOf(classDescription));
@@ -406,24 +223,24 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	switch (assertionsEntryPointType) {
 	case SOFT:
 	case JUNIT_SOFT:
-	  return softAssertionEntryPointMethodTemplate;
+	  return templateRegistry.getTemplate(Type.SOFT_ENTRY_POINT_METHOD_ASSERTION);
 	case BDD:
-	  return bddAssertionEntryPointMethodTemplate;
+	  return templateRegistry.getTemplate(Type.BDD_ENTRY_POINT_METHOD_ASSERTION);
 	default:
-	  return standardAssertionEntryPointMethodTemplate;
+	  return templateRegistry.getTemplate(Type.ASSERTION_ENTRY_POINT);
 	}
   }
 
   private Template chooseAssertionEntryPointClassTemplate(final AssertionsEntryPointType assertionsEntryPointType) {
 	switch (assertionsEntryPointType) {
 	case SOFT:
-	  return softAssertionsEntryPointClassTemplate;
+	  return templateRegistry.getTemplate(Type.SOFT_ASSERTIONS_ENTRY_POINT_CLASS);
 	case JUNIT_SOFT:
-	  return junitSoftAssertionsEntryPointClassTemplate;
+	  return templateRegistry.getTemplate(Type.JUNIT_SOFT_ASSERTIONS_ENTRY_POINT_CLASS);
 	case BDD:
-	  return bddAssertionsEntryPointClassTemplate;
+	  return templateRegistry.getTemplate(Type.BDD_ASSERTIONS_ENTRY_POINT_CLASS);
 	default:
-	  return standardAssertionsEntryPointClassTemplate;
+	  return templateRegistry.getTemplate(Type.ASSERTIONS_ENTRY_POINT_CLASS);
 	}
   }
 
@@ -647,7 +464,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 		"case",
 		"catch",
 		"char",
-		// This one's not strictly required because you can't have a property called "class" 
+		// This one's not strictly required because you can't have a property called "class"
 		"class",
 		"const",
 		"continue",
@@ -702,7 +519,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   static private final String getSafeProperty(String unsafe) {
 	return JAVA_KEYWORDS.contains(unsafe) ? "expected" + capitalize(unsafe) : unsafe;
   }
-  
+
   private String assertionContentForProperty(GetterDescription getter, ClassDescription classDescription) {
 	String assertionContent = baseAssertionContentFor(getter, classDescription);
 
@@ -736,24 +553,24 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   /**
    * The assertion content that is common to field and property (getter), the specific content part is handled
    * afterwards.
-   * 
+   *
    * @param fieldOrProperty
    * @return the base assertion content
    */
   private String baseAssertionContentFor(DataDescription fieldOrProperty, ClassDescription classDescription) {
-	String assertionContent = hasAssertionTemplate.getContent();
+	String assertionContent = templateRegistry.getTemplate(Type.HAS).getContent();
 	if (fieldOrProperty.isPredicate()) {
-	  assertionContent = isAssertionTemplate.getContent();
+	  assertionContent = templateRegistry.getTemplate(Type.IS).getContent();
 	} else if (fieldOrProperty.isIterableType()) {
-	  assertionContent = replace(hasIterableElementsAssertionTemplate.getContent(), ELEMENT_TYPE,
+	  assertionContent = replace(templateRegistry.getTemplate(Type.HAS_FOR_ITERABLE).getContent(), ELEMENT_TYPE,
 		                         fieldOrProperty.getElementTypeName(classDescription.getPackageName()));
 	} else if (fieldOrProperty.isArrayType()) {
-	  assertionContent = replace(hasArrayElementsAssertionTemplate.getContent(), ELEMENT_TYPE,
+	  assertionContent = replace(templateRegistry.getTemplate(Type.HAS_FOR_ARRAY).getContent(), ELEMENT_TYPE,
 		                         fieldOrProperty.getElementTypeName(classDescription.getPackageName()));
 	} else if (fieldOrProperty.isRealNumberType()) {
-	  assertionContent = hasAssertionTemplateForRealNumber.getContent();
+	  assertionContent = templateRegistry.getTemplate(Type.HAS_FOR_REAL_NUMBER).getContent();
 	} else if (fieldOrProperty.isPrimitiveType()) {
-	  assertionContent = hasAssertionTemplateForPrimitive.getContent();
+	  assertionContent = templateRegistry.getTemplate(Type.HAS_FOR_PRIMITIVE).getContent();
 	}
 	return assertionContent;
   }

@@ -12,17 +12,18 @@
  */
 package org.assertj.assertions.generator.description;
 
-import static org.apache.commons.lang3.StringUtils.remove;
-import static org.assertj.assertions.generator.util.ClassUtil.getNegativePredicateFor;
-import static org.assertj.assertions.generator.util.ClassUtil.getPredicatePrefix;
-import static org.assertj.assertions.generator.util.StringUtil.camelCaseToWords;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Ordering;
+import com.google.common.primitives.Ints;
 
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Ordering;
-import com.google.common.primitives.Ints;
+import static org.apache.commons.lang3.StringUtils.remove;
+import static org.apache.commons.lang3.StringUtils.removeStart;
+import static org.assertj.assertions.generator.util.ClassUtil.getNegativePredicateFor;
+import static org.assertj.assertions.generator.util.ClassUtil.getPredicatePrefix;
+import static org.assertj.assertions.generator.util.StringUtil.camelCaseToWords;
 
 /**
  * base class to describe a field or a property/getter
@@ -188,7 +189,7 @@ public abstract class DataDescription {
     for (String predicatePrefix : prefixesSortedByBiggerLength) {
       if (originalMember.startsWith(predicatePrefix)) {
         // get rid of prefix
-        String propertyName = remove(originalMember, predicatePrefix);
+        String propertyName = removeStart(originalMember, predicatePrefix);
         // make it human readable
         return camelCaseToWords(propertyName);
       }

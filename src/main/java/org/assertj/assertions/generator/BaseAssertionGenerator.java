@@ -130,22 +130,21 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   public String[] generateHierarchicalCustomAssertionContentFor(ClassDescription classDescription,
 	                                                            Set<Class<?>> allClasses) {
 	// use class template first
-	StringBuilder abstractAssertClassContentBuilder = new StringBuilder(templateRegistry.getTemplate(Type.ABSTRACT_ASSERT_CLASS).getContent());
 
-	// generate assertion method for each property with a public getter
-	abstractAssertClassContentBuilder.append(generateAssertionsForDeclaredGettersOf(classDescription));
-	abstractAssertClassContentBuilder.append(generateAssertionsForDeclaredPublicFieldsOf(classDescription));
+      // generate assertion method for each property with a public getter
 
-	// close class with }
-	abstractAssertClassContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
+      // close class with }
 
-	// use class template first
-	StringBuilder concreteAssertClassContentBuilder = new StringBuilder(templateRegistry.getTemplate(Type.HIERARCHICAL_ASSERT_CLASS).getContent());
+      // use class template first
 
-	String[] assertionClassesContent = new String[2];
-	assertionClassesContent[0] = fillAssertClassTemplate(abstractAssertClassContentBuilder.toString(),
+      String[] assertionClassesContent = new String[2];
+	assertionClassesContent[0] = fillAssertClassTemplate(
+      templateRegistry.getTemplate(Type.ABSTRACT_ASSERT_CLASS).getContent() + generateAssertionsForDeclaredGettersOf(
+          classDescription) + generateAssertionsForDeclaredPublicFieldsOf(classDescription) + LINE_SEPARATOR + "}"
+      + LINE_SEPARATOR,
 	                                                     classDescription, allClasses, false);
-	assertionClassesContent[1] = fillAssertClassTemplate(concreteAssertClassContentBuilder.toString(),
+	assertionClassesContent[1] = fillAssertClassTemplate(
+      templateRegistry.getTemplate(Type.HIERARCHICAL_ASSERT_CLASS).getContent(),
 	                                                     classDescription, null, true);
 	return assertionClassesContent;
   }
@@ -196,16 +195,14 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   public String generateCustomAssertionContentFor(ClassDescription classDescription) {
 
 	// use class template first
-	StringBuilder assertionFileContentBuilder = new StringBuilder(templateRegistry.getTemplate(ASSERT_CLASS).getContent());
 
-	// generate assertion method for each property with a public getter
-	assertionFileContentBuilder.append(generateAssertionsForGettersOf(classDescription));
-	assertionFileContentBuilder.append(generateAssertionsForPublicFieldsOf(classDescription));
+      // generate assertion method for each property with a public getter
 
-	// close class with }
-	assertionFileContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
+      // close class with }
 
-	return fillAssertClassTemplate(assertionFileContentBuilder.toString(), classDescription);
+      return fillAssertClassTemplate(
+          templateRegistry.getTemplate(ASSERT_CLASS).getContent() + generateAssertionsForGettersOf(classDescription)
+          + generateAssertionsForPublicFieldsOf(classDescription) + LINE_SEPARATOR + "}" + LINE_SEPARATOR, classDescription);
   }
 
   @Override
@@ -511,9 +508,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 		"volatile",
 		"while",
 	};
-	for (String keyword : keywords) {
-	  JAVA_KEYWORDS.add(keyword);
-	}
+      Collections.addAll(JAVA_KEYWORDS, keywords);
   }
 
   static private final String getSafeProperty(String unsafe) {
@@ -619,19 +614,6 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	file.createNewFile();
 	fillFile(fileContent, file);
 	return file;
-  }
-
-  private static void checkTemplateParameter(Template assertionClassTemplate, Type templateType) {
-	if (assertionClassTemplate == null) {
-	  throw new NullPointerException("Expecting a non null Template");
-	}
-	if (templateType != assertionClassTemplate.getType()) {
-	  throw new IllegalArgumentException("Expecting a Template type to be '" + templateType + "' but was '"
-		                                 + assertionClassTemplate.getType() + "'");
-	}
-	if (assertionClassTemplate.getContent() == null) {
-	  throw new NullPointerException("Expecting a non null content in the Template");
-	}
   }
 
   private static boolean noClassDescriptionsGiven(final Set<ClassDescription> classDescriptionSet) {

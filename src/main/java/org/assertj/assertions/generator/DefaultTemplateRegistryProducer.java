@@ -1,6 +1,7 @@
 package org.assertj.assertions.generator;
 
 import java.io.File;
+import java.io.IOException;
 
 import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
 
@@ -31,7 +32,7 @@ public class DefaultTemplateRegistryProducer {
     static final String DEFAULT_BDD_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE = "bdd_assertions_entry_point_class_template.txt";
     static final String DEFAULT_BDD_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE = "bdd_assertion_entry_point_method_template.txt";
 
-    public static TemplateRegistry create(String templateDirectory) {
+    public static TemplateRegistry create(String templateDirectory) throws IOException {
         TemplateRegistry templateRegistry = new TemplateRegistry();
         templateRegistry.register(new Template(ASSERT_CLASS,
                                                new File(templateDirectory, DEFAULT_CUSTOM_ASSERTION_CLASS_TEMPLATE)));

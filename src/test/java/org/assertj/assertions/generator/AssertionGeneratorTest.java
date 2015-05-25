@@ -22,7 +22,6 @@ import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
 import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClassNotSeparatedByDots;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
 import java.io.File;
 import java.io.IOException;
@@ -201,18 +200,6 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   @Test
-  public void should_check_template_type() throws Exception {
-	BaseAssertionGenerator assertionGenerator = new BaseAssertionGenerator();
-	assertionGenerator.setHasAssertionTemplate(new Template(Template.Type.HAS, "template content"));
-	try {
-	  assertionGenerator.setHasAssertionTemplate(new Template(Template.Type.IS, "template content"));
-	  failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-	} catch (IllegalArgumentException e) {
-	  assertThat(e).hasMessage("Expecting a Template type to be 'HAS' but was 'IS'");
-	}
-  }
-
-  @Test
   public void should_generate_assertion_for_classes_using_type_with_same_name() throws IOException {
 	Class<?> clazz = ClassUsingDifferentClassesWithSameName.class;
 	assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(clazz));
@@ -220,12 +207,14 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 	                           "ClassUsingDifferentClassesWithSameName.expected.txt");
   }
 
-  private static void assertGeneratedAssertClass(Class<?> clazz, String expectedAssertFile) {
-	assertThat(fileGeneratedFor(clazz)).hasContentEqualTo(new File("src/test/resources/" + expectedAssertFile).getAbsoluteFile());
+  static void assertGeneratedAssertClass(Class<?> clazz, String expectedAssertFile) {
+    File expectedFile = new File("src/test/resources/" + expectedAssertFile).getAbsoluteFile();
+    assertThat(fileGeneratedFor(clazz)).hasSameContentAs(expectedFile);
   }
 
   private static void assertAbstractGeneratedAssertClass(Class<?> clazz, String expectedAssertFile) {
-	assertThat(abstractFileGeneratedFor(clazz)).hasContentEqualTo(new File("src/test/resources/" + expectedAssertFile).getAbsoluteFile());
+    File expectedFile = new File("src/test/resources/" + expectedAssertFile).getAbsoluteFile();
+    assertThat(abstractFileGeneratedFor(clazz)).hasSameContentAs(expectedFile);
   }
 
   private static String expectedContentFromTemplate(Class<?> clazz, String fileTemplate) throws IOException {

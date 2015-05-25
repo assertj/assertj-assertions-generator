@@ -32,6 +32,7 @@ public class Player {
   private int reboundsPerGame;
   private String team;
   private float size;
+  private boolean isDisabled;
   private List<Player> teamMates = new ArrayList<Player>();
   private List<int[]> points = new ArrayList<int[]>();
   private String[] previousTeams = {};
@@ -41,7 +42,15 @@ public class Player {
     setTeam(team);
   }
 
-  public Name getName() {
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    public void setDisabled(boolean isDisabled) {
+        this.isDisabled = isDisabled;
+    }
+
+    public Name getName() {
     return name;
   }
 

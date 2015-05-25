@@ -420,6 +420,42 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
   
 
   /**
+   * Verifies that the actual Player is disabled.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player is not disabled.
+   */
+  public PlayerAssert isDisabled() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check
+    if (!actual.isDisabled()) {
+      failWithMessage("\nExpecting that actual Player is disabled but is not.");
+    }
+    
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player is not disabled.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player is disabled.
+   */
+  public PlayerAssert isNotDisabled() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check
+    if (actual.isDisabled()) {
+      failWithMessage("\nExpecting that actual Player is not disabled but is.");
+    }
+    
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Player is rookie.
    * @return this assertion object.
    * @throws AssertionError - if the actual Player is not rookie.

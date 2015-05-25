@@ -50,7 +50,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
 	assertThat(classDescription.getClassName()).isEqualTo("Player");
 	assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Player");
 	assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.nba");
-	assertThat(classDescription.getGettersDescriptions()).hasSize(10);
+    assertThat(classDescription.getGettersDescriptions()).hasSize(11);
   }
 
   @Test
@@ -243,7 +243,8 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   class ClassOverridingGetter implements InterfaceWithGetter {
-	public ArrayList<String> getMyList() {
+	@Override
+  public ArrayList<String> getMyList() {
 	  return null;
 	}
   }

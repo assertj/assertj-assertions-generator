@@ -12,7 +12,7 @@
  */
 package org.assertj.assertions.generator.description;
 
-import static org.apache.commons.lang3.StringUtils.remove;
+import static org.apache.commons.lang3.StringUtils.removeStart;
 import static org.assertj.assertions.generator.util.ClassUtil.getNegativePredicateFor;
 import static org.assertj.assertions.generator.util.ClassUtil.getPredicatePrefix;
 import static org.assertj.assertions.generator.util.StringUtil.camelCaseToWords;
@@ -188,7 +188,7 @@ public abstract class DataDescription {
     for (String predicatePrefix : prefixesSortedByBiggerLength) {
       if (originalMember.startsWith(predicatePrefix)) {
         // get rid of prefix
-        String propertyName = remove(originalMember, predicatePrefix);
+        String propertyName = removeStart(originalMember, predicatePrefix);
         // make it human readable
         return camelCaseToWords(propertyName);
       }

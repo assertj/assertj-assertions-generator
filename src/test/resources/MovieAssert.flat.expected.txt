@@ -174,7 +174,7 @@ public class MovieAssert extends AbstractAssert<MovieAssert, Movie> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Movie's rating is not close enough to the given value.
    */
-  public MovieAssert hasRating(double rating, double offset) {
+  public MovieAssert hasCloseToRating(double rating, double offset) {
     // check that actual Movie we want to make assertions on is not null.
     isNotNull();
 

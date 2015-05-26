@@ -213,7 +213,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Keywords's byte is not close enough to the given value.
    */
-  public KeywordsAssert hasByte(Byte expectedByte, Byte offset) {
+  public KeywordsAssert hasCloseToByte(Byte expectedByte, Byte offset) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
@@ -548,7 +548,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Keywords's double is not close enough to the given value.
    */
-  public KeywordsAssert hasDouble(double expectedDouble, double offset) {
+  public KeywordsAssert hasCloseToDouble(double expectedDouble, double offset) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
@@ -735,7 +735,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Keywords's float is not close enough to the given value.
    */
-  public KeywordsAssert hasFloat(float expectedFloat, float offset) {
+  public KeywordsAssert hasCloseToFloat(float expectedFloat, float offset) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
@@ -925,7 +925,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
    * @throws AssertionError - if the actual Keywords's int is not close enough to the given value.
    * @throws java.io.IOException if actual.getInt() throws one.
    */
-  public KeywordsAssert hasInt(int expectedInt, int offset) throws java.io.IOException {
+  public KeywordsAssert hasCloseToInt(int expectedInt, int offset) throws java.io.IOException {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
@@ -997,7 +997,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Keywords's long is not close enough to the given value.
    */
-  public KeywordsAssert hasLong(long expectedLong, long offset) {
+  public KeywordsAssert hasCloseToLong(long expectedLong, long offset) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
@@ -1230,7 +1230,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Keywords's short is not close enough to the given value.
    */
-  public KeywordsAssert hasShort(short expectedShort, short offset) {
+  public KeywordsAssert hasCloseToShort(short expectedShort, short offset) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 

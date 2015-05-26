@@ -356,7 +356,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Team's rank is not close enough to the given value.
    */
-  public TeamAssert hasRank(int rank, int offset) {
+  public TeamAssert hasCloseToRank(int rank, int offset) {
     // check that actual Team we want to make assertions on is not null.
     isNotNull();
 
@@ -405,7 +405,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Team's victoryRatio is not close enough to the given value.
    */
-  public TeamAssert hasVictoryRatio(double victoryRatio, double offset) {
+  public TeamAssert hasCloseToVictoryRatio(double victoryRatio, double offset) {
     // check that actual Team we want to make assertions on is not null.
     isNotNull();
 

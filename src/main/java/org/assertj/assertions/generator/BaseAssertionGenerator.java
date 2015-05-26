@@ -23,12 +23,7 @@ import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.assertj.assertions.generator.Template.Type;
 import org.assertj.assertions.generator.description.ClassDescription;
@@ -620,4 +615,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 	return classDescriptionSet == null || classDescriptionSet.isEmpty();
   }
 
+    @Override
+    public void register(Template template) {
+        templateRegistry.register(template);
+    }
 }

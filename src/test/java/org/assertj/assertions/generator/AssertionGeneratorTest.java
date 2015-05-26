@@ -208,7 +208,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 	                           "ClassUsingDifferentClassesWithSameName.expected.txt");
   }
 
-  private static void assertGeneratedAssertClass(Class<?> clazz, String expectedAssertFile) {
+  static void assertGeneratedAssertClass(Class<?> clazz, String expectedAssertFile) {
 	assertThat(fileGeneratedFor(clazz)).hasContentEqualTo(new File("src/test/resources/" + expectedAssertFile).getAbsoluteFile());
   }
 

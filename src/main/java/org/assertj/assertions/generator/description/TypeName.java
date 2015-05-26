@@ -38,8 +38,8 @@ public class TypeName implements Comparable<TypeName> {
   private static final String NO_PACKAGE = "";
   public static final String JAVA_LANG_PACKAGE = "java.lang";
   protected static final String[] PRIMITIVE_TYPES = { "int", "long", "short", "byte", "float", "double", "char", BOOLEAN };
-  protected static final String[] REAL_NUMBERS_TYPES = { "float", "double"};
-  protected static final String[] REAL_NUMBERS_WRAPPER_TYPES = { "Float", "Double" };
+  protected static final String[] NUMBERS_TYPES = { "float", "double", "int", "long", "short", "byte"};
+  protected static final String[] NUMBERS_WRAPPER_TYPES = { "Float", "Double", "Integer", "Long", "Short", "Byte" };
 
   private String typeSimpleName;
   private String typeSimpleNameWithOuterClass;
@@ -107,16 +107,16 @@ public class TypeName implements Comparable<TypeName> {
     return contains(PRIMITIVE_TYPES, typeSimpleName) && isEmpty(packageName);
   }
 
-  public boolean isRealNumber() {
-    return isPrimitiveRealNumber() || isRealNumberWrapper();
+  public boolean isNumber() {
+    return isPrimitiveNumber() || isNumberWrapper();
   }
 
-  private boolean isPrimitiveRealNumber() {
-    return contains(REAL_NUMBERS_TYPES, typeSimpleName) && isEmpty(packageName);
+  private boolean isPrimitiveNumber() {
+    return contains(NUMBERS_TYPES, typeSimpleName) && isEmpty(packageName);
   }
   
-  private boolean isRealNumberWrapper() {
-    return contains(REAL_NUMBERS_WRAPPER_TYPES, typeSimpleName) && JAVA_LANG_PACKAGE.equals(packageName);
+  private boolean isNumberWrapper() {
+    return contains(NUMBERS_WRAPPER_TYPES, typeSimpleName) && JAVA_LANG_PACKAGE.equals(packageName);
   }
   
   public boolean isBoolean() {

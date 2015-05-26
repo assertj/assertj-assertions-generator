@@ -38,22 +38,38 @@ public class FieldDescriptionTest {
   }
 
   @Test
-  public void should_detect_real_number_correctly() throws Exception {
+  public void should_detect_number_correctly() throws Exception {
     fieldDescription = new FieldDescription("double", new TypeDescription(new TypeName(double.class)));
-    assertThat(fieldDescription.isRealNumberType()).as("double").isTrue();
+    assertThat(fieldDescription.isNumberType()).as("double").isTrue();
     fieldDescription = new FieldDescription("Double", new TypeDescription(new TypeName(Double.class)));
-    assertThat(fieldDescription.isRealNumberType()).as("Double").isTrue();
+    assertThat(fieldDescription.isNumberType()).as("Double").isTrue();
     fieldDescription = new FieldDescription("float", new TypeDescription(new TypeName(float.class)));
-    assertThat(fieldDescription.isRealNumberType()).as("float").isTrue();
+    assertThat(fieldDescription.isNumberType()).as("float").isTrue();
     fieldDescription = new FieldDescription("Float", new TypeDescription(new TypeName(Float.class)));
-    assertThat(fieldDescription.isRealNumberType()).as("Float").isTrue();
-    // not real number types
+    assertThat(fieldDescription.isNumberType()).as("Float").isTrue();
     fieldDescription = new FieldDescription("int", new TypeDescription(new TypeName(int.class)));
-    assertThat(fieldDescription.isRealNumberType()).as("int").isFalse();
+    assertThat(fieldDescription.isNumberType()).as("int").isTrue();
     fieldDescription = new FieldDescription("Integer", new TypeDescription(new TypeName(Integer.class)));
-    assertThat(fieldDescription.isRealNumberType()).as("Integer").isFalse();
+    assertThat(fieldDescription.isNumberType()).as("Integer").isTrue();
+
+      fieldDescription = new FieldDescription("long", new TypeDescription(new TypeName(long.class)));
+      assertThat(fieldDescription.isNumberType()).as("long").isTrue();
+      fieldDescription = new FieldDescription("Long", new TypeDescription(new TypeName(Long.class)));
+      assertThat(fieldDescription.isNumberType()).as("Long").isTrue();
+
+      fieldDescription = new FieldDescription("short", new TypeDescription(new TypeName(short.class)));
+      assertThat(fieldDescription.isNumberType()).as("short").isTrue();
+      fieldDescription = new FieldDescription("Short", new TypeDescription(new TypeName(Short.class)));
+      assertThat(fieldDescription.isNumberType()).as("Short").isTrue();
+
+      fieldDescription = new FieldDescription("byte", new TypeDescription(new TypeName(byte.class)));
+      assertThat(fieldDescription.isNumberType()).as("byte").isTrue();
+      fieldDescription = new FieldDescription("Byte", new TypeDescription(new TypeName(Byte.class)));
+      assertThat(fieldDescription.isNumberType()).as("Byte").isTrue();
+
+    // not number types
     fieldDescription = new FieldDescription("String", new TypeDescription(new TypeName(String.class)));
-    assertThat(fieldDescription.isRealNumberType()).as("String").isFalse();
+    assertThat(fieldDescription.isNumberType()).as("String").isFalse();
   }
   
   @Test

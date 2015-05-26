@@ -120,8 +120,8 @@ public abstract class DataDescription {
     return typeDescription.isPrimitive();
   }
 
-  public boolean isRealNumberType() {
-    return typeDescription.isRealNumber();
+  public boolean isNumberType() {
+    return typeDescription.isNumber();
   }
 
   public abstract boolean isPredicate();

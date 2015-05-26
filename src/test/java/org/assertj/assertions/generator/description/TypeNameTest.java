@@ -81,7 +81,7 @@ public class TypeNameTest implements NestedClassesTest {
     assertThat(typeName.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isFalse();
-    assertThat(typeName.isRealNumber()).isFalse();
+    assertThat(typeName.isNumber()).isFalse();
     assertThat(typeName.isNested()).isFalse();
     assertThat(typeName.getOuterClassTypeName()).isNull();
   }
@@ -95,7 +95,7 @@ public class TypeNameTest implements NestedClassesTest {
     assertThat(typeName.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isFalse();
-    assertThat(typeName.isRealNumber()).isFalse();
+    assertThat(typeName.isNumber()).isFalse();
     assertThat(typeName.isNested()).isTrue();
     assertThat(typeName.getOuterClassTypeName()).isEqualTo(new TypeName("org.assertj.assertions.generator.data.Player"));
   }
@@ -152,19 +152,19 @@ public class TypeNameTest implements NestedClassesTest {
   }
 
   @Test
-  public void should_detect_real_numbers_typename() {
-    assertThat(new TypeName(int.class).isRealNumber()).isFalse();
-    assertThat(new TypeName(long.class).isRealNumber()).isFalse();
-    assertThat(new TypeName(short.class).isRealNumber()).isFalse();
-    assertThat(new TypeName(boolean.class).isRealNumber()).isFalse();
-    assertThat(new TypeName(char.class).isRealNumber()).isFalse();
-    assertThat(new TypeName(byte.class).isRealNumber()).isFalse();
-    assertThat(new TypeName(float.class).isRealNumber()).isTrue();
-    assertThat(new TypeName(Float.class).isRealNumber()).isTrue();
-    assertThat(new TypeName(double.class).isRealNumber()).isTrue();
-    assertThat(new TypeName(Double.class).isRealNumber()).isTrue();
-    assertThat(new TypeName(String.class).isRealNumber()).isFalse();
-    assertThat(new TypeName("test.Double").isRealNumber()).isFalse();
+  public void should_detect_numbers_typename() {
+    assertThat(new TypeName(int.class).isNumber()).isTrue();
+    assertThat(new TypeName(long.class).isNumber()).isTrue();
+    assertThat(new TypeName(short.class).isNumber()).isTrue();
+    assertThat(new TypeName(boolean.class).isNumber()).isFalse();
+    assertThat(new TypeName(char.class).isNumber()).isFalse();
+    assertThat(new TypeName(byte.class).isNumber()).isTrue();
+    assertThat(new TypeName(float.class).isNumber()).isTrue();
+    assertThat(new TypeName(Float.class).isNumber()).isTrue();
+    assertThat(new TypeName(double.class).isNumber()).isTrue();
+    assertThat(new TypeName(Double.class).isNumber()).isTrue();
+    assertThat(new TypeName(String.class).isNumber()).isFalse();
+    assertThat(new TypeName("test.Double").isNumber()).isFalse();
   }
 
   @Test

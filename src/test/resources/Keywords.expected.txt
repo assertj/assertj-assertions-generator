@@ -182,23 +182,49 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   
 
   /**
-   * Verifies that the actual Keywords's byte is equal to the given one.
-   * @param expectedByte the given byte to compare the actual Keywords's byte to.
+     * Verifies that the actual Keywords's byte is equal to the given one.
+     * @param expectedByte the given byte to compare the actual Keywords's byte to.
+     * @return this assertion object.
+     * @throws AssertionError - if the actual Keywords's byte is not equal to the given one.
+     */
+    public KeywordsAssert hasByte(Byte expectedByte) {
+      // check that actual Keywords we want to make assertions on is not null.
+      isNotNull();
+
+      // overrides the default error message with a more explicit one
+      String assertjErrorMessage = "\nExpecting byte of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+      // check
+      Byte actualByte = actual.getByte();
+      if (actualByte != expectedByte) {
+        failWithMessage(assertjErrorMessage, actual, expectedByte, actualByte);
+      }
+
+      // return the current assertion for method chaining
+      return this;
+    }
+
+  /**
+   * Verifies that the actual Keywords's byte is close to the given value by less than the given offset.
+   * <p>
+   * If difference is equal to the offset value, assertion is considered successful.
+   * @param expectedByte the value to compare the actual Keywords's byte to.
+   * @param offset the given offset.
    * @return this assertion object.
-   * @throws AssertionError - if the actual Keywords's byte is not equal to the given one.
+   * @throws AssertionError - if the actual Keywords's byte is not close enough to the given value.
    */
-  public KeywordsAssert hasByte(Byte expectedByte) {
+  public KeywordsAssert hasCloseToByte(Byte expectedByte, Byte offset) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
-    // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting byte of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
-    // null safe check
     Byte actualByte = actual.getByte();
-    if (!Objects.areEqual(actualByte, expectedByte)) {
-      failWithMessage(assertjErrorMessage, actual, expectedByte, actualByte);
-    }
+    
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = String.format("\nExpecting byte:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+                                               actualByte, expectedByte, offset, Math.abs(expectedByte - actualByte));
+    
+    // check
+    Assertions.assertThat(actualByte).overridingErrorMessage(assertjErrorMessage).isCloseTo(expectedByte, Assertions.within(offset));
 
     // return the current assertion for method chaining
     return this;
@@ -491,6 +517,29 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
+     * Verifies that the actual Keywords's double is equal to the given one.
+     * @param expectedDouble the given double to compare the actual Keywords's double to.
+     * @return this assertion object.
+     * @throws AssertionError - if the actual Keywords's double is not equal to the given one.
+     */
+    public KeywordsAssert hasDouble(double expectedDouble) {
+      // check that actual Keywords we want to make assertions on is not null.
+      isNotNull();
+
+      // overrides the default error message with a more explicit one
+      String assertjErrorMessage = "\nExpecting double of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+      // check
+      double actualDouble = actual.getDouble();
+      if (actualDouble != expectedDouble) {
+        failWithMessage(assertjErrorMessage, actual, expectedDouble, actualDouble);
+      }
+
+      // return the current assertion for method chaining
+      return this;
+    }
+
+  /**
    * Verifies that the actual Keywords's double is close to the given value by less than the given offset.
    * <p>
    * If difference is equal to the offset value, assertion is considered successful.
@@ -499,7 +548,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Keywords's double is not close enough to the given value.
    */
-  public KeywordsAssert hasDouble(double expectedDouble, double offset) {
+  public KeywordsAssert hasCloseToDouble(double expectedDouble, double offset) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
@@ -655,6 +704,29 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
+     * Verifies that the actual Keywords's float is equal to the given one.
+     * @param expectedFloat the given float to compare the actual Keywords's float to.
+     * @return this assertion object.
+     * @throws AssertionError - if the actual Keywords's float is not equal to the given one.
+     */
+    public KeywordsAssert hasFloat(float expectedFloat) {
+      // check that actual Keywords we want to make assertions on is not null.
+      isNotNull();
+
+      // overrides the default error message with a more explicit one
+      String assertjErrorMessage = "\nExpecting float of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+      // check
+      float actualFloat = actual.getFloat();
+      if (actualFloat != expectedFloat) {
+        failWithMessage(assertjErrorMessage, actual, expectedFloat, actualFloat);
+      }
+
+      // return the current assertion for method chaining
+      return this;
+    }
+
+  /**
    * Verifies that the actual Keywords's float is close to the given value by less than the given offset.
    * <p>
    * If difference is equal to the offset value, assertion is considered successful.
@@ -663,7 +735,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Keywords's float is not close enough to the given value.
    */
-  public KeywordsAssert hasFloat(float expectedFloat, float offset) {
+  public KeywordsAssert hasCloseToFloat(float expectedFloat, float offset) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
@@ -820,24 +892,51 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
-   * Verifies that the actual Keywords's int is equal to the given one.
-   * @param expectedInt the given int to compare the actual Keywords's int to.
+     * Verifies that the actual Keywords's int is equal to the given one.
+     * @param expectedInt the given int to compare the actual Keywords's int to.
+     * @return this assertion object.
+     * @throws AssertionError - if the actual Keywords's int is not equal to the given one.
+   * @throws java.io.IOException if actual.getInt() throws one.
+     */
+    public KeywordsAssert hasInt(int expectedInt) throws java.io.IOException {
+      // check that actual Keywords we want to make assertions on is not null.
+      isNotNull();
+
+      // overrides the default error message with a more explicit one
+      String assertjErrorMessage = "\nExpecting int of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+      // check
+      int actualInt = actual.getInt();
+      if (actualInt != expectedInt) {
+        failWithMessage(assertjErrorMessage, actual, expectedInt, actualInt);
+      }
+
+      // return the current assertion for method chaining
+      return this;
+    }
+
+  /**
+   * Verifies that the actual Keywords's int is close to the given value by less than the given offset.
+   * <p>
+   * If difference is equal to the offset value, assertion is considered successful.
+   * @param expectedInt the value to compare the actual Keywords's int to.
+   * @param offset the given offset.
    * @return this assertion object.
-   * @throws AssertionError - if the actual Keywords's int is not equal to the given one.
+   * @throws AssertionError - if the actual Keywords's int is not close enough to the given value.
    * @throws java.io.IOException if actual.getInt() throws one.
    */
-  public KeywordsAssert hasInt(int expectedInt) throws java.io.IOException {
+  public KeywordsAssert hasCloseToInt(int expectedInt, int offset) throws java.io.IOException {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
+    int actualInt = actual.getInt();
+    
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting int of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = String.format("\nExpecting int:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+                                               actualInt, expectedInt, offset, Math.abs(expectedInt - actualInt));
     
     // check
-    int actualInt = actual.getInt();
-    if (actualInt != expectedInt) {
-      failWithMessage(assertjErrorMessage, actual, expectedInt, actualInt);
-    }
+    Assertions.assertThat(actualInt).overridingErrorMessage(assertjErrorMessage).isCloseTo(expectedInt, Assertions.within(offset));
 
     // return the current assertion for method chaining
     return this;
@@ -867,23 +966,49 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
-   * Verifies that the actual Keywords's long is equal to the given one.
-   * @param expectedLong the given long to compare the actual Keywords's long to.
+     * Verifies that the actual Keywords's long is equal to the given one.
+     * @param expectedLong the given long to compare the actual Keywords's long to.
+     * @return this assertion object.
+     * @throws AssertionError - if the actual Keywords's long is not equal to the given one.
+     */
+    public KeywordsAssert hasLong(long expectedLong) {
+      // check that actual Keywords we want to make assertions on is not null.
+      isNotNull();
+
+      // overrides the default error message with a more explicit one
+      String assertjErrorMessage = "\nExpecting long of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+      // check
+      long actualLong = actual.getLong();
+      if (actualLong != expectedLong) {
+        failWithMessage(assertjErrorMessage, actual, expectedLong, actualLong);
+      }
+
+      // return the current assertion for method chaining
+      return this;
+    }
+
+  /**
+   * Verifies that the actual Keywords's long is close to the given value by less than the given offset.
+   * <p>
+   * If difference is equal to the offset value, assertion is considered successful.
+   * @param expectedLong the value to compare the actual Keywords's long to.
+   * @param offset the given offset.
    * @return this assertion object.
-   * @throws AssertionError - if the actual Keywords's long is not equal to the given one.
+   * @throws AssertionError - if the actual Keywords's long is not close enough to the given value.
    */
-  public KeywordsAssert hasLong(long expectedLong) {
+  public KeywordsAssert hasCloseToLong(long expectedLong, long offset) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
+    long actualLong = actual.getLong();
+    
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting long of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = String.format("\nExpecting long:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+                                               actualLong, expectedLong, offset, Math.abs(expectedLong - actualLong));
     
     // check
-    long actualLong = actual.getLong();
-    if (actualLong != expectedLong) {
-      failWithMessage(assertjErrorMessage, actual, expectedLong, actualLong);
-    }
+    Assertions.assertThat(actualLong).overridingErrorMessage(assertjErrorMessage).isCloseTo(expectedLong, Assertions.within(offset));
 
     // return the current assertion for method chaining
     return this;
@@ -1074,23 +1199,49 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
-   * Verifies that the actual Keywords's short is equal to the given one.
-   * @param expectedShort the given short to compare the actual Keywords's short to.
+     * Verifies that the actual Keywords's short is equal to the given one.
+     * @param expectedShort the given short to compare the actual Keywords's short to.
+     * @return this assertion object.
+     * @throws AssertionError - if the actual Keywords's short is not equal to the given one.
+     */
+    public KeywordsAssert hasShort(short expectedShort) {
+      // check that actual Keywords we want to make assertions on is not null.
+      isNotNull();
+
+      // overrides the default error message with a more explicit one
+      String assertjErrorMessage = "\nExpecting short of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+      // check
+      short actualShort = actual.getShort();
+      if (actualShort != expectedShort) {
+        failWithMessage(assertjErrorMessage, actual, expectedShort, actualShort);
+      }
+
+      // return the current assertion for method chaining
+      return this;
+    }
+
+  /**
+   * Verifies that the actual Keywords's short is close to the given value by less than the given offset.
+   * <p>
+   * If difference is equal to the offset value, assertion is considered successful.
+   * @param expectedShort the value to compare the actual Keywords's short to.
+   * @param offset the given offset.
    * @return this assertion object.
-   * @throws AssertionError - if the actual Keywords's short is not equal to the given one.
+   * @throws AssertionError - if the actual Keywords's short is not close enough to the given value.
    */
-  public KeywordsAssert hasShort(short expectedShort) {
+  public KeywordsAssert hasCloseToShort(short expectedShort, short offset) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
+    short actualShort = actual.getShort();
+    
     // overrides the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting short of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+    String assertjErrorMessage = String.format("\nExpecting short:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+                                               actualShort, expectedShort, offset, Math.abs(expectedShort - actualShort));
     
     // check
-    short actualShort = actual.getShort();
-    if (actualShort != expectedShort) {
-      failWithMessage(assertjErrorMessage, actual, expectedShort, actualShort);
-    }
+    Assertions.assertThat(actualShort).overridingErrorMessage(assertjErrorMessage).isCloseTo(expectedShort, Assertions.within(offset));
 
     // return the current assertion for method chaining
     return this;

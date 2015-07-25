@@ -201,18 +201,6 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   @Test
-  public void should_check_template_type() throws Exception {
-	BaseAssertionGenerator assertionGenerator = new BaseAssertionGenerator();
-	assertionGenerator.setHasAssertionTemplate(new Template(Template.Type.HAS, "template content"));
-	try {
-	  assertionGenerator.setHasAssertionTemplate(new Template(Template.Type.IS, "template content"));
-	  failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-	} catch (IllegalArgumentException e) {
-	  assertThat(e).hasMessage("Expecting a Template type to be 'HAS' but was 'IS'");
-	}
-  }
-
-  @Test
   public void should_generate_assertion_for_classes_using_type_with_same_name() throws IOException {
 	Class<?> clazz = ClassUsingDifferentClassesWithSameName.class;
 	assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(clazz));
@@ -220,7 +208,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 	                           "ClassUsingDifferentClassesWithSameName.expected.txt");
   }
 
-  private static void assertGeneratedAssertClass(Class<?> clazz, String expectedAssertFile) {
+  static void assertGeneratedAssertClass(Class<?> clazz, String expectedAssertFile) {
 	assertThat(fileGeneratedFor(clazz)).hasContentEqualTo(new File("src/test/resources/" + expectedAssertFile).getAbsoluteFile());
   }
 

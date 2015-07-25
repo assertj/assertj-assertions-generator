@@ -242,4 +242,12 @@ public interface AssertionGenerator {
    */
   String[] generateHierarchicalCustomAssertionContentFor(ClassDescription classDescription, Set<Class<?>> allClasses);
 
+    /**
+     * Registers a template in the internal TemplateRegistry so that customers can override default templates.
+     *
+     * @param template
+     * @throws java.lang.NullPointerException if template is null
+     * @throws java.lang.NullPointerException if template.getContent is null
+     */
+  void register(Template template);
 }

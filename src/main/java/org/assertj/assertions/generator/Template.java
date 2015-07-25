@@ -145,7 +145,24 @@ public class Template {
     }
   }
 
-  public enum Type {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Template template = (Template) o;
+
+        if (type != template.type) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return type.hashCode();
+    }
+
+    public enum Type {
     IS, HAS_FOR_ARRAY, HAS_FOR_ITERABLE, HAS, HAS_FOR_PRIMITIVE, ASSERT_CLASS, HIERARCHICAL_ASSERT_CLASS, ABSTRACT_ASSERT_CLASS, ASSERTIONS_ENTRY_POINT_CLASS, ASSERTION_ENTRY_POINT, SOFT_ASSERTIONS_ENTRY_POINT_CLASS, JUNIT_SOFT_ASSERTIONS_ENTRY_POINT_CLASS, SOFT_ENTRY_POINT_METHOD_ASSERTION, BDD_ASSERTIONS_ENTRY_POINT_CLASS, BDD_ENTRY_POINT_METHOD_ASSERTION, HAS_FOR_REAL_NUMBER;
   }
 

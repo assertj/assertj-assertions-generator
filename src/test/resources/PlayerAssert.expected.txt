@@ -288,6 +288,29 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
   }
 
   /**
+   * Verifies that the actual Player's size is equal to the given one.
+   * @param size the given size to compare the actual Player's size to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's size is not equal to the given one.
+   */
+  public PlayerAssert hasSize(float size) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting size of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+    // check
+    float actualSize = actual.getSize();
+    if (actualSize != size) {
+      failWithMessage(assertjErrorMessage, actual, size, actualSize);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Player's size is close to the given value by less than the given offset.
    * <p>
    * If difference is equal to the offset value, assertion is considered successful.
@@ -296,7 +319,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Player's size is not close enough to the given value.
    */
-  public PlayerAssert hasSize(float size, float offset) {
+  public PlayerAssert hasSizeCloseTo(float size, float offset) {
     // check that actual Player we want to make assertions on is not null.
     isNotNull();
 

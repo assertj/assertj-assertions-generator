@@ -491,6 +491,29 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
+   * Verifies that the actual Keywords's double is equal to the given one.
+   * @param expectedDouble the given double to compare the actual Keywords's double to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's double is not equal to the given one.
+   */
+  public KeywordsAssert hasDouble(double expectedDouble) {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting double of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+    // check
+    double actualDouble = actual.getDouble();
+    if (actualDouble != expectedDouble) {
+      failWithMessage(assertjErrorMessage, actual, expectedDouble, actualDouble);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Keywords's double is close to the given value by less than the given offset.
    * <p>
    * If difference is equal to the offset value, assertion is considered successful.
@@ -499,7 +522,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Keywords's double is not close enough to the given value.
    */
-  public KeywordsAssert hasDouble(double expectedDouble, double offset) {
+  public KeywordsAssert hasDoubleCloseTo(double expectedDouble, double offset) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
@@ -655,6 +678,29 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
+   * Verifies that the actual Keywords's float is equal to the given one.
+   * @param expectedFloat the given float to compare the actual Keywords's float to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's float is not equal to the given one.
+   */
+  public KeywordsAssert hasFloat(float expectedFloat) {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting float of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+    // check
+    float actualFloat = actual.getFloat();
+    if (actualFloat != expectedFloat) {
+      failWithMessage(assertjErrorMessage, actual, expectedFloat, actualFloat);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Keywords's float is close to the given value by less than the given offset.
    * <p>
    * If difference is equal to the offset value, assertion is considered successful.
@@ -663,7 +709,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
    * @return this assertion object.
    * @throws AssertionError - if the actual Keywords's float is not close enough to the given value.
    */
-  public KeywordsAssert hasFloat(float expectedFloat, float offset) {
+  public KeywordsAssert hasFloatCloseTo(float expectedFloat, float offset) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 

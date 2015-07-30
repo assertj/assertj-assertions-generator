@@ -19,6 +19,7 @@ import java.util.List;
  * This is a class whose properties clash with Java keywords.
  */
 public class Keywords {
+  @SuppressWarnings("unused")
   public String getAbstract() throws java.io.IOException {
 	return null;
   }
@@ -53,6 +54,8 @@ public class Keywords {
   public String getContinue() {
 	return null;
   }
+
+  @SuppressWarnings("unused")
   public List<String> getDefault() throws IOException {
 	return null;
   }
@@ -83,6 +86,8 @@ public class Keywords {
   public float getFloat() {
 	return 1.0f;
   }
+
+  @SuppressWarnings("unused")
   public Object getFor() throws IOException {
 	return null;
   }
@@ -101,6 +106,8 @@ public class Keywords {
   public Object getInstanceof() {
 	return null;
   }
+
+  @SuppressWarnings("unused")
   public int getInt() throws IOException {
 	return 1;
   }
@@ -149,6 +156,8 @@ public class Keywords {
   public Object getSynchronized() {
 	return null;
   }
+
+  @SuppressWarnings("unused")
   public String[] getSwitch() throws IOException {
 	return null;
   }

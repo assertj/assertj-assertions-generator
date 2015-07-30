@@ -42,6 +42,7 @@ import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.Name;
 import org.assertj.assertions.generator.data.OuterClass;
 import org.assertj.assertions.generator.data.OuterClass.StaticNestedPerson;
+import org.assertj.assertions.generator.data.Primitives;
 import org.assertj.assertions.generator.data.Team;
 import org.assertj.assertions.generator.data.TreeEnum;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
@@ -71,7 +72,7 @@ public class ClassUtilTest implements NestedClassesTest {
   }
 
   @Test
-  public void should_get_classes_in_package_and_subpackages() throws ClassNotFoundException {
+  public void should_get_classes_in_package_and_subpackages() {
     Set<Class<?>> classesInPackage = collectClasses("org.assertj.assertions.generator.data");
     assertThat(classesInPackage).contains(Player.class, PlayerAgent.class, ArtWork.class, Name.class, Movie.class,
                                           Movie.PublicCategory.class, Ring.class, Race.class,
@@ -90,14 +91,14 @@ public class ClassUtilTest implements NestedClassesTest {
   }
 
   @Test
-  public void should_get_classes_with_provided_class_loader() throws ClassNotFoundException {
+  public void should_get_classes_with_provided_class_loader() {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     Set<Class<?>> classesInPackage = collectClasses(classLoader, "org.assertj.assertions.generator.data");
     assertThat(classesInPackage).contains(Player.class, ArtWork.class, Name.class, Movie.class, Ring.class, Race.class);
   }
 
   @Test
-  public void should_return_empty_collection_if_package_does_not_exist() throws ClassNotFoundException {
+  public void should_return_empty_collection_if_package_does_not_exist() {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     assertThat(collectClasses(classLoader, "fakepackage")).isEmpty();
     assertThat(collectClasses("fakepackage")).isEmpty();
@@ -132,6 +133,8 @@ public class ClassUtilTest implements NestedClassesTest {
   @Test
   public void should_return_true_if_method_is_a_boolean_getter() throws Exception {
     assertThat(isPredicate(Player.class.getMethod("isRookie", NO_PARAMS))).isTrue();
+    assertThat(isPredicate(Primitives.class.getMethod("isBoolean", NO_PARAMS))).isTrue();
+    assertThat(isPredicate(Primitives.class.getMethod("isBooleanWrapper", NO_PARAMS))).isTrue();
   }
 
   @Test

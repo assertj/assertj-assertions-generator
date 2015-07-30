@@ -50,9 +50,9 @@ public class AssertionGeneratorOverrideTemplateTest {
 
   @Test
   public void should_generate_assertion_with_custom_template() throws IOException {
-    assertionGenerator.register(new Template(Template.Type.HAS_FOR_PRIMITIVE,
+    assertionGenerator.register(new Template(Template.Type.HAS_FOR_WHOLE_NUMBER,
                                              new File("customtemplates" + File.separator,
-                                                      "custom_has_assertion_template_for_primitive.txt")));
+                                                      "custom_has_assertion_template_for_whole_number.txt")));
 
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Car.class));
     assertGeneratedAssertClass(Car.class, "CarAssert.expected.txt");

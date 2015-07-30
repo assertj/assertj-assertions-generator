@@ -73,7 +73,7 @@ public class ClassUtil {
    * Call {@link #collectClasses(ClassLoader, String...)} with <code>Thread.currentThread().getContextClassLoader()
    * </code>
    */
-  public static Set<Class<?>> collectClasses(String... classOrPackageNames) throws ClassNotFoundException {
+  public static Set<Class<?>> collectClasses(String... classOrPackageNames) {
     return collectClasses(Thread.currentThread().getContextClassLoader(), classOrPackageNames);
   }
 
@@ -272,7 +272,7 @@ public class ClassUtil {
 
   public static boolean isPredicate(Method method) {
     return isValidPredicateName(method.getName())
-           && Boolean.TYPE.equals(method.getReturnType())
+           && (Boolean.TYPE.equals(method.getReturnType()) || Boolean.class.equals(method.getReturnType()))
            && method.getParameterTypes().length == 0;
   }
 

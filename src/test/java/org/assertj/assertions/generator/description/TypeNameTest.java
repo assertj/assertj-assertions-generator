@@ -82,6 +82,7 @@ public class TypeNameTest implements NestedClassesTest {
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isFalse();
     assertThat(typeName.isRealNumber()).isFalse();
+    assertThat(typeName.isWholeNumber()).isFalse();
     assertThat(typeName.isNested()).isFalse();
     assertThat(typeName.getOuterClassTypeName()).isNull();
   }
@@ -96,6 +97,7 @@ public class TypeNameTest implements NestedClassesTest {
     assertThat(typeName.belongsToJavaLangPackage()).isFalse();
     assertThat(typeName.isPrimitive()).isFalse();
     assertThat(typeName.isRealNumber()).isFalse();
+    assertThat(typeName.isWholeNumber()).isFalse();
     assertThat(typeName.isNested()).isTrue();
     assertThat(typeName.getOuterClassTypeName()).isEqualTo(new TypeName("org.assertj.assertions.generator.data.Player"));
   }
@@ -168,11 +170,63 @@ public class TypeNameTest implements NestedClassesTest {
   }
 
   @Test
+  public void should_detect_whole_numbers_typename() {
+    assertThat(new TypeName(int.class).isWholeNumber()).as("int").isTrue();
+    assertThat(new TypeName(Integer.class).isWholeNumber()).as("Integer").isTrue();
+    assertThat(new TypeName(long.class).isWholeNumber()).as("long").isTrue();
+    assertThat(new TypeName(Long.class).isWholeNumber()).as("Long").isTrue();
+    assertThat(new TypeName(short.class).isWholeNumber()).as("short").isTrue();
+    assertThat(new TypeName(Short.class).isWholeNumber()).as("Short").isTrue();
+    assertThat(new TypeName(byte.class).isWholeNumber()).as("byte").isTrue();
+    assertThat(new TypeName(Byte.class).isWholeNumber()).as("Byte").isTrue();
+    assertThat(new TypeName(boolean.class).isWholeNumber()).isFalse();
+    assertThat(new TypeName(char.class).isWholeNumber()).isFalse();
+    assertThat(new TypeName(float.class).isWholeNumber()).isFalse();
+    assertThat(new TypeName(Float.class).isWholeNumber()).isFalse();
+    assertThat(new TypeName(double.class).isWholeNumber()).isFalse();
+    assertThat(new TypeName(Double.class).isWholeNumber()).isFalse();
+    assertThat(new TypeName(String.class).isWholeNumber()).isFalse();
+    assertThat(new TypeName("test.Integer").isWholeNumber()).isFalse();
+  }
+
+  @Test
   public void should_detect_boolean_typename() {
     assertThat(new TypeName(boolean.class).isBoolean()).isTrue();
+    assertThat(new TypeName(Boolean.class).isBoolean()).isTrue();
     assertThat(new TypeName("boolean").isBoolean()).isTrue();
-    assertThat(new TypeName(char.class).isBoolean()).isFalse();
     assertThat(new TypeName("Boolean").isBoolean()).isFalse();
+    assertThat(new TypeName(char.class).isBoolean()).isFalse();
+  }
+
+  @Test
+  public void should_detect_character_typename() {
+    assertThat(new TypeName(char.class).isChar()).isTrue();
+    assertThat(new TypeName(Character.class).isChar()).isTrue();
+    assertThat(new TypeName("char").isChar()).isTrue();
+    assertThat(new TypeName("Character").isChar()).isFalse();
+    assertThat(new TypeName(int.class).isChar()).isFalse();
+  }
+
+  @Test
+  public void should_detect_primitive_wrapper_typename() {
+    assertThat(new TypeName(Integer.class).isPrimitiveWrapper()).as("Integer").isTrue();
+    assertThat(new TypeName(Long.class).isPrimitiveWrapper()).as("Long").isTrue();
+    assertThat(new TypeName(Short.class).isPrimitiveWrapper()).as("Short").isTrue();
+    assertThat(new TypeName(Byte.class).isPrimitiveWrapper()).as("Byte").isTrue();
+    assertThat(new TypeName(Boolean.class).isPrimitiveWrapper()).isTrue();
+    assertThat(new TypeName(Character.class).isPrimitiveWrapper()).isTrue();
+    assertThat(new TypeName(Float.class).isPrimitiveWrapper()).isTrue();
+    assertThat(new TypeName(Double.class).isPrimitiveWrapper()).isTrue();
+    assertThat(new TypeName(int.class).isPrimitiveWrapper()).as("int").isFalse();
+    assertThat(new TypeName(long.class).isPrimitiveWrapper()).as("long").isFalse();
+    assertThat(new TypeName(short.class).isPrimitiveWrapper()).as("short").isFalse();
+    assertThat(new TypeName(byte.class).isPrimitiveWrapper()).as("byte").isFalse();
+    assertThat(new TypeName(boolean.class).isPrimitiveWrapper()).isFalse();
+    assertThat(new TypeName(char.class).isPrimitiveWrapper()).isFalse();
+    assertThat(new TypeName(float.class).isPrimitiveWrapper()).isFalse();
+    assertThat(new TypeName(double.class).isPrimitiveWrapper()).isFalse();
+    assertThat(new TypeName(String.class).isPrimitiveWrapper()).isFalse();
+    assertThat(new TypeName("test.Integer").isPrimitiveWrapper()).isFalse();
   }
 
   @Test

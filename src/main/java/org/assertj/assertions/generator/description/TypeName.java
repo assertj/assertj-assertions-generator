@@ -27,19 +27,21 @@ import org.assertj.assertions.generator.util.ClassUtil;
  * Describes a type with package and class/interface simple name.
  * <p>
  * {@link TypeName} is immutable.
- * 
- * @author Joel Costigliola
- * 
  */
 public class TypeName implements Comparable<TypeName> {
 
   private static final String CAPITAL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   private static final String BOOLEAN = "boolean";
+  private static final String BOOLEAN_WRAPPER = "Boolean";
+  private static final String CHAR = "char";
+  private static final String CHARRACTER = "Character";
   private static final String NO_PACKAGE = "";
   public static final String JAVA_LANG_PACKAGE = "java.lang";
   protected static final String[] PRIMITIVE_TYPES = { "int", "long", "short", "byte", "float", "double", "char", BOOLEAN };
   protected static final String[] REAL_NUMBERS_TYPES = { "float", "double"};
   protected static final String[] REAL_NUMBERS_WRAPPER_TYPES = { "Float", "Double" };
+  protected static final String[] WHOLE_NUMBERS_TYPES = { "int", "long", "short", "byte" };
+  protected static final String[] WHOLE_NUMBERS_WRAPPER_TYPES = { "Integer", "Long", "Short", "Byte" };
 
   private String typeSimpleName;
   private String typeSimpleNameWithOuterClass;
@@ -47,7 +49,6 @@ public class TypeName implements Comparable<TypeName> {
   private String packageName;
 
   public TypeName(String typeSimpleName, String packageName) {
-    super();
     if (typeSimpleName == null) throw new IllegalArgumentException("type simple name should not be null");
     this.typeSimpleName = typeSimpleName;
     this.typeSimpleNameWithOuterClass = typeSimpleName;
@@ -111,6 +112,9 @@ public class TypeName implements Comparable<TypeName> {
     return isPrimitiveRealNumber() || isRealNumberWrapper();
   }
 
+  public boolean isWholeNumber() {
+    return isPrimitiveWholeNumber() || isWholeNumberWrapper();
+  }
   private boolean isPrimitiveRealNumber() {
     return contains(REAL_NUMBERS_TYPES, typeSimpleName) && isEmpty(packageName);
   }
@@ -118,11 +122,39 @@ public class TypeName implements Comparable<TypeName> {
   private boolean isRealNumberWrapper() {
     return contains(REAL_NUMBERS_WRAPPER_TYPES, typeSimpleName) && JAVA_LANG_PACKAGE.equals(packageName);
   }
+
+  private boolean isPrimitiveWholeNumber() {
+    return contains(WHOLE_NUMBERS_TYPES, typeSimpleName) && isEmpty(packageName);
+  }
   
+  private boolean isWholeNumberWrapper() {
+    return contains(WHOLE_NUMBERS_WRAPPER_TYPES, typeSimpleName) && JAVA_LANG_PACKAGE.equals(packageName);
+  }
+
   public boolean isBoolean() {
+    return isPrimitiveBoolean() || isBooleanWrapper();
+  }
+
+  private boolean isPrimitiveBoolean() {
     return BOOLEAN.equals(typeSimpleName) && isEmpty(packageName);
   }
   
+  private boolean isBooleanWrapper() {
+    return BOOLEAN_WRAPPER.equals(typeSimpleName) && JAVA_LANG_PACKAGE.equals(packageName);
+  }
+
+  public boolean isChar() {
+    return isPrimitiveChar() || isCharacter();
+  }
+
+  private boolean isCharacter() {
+    return CHARRACTER.equals(typeSimpleName) && JAVA_LANG_PACKAGE.equals(packageName);
+  }
+
+  private boolean isPrimitiveChar() {
+    return CHAR.equals(typeSimpleName) && isEmpty(packageName);
+  }
+
   public boolean belongsToJavaLangPackage() {
     return JAVA_LANG_PACKAGE.equals(packageName);
   }
@@ -181,5 +213,9 @@ public class TypeName implements Comparable<TypeName> {
   public String getFullyQualifiedTypeNameIfNeeded(String targetPackage) {
 	return belongsToJavaLangPackage() || equal(targetPackage, packageName) ? getSimpleNameWithOuterClass() : getFullyQualifiedClassName();
   }
-  
+
+  public boolean isPrimitiveWrapper() {
+    return isWholeNumberWrapper() || isRealNumberWrapper() || isBooleanWrapper() || isCharacter();
+  }
+
 }

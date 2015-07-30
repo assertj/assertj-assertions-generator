@@ -78,8 +78,20 @@ public class TypeDescription {
 	return typeName.isRealNumber();
   }
 
+  public boolean isWholeNumber() {
+    return typeName.isWholeNumber();
+  }
+
   public boolean isBoolean() {
 	return typeName.isBoolean();
+  }
+
+  public boolean isChar() {
+    return typeName.isChar();
+  }
+
+  public boolean isPrimitiveWrapper() {
+    return typeName.isPrimitiveWrapper();
   }
 
   public TypeName getElementTypeName() {

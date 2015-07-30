@@ -565,7 +565,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private String baseAssertionContentFor(DataDescription fieldOrProperty, ClassDescription classDescription) {
     String assertionContent = templateRegistry.getTemplate(Type.HAS).getContent();
     if (fieldOrProperty.isPredicate()) {
-      assertionContent = templateRegistry.getTemplate(Type.IS).getContent();
+      Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.IS_WRAPPER : Type.IS;
+      assertionContent = templateRegistry.getTemplate(type).getContent();
     } else if (fieldOrProperty.isIterableType()) {
       assertionContent = replace(templateRegistry.getTemplate(Type.HAS_FOR_ITERABLE).getContent(), ELEMENT_TYPE,
                                  fieldOrProperty.getElementTypeName(classDescription.getPackageName()));
@@ -573,9 +574,20 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       assertionContent = replace(templateRegistry.getTemplate(Type.HAS_FOR_ARRAY).getContent(), ELEMENT_TYPE,
                                  fieldOrProperty.getElementTypeName(classDescription.getPackageName()));
     } else if (fieldOrProperty.isRealNumberType()) {
-      assertionContent = templateRegistry.getTemplate(Type.HAS_FOR_REAL_NUMBER).getContent();
+      Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.HAS_FOR_REAL_NUMBER_WRAPPER
+          : Type.HAS_FOR_REAL_NUMBER;
+      assertionContent = templateRegistry.getTemplate(type).getContent();
+    } else if (fieldOrProperty.isWholeNumberType()) {
+      Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.HAS_FOR_WHOLE_NUMBER_WRAPPER
+          : Type.HAS_FOR_WHOLE_NUMBER;
+      assertionContent = templateRegistry.getTemplate(type).getContent();
+    } else if (fieldOrProperty.isCharType()) {
+      Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.HAS_FOR_CHARACTER : Type.HAS_FOR_CHAR;
+      assertionContent = templateRegistry.getTemplate(type).getContent();
     } else if (fieldOrProperty.isPrimitiveType()) {
-      assertionContent = templateRegistry.getTemplate(Type.HAS_FOR_PRIMITIVE).getContent();
+      // use case : boolean getFoo -> not a predicate, but a primitive type
+      Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.HAS_FOR_PRIMITIVE_WRAPPER : Type.HAS_FOR_PRIMITIVE;
+      assertionContent = templateRegistry.getTemplate(type).getContent();
     }
     return assertionContent;
   }

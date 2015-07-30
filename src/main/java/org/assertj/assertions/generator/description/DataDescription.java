@@ -124,6 +124,18 @@ public abstract class DataDescription {
     return typeDescription.isRealNumber();
   }
 
+  public boolean isWholeNumberType() {
+    return typeDescription.isWholeNumber();
+  }
+
+  public boolean isCharType() {
+    return typeDescription.isChar();
+  }
+
+  public boolean isPrimitiveWrapperType() {
+    return typeDescription.isPrimitiveWrapper();
+  }
+
   public abstract boolean isPredicate();
 
   public String getPredicate() {

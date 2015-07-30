@@ -33,6 +33,7 @@ import org.assertj.assertions.generator.data.BooleanPredicates;
 import org.assertj.assertions.generator.data.FieldPropertyClash;
 import org.assertj.assertions.generator.data.Keywords;
 import org.assertj.assertions.generator.data.Movie;
+import org.assertj.assertions.generator.data.Primitives;
 import org.assertj.assertions.generator.data.Team;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.PlayerAgent;
@@ -101,6 +102,12 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_generate_assertion_for_class_with_predicates() throws Exception {
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(BooleanPredicates.class));
     assertGeneratedAssertClass(BooleanPredicates.class, "BooleanPredicates.expected.txt");
+  }
+
+  @Test
+  public void should_generate_assertion_for_class_with_primitives() throws Exception {
+    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Primitives.class));
+    assertGeneratedAssertClass(Primitives.class, "PrimitivesAssert.expected.txt");
   }
 
   @Test

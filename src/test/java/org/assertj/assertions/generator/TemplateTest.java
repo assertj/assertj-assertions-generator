@@ -26,6 +26,7 @@ import org.junit.Test;
 
 public class TemplateTest {
 
+  @SuppressWarnings("unused")
   @Test
   public void should_throw_an_exception_when_url_is_a_directory() {
     URL templateURL = getClass().getClassLoader().getResource(TEMPLATES_DIR);

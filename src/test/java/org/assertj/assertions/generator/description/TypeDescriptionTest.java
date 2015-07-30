@@ -24,6 +24,7 @@ public class TypeDescriptionTest {
   @Rule
   public ExpectedException thrown = none();
   
+  @SuppressWarnings("unused")
   @Test
   public void should_throw_exception_in_constructor_call_if_typename_parameter_is_null() throws Exception {
     thrown.expect(IllegalArgumentException.class);

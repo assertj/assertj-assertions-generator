@@ -35,7 +35,7 @@ public class CarAssert extends AbstractAssert<CarAssert, Car> {
     // check that actual Car we want to make assertions on is not null.
     isNotNull();
 
-    System.out.println("Hello World");
+    System.out.println("Custom template for whole number");
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting wheelsCount of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";

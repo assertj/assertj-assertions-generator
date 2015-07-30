@@ -37,7 +37,7 @@ public class AssertionGeneratorLauncher {
   private static final Logger logger = LoggerFactory.getLogger(AssertionGeneratorLauncher.class);
   private static ClassToClassDescriptionConverter classDescriptionConverter = new ClassToClassDescriptionConverter();
 
-  public static void main(String[] args) throws IOException, ClassNotFoundException {
+  public static void main(String[] args) throws IOException {
     Options options = new Options();
     options.addOption("H", "hierarchical", false, "Generate a hierarchy of assertions that follows the hierarchy of classes to assert");
     options.addOption("h", "help", false, "Print this help message");

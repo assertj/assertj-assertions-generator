@@ -1,0 +1,48 @@
+// use assertj generator from gradle example
+
+def assertjOutput = file('src-gen/test/java')
+
+configurations {
+    assertj
+}
+
+dependencies {
+    testCompile 'org.assertj:assertj-core:3.2.0'
+
+    assertj 'org.assertj:assertj-assertions-generator:2.0.0'
+    assertj project(':bacsapp:metadata')
+}
+
+sourceSets {
+    test {
+        java {
+            srcDir 'src/test/java'
+            srcDir 'src-gen/test/java'
+        }
+    }
+}
+
+task assertjClean(type: Delete) {
+    delete assertjOutput
+}
+
+task assertjGen(dependsOn: assertjClean, type: JavaExec) {
+    doFirst {
+        if (!assertjOutput.exists()) {
+            logger.info("Creating `$assertjOutput` directory")
+
+            if (!assertjOutput.mkdirs()) {
+                throw new InvalidUserDataException("Unable to create `$assertjOutput` directory")
+            }
+        }
+    }
+
+    main 'org.assertj.assertions.generator.cli.AssertionGeneratorLauncher'
+    classpath = files(configurations.assertj)
+    workingDir = assertjOutput
+    args = [
+            // TODO: instear FQCN or FQPN
+    ]
+}
+
+compileTestJava.dependsOn(assertjGen)

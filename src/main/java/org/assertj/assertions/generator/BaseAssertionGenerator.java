@@ -12,13 +12,12 @@
  */
 package org.assertj.assertions.generator;
 
-import static java.lang.String.format;
-import static org.apache.commons.io.IOUtils.closeQuietly;
-import static org.apache.commons.lang3.StringUtils.capitalize;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.remove;
-import static org.apache.commons.lang3.StringUtils.replace;
-import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
+import org.assertj.assertions.generator.Template.Type;
+import org.assertj.assertions.generator.description.ClassDescription;
+import org.assertj.assertions.generator.description.DataDescription;
+import org.assertj.assertions.generator.description.FieldDescription;
+import org.assertj.assertions.generator.description.GetterDescription;
+import org.assertj.assertions.generator.description.TypeName;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -30,12 +29,13 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.assertj.assertions.generator.Template.Type;
-import org.assertj.assertions.generator.description.ClassDescription;
-import org.assertj.assertions.generator.description.DataDescription;
-import org.assertj.assertions.generator.description.FieldDescription;
-import org.assertj.assertions.generator.description.GetterDescription;
-import org.assertj.assertions.generator.description.TypeName;
+import static java.lang.String.format;
+import static org.apache.commons.io.IOUtils.closeQuietly;
+import static org.apache.commons.lang3.StringUtils.capitalize;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.remove;
+import static org.apache.commons.lang3.StringUtils.replace;
+import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
 
 public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEntryPointGenerator {
 
@@ -110,7 +110,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
   @Override
   public File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription, Set<Class<?>> allClasses)
-      throws IOException {
+                                                                                                                    throws IOException {
 
     // Assertion content
     String[] assertionFileContent = generateHierarchicalCustomAssertionContentFor(classDescription, allClasses);
@@ -565,7 +565,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private String baseAssertionContentFor(DataDescription fieldOrProperty, ClassDescription classDescription) {
     String assertionContent = templateRegistry.getTemplate(Type.HAS).getContent();
     if (fieldOrProperty.isPredicate()) {
-      Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.IS_WRAPPER : Type.IS;
+      Type type = determinePredicateType(fieldOrProperty, classDescription);
       assertionContent = templateRegistry.getTemplate(type).getContent();
     } else if (fieldOrProperty.isIterableType()) {
       assertionContent = replace(templateRegistry.getTemplate(Type.HAS_FOR_ITERABLE).getContent(), ELEMENT_TYPE,
@@ -590,6 +590,26 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       assertionContent = templateRegistry.getTemplate(type).getContent();
     }
     return assertionContent;
+  }
+
+  /**
+   * Determine whether we need to generate negative predicate assertions, for example if the class contains isValid and
+   * isNotValid methods, we must not generate the negative assertion for isValid as it will be done when generating
+   * assertions for isNotValid
+   */
+  private Type determinePredicateType(final DataDescription fieldOrProperty, final ClassDescription classDescription) {
+    if (hasAlreadyNegativePredicate(fieldOrProperty, classDescription)) {
+      return fieldOrProperty.isPrimitiveWrapperType() ? Type.IS_WRAPPER_WITHOUT_NEGATION : Type.IS_WITHOUT_NEGATION;
+    }
+    return fieldOrProperty.isPrimitiveWrapperType() ? Type.IS_WRAPPER : Type.IS;
+  }
+
+  private boolean hasAlreadyNegativePredicate(final DataDescription fieldOrProperty,
+                                              final ClassDescription classDescription) {
+    for (final GetterDescription getterDescription : classDescription.getGettersDescriptions()) {
+      if (getterDescription.getOriginalMember().equals(fieldOrProperty.getNegativePredicate())) return true;
+    }
+    return false;
   }
 
   /**

@@ -22,9 +22,7 @@
  */
 package org.assertj.assertions.generator;
 
-import static java.lang.Thread.currentThread;
-import static org.apache.commons.io.IOUtils.closeQuietly;
-import static org.apache.commons.io.IOUtils.copy;
+import org.apache.commons.lang3.CharEncoding;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +31,9 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLDecoder;
 
-import org.apache.commons.lang3.CharEncoding;
+import static java.lang.Thread.currentThread;
+import static org.apache.commons.io.IOUtils.closeQuietly;
+import static org.apache.commons.io.IOUtils.copy;
 
 /**
  * 
@@ -160,9 +160,11 @@ public class Template {
 
   public enum Type {
     // @format:off
-    IS, 
-    IS_WRAPPER, 
-    HAS, 
+    IS,
+    IS_WITHOUT_NEGATION,
+    IS_WRAPPER,
+    IS_WRAPPER_WITHOUT_NEGATION,
+    HAS,
     HAS_FOR_ARRAY, 
     HAS_FOR_ITERABLE, 
     HAS_FOR_PRIMITIVE, 

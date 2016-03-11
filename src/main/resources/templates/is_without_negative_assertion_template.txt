@@ -1,0 +1,18 @@
+
+  /**
+   * Verifies that the actual ${class_to_assert} ${predicate_for_javadoc}.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ${class_to_assert} ${negative_predicate_for_javadoc}.${throws_javadoc}
+   */
+  public ${self_type} ${predicate}() ${throws}{
+    // check that actual ${class_to_assert} we want to make assertions on is not null.
+    isNotNull();
+
+    // check
+    if (!actual.${predicate}()) {
+      failWithMessage("\nExpecting that actual ${class_to_assert} ${predicate_for_error_message_part1} but ${predicate_for_error_message_part2}.");
+    }
+
+    // return the current assertion for method chaining
+    return ${myself};
+  }

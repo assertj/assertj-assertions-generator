@@ -12,25 +12,10 @@
  */
 package org.assertj.assertions.generator;
 
-import static com.google.common.collect.Sets.newHashSet;
-import static java.lang.reflect.Modifier.isPublic;
-import static org.apache.commons.io.FileUtils.readFileToString;
-import static org.apache.commons.lang3.StringUtils.replace;
-import static org.assertj.assertions.generator.BaseAssertionGenerator.ABSTRACT_ASSERT_CLASS_PREFIX;
-import static org.assertj.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_FILE_SUFFIX;
-import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
-import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
-import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClassNotSeparatedByDots;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Set;
-
 import org.assertj.assertions.generator.data.ArtWork;
 import org.assertj.assertions.generator.data.BooleanPredicates;
 import org.assertj.assertions.generator.data.FieldPropertyClash;
+import org.assertj.assertions.generator.data.InterferencePrimitives;
 import org.assertj.assertions.generator.data.Keywords;
 import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.Primitives;
@@ -46,6 +31,22 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Set;
+
+import static com.google.common.collect.Sets.newHashSet;
+import static java.lang.reflect.Modifier.isPublic;
+import static org.apache.commons.io.FileUtils.readFileToString;
+import static org.apache.commons.lang3.StringUtils.replace;
+import static org.assertj.assertions.generator.BaseAssertionGenerator.ABSTRACT_ASSERT_CLASS_PREFIX;
+import static org.assertj.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_FILE_SUFFIX;
+import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
+import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
+import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClassNotSeparatedByDots;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Theories.class)
 public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExceptionsTest {
@@ -109,6 +110,12 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Primitives.class));
     assertGeneratedAssertClass(Primitives.class, "PrimitivesAssert.expected.txt");
   }
+
+	@Test
+	public void should_generate_assertion_for_class_with_interferenceprimitives() throws Exception {
+		assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(InterferencePrimitives.class));
+		assertGeneratedAssertClass(InterferencePrimitives.class, "InterferencePrimitivesAssert.expected.txt");
+	}
 
   @Test
   public void should_generate_flat_assertion_for_movie_class() throws Exception {

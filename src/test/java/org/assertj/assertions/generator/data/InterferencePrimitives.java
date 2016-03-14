@@ -16,11 +16,21 @@ public class InterferencePrimitives {
 
 	private boolean working;
 
+	private Boolean aBoolean;
+
 	public boolean isWorking() {
 		return working;
 	}
 
 	public boolean isNotWorking() {
 		return !working;
+	}
+
+	public Boolean isABoolean() {
+		return aBoolean;
+	}
+
+	public Boolean isNotABoolean() {
+		return !aBoolean;
 	}
 }

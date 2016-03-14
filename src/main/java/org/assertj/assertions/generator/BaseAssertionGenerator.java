@@ -592,15 +592,14 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     return assertionContent;
   }
 
-	private Type determinePredicateType(final DataDescription fieldOrProperty, final ClassDescription classDescription) {
-		boolean useNoNegativeTemplate = useWithoutNegativeTemplate(fieldOrProperty, classDescription);
-		if (!useNoNegativeTemplate) {
-			return fieldOrProperty.isPrimitiveWrapperType() ? Type.IS_WRAPPER : Type.IS;
-		}
-		else {
-			return fieldOrProperty.isPrimitiveWrapperType() ? Type.IS_WRAPPER_WITHOUT_NEG : Type.IS_WITHOUT_NEG;
-		}
-	}
+  private Type determinePredicateType(final DataDescription fieldOrProperty, final ClassDescription classDescription) {
+    boolean useWithoutNegativeTemplates = useWithoutNegativeTemplate(fieldOrProperty, classDescription);
+    if (useWithoutNegativeTemplates) {
+      return fieldOrProperty.isPrimitiveWrapperType() ? Type.IS_WRAPPER_WITHOUT_NEG : Type.IS_WITHOUT_NEG;
+    } else {
+      return fieldOrProperty.isPrimitiveWrapperType() ? Type.IS_WRAPPER : Type.IS;
+    }
+  }
 
 	private boolean useWithoutNegativeTemplate(final DataDescription fieldOrProperty, final ClassDescription classDescription) {
 		for (final GetterDescription getterDescription : classDescription.getGettersDescriptions()) {

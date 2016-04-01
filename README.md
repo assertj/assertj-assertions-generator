@@ -14,5 +14,3 @@ assertThat(mvp).hasName("Lebron James").hasTeam("Miami Heat");
 ## Documentation
 
 Please have a look at the complete documentation in [**assertj.org assertions generator section**](http://joel-costigliola.github.io/assertj/assertj-assertions-generator.html), including a [**quickstart guide**](http://joel-costigliola.github.io/assertj/assertj-assertions-generator.html#quickstart).
-
-[![Build Status](https://assertj.ci.cloudbees.com/buildStatus/icon?job=assertj-assertions-generator)](https://assertj.ci.cloudbees.com/job/assertj-assertions-generator/)

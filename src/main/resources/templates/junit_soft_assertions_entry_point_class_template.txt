@@ -13,6 +13,7 @@ import org.junit.runners.model.Statement;
  * Entry point for assertions of different data types. Each method in this class is a static factory for the
  * type-specific assertion objects.
  */
+@javax.annotation.Generated(value="assertj-assertions-generator")
 public class JUnitSoftAssertions implements TestRule {
 
   /** Collects error messages of all AssertionErrors thrown by the proxied method. */

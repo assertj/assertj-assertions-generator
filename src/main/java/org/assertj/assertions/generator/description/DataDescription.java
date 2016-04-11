@@ -163,6 +163,10 @@ public abstract class DataDescription {
     return typeDescription.getFullyQualifiedTypeNameIfNeeded(packageName);
   }
 
+  public String getAssertTypeName(String packageName) {
+    return typeDescription.getAssertTypeName(packageName);
+  }
+
   public String getPredicateForJavadoc() {
     String predicatePrefix = getPredicatePrefix(getPredicate());
     return PREDICATE_PREFIXES_FOR_JAVADOC.get(predicatePrefix) + " " + readablePropertyName();

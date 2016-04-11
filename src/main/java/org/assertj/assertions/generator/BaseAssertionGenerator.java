@@ -57,6 +57,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String PROPERTY_WITH_SAFE = "${property_safe}";
   private static final String PACKAGE = "${package}";
   private static final String PROPERTY_TYPE = "${propertyType}";
+  private static final String PROPERTY_SIMPLE_TYPE = "${propertySimpleType}";
+  private static final String PROPERTY_ASSERT_TYPE = "${propertyAssertType}";
   private static final String CLASS_TO_ASSERT = "${class_to_assert}";
   private static final String CUSTOM_ASSERTION_CLASS = "${custom_assertion_class}";
   private static final String SUPER_ASSERTION_CLASS = "${super_assertion_class}";
@@ -450,6 +452,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       assertionContent = replace(assertionContent, PREDICATE_NEG, field.getNegativePredicate());
     }
     assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, fieldNameCap);
+    assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE,
+                               field.getTypeName());
+    assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,
+                               field.getAssertTypeName(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_TYPE,
                                field.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, fieldName);
@@ -547,6 +553,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       assertionContent = replace(assertionContent, PREDICATE_NEG, getter.getNegativePredicate());
     }
     assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(propertyName));
+    assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE,
+                               getter.getTypeName());
+    assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,
+                               getter.getAssertTypeName(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_TYPE,
                                getter.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, propertyName);

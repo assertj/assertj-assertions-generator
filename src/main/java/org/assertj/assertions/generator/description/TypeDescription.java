@@ -120,4 +120,20 @@ public class TypeDescription {
 	return typeName.getFullyQualifiedTypeNameIfNeeded(packageName);
   }
 
+  public String getAssertTypeName(String packageName) {
+    if (typeName == null) {
+      return null;
+    }
+    String fullName = typeName.getFullyQualifiedClassName();
+    if (fullName.startsWith("java.")) {
+      // lets assume the name is an assertj wrapper
+      return "org.assertj.core.api." + typeName.getSimpleName() + "Assert";
+    } else {
+      String prefix = fullName;
+      if (packageName != null && packageName.equals(typeName.getPackageName())) {
+        prefix = typeName.getSimpleName();
+      }
+      return prefix + "Assert";
+    }
+  }
 }

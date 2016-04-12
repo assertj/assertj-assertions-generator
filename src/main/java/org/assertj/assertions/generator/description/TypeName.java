@@ -218,4 +218,17 @@ public class TypeName implements Comparable<TypeName> {
     return isWholeNumberWrapper() || isRealNumberWrapper() || isBooleanWrapper() || isCharacter();
   }
 
+  public String getAssertTypeName(String packageName) {
+    String fullName = getFullyQualifiedClassName();
+    if (fullName.startsWith("java.")) {
+      // lets assume the name is an assertj wrapper
+      return "org.assertj.core.api." + getSimpleName() + "Assert";
+    } else {
+      String prefix = fullName;
+      if (packageName != null && packageName.equals(getPackageName())) {
+        prefix = getSimpleName();
+      }
+      return prefix + "Assert";
+    }
+  }
 }

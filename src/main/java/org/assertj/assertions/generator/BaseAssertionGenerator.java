@@ -65,6 +65,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String SELF_TYPE = "${self_type}";
   private static final String MYSELF = "${myself}";
   private static final String ELEMENT_TYPE = "${elementType}";
+  private static final String ELEMENT_ASSERT_TYPE = "${elementAssertType}";
   private static final String ALL_ASSERTIONS_ENTRY_POINTS = "${all_assertions_entry_points}";
   private static final String IMPORTS = "${imports}";
   private static final String THROWS = "${throws}";
@@ -580,9 +581,13 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     } else if (fieldOrProperty.isIterableType()) {
       assertionContent = replace(templateRegistry.getTemplate(Type.HAS_FOR_ITERABLE).getContent(), ELEMENT_TYPE,
                                  fieldOrProperty.getElementTypeName(classDescription.getPackageName()));
+      assertionContent = replace(assertionContent, ELEMENT_ASSERT_TYPE,
+                                 fieldOrProperty.getElementAssertTypeName(classDescription.getPackageName()));
     } else if (fieldOrProperty.isArrayType()) {
       assertionContent = replace(templateRegistry.getTemplate(Type.HAS_FOR_ARRAY).getContent(), ELEMENT_TYPE,
                                  fieldOrProperty.getElementTypeName(classDescription.getPackageName()));
+      assertionContent = replace(assertionContent, ELEMENT_ASSERT_TYPE,
+                                 fieldOrProperty.getElementAssertTypeName(classDescription.getPackageName()));
     } else if (fieldOrProperty.isRealNumberType()) {
       Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.HAS_FOR_REAL_NUMBER_WRAPPER
           : Type.HAS_FOR_REAL_NUMBER;

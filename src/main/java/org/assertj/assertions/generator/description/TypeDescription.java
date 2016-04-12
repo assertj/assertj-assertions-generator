@@ -124,16 +124,6 @@ public class TypeDescription {
     if (typeName == null) {
       return null;
     }
-    String fullName = typeName.getFullyQualifiedClassName();
-    if (fullName.startsWith("java.")) {
-      // lets assume the name is an assertj wrapper
-      return "org.assertj.core.api." + typeName.getSimpleName() + "Assert";
-    } else {
-      String prefix = fullName;
-      if (packageName != null && packageName.equals(typeName.getPackageName())) {
-        prefix = typeName.getSimpleName();
-      }
-      return prefix + "Assert";
-    }
+    return typeName.getAssertTypeName(packageName);
   }
 }

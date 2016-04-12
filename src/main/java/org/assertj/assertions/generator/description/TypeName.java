@@ -218,4 +218,18 @@ public class TypeName implements Comparable<TypeName> {
     return isWholeNumberWrapper() || isRealNumberWrapper() || isBooleanWrapper() || isCharacter();
   }
 
+  // used to support navigation assertion https://github.com/joel-costigliola/assertj-assertions-generator/issues/67
+  public String getAssertTypeName(String packageName) {
+    String fullName = getFullyQualifiedClassName();
+    if (fullName.startsWith("java.")) {
+      // lets assume the name is an assertj wrapper
+      return "org.assertj.core.api." + getSimpleName() + "Assert";
+    } else {
+      String prefix = fullName;
+      if (packageName != null && packageName.equals(getPackageName())) {
+        prefix = getSimpleName();
+      }
+      return prefix + "Assert";
+    }
+  }
 }

@@ -159,6 +159,12 @@ public abstract class DataDescription {
         : typeDescription.getElementTypeName().getFullyQualifiedTypeNameIfNeeded(packageName);
   }
 
+  public String getElementAssertTypeName(String packageName) {
+    TypeName elementTypeName = typeDescription.getElementTypeName();
+    return elementTypeName == null ? null
+        : elementTypeName.getAssertTypeName(packageName);
+  }
+
   public String getFullyQualifiedTypeNameIfNeeded(String packageName) {
     return typeDescription.getFullyQualifiedTypeNameIfNeeded(packageName);
   }

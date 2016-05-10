@@ -20,7 +20,7 @@
   }
 
   /**
-   * Verifies that the actual ${class_to_assert}'s ${property} contains <b>only<b> the given ${elementType} elements and nothing else in whatever order.
+   * Verifies that the actual ${class_to_assert}'s ${property} contains <b>only</b> the given ${elementType} elements and nothing else in whatever order.
    * @param ${property_safe} the given elements that should be contained in actual ${class_to_assert}'s ${property}.
    * @return this assertion object.
    * @throws AssertionError if the actual ${class_to_assert}'s ${property} does not contain all given ${elementType} elements.${throws_javadoc}

@@ -118,6 +118,29 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     // return the current assertion for method chaining
     return this;
   }
+  
+  /**
+   * Verifies that the actual Keywords's break contains the given Object elements in Collection.
+   * @param expectedBreak the given elements that should be contained in actual Keywords's break.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Keywords's break does not contain all given Object elements.
+   */
+  public KeywordsAssert hasBreak(java.util.Collection<? extends Object> expectedBreak) {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given Object collection is not null.
+    if (expectedBreak == null) {
+      failWithMessage("Expecting break parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContains(info, actual.getBreak(), expectedBreak.toArray());
+
+    // return the current assertion for method chaining
+    return this;
+  }
 
   /**
    * Verifies that the actual Keywords's break contains <b>only</b> the given Object elements and nothing else in whatever order.
@@ -140,6 +163,29 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
+   * Verifies that the actual Keywords's break contains <b>only</b> the given Object elements in Collection and nothing else in whatever order.
+   * @param expectedBreak the given elements that should be contained in actual Keywords's break.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Keywords's break does not contain all given Object elements.
+   */
+  public KeywordsAssert hasOnlyBreak(java.util.Collection<? extends Object> expectedBreak) {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given Object collection is not null.
+    if (expectedBreak == null) {
+      failWithMessage("Expecting break parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.getBreak(), expectedBreak.toArray());
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Keywords's break does not contain the given Object elements.
    *
    * @param expectedBreak the given elements that should not be in actual Keywords's break.
@@ -155,6 +201,30 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Iterables.instance().assertDoesNotContain(info, actual.getBreak(), expectedBreak);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Keywords's break does not contain the given Object elements in Collection.
+   *
+   * @param expectedBreak the given elements that should not be in actual Keywords's break.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Keywords's break contains any given Object elements.
+   */
+  public KeywordsAssert doesNotHaveBreak(java.util.Collection<? extends Object> expectedBreak) {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given Object collection is not null.
+    if (expectedBreak == null) {
+      failWithMessage("Expecting break parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.getBreak(), expectedBreak.toArray());
 
     // return the current assertion for method chaining
     return this;
@@ -401,6 +471,30 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     // return the current assertion for method chaining
     return this;
   }
+  
+  /**
+   * Verifies that the actual Keywords's default contains the given String elements in Collection.
+   * @param expectedDefault the given elements that should be contained in actual Keywords's default.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Keywords's default does not contain all given String elements.
+   * @throws java.io.IOException if actual.getDefault() throws one.
+   */
+  public KeywordsAssert hasDefault(java.util.Collection<? extends String> expectedDefault) throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String collection is not null.
+    if (expectedDefault == null) {
+      failWithMessage("Expecting default parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContains(info, actual.getDefault(), expectedDefault.toArray());
+
+    // return the current assertion for method chaining
+    return this;
+  }
 
   /**
    * Verifies that the actual Keywords's default contains <b>only</b> the given String elements and nothing else in whatever order.
@@ -424,6 +518,30 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
+   * Verifies that the actual Keywords's default contains <b>only</b> the given String elements in Collection and nothing else in whatever order.
+   * @param expectedDefault the given elements that should be contained in actual Keywords's default.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Keywords's default does not contain all given String elements.
+   * @throws java.io.IOException if actual.getDefault() throws one.
+   */
+  public KeywordsAssert hasOnlyDefault(java.util.Collection<? extends String> expectedDefault) throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String collection is not null.
+    if (expectedDefault == null) {
+      failWithMessage("Expecting default parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.getDefault(), expectedDefault.toArray());
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Keywords's default does not contain the given String elements.
    *
    * @param expectedDefault the given elements that should not be in actual Keywords's default.
@@ -440,6 +558,31 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
     
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Iterables.instance().assertDoesNotContain(info, actual.getDefault(), expectedDefault);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Keywords's default does not contain the given String elements in Collection.
+   *
+   * @param expectedDefault the given elements that should not be in actual Keywords's default.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Keywords's default contains any given String elements.
+   * @throws java.io.IOException if actual.getDefault() throws one.
+   */
+  public KeywordsAssert doesNotHaveDefault(java.util.Collection<? extends String> expectedDefault) throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given String collection is not null.
+    if (expectedDefault == null) {
+      failWithMessage("Expecting default parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.getDefault(), expectedDefault.toArray());
 
     // return the current assertion for method chaining
     return this;

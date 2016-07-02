@@ -94,6 +94,29 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     // return the current assertion for method chaining
     return this;
   }
+  
+  /**
+   * Verifies that the actual Player's points contains the given int[] elements in Collection.
+   * @param points the given elements that should be contained in actual Player's points.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's points does not contain all given int[] elements.
+   */
+  public PlayerAssert hasPoints(java.util.Collection<? extends int[]> points) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given int[] collection is not null.
+    if (points == null) {
+      failWithMessage("Expecting points parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContains(info, actual.getPoints(), points.toArray());
+
+    // return the current assertion for method chaining
+    return this;
+  }
 
   /**
    * Verifies that the actual Player's points contains <b>only</b> the given int[] elements and nothing else in whatever order.
@@ -116,6 +139,29 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
   }
 
   /**
+   * Verifies that the actual Player's points contains <b>only</b> the given int[] elements in Collection and nothing else in whatever order.
+   * @param points the given elements that should be contained in actual Player's points.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's points does not contain all given int[] elements.
+   */
+  public PlayerAssert hasOnlyPoints(java.util.Collection<? extends int[]> points) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given int[] collection is not null.
+    if (points == null) {
+      failWithMessage("Expecting points parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.getPoints(), points.toArray());
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Player's points does not contain the given int[] elements.
    *
    * @param points the given elements that should not be in actual Player's points.
@@ -131,6 +177,30 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Iterables.instance().assertDoesNotContain(info, actual.getPoints(), points);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's points does not contain the given int[] elements in Collection.
+   *
+   * @param points the given elements that should not be in actual Player's points.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's points contains any given int[] elements.
+   */
+  public PlayerAssert doesNotHavePoints(java.util.Collection<? extends int[]> points) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given int[] collection is not null.
+    if (points == null) {
+      failWithMessage("Expecting points parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.getPoints(), points.toArray());
 
     // return the current assertion for method chaining
     return this;
@@ -379,6 +449,29 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     // return the current assertion for method chaining
     return this;
   }
+  
+  /**
+   * Verifies that the actual Player's teamMates contains the given Player elements in Collection.
+   * @param teamMates the given elements that should be contained in actual Player's teamMates.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's teamMates does not contain all given Player elements.
+   */
+  public PlayerAssert hasTeamMates(java.util.Collection<? extends Player> teamMates) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given Player collection is not null.
+    if (teamMates == null) {
+      failWithMessage("Expecting teamMates parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContains(info, actual.getTeamMates(), teamMates.toArray());
+
+    // return the current assertion for method chaining
+    return this;
+  }
 
   /**
    * Verifies that the actual Player's teamMates contains <b>only</b> the given Player elements and nothing else in whatever order.
@@ -401,6 +494,29 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
   }
 
   /**
+   * Verifies that the actual Player's teamMates contains <b>only</b> the given Player elements in Collection and nothing else in whatever order.
+   * @param teamMates the given elements that should be contained in actual Player's teamMates.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's teamMates does not contain all given Player elements.
+   */
+  public PlayerAssert hasOnlyTeamMates(java.util.Collection<? extends Player> teamMates) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given Player collection is not null.
+    if (teamMates == null) {
+      failWithMessage("Expecting teamMates parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.getTeamMates(), teamMates.toArray());
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Player's teamMates does not contain the given Player elements.
    *
    * @param teamMates the given elements that should not be in actual Player's teamMates.
@@ -416,6 +532,30 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
     
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Iterables.instance().assertDoesNotContain(info, actual.getTeamMates(), teamMates);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's teamMates does not contain the given Player elements in Collection.
+   *
+   * @param teamMates the given elements that should not be in actual Player's teamMates.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's teamMates contains any given Player elements.
+   */
+  public PlayerAssert doesNotHaveTeamMates(java.util.Collection<? extends Player> teamMates) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given Player collection is not null.
+    if (teamMates == null) {
+      failWithMessage("Expecting teamMates parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.getTeamMates(), teamMates.toArray());
 
     // return the current assertion for method chaining
     return this;

@@ -18,6 +18,29 @@
     // return the current assertion for method chaining
     return ${myself};
   }
+  
+  /**
+   * Verifies that the actual ${class_to_assert}'s ${property} contains the given ${elementType} elements in Collection.
+   * @param ${property_safe} the given elements that should be contained in actual ${class_to_assert}'s ${property}.
+   * @return this assertion object.
+   * @throws AssertionError if the actual ${class_to_assert}'s ${property} does not contain all given ${elementType} elements.${throws_javadoc}
+   */
+  public ${self_type} has${Property}(java.util.Collection<? extends ${elementType}> ${property_safe}) ${throws}{
+    // check that actual ${class_to_assert} we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given ${elementType} collection is not null.
+    if (${property_safe} == null) {
+      failWithMessage("Expecting ${property} parameter not to be null.");
+      return ${myself}; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContains(info, actual.get${Property}(), ${property_safe}.toArray());
+
+    // return the current assertion for method chaining
+    return ${myself};
+  }
 
   /**
    * Verifies that the actual ${class_to_assert}'s ${property} contains <b>only</b> the given ${elementType} elements and nothing else in whatever order.
@@ -40,6 +63,29 @@
   }
 
   /**
+   * Verifies that the actual ${class_to_assert}'s ${property} contains <b>only</b> the given ${elementType} elements in Collection and nothing else in whatever order.
+   * @param ${property_safe} the given elements that should be contained in actual ${class_to_assert}'s ${property}.
+   * @return this assertion object.
+   * @throws AssertionError if the actual ${class_to_assert}'s ${property} does not contain all given ${elementType} elements.${throws_javadoc}
+   */
+  public ${self_type} hasOnly${Property}(java.util.Collection<? extends ${elementType}> ${property_safe}) ${throws}{
+    // check that actual ${class_to_assert} we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given ${elementType} collection is not null.
+    if (${property_safe} == null) {
+      failWithMessage("Expecting ${property} parameter not to be null.");
+      return ${myself}; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.get${Property}(), ${property_safe}.toArray());
+
+    // return the current assertion for method chaining
+    return ${myself};
+  }
+
+  /**
    * Verifies that the actual ${class_to_assert}'s ${property} does not contain the given ${elementType} elements.
    *
    * @param ${property_safe} the given elements that should not be in actual ${class_to_assert}'s ${property}.
@@ -55,6 +101,30 @@
     
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Iterables.instance().assertDoesNotContain(info, actual.get${Property}(), ${property_safe});
+
+    // return the current assertion for method chaining
+    return ${myself};
+  }
+
+  /**
+   * Verifies that the actual ${class_to_assert}'s ${property} does not contain the given ${elementType} elements in Collection.
+   *
+   * @param ${property_safe} the given elements that should not be in actual ${class_to_assert}'s ${property}.
+   * @return this assertion object.
+   * @throws AssertionError if the actual ${class_to_assert}'s ${property} contains any given ${elementType} elements.${throws_javadoc}
+   */
+  public ${self_type} doesNotHave${Property}(java.util.Collection<? extends ${elementType}> ${property_safe}) ${throws}{
+    // check that actual ${class_to_assert} we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given ${elementType} collection is not null.
+    if (${property_safe} == null) {
+      failWithMessage("Expecting ${property} parameter not to be null.");
+      return ${myself}; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+    
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.get${Property}(), ${property_safe}.toArray());
 
     // return the current assertion for method chaining
     return ${myself};

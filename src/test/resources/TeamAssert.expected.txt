@@ -96,7 +96,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
   }
 
   /**
-   * Verifies that the actual Team's oldNames contains <b>only<b> the given String elements and nothing else in whatever order.
+   * Verifies that the actual Team's oldNames contains <b>only</b> the given String elements and nothing else in whatever order.
    * 
    * @param oldNames the given elements that should be contained in actual Team's oldNames.
    * @return this assertion object.
@@ -180,7 +180,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
   }
 
   /**
-   * Verifies that the actual Team's players contains <b>only<b> the given org.assertj.assertions.generator.data.nba.Player elements and nothing else in whatever order.
+   * Verifies that the actual Team's players contains <b>only</b> the given org.assertj.assertions.generator.data.nba.Player elements and nothing else in whatever order.
    * @param players the given elements that should be contained in actual Team's players.
    * @return this assertion object.
    * @throws AssertionError if the actual Team's players does not contain all given org.assertj.assertions.generator.data.nba.Player elements.
@@ -263,7 +263,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
   }
 
   /**
-   * Verifies that the actual Team's points contains <b>only<b> the given int[] elements and nothing else in whatever order.
+   * Verifies that the actual Team's points contains <b>only</b> the given int[] elements and nothing else in whatever order.
    * @param points the given elements that should be contained in actual Team's points.
    * @return this assertion object.
    * @throws AssertionError if the actual Team's points does not contain all given int[] elements.

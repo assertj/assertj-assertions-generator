@@ -96,7 +96,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
   }
 
   /**
-   * Verifies that the actual Player's points contains <b>only<b> the given int[] elements and nothing else in whatever order.
+   * Verifies that the actual Player's points contains <b>only</b> the given int[] elements and nothing else in whatever order.
    * @param points the given elements that should be contained in actual Player's points.
    * @return this assertion object.
    * @throws AssertionError if the actual Player's points does not contain all given int[] elements.
@@ -202,7 +202,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
   }
 
   /**
-   * Verifies that the actual Player's previousTeams contains <b>only<b> the given String elements and nothing else in whatever order.
+   * Verifies that the actual Player's previousTeams contains <b>only</b> the given String elements and nothing else in whatever order.
    * 
    * @param previousTeams the given elements that should be contained in actual Player's previousTeams.
    * @return this assertion object.
@@ -381,7 +381,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
   }
 
   /**
-   * Verifies that the actual Player's teamMates contains <b>only<b> the given Player elements and nothing else in whatever order.
+   * Verifies that the actual Player's teamMates contains <b>only</b> the given Player elements and nothing else in whatever order.
    * @param teamMates the given elements that should be contained in actual Player's teamMates.
    * @return this assertion object.
    * @throws AssertionError if the actual Player's teamMates does not contain all given Player elements.

@@ -120,7 +120,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
-   * Verifies that the actual Keywords's break contains <b>only<b> the given Object elements and nothing else in whatever order.
+   * Verifies that the actual Keywords's break contains <b>only</b> the given Object elements and nothing else in whatever order.
    * @param expectedBreak the given elements that should be contained in actual Keywords's break.
    * @return this assertion object.
    * @throws AssertionError if the actual Keywords's break does not contain all given Object elements.
@@ -226,7 +226,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
-   * Verifies that the actual Keywords's case contains <b>only<b> the given Object elements and nothing else in whatever order.
+   * Verifies that the actual Keywords's case contains <b>only</b> the given Object elements and nothing else in whatever order.
    * 
    * @param expectedCase the given elements that should be contained in actual Keywords's case.
    * @return this assertion object.
@@ -403,7 +403,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
-   * Verifies that the actual Keywords's default contains <b>only<b> the given String elements and nothing else in whatever order.
+   * Verifies that the actual Keywords's default contains <b>only</b> the given String elements and nothing else in whatever order.
    * @param expectedDefault the given elements that should be contained in actual Keywords's default.
    * @return this assertion object.
    * @throws AssertionError if the actual Keywords's default does not contain all given String elements.
@@ -1234,7 +1234,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
   }
 
   /**
-   * Verifies that the actual Keywords's switch contains <b>only<b> the given String elements and nothing else in whatever order.
+   * Verifies that the actual Keywords's switch contains <b>only</b> the given String elements and nothing else in whatever order.
    * 
    * @param expectedSwitch the given elements that should be contained in actual Keywords's switch.
    * @return this assertion object.

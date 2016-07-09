@@ -104,7 +104,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // finally create the assertion file, located in its package directory starting from targetBaseDirectory
     String targetDirectory = getDirectoryPathCorrespondingToPackage(classDescription.getPackageName());
     // build any needed directories
-    new File(targetDirectory).mkdirs();
+    buildTargetDirectory(targetDirectory);
     return createFile(assertionFileContent, assertClassNameOf(classDescription) + ".java", targetDirectory);
   }
 
@@ -117,12 +117,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // finally create the assertion file, located in its package directory starting from targetBaseDirectory
     String targetDirectory = getDirectoryPathCorrespondingToPackage(classDescription.getPackageName());
     // build any needed directories
-    new File(targetDirectory).mkdirs();
+    buildTargetDirectory(targetDirectory);
     File[] assertionClassesFile = new File[2];
-    final String concreteAsserClassFileName = assertClassNameOf(classDescription) + ".java";
-    final String abstractAsserClassFileName = abstractAssertClassNameOf(classDescription) + ".java";
-    assertionClassesFile[0] = createFile(assertionFileContent[0], abstractAsserClassFileName, targetDirectory);
-    assertionClassesFile[1] = createFile(assertionFileContent[1], concreteAsserClassFileName, targetDirectory);
+    final String concreteAssertClassFileName = assertClassNameOf(classDescription) + ".java";
+    final String abstractAssertClassFileName = abstractAssertClassNameOf(classDescription) + ".java";
+    assertionClassesFile[0] = createFile(assertionFileContent[0], abstractAssertClassFileName, targetDirectory);
+    assertionClassesFile[1] = createFile(assertionFileContent[1], concreteAssertClassFileName, targetDirectory);
     return assertionClassesFile;
   }
 
@@ -155,7 +155,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
   private String fillAssertClassTemplate(String template, ClassDescription classDescription,
                                          Set<Class<?>> classesHierarchy, boolean concrete) {
-    // Add any AssertJ needed imports only, other types are used with their fully qualifed names to avoid a compilation
+    // Add any AssertJ needed imports only, other types are used with their fully qualified names to avoid a compilation
     // error when two types have the same
     TreeSet<TypeName> assertjImports = new TreeSet<TypeName>();
     if (template.contains("Assertions.")) assertjImports.add(new TypeName("org.assertj.core.api.Assertions"));
@@ -298,7 +298,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
         ? determineBestEntryPointsAssertionsClassPackage(classDescriptionSet) : assertionsClassPackage;
     String assertionsDirectory = getDirectoryPathCorrespondingToPackage(classPackage);
     // build any needed directories
-    new File(assertionsDirectory).mkdirs();
+    buildTargetDirectory(assertionsDirectory);
     return createFile(fileContent, fileName, assertionsDirectory);
   }
 
@@ -641,6 +641,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
   private static boolean noClassDescriptionsGiven(final Set<ClassDescription> classDescriptionSet) {
     return classDescriptionSet == null || classDescriptionSet.isEmpty();
+  }
+
+  private static void buildTargetDirectory(String targetDirectory) {
+    new File(targetDirectory).mkdirs();
   }
 
   @Override

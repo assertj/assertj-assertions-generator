@@ -51,7 +51,7 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
   }
 
   /**
-   * Verifies that the actual BeanWithOneException's arrayPropertyThrowsException contains <b>only<b> the given String elements and nothing else in whatever order.
+   * Verifies that the actual BeanWithOneException's arrayPropertyThrowsException contains <b>only</b> the given String elements and nothing else in whatever order.
    * 
    * @param arrayPropertyThrowsException the given elements that should be contained in actual BeanWithOneException's arrayPropertyThrowsException.
    * @return this assertion object.
@@ -139,7 +139,7 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
   }
 
   /**
-   * Verifies that the actual BeanWithOneException's iterablePropertyThrowsException contains <b>only<b> the given String elements and nothing else in whatever order.
+   * Verifies that the actual BeanWithOneException's iterablePropertyThrowsException contains <b>only</b> the given String elements and nothing else in whatever order.
    * @param iterablePropertyThrowsException the given elements that should be contained in actual BeanWithOneException's iterablePropertyThrowsException.
    * @return this assertion object.
    * @throws AssertionError if the actual BeanWithOneException's iterablePropertyThrowsException does not contain all given String elements.

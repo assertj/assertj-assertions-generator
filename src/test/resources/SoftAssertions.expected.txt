@@ -18,7 +18,7 @@ public class SoftAssertions {
   /** Collects error messages of all AssertionErrors thrown by the proxied method. */
   protected final ErrorCollector collector = new ErrorCollector();
 
-  /** Creates a new </code>{@link SoftAssertions}</code>. */
+  /** Creates a new <code>{@link SoftAssertions}</code>. */
   public SoftAssertions() {
   }
 

@@ -19,7 +19,7 @@
 # ----------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------
-# Fest Assertions generator Start Up Batch script
+# AssertJ Assertions generator Start Up Batch script
 #
 # Required ENV vars:
 # ------------------

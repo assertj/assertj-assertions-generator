@@ -231,7 +231,7 @@ public class ClassUtil {
   }
 
   private static Class<?> loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
-    return Class.forName(className, true, classLoader);
+    return Class.forName(className, false, classLoader);
   }
 
   /**

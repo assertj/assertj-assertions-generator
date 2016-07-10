@@ -57,12 +57,15 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String PROPERTY_WITH_SAFE = "${property_safe}";
   private static final String PACKAGE = "${package}";
   private static final String PROPERTY_TYPE = "${propertyType}";
+  private static final String PROPERTY_SIMPLE_TYPE = "${propertySimpleType}";
+  private static final String PROPERTY_ASSERT_TYPE = "${propertyAssertType}";
   private static final String CLASS_TO_ASSERT = "${class_to_assert}";
   private static final String CUSTOM_ASSERTION_CLASS = "${custom_assertion_class}";
   private static final String SUPER_ASSERTION_CLASS = "${super_assertion_class}";
   private static final String SELF_TYPE = "${self_type}";
   private static final String MYSELF = "${myself}";
   private static final String ELEMENT_TYPE = "${elementType}";
+  private static final String ELEMENT_ASSERT_TYPE = "${elementAssertType}";
   private static final String ALL_ASSERTIONS_ENTRY_POINTS = "${all_assertions_entry_points}";
   private static final String IMPORTS = "${imports}";
   private static final String THROWS = "${throws}";
@@ -451,6 +454,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       assertionContent = replace(assertionContent, PREDICATE_NEG, field.getNegativePredicate());
     }
     assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, fieldNameCap);
+    assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE,
+                               field.getTypeName());
+    assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,
+                               field.getAssertTypeName(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_TYPE,
                                field.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, fieldName);
@@ -548,6 +555,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       assertionContent = replace(assertionContent, PREDICATE_NEG, getter.getNegativePredicate());
     }
     assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(propertyName));
+    assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE,
+                               getter.getTypeName());
+    assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,
+                               getter.getAssertTypeName(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_TYPE,
                                getter.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, propertyName);
@@ -570,9 +581,13 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     } else if (fieldOrProperty.isIterableType()) {
       assertionContent = replace(templateRegistry.getTemplate(Type.HAS_FOR_ITERABLE).getContent(), ELEMENT_TYPE,
                                  fieldOrProperty.getElementTypeName(classDescription.getPackageName()));
+      assertionContent = replace(assertionContent, ELEMENT_ASSERT_TYPE,
+                                 fieldOrProperty.getElementAssertTypeName(classDescription.getPackageName()));
     } else if (fieldOrProperty.isArrayType()) {
       assertionContent = replace(templateRegistry.getTemplate(Type.HAS_FOR_ARRAY).getContent(), ELEMENT_TYPE,
                                  fieldOrProperty.getElementTypeName(classDescription.getPackageName()));
+      assertionContent = replace(assertionContent, ELEMENT_ASSERT_TYPE,
+                                 fieldOrProperty.getElementAssertTypeName(classDescription.getPackageName()));
     } else if (fieldOrProperty.isRealNumberType()) {
       Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.HAS_FOR_REAL_NUMBER_WRAPPER
           : Type.HAS_FOR_REAL_NUMBER;

@@ -120,4 +120,10 @@ public class TypeDescription {
 	return typeName.getFullyQualifiedTypeNameIfNeeded(packageName);
   }
 
+  public String getAssertTypeName(String packageName) {
+    if (typeName == null) {
+      return null;
+    }
+    return typeName.getAssertTypeName(packageName);
+  }
 }

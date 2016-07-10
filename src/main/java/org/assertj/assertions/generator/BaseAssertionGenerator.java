@@ -417,8 +417,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private String assertionContentForField(FieldDescription field, ClassDescription classDescription) {
     final String fieldName = field.getName();
     final String fieldNameCap = capitalize(field.getName());
-    if (classDescription.getGettersDescriptions().contains(
-                                                           new GetterDescription(fieldName, "get" + fieldNameCap,
+    if (classDescription.getGettersDescriptions().contains(new GetterDescription(fieldName, "get" + fieldNameCap,
                                                                                  field.getTypeDescription(),
                                                                                  Collections.<TypeName> emptyList()))) {
       return "";

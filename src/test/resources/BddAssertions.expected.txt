@@ -13,6 +13,7 @@ public class BddAssertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public static org.assertj.assertions.generator.data.ArtWorkAssert then(org.assertj.assertions.generator.data.ArtWork actual) {
     return new org.assertj.assertions.generator.data.ArtWorkAssert(actual);
   }
@@ -23,6 +24,7 @@ public class BddAssertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public static org.assertj.assertions.generator.data.MovieAssert then(org.assertj.assertions.generator.data.Movie actual) {
     return new org.assertj.assertions.generator.data.MovieAssert(actual);
   }
@@ -33,6 +35,7 @@ public class BddAssertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public static org.assertj.assertions.generator.data.MoviePublicCategoryAssert then(org.assertj.assertions.generator.data.Movie.PublicCategory actual) {
     return new org.assertj.assertions.generator.data.MoviePublicCategoryAssert(actual);
   }
@@ -43,6 +46,7 @@ public class BddAssertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public static org.assertj.assertions.generator.data.NameAssert then(org.assertj.assertions.generator.data.Name actual) {
     return new org.assertj.assertions.generator.data.NameAssert(actual);
   }
@@ -53,6 +57,7 @@ public class BddAssertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public static org.assertj.assertions.generator.data.TreeEnumAssert then(org.assertj.assertions.generator.data.TreeEnum actual) {
     return new org.assertj.assertions.generator.data.TreeEnumAssert(actual);
   }
@@ -63,6 +68,7 @@ public class BddAssertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public static org.assertj.assertions.generator.data.lotr.RaceAssert then(org.assertj.assertions.generator.data.lotr.Race actual) {
     return new org.assertj.assertions.generator.data.lotr.RaceAssert(actual);
   }
@@ -73,6 +79,7 @@ public class BddAssertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public static org.assertj.assertions.generator.data.lotr.RingAssert then(org.assertj.assertions.generator.data.lotr.Ring actual) {
     return new org.assertj.assertions.generator.data.lotr.RingAssert(actual);
   }
@@ -83,6 +90,7 @@ public class BddAssertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public static org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert then(org.assertj.assertions.generator.data.lotr.TolkienCharacter actual) {
     return new org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert(actual);
   }
@@ -93,6 +101,7 @@ public class BddAssertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public static org.assertj.assertions.generator.data.nba.PlayerAssert then(org.assertj.assertions.generator.data.nba.Player actual) {
     return new org.assertj.assertions.generator.data.nba.PlayerAssert(actual);
   }

@@ -22,6 +22,7 @@ public class CarAssert extends AbstractAssert<CarAssert, Car> {
    * @param actual the Car we want to make assertions on.
    * @return a new <code>{@link CarAssert}</code>
    */
+  @org.assertj.core.util.CheckReturnValue
   public static CarAssert assertThat(Car actual) {
     return new CarAssert(actual);
   }

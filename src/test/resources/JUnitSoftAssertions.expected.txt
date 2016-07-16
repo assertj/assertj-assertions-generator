@@ -22,6 +22,7 @@ public class JUnitSoftAssertions extends org.assertj.core.api.JUnitSoftAssertion
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public org.assertj.assertions.generator.data.ArtWorkAssert assertThat(org.assertj.assertions.generator.data.ArtWork actual) {
     return proxy(org.assertj.assertions.generator.data.ArtWorkAssert.class, org.assertj.assertions.generator.data.ArtWork.class, actual);
   }
@@ -32,6 +33,7 @@ public class JUnitSoftAssertions extends org.assertj.core.api.JUnitSoftAssertion
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public org.assertj.assertions.generator.data.MovieAssert assertThat(org.assertj.assertions.generator.data.Movie actual) {
     return proxy(org.assertj.assertions.generator.data.MovieAssert.class, org.assertj.assertions.generator.data.Movie.class, actual);
   }
@@ -42,6 +44,7 @@ public class JUnitSoftAssertions extends org.assertj.core.api.JUnitSoftAssertion
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public org.assertj.assertions.generator.data.MoviePublicCategoryAssert assertThat(org.assertj.assertions.generator.data.Movie.PublicCategory actual) {
     return proxy(org.assertj.assertions.generator.data.MoviePublicCategoryAssert.class, org.assertj.assertions.generator.data.Movie.PublicCategory.class, actual);
   }
@@ -52,6 +55,7 @@ public class JUnitSoftAssertions extends org.assertj.core.api.JUnitSoftAssertion
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public org.assertj.assertions.generator.data.NameAssert assertThat(org.assertj.assertions.generator.data.Name actual) {
     return proxy(org.assertj.assertions.generator.data.NameAssert.class, org.assertj.assertions.generator.data.Name.class, actual);
   }
@@ -62,6 +66,7 @@ public class JUnitSoftAssertions extends org.assertj.core.api.JUnitSoftAssertion
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public org.assertj.assertions.generator.data.TreeEnumAssert assertThat(org.assertj.assertions.generator.data.TreeEnum actual) {
     return proxy(org.assertj.assertions.generator.data.TreeEnumAssert.class, org.assertj.assertions.generator.data.TreeEnum.class, actual);
   }
@@ -72,6 +77,7 @@ public class JUnitSoftAssertions extends org.assertj.core.api.JUnitSoftAssertion
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public org.assertj.assertions.generator.data.lotr.RaceAssert assertThat(org.assertj.assertions.generator.data.lotr.Race actual) {
     return proxy(org.assertj.assertions.generator.data.lotr.RaceAssert.class, org.assertj.assertions.generator.data.lotr.Race.class, actual);
   }
@@ -82,6 +88,7 @@ public class JUnitSoftAssertions extends org.assertj.core.api.JUnitSoftAssertion
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public org.assertj.assertions.generator.data.lotr.RingAssert assertThat(org.assertj.assertions.generator.data.lotr.Ring actual) {
     return proxy(org.assertj.assertions.generator.data.lotr.RingAssert.class, org.assertj.assertions.generator.data.lotr.Ring.class, actual);
   }
@@ -92,6 +99,7 @@ public class JUnitSoftAssertions extends org.assertj.core.api.JUnitSoftAssertion
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert assertThat(org.assertj.assertions.generator.data.lotr.TolkienCharacter actual) {
     return proxy(org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert.class, org.assertj.assertions.generator.data.lotr.TolkienCharacter.class, actual);
   }
@@ -102,6 +110,7 @@ public class JUnitSoftAssertions extends org.assertj.core.api.JUnitSoftAssertion
    * @param actual the actual value.
    * @return the created "soft" assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public org.assertj.assertions.generator.data.nba.PlayerAssert assertThat(org.assertj.assertions.generator.data.nba.Player actual) {
     return proxy(org.assertj.assertions.generator.data.nba.PlayerAssert.class, org.assertj.assertions.generator.data.nba.Player.class, actual);
   }

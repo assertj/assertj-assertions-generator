@@ -25,6 +25,7 @@ public class BeanWithOneExceptionAssert extends AbstractAssert<BeanWithOneExcept
    * @param actual the BeanWithOneException we want to make assertions on.
    * @return a new <code>{@link BeanWithOneExceptionAssert}</code>
    */
+  @org.assertj.core.util.CheckReturnValue
   public static BeanWithOneExceptionAssert assertThat(BeanWithOneException actual) {
     return new BeanWithOneExceptionAssert(actual);
   }

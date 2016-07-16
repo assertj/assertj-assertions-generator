@@ -13,6 +13,7 @@ public class Assertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public static org.assertj.assertions.generator.data.TeamAssert assertThat(org.assertj.assertions.generator.data.Team actual) {
     return new org.assertj.assertions.generator.data.TeamAssert(actual);
   }
@@ -23,6 +24,7 @@ public class Assertions {
    * @param actual the actual value.
    * @return the created assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public static org.assertj.assertions.generator.data.nba.TeamAssert assertThat(org.assertj.assertions.generator.data.nba.Team actual) {
     return new org.assertj.assertions.generator.data.nba.TeamAssert(actual);
   }

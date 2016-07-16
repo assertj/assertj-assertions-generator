@@ -25,6 +25,7 @@ public class KeywordsAssert extends AbstractAssert<KeywordsAssert, Keywords> {
    * @param actual the Keywords we want to make assertions on.
    * @return a new <code>{@link KeywordsAssert}</code>
    */
+  @org.assertj.core.util.CheckReturnValue
   public static KeywordsAssert assertThat(Keywords actual) {
     return new KeywordsAssert(actual);
   }

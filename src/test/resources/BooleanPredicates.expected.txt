@@ -22,6 +22,7 @@ public class BooleanPredicatesAssert extends AbstractAssert<BooleanPredicatesAss
    * @param actual the BooleanPredicates we want to make assertions on.
    * @return a new <code>{@link BooleanPredicatesAssert}</code>
    */
+  @org.assertj.core.util.CheckReturnValue
   public static BooleanPredicatesAssert assertThat(BooleanPredicates actual) {
     return new BooleanPredicatesAssert(actual);
   }

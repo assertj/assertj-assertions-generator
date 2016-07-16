@@ -25,6 +25,7 @@ public class PlayerAssert extends AbstractAssert<PlayerAssert, Player> {
    * @param actual the Player we want to make assertions on.
    * @return a new <code>{@link PlayerAssert}</code>
    */
+  @org.assertj.core.util.CheckReturnValue
   public static PlayerAssert assertThat(Player actual) {
     return new PlayerAssert(actual);
   }

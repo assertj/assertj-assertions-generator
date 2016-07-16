@@ -23,6 +23,7 @@ public class PlayerAgentAssert extends AbstractAssert<PlayerAgentAssert, PlayerA
    * @param actual the PlayerAgent we want to make assertions on.
    * @return a new <code>{@link PlayerAgentAssert}</code>
    */
+  @org.assertj.core.util.CheckReturnValue
   public static PlayerAgentAssert assertThat(PlayerAgent actual) {
     return new PlayerAgentAssert(actual);
   }

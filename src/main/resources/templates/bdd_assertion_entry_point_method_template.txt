@@ -4,6 +4,7 @@
    * @param actual the actual value.
    * @return the created assertion object.
    */
+  @org.assertj.core.util.CheckReturnValue
   public static ${custom_assertion_class} then(${class_to_assert} actual) {
     return new ${custom_assertion_class}(actual);
   }

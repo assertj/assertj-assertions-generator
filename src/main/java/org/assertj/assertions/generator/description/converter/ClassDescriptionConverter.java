@@ -29,6 +29,6 @@ public interface ClassDescriptionConverter<T> {
    * @param instance to convert to a {@link ClassDescription} instance.
    * @return the {@link ClassDescription} instance from given T instance.
    */
-  public ClassDescription convertToClassDescription(T instance);
+  ClassDescription convertToClassDescription(T instance);
   
 }

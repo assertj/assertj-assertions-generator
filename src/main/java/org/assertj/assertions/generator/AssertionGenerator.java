@@ -52,10 +52,10 @@ public interface AssertionGenerator {
    * <pre>
    * import static java.lang.String.format;
    *
-   * import org.assertj.core.api.AbstractAssert;
+   * import org.assertj.core.api.AbstractObjectAssert;
    * import org.assertj.core.api.Assertions;
    *
-   * public class RaceAssert extends AbstractAssert<RaceAssert, Race> {
+   * public class RaceAssert extends AbstractObjectAssert<RaceAssert, Race> {
    *
    *   public RaceAssert(Race actual) {
    *     super(actual, RaceAssert.class);
@@ -118,7 +118,7 @@ public interface AssertionGenerator {
    * 
    * If the <code>classDescription</code> has a supertype with a known assertion class, then the generated abstract
    * assertion class will inherit from the superclass' abstract assertion class. Otherwise, it will inherit from
-   * <code>AbstractAssert&lt;S, T&gt;</code>.
+   * <code>AbstractObjectAssert&lt;S, T&gt;</code>.
    * 
    * @param classDescription the {@link ClassDescription} used to generate the assertions class.
    * @param allClasses set of all classes that we are currently generating assertions for. Used to find superclass
@@ -160,10 +160,10 @@ public interface AssertionGenerator {
    * <pre>
    * import static java.lang.String.format;
    *
-   * import org.assertj.core.api.AbstractAssert;
+   * import org.assertj.core.api.AbstractObjectAssert;
    * import org.assertj.core.api.Assertions;
    *
-   * public class RaceAssert extends AbstractAssert<RaceAssert, Race> {
+   * public class RaceAssert extends AbstractObjectAssert<RaceAssert, Race> {
    *
    *   public RaceAssert(Race actual) {
    *     super(actual, RaceAssert.class);
@@ -226,7 +226,7 @@ public interface AssertionGenerator {
    * 
    * If the <code>classDescription</code> has a supertype with a known assertion class, then the generated abstract
    * assertion class will inherit from the superclass' abstract assertion class. Otherwise, it will inherit from
-   * <code>AbstractAssert&lt;S, T&gt;</code>.
+   * <code>AbstractObjectAssert&lt;S, T&gt;</code>.
    * 
    * @param classDescription
    *            the {@link ClassDescription} used to generate the assertions

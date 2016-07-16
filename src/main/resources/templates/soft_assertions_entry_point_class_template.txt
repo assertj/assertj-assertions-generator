@@ -13,33 +13,6 @@ import org.assertj.core.api.SoftAssertionError;
  * type-specific assertion objects.
  */
 @javax.annotation.Generated(value="assertj-assertions-generator")
-public class SoftAssertions {
-
-  /** Collects error messages of all AssertionErrors thrown by the proxied method. */
-  protected final ErrorCollector collector = new ErrorCollector();
-
-  /** Creates a new <code>{@link SoftAssertions}</code>. */
-  public SoftAssertions() {
-  }
-
-  /**
-   * Verifies that no proxied assertion methods have failed.
-   *
-   * @throws SoftAssertionError if any proxied assertion objects threw
-   */
-  public void assertAll() {
-    List<Throwable> errors = collector.errors();
-    if (!errors.isEmpty()) {
-      throw new SoftAssertionError(extractProperty("message", String.class).from(errors));
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  protected <T, V> V proxy(Class<V> assertClass, Class<T> actualClass, T actual) {
-    Enhancer enhancer = new Enhancer();
-    enhancer.setSuperclass(assertClass);
-    enhancer.setCallback(collector);
-    return (V) enhancer.create(new Class[] { actualClass }, new Object[] { actual });
-  }
+public class SoftAssertions extends org.assertj.core.api.SoftAssertions {
 ${all_assertions_entry_points}
 }

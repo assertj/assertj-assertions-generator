@@ -23,6 +23,7 @@ public class InterferencePrimitivesAssert extends AbstractAssert<InterferencePri
    * @param actual the InterferencePrimitives we want to make assertions on.
    * @return a new <code>{@link InterferencePrimitivesAssert}</code>
    */
+  @org.assertj.core.util.CheckReturnValue
   public static InterferencePrimitivesAssert assertThat(InterferencePrimitives actual) {
     return new InterferencePrimitivesAssert(actual);
   }

@@ -25,6 +25,7 @@ public class TeamAssert extends AbstractAssert<TeamAssert, Team> {
    * @param actual the Team we want to make assertions on.
    * @return a new <code>{@link TeamAssert}</code>
    */
+  @org.assertj.core.util.CheckReturnValue
   public static TeamAssert assertThat(Team actual) {
     return new TeamAssert(actual);
   }

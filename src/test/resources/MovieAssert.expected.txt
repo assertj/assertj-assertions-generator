@@ -24,6 +24,7 @@ public class MovieAssert extends AbstractMovieAssert<MovieAssert, Movie> {
    * @param actual the Movie we want to make assertions on.
    * @return a new <code>{@link MovieAssert}</code>
    */
+  @org.assertj.core.util.CheckReturnValue
   public static MovieAssert assertThat(Movie actual) {
     return new MovieAssert(actual);
   }

@@ -23,6 +23,7 @@ public class FieldPropertyClashAssert extends AbstractAssert<FieldPropertyClashA
    * @param actual the FieldPropertyClash we want to make assertions on.
    * @return a new <code>{@link FieldPropertyClashAssert}</code>
    */
+  @org.assertj.core.util.CheckReturnValue
   public static FieldPropertyClashAssert assertThat(FieldPropertyClash actual) {
     return new FieldPropertyClashAssert(actual);
   }

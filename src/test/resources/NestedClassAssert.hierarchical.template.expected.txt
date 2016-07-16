@@ -24,6 +24,7 @@ public class ${nestedClass}Assert extends Abstract${nestedClass}Assert<${nestedC
    * @param actual the ${nestedClass} we want to make assertions on.
    * @return a new <code>{@link ${nestedClass}Assert}</code>
    */
+  @org.assertj.core.util.CheckReturnValue
   public static ${nestedClass}Assert assertThat(${nestedClass} actual) {
     return new ${nestedClass}Assert(actual);
   }

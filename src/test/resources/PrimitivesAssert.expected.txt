@@ -24,6 +24,7 @@ public class PrimitivesAssert extends AbstractAssert<PrimitivesAssert, Primitive
    * @param actual the Primitives we want to make assertions on.
    * @return a new <code>{@link PrimitivesAssert}</code>
    */
+  @org.assertj.core.util.CheckReturnValue
   public static PrimitivesAssert assertThat(Primitives actual) {
     return new PrimitivesAssert(actual);
   }

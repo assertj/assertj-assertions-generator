@@ -23,6 +23,7 @@ public class ClassUsingDifferentClassesWithSameNameAssert extends AbstractAssert
    * @param actual the ClassUsingDifferentClassesWithSameName we want to make assertions on.
    * @return a new <code>{@link ClassUsingDifferentClassesWithSameNameAssert}</code>
    */
+  @org.assertj.core.util.CheckReturnValue
   public static ClassUsingDifferentClassesWithSameNameAssert assertThat(ClassUsingDifferentClassesWithSameName actual) {
     return new ClassUsingDifferentClassesWithSameNameAssert(actual);
   }

@@ -14,12 +14,13 @@ package org.assertj.assertions.generator.util;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.lang.reflect.Modifier.isPublic;
-import static org.apache.commons.lang3.StringUtils.substringAfter;
+import static java.lang.reflect.Modifier.isStatic;
 import static org.apache.commons.lang3.StringUtils.uncapitalize;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -251,9 +252,15 @@ public class ClassUtil {
    * @return the property name of given getter method
    */
   public static String propertyNameOf(Method getter) {
+    String methodName = getter.getName();
     String prefixToRemove = isPredicate(getter) ? IS_PREFIX : GET_PREFIX;
-    String propertyWithCapitalLetter = substringAfter(getter.getName(), prefixToRemove);
-    return uncapitalize(propertyWithCapitalLetter);
+    int pos = methodName.indexOf(prefixToRemove);
+    if (pos != StringUtils.INDEX_NOT_FOUND) {
+      String propertyWithCapitalLetter = methodName.substring(pos + prefixToRemove.length());
+      return uncapitalize(propertyWithCapitalLetter);
+    } else {
+      return methodName;
+    }
   }
 
   public static boolean inheritsCollectionOrIsIterable(Class<?> returnType) {
@@ -274,6 +281,25 @@ public class ClassUtil {
     return isValidPredicateName(method.getName())
            && (Boolean.TYPE.equals(method.getReturnType()) || Boolean.class.equals(method.getReturnType()))
            && method.getParameterTypes().length == 0;
+  }
+
+  private static boolean isAnnotated(Method method, Set<Class<?>> includeAnnotations, boolean isClassAnnotated) {
+    if (!Void.TYPE.equals(method.getReturnType())
+            && method.getParameterTypes().length == 0
+            && !isStatic(method.getModifiers())) {
+      Annotation[] methodAnnotations = method.getAnnotations();
+      return isClassAnnotated || containsAny(methodAnnotations, includeAnnotations);
+    }
+    return false;
+  }
+
+  private static boolean containsAny(Annotation[] methodAnnotations, Set<Class<?>> includeAnnotations) {
+    for (Annotation annotation : methodAnnotations) {
+      if (includeAnnotations.contains(annotation.annotationType())) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public static boolean isValidGetterName(String methodName) {
@@ -341,29 +367,34 @@ public class ClassUtil {
     return null;
   }
 
-  public static Set<Method> declaredGetterMethodsOf(Class<?> clazz) {
-    return filterGetterMethods(clazz.getDeclaredMethods());
+  public static Set<Method> declaredGetterMethodsOf(Class<?> clazz, Set<Class<?>> includeAnnotations) {
+    boolean isClassAnnotated = containsAny(clazz.getDeclaredAnnotations(), includeAnnotations);
+    return filterGetterMethods(clazz.getDeclaredMethods(), includeAnnotations, isClassAnnotated);
   }
 
-  public static Set<Method> getterMethodsOf(Class<?> clazz) {
-    return filterGetterMethods(clazz.getMethods());
+  public static Set<Method> getterMethodsOf(Class<?> clazz, Set<Class<?>> includeAnnotations) {
+    boolean isClassAnnotated = containsAny(clazz.getDeclaredAnnotations(), includeAnnotations);
+    return filterGetterMethods(clazz.getMethods(), includeAnnotations, isClassAnnotated);
   }
 
-  private static Set<Method> filterGetterMethods(Method[] methods) {
+  private static Set<Method> filterGetterMethods(Method[] methods, Set<Class<?>> includeAnnotations,
+                                                 boolean isClassAnnotated) {
     Set<Method> getters = new TreeSet<Method>(GETTER_COMPARATOR);
     for (int i = 0; i < methods.length; i++) {
       Method method = methods[i];
       if (isPublic(method.getModifiers())
           && isNotDefinedInObjectClass(method)
-          && isGetter(method)) {
+          && isGetter(method, includeAnnotations, isClassAnnotated)) {
         getters.add(method);
       }
     }
     return getters;
   }
 
-  private static boolean isGetter(Method method) {
-    return isStandardGetter(method) || isPredicate(method);
+  private static boolean isGetter(Method method, Set<Class<?>> includeAnnotations, boolean isClassAnnotated) {
+    return isStandardGetter(method)
+           || isPredicate(method)
+           || isAnnotated(method, includeAnnotations, isClassAnnotated);
   }
 
   public static List<Field> nonStaticPublicFieldsOf(Class<?> clazz) {

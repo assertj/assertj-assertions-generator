@@ -53,6 +53,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String NEGATIVE_PREDICATE_FOR_FOR_ERROR_MESSAGE_PART1 = "${negative_predicate_for_error_message_part1}";
   private static final String NEGATIVE_PREDICATE_FOR_FOR_ERROR_MESSAGE_PART2 = "${negative_predicate_for_error_message_part2}";
   private static final String PROPERTY_WITH_UPPERCASE_FIRST_CHAR = "${Property}";
+  private static final String PROPERTY_GETTER_CALL = "${getter}";
   private static final String PROPERTY_WITH_LOWERCASE_FIRST_CHAR = "${property}";
   private static final String PROPERTY_WITH_SAFE = "${property_safe}";
   private static final String PACKAGE = "${package}";
@@ -429,7 +430,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
     // we reuse template for properties to have consistent assertions for property and field but change the way we get
     // the value since it's a field and not a property:
-    assertionContent = assertionContent.replace("get${Property}()", "${property}");
+    assertionContent = assertionContent.replace("${getter}()", "${property}");
     // - remove also ${throws} and ${throws_javadoc} since it does not make any sense for a field
     assertionContent = remove(assertionContent, "${throws}");
     assertionContent = remove(assertionContent, "${throws_javadoc}");
@@ -553,6 +554,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       assertionContent = replace(assertionContent, PREDICATE, getter.getOriginalMember());
       assertionContent = replace(assertionContent, PREDICATE_NEG, getter.getNegativePredicate());
     }
+    assertionContent = replace(assertionContent, PROPERTY_GETTER_CALL, getter.getOriginalMember());
     assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(propertyName));
     assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE,
                                getter.getTypeName());
@@ -646,8 +648,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       String exceptionName = exception.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName());
       throwsClause.append(exceptionName);
       throwsJavaDoc.append(LINE_SEPARATOR).append("   * @throws ").append(exceptionName);
-      throwsJavaDoc.append(" if actual.").append(getter.isPredicate() ? "is" : "get")
-                   .append("${Property}() throws one.");
+      throwsJavaDoc.append(" if actual.").append("${getter}() throws one.");
     }
     if (!getter.getExceptions().isEmpty()) throwsClause.append(' ');
 

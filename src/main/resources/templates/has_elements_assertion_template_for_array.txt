@@ -13,7 +13,7 @@
     if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
     
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
-    Assertions.assertThat(actual.get${Property}()).contains(${property_safe});
+    Assertions.assertThat(actual.${getter}()).contains(${property_safe});
 
     // return the current assertion for method chaining
     return ${myself};
@@ -34,7 +34,7 @@
     if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
     
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
-    Assertions.assertThat(actual.get${Property}()).containsOnly(${property_safe});
+    Assertions.assertThat(actual.${getter}()).containsOnly(${property_safe});
 
     // return the current assertion for method chaining
     return ${myself};
@@ -55,7 +55,7 @@
     if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
     
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
-    Assertions.assertThat(actual.get${Property}()).doesNotContain(${property_safe});
+    Assertions.assertThat(actual.${getter}()).doesNotContain(${property_safe});
 
     // return the current assertion for method chaining
     return ${myself};
@@ -74,8 +74,8 @@
     String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
     
     // check
-    if (actual.get${Property}().length > 0)  {
-      failWithMessage(assertjErrorMessage, actual, java.util.Arrays.toString(actual.get${Property}()));
+    if (actual.${getter}().length > 0)  {
+      failWithMessage(assertjErrorMessage, actual, java.util.Arrays.toString(actual.${getter}()));
     }
     
     // return the current assertion for method chaining

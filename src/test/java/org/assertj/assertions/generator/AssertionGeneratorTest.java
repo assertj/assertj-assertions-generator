@@ -12,6 +12,7 @@
  */
 package org.assertj.assertions.generator;
 
+import org.assertj.assertions.generator.data.Annotations;
 import org.assertj.assertions.generator.data.ArtWork;
 import org.assertj.assertions.generator.data.BooleanPredicates;
 import org.assertj.assertions.generator.data.FieldPropertyClash;
@@ -23,6 +24,7 @@ import org.assertj.assertions.generator.data.Team;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.PlayerAgent;
 import org.assertj.assertions.generator.description.ClassDescription;
+import org.assertj.assertions.generator.description.converter.AnnotationConfiguration;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
@@ -221,6 +224,14 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(clazz));
     assertGeneratedAssertClass(ClassUsingDifferentClassesWithSameName.class,
                                "ClassUsingDifferentClassesWithSameName.expected.txt");
+  }
+
+  @Test
+  public void should_generate_assertion_for_annotated_properties() throws IOException {
+    Set<Class<?>> assertions = Collections.<Class<?>>singleton(Annotations.Property.class);
+    converter = new ClassToClassDescriptionConverter(new AnnotationConfiguration(assertions));
+    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Annotations.class));
+    assertGeneratedAssertClass(Annotations.class, "Annotations.expected.txt");
   }
 
   static void assertGeneratedAssertClass(Class<?> clazz, String expectedAssertFile) {

@@ -13,7 +13,7 @@
     if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
-    Iterables.instance().assertContains(info, actual.get${Property}(), ${property_safe});
+    Iterables.instance().assertContains(info, actual.${getter}(), ${property_safe});
 
     // return the current assertion for method chaining
     return ${myself};
@@ -36,7 +36,7 @@
     }
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
-    Iterables.instance().assertContains(info, actual.get${Property}(), ${property_safe}.toArray());
+    Iterables.instance().assertContains(info, actual.${getter}(), ${property_safe}.toArray());
 
     // return the current assertion for method chaining
     return ${myself};
@@ -56,7 +56,7 @@
     if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
-    Iterables.instance().assertContainsOnly(info, actual.get${Property}(), ${property_safe});
+    Iterables.instance().assertContainsOnly(info, actual.${getter}(), ${property_safe});
 
     // return the current assertion for method chaining
     return ${myself};
@@ -79,7 +79,7 @@
     }
     
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
-    Iterables.instance().assertContainsOnly(info, actual.get${Property}(), ${property_safe}.toArray());
+    Iterables.instance().assertContainsOnly(info, actual.${getter}(), ${property_safe}.toArray());
 
     // return the current assertion for method chaining
     return ${myself};
@@ -100,7 +100,7 @@
     if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
     
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
-    Iterables.instance().assertDoesNotContain(info, actual.get${Property}(), ${property_safe});
+    Iterables.instance().assertDoesNotContain(info, actual.${getter}(), ${property_safe});
 
     // return the current assertion for method chaining
     return ${myself};
@@ -124,7 +124,7 @@
     }
     
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
-    Iterables.instance().assertDoesNotContain(info, actual.get${Property}(), ${property_safe}.toArray());
+    Iterables.instance().assertDoesNotContain(info, actual.${getter}(), ${property_safe}.toArray());
 
     // return the current assertion for method chaining
     return ${myself};
@@ -143,8 +143,8 @@
     String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
     
     // check
-    if (actual.get${Property}().iterator().hasNext()) {
-      failWithMessage(assertjErrorMessage, actual, actual.get${Property}());
+    if (actual.${getter}().iterator().hasNext()) {
+      failWithMessage(assertjErrorMessage, actual, actual.${getter}());
     }
     
     // return the current assertion for method chaining

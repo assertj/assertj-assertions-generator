@@ -13,7 +13,7 @@
     String assertjErrorMessage = "\nExpecting ${property} of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
     
     // check
-    ${propertyType} actual${Property} = actual.get${Property}();
+    ${propertyType} actual${Property} = actual.${getter}();
     if (actual${Property} != ${property_safe}) {
       failWithMessage(assertjErrorMessage, actual, ${property_safe}, actual${Property});
     }

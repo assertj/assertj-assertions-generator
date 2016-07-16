@@ -30,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -185,21 +186,21 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Test
   public void should_return_getters_methods_only() throws Exception {
-	Set<Method> playerGetterMethods = getterMethodsOf(Player.class);
+	Set<Method> playerGetterMethods = getterMethodsOf(Player.class, Collections.<Class<?>>emptySet());
     assertThat(playerGetterMethods).contains(Player.class.getMethod("getTeam", NO_PARAMS))
                                    .doesNotContain(Player.class.getMethod("isInTeam", String.class));
   }
 
   @Test
   public void should_also_return_inherited_getters_methods() throws Exception {
-    Set<Method> playerGetterMethods = getterMethodsOf(Movie.class);
+    Set<Method> playerGetterMethods = getterMethodsOf(Movie.class, Collections.<Class<?>>emptySet());
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS),
                                              ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }
 
   @Test
   public void should_not_return_inherited_getters_methods() throws Exception {
-	Set<Method> playerGetterMethods = declaredGetterMethodsOf(Movie.class);
+	Set<Method> playerGetterMethods = declaredGetterMethodsOf(Movie.class, Collections.<Class<?>>emptySet());
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS))
                                    .doesNotContain(ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }

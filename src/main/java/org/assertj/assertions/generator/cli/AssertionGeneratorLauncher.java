@@ -68,7 +68,7 @@ public class AssertionGeneratorLauncher {
   private static void printHelp(Options options) {
     HelpFormatter help = new HelpFormatter();
     final String cmdLine = "java " + AssertionGeneratorLauncher.class.getCanonicalName() + " [--help] [--hierarchical] <classes/packages>";
-    help.printHelp(cmdLine, "Generate AssertJ-style assertions for the specified classes", options, "The list of classes can either be package names (which includes all packges in the class) or fully-qualified class names.");
+    help.printHelp(cmdLine, "Generate AssertJ-style assertions for the specified classes", options, "The list of classes can either be package names (which includes all packages in the class) or fully-qualified class names.");
   }
   
   private static void generateHierarchicalAssertions(Set<Class<?>> classes) throws IOException {

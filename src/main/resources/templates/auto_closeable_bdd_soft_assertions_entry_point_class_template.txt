@@ -1,0 +1,30 @@
+package ${package};
+
+/**
+ * A version of {@link BDDSoftAssertions} that uses try-with-resources statement to automatically call
+ * {@link BDDSoftAssertions#assertAll()} so that you don't forget to.
+ * <p>
+ * Example:
+ * <pre><code class='java'> public class AutoCloseableBDDSoftAssertionsTest {
+ * 
+ * &#064;Test
+ * public void host_dinner_party_where_nobody_dies() {
+ *   Mansion mansion = new Mansion();
+ * 
+ *   mansion.hostPotentiallyMurderousDinnerParty();
+ * 
+ *   try (AutoCloseableBDDSoftAssertions softly = new AutoCloseableBDDSoftAssertions()) {
+ *     softly.then(mansion.guests()).as(&quot;Living Guests&quot;).isEqualTo(7);
+ *     softly.then(mansion.kitchen()).as(&quot;Kitchen&quot;).isEqualTo(&quot;clean&quot;);
+ *     // no need to call assertAll, it is done when softly is closed.
+ *   }
+ * }
+ * </pre>
+ */
+public class AutoCloseableBDDSoftAssertions extends org.assertj.core.api.BDDSoftAssertions implements AutoCloseable {
+${all_assertions_entry_points}
+  @Override
+  public void close() throws SoftAssertionError {
+    assertAll();
+  }
+}

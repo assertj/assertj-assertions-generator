@@ -13,6 +13,8 @@
 package org.assertj.assertions.generator;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
+import static org.assertj.assertions.generator.AssertionsEntryPointType.AUTO_CLOSEABLE_BDD_SOFT;
+import static org.assertj.assertions.generator.AssertionsEntryPointType.AUTO_CLOSEABLE_SOFT;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.BDD;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.BDD_SOFT;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.JUNIT_BDD_SOFT;
@@ -172,6 +174,38 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
+  public void should_generate_auto_closeable_soft_assertions_entry_point_class_file() throws Exception {
+    // GIVEN : classes we want to have entry point assertions for
+    Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
+                                                                       Name.class, Player.class, Movie.class,
+                                                                       TolkienCharacter.class, TreeEnum.class,
+                                                                       Movie.PublicCategory.class);
+    // WHEN
+    File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet, AUTO_CLOSEABLE_SOFT,
+                                                                                   null);
+    // THEN
+    String expectedContent = readExpectedContentFromFile("AutoCloseableSoftAssertions.expected.txt");
+    assertThat(assertionsEntryPointFile).as("check auto closeable soft assertions entry point class content")
+                                        .hasContent(expectedContent);
+  }
+
+  @Test
+  public void should_generate_auto_closeable_bdd_soft_assertions_entry_point_class_file() throws Exception {
+    // GIVEN : classes we want to have entry point assertions for
+    Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
+                                                                       Name.class, Player.class, Movie.class,
+                                                                       TolkienCharacter.class, TreeEnum.class,
+                                                                       Movie.PublicCategory.class);
+    // WHEN
+    File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet, AUTO_CLOSEABLE_BDD_SOFT,
+                                                                                   null);
+    // THEN
+    String expectedContent = readExpectedContentFromFile("AutoCloseableBDDSoftAssertions.expected.txt");
+    assertThat(assertionsEntryPointFile).as("check auto closeable BDD soft assertions entry point class content")
+                                        .hasContent(expectedContent);
+  }
+
+  @Test
   public void should_return_null_assertion_entry_point_file_if_no_classes_description_are_given() throws Exception {
     // GIVEN no ClassDescription
     Set<ClassDescription> classDescriptionSet = newLinkedHashSet();
@@ -212,7 +246,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   private Set<ClassDescription> getClassDescriptionsOf(Class<?>... classes) {
-    Set<ClassDescription> classDescriptionSet = new LinkedHashSet<ClassDescription>(classes.length);
+    Set<ClassDescription> classDescriptionSet = new LinkedHashSet<>(classes.length);
     ClassToClassDescriptionConverter converter = new ClassToClassDescriptionConverter();
     for (Class<?> clazz : classes) {
       classDescriptionSet.add(converter.convertToClassDescription(clazz));

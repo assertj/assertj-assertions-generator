@@ -1,0 +1,29 @@
+package ${package};
+
+/**
+ * A version of {@link SoftAssertions} that uses try-with-resources statement to automatically call
+ * {@link SoftAssertions#assertAll()} so that you don't forget to.
+ * <p>
+ * Example:
+ * <pre><code class='java'> public class AutoCloseableSoftAssertionsTest {
+ * 
+ * &#064;Test
+ * public void host_dinner_party_where_nobody_dies() {
+ *   Mansion mansion = new Mansion();
+ *   mansion.hostPotentiallyMurderousDinnerParty();
+ *   try (AutoCloseableSoftAssertions softly = new AutoCloseableSoftAssertions()) {
+ *      softly.assertThat(mansion.guests()).as(&quot;Living Guests&quot;).isEqualTo(7);
+ *      softly.assertThat(mansion.kitchen()).as(&quot;Kitchen&quot;).isEqualTo(&quot;clean&quot;);
+ *      // no need to call assertAll, it is done when softly is closed.
+ *   }
+ * }
+ * </pre>
+ */
+@javax.annotation.Generated(value="assertj-assertions-generator")
+public class AutoCloseableSoftAssertions extends org.assertj.core.api.SoftAssertions implements AutoCloseable {
+${all_assertions_entry_points}
+  @Override
+  public void close() throws org.assertj.core.api.SoftAssertionError {
+    assertAll();
+  }
+}

@@ -1,7 +1,8 @@
 language: java
-script: "mvn clean install"
+script: "mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.login=ac498d468ea131b13c372818d5c8a52db50bada0"
 
 jdk:
  - oraclejdk7
- - openjdk7
+
+
 

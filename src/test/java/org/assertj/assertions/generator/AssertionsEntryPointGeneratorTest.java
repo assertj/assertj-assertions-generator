@@ -16,6 +16,7 @@ import static com.google.common.collect.Sets.newLinkedHashSet;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.BDD;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.BDD_SOFT;
+import static org.assertj.assertions.generator.AssertionsEntryPointType.JUNIT_BDD_SOFT;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.JUNIT_SOFT;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.SOFT;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.STANDARD;
@@ -150,7 +151,23 @@ public class AssertionsEntryPointGeneratorTest {
                                                                                    null);
     // THEN
     String expectedContent = readFileToString(new File("src/test/resources/BDDSoftAssertions.expected.txt"));
-    assertThat(assertionsEntryPointFile).as("check JUnit soft assertions entry point class content")
+    assertThat(assertionsEntryPointFile).as("check BDD soft assertions entry point class content")
+                                        .hasContent(expectedContent);
+  }
+
+  @Test
+  public void should_generate_junit_bdd_soft_assertions_entry_point_class_file() throws Exception {
+    // GIVEN : classes we want to have entry point assertions for
+    Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
+                                                                       Name.class, Player.class, Movie.class,
+                                                                       TolkienCharacter.class, TreeEnum.class,
+                                                                       Movie.PublicCategory.class);
+    // WHEN
+    File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet, JUNIT_BDD_SOFT,
+                                                                                   null);
+    // THEN
+    String expectedContent = readFileToString(new File("src/test/resources/JUnitBDDSoftAssertions.expected.txt"));
+    assertThat(assertionsEntryPointFile).as("check JUnit BDD soft assertions entry point class content")
                                         .hasContent(expectedContent);
   }
 

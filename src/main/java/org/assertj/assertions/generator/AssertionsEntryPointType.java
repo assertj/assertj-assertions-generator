@@ -18,7 +18,8 @@ public enum AssertionsEntryPointType {
   BDD("BddAssertions.java"),
   SOFT("SoftAssertions.java"),
   JUNIT_SOFT("JUnitSoftAssertions.java"),
-  BDD_SOFT("BDDSoftAssertions.java");
+  BDD_SOFT("BDDSoftAssertions.java"),
+  JUNIT_BDD_SOFT("JUnitBDDSoftAssertions.java");
 
   private String fileName;
 

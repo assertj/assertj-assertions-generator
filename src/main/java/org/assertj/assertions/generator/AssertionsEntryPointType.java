@@ -19,7 +19,9 @@ public enum AssertionsEntryPointType {
   SOFT("SoftAssertions.java"),
   JUNIT_SOFT("JUnitSoftAssertions.java"),
   BDD_SOFT("BDDSoftAssertions.java"),
-  JUNIT_BDD_SOFT("JUnitBDDSoftAssertions.java");
+  JUNIT_BDD_SOFT("JUnitBDDSoftAssertions.java"),
+  AUTO_CLOSEABLE_SOFT("AutoCloseableSoftAssertions.java"),
+  AUTO_CLOSEABLE_BDD_SOFT("AutoCloseableBDDSoftAssertions.java");
 
   private String fileName;
 

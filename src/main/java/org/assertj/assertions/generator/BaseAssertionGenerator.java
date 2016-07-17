@@ -230,11 +230,13 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     switch (assertionsEntryPointType) {
     case SOFT:
     case JUNIT_SOFT:
+    case AUTO_CLOSEABLE_SOFT:
       return templateRegistry.getTemplate(Type.SOFT_ENTRY_POINT_METHOD_ASSERTION);
     case BDD:
       return templateRegistry.getTemplate(Type.BDD_ENTRY_POINT_METHOD_ASSERTION);
     case BDD_SOFT:
     case JUNIT_BDD_SOFT:
+    case AUTO_CLOSEABLE_BDD_SOFT:
       return templateRegistry.getTemplate(Type.BDD_SOFT_ENTRY_POINT_METHOD_ASSERTION);
     default:
       return templateRegistry.getTemplate(Type.ASSERTION_ENTRY_POINT);
@@ -247,12 +249,16 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       return templateRegistry.getTemplate(Type.SOFT_ASSERTIONS_ENTRY_POINT_CLASS);
     case JUNIT_SOFT:
       return templateRegistry.getTemplate(Type.JUNIT_SOFT_ASSERTIONS_ENTRY_POINT_CLASS);
+    case AUTO_CLOSEABLE_SOFT:
+      return templateRegistry.getTemplate(Type.AUTO_CLOSEABLE_SOFT_ASSERTIONS_ENTRY_POINT_CLASS);
     case BDD:
       return templateRegistry.getTemplate(Type.BDD_ASSERTIONS_ENTRY_POINT_CLASS);
     case BDD_SOFT:
       return templateRegistry.getTemplate(Type.BDD_SOFT_ASSERTIONS_ENTRY_POINT_CLASS);
     case JUNIT_BDD_SOFT:
       return templateRegistry.getTemplate(Type.JUNIT_BDD_SOFT_ASSERTIONS_ENTRY_POINT_CLASS);
+    case AUTO_CLOSEABLE_BDD_SOFT:
+      return templateRegistry.getTemplate(Type.AUTO_CLOSEABLE_BDD_SOFT_ASSERTIONS_ENTRY_POINT_CLASS);
     default:
       return templateRegistry.getTemplate(Type.ASSERTIONS_ENTRY_POINT_CLASS);
     }

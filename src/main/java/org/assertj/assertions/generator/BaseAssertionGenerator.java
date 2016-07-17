@@ -233,6 +233,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       return templateRegistry.getTemplate(Type.SOFT_ENTRY_POINT_METHOD_ASSERTION);
     case BDD:
       return templateRegistry.getTemplate(Type.BDD_ENTRY_POINT_METHOD_ASSERTION);
+    case BDD_SOFT:
+      return templateRegistry.getTemplate(Type.BDD_SOFT_ENTRY_POINT_METHOD_ASSERTION);
     default:
       return templateRegistry.getTemplate(Type.ASSERTION_ENTRY_POINT);
     }
@@ -246,6 +248,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       return templateRegistry.getTemplate(Type.JUNIT_SOFT_ASSERTIONS_ENTRY_POINT_CLASS);
     case BDD:
       return templateRegistry.getTemplate(Type.BDD_ASSERTIONS_ENTRY_POINT_CLASS);
+    case BDD_SOFT:
+      return templateRegistry.getTemplate(Type.BDD_SOFT_ASSERTIONS_ENTRY_POINT_CLASS);
     default:
       return templateRegistry.getTemplate(Type.ASSERTIONS_ENTRY_POINT_CLASS);
     }
@@ -527,7 +531,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     Collections.addAll(JAVA_KEYWORDS, keywords);
   }
 
-  static private final String getSafeProperty(String unsafe) {
+  static private String getSafeProperty(String unsafe) {
     return JAVA_KEYWORDS.contains(unsafe) ? "expected" + capitalize(unsafe) : unsafe;
   }
 
@@ -629,10 +633,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   /**
    * Handle case where getter throws an exception.
    *
-   * @param getter
-   * @param assertionContent
-   * @param classDescription
-   * @return
+   * @param getter method we want to declare exception for
+   * @param assertionContent the assertion content to enrich
+   * @param classDescription use to resolve exception
+   * @return assertion content with thrown exceptions
    */
   private String declareExceptions(GetterDescription getter, String assertionContent,
                                    ClassDescription classDescription) {

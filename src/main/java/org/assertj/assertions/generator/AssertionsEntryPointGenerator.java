@@ -46,7 +46,7 @@ public interface AssertionsEntryPointGenerator {
    * Same as {@link #generateAssertionsEntryPointClassContentFor(Set, AssertionsEntryPointType, String)} but in addition
    * create the corresponding java class file.
    * 
-   * @throws java.io.IOException if ebtry point file can't be created.
+   * @throws java.io.IOException if entry point file can't be created.
    */
   File generateAssertionsEntryPointClassFor(Set<ClassDescription> classDescriptionSet,
                                             AssertionsEntryPointType assertionsEntryPointType,

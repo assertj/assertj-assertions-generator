@@ -42,6 +42,8 @@ public class DefaultTemplateRegistryProducer {
     static final String DEFAULT_SOFT_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE = "soft_assertion_entry_point_method_template.txt";
     static final String DEFAULT_BDD_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE = "bdd_assertions_entry_point_class_template.txt";
     static final String DEFAULT_BDD_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE = "bdd_assertion_entry_point_method_template.txt";
+    static final String DEFAULT_BDD_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE = "bdd_soft_assertions_entry_point_class_template.txt";
+    static final String DEFAULT_BDD_SOFT_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE = "bdd_soft_assertion_entry_point_method_template.txt";
 
     public static TemplateRegistry create(String templateDirectory) {
         TemplateRegistry templateRegistry = new TemplateRegistry();
@@ -115,6 +117,12 @@ public class DefaultTemplateRegistryProducer {
         templateRegistry.register(new Template(Template.Type.BDD_ENTRY_POINT_METHOD_ASSERTION,
                                                new File(templateDirectory,
                                                         DEFAULT_BDD_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE)));
+        templateRegistry.register(new Template(Template.Type.BDD_SOFT_ASSERTIONS_ENTRY_POINT_CLASS,
+                                               new File(templateDirectory,
+                                                        DEFAULT_BDD_SOFT_ENTRY_POINT_ASSERTIONS_CLASS_TEMPLATE)));
+        templateRegistry.register(new Template(Template.Type.BDD_SOFT_ENTRY_POINT_METHOD_ASSERTION,
+                                               new File(templateDirectory,
+                                                        DEFAULT_BDD_SOFT_ENTRY_POINT_ASSERTION_METHOD_TEMPLATE)));
         return templateRegistry;
     }
 }

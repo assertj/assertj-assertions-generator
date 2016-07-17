@@ -14,7 +14,11 @@ package org.assertj.assertions.generator;
 
 
 public enum AssertionsEntryPointType {
-  STANDARD("Assertions.java"),  BDD("BddAssertions.java"), SOFT("SoftAssertions.java"), JUNIT_SOFT("JUnitSoftAssertions.java");
+  STANDARD("Assertions.java"),
+  BDD("BddAssertions.java"),
+  SOFT("SoftAssertions.java"),
+  JUNIT_SOFT("JUnitSoftAssertions.java"),
+  BDD_SOFT("BDDSoftAssertions.java");
 
   private String fileName;
 

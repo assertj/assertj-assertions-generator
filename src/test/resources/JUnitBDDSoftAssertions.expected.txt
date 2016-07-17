@@ -1,8 +1,8 @@
 package org.assertj.assertions.generator.data;
 
 /**
- * Like {@link SoftAssertions} but as a junit rule which can be used without having to call
- * {@link SoftAssertions#assertAll() assertAll()},
+ * Like {@link BDDSoftAssertions} but as a junit rule that takes care of calling
+ * {@link SoftAssertions#assertAll() assertAll()} at the end of each test.
  * <p>
  * Example:
  * <pre><code class='java'> public class SoftlyTest {
@@ -14,6 +14,7 @@ package org.assertj.assertions.generator.data;
  *     public void soft_bdd_assertions() throws Exception {
  *       softly.then(1).isEqualTo(2);
  *       softly.then(Lists.newArrayList(1, 2)).containsOnly(1, 2);
+ *       // no need to call assertAll(), this is done automatically.
  *     }
  *  }</code></pre>
  */

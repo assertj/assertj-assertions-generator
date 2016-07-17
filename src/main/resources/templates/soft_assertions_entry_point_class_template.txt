@@ -1,13 +1,5 @@
 package ${package};
 
-import static org.assertj.core.groups.Properties.extractProperty;
-
-import java.util.List;
-import org.assertj.core.internal.cglib.proxy.Enhancer;
-
-import org.assertj.core.api.ErrorCollector;
-import org.assertj.core.api.SoftAssertionError;
-
 /**
  * Entry point for assertions of different data types. Each method in this class is a static factory for the
  * type-specific assertion objects.

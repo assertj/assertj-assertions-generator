@@ -1,14 +1,5 @@
 package org.assertj.assertions.generator.data;
 
-import org.assertj.core.internal.cglib.proxy.Enhancer;
-
-import org.assertj.core.api.ErrorCollector;
-
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.MultipleFailureException;
-import org.junit.runners.model.Statement;
-
 /**
  * Entry point for assertions of different data types. Each method in this class is a static factory for the
  * type-specific assertion objects.

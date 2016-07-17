@@ -30,7 +30,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import static java.lang.String.format;
-import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.remove;
@@ -664,12 +663,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private void fillFile(String customAssertionContent, File assertionJavaFile) throws IOException {
-    FileWriter fileWriter = null;
-    try {
-      fileWriter = new FileWriter(assertionJavaFile);
+    try (FileWriter fileWriter = new FileWriter(assertionJavaFile)) {
       fileWriter.write(customAssertionContent);
-    } finally {
-      closeQuietly(fileWriter);
     }
   }
 

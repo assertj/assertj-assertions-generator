@@ -24,16 +24,17 @@ package org.assertj.assertions.generator;
 
 import org.apache.commons.lang3.CharEncoding;
 
+import com.google.common.io.CharStreams;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLDecoder;
 
+import static com.google.common.io.Closeables.closeQuietly;
 import static java.lang.Thread.currentThread;
-import static org.apache.commons.io.IOUtils.closeQuietly;
-import static org.apache.commons.io.IOUtils.copy;
 
 /**
  * 
@@ -134,14 +135,12 @@ public class Template {
   }
 
   private String readContentThenClose(InputStream input) throws IOException {
-    StringWriter writer = null;
+    InputStreamReader reader = new InputStreamReader(input);
     try {
-      writer = new StringWriter();
-      copy(input, writer);
-      return writer.toString();
+      return CharStreams.toString(reader);
     } finally {
       closeQuietly(input);
-      closeQuietly(writer);
+      closeQuietly(reader);
     }
   }
 

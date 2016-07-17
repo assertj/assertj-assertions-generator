@@ -13,7 +13,6 @@
 package org.assertj.assertions.generator;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
-import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.BDD;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.BDD_SOFT;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.JUNIT_BDD_SOFT;
@@ -21,6 +20,7 @@ import static org.assertj.assertions.generator.AssertionsEntryPointType.JUNIT_SO
 import static org.assertj.assertions.generator.AssertionsEntryPointType.SOFT;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.STANDARD;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.contentOf;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,7 +60,7 @@ public class AssertionsEntryPointGeneratorTest {
     // WHEN
     File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet, STANDARD, null);
     // THEN
-    String expectedContent = readFileToString(new File("src/test/resources/Assertions.expected.txt"));
+    String expectedContent = readExpectedContentFromFile("Assertions.expected.txt");
     assertThat(assertionsEntryPointFile).as("check entry point class content").hasContent(expectedContent);
   }
 
@@ -73,7 +73,7 @@ public class AssertionsEntryPointGeneratorTest {
     String assertionsEntryPointContent = generator.generateAssertionsEntryPointClassContentFor(classDescriptionSet,
                                                                                                STANDARD, "org");
     // THEN
-    String expectedContent = readFileToString(new File("src/test/resources/AssertionsForClassesWithSameName.expected.txt"));
+    String expectedContent = readExpectedContentFromFile("AssertionsForClassesWithSameName.expected.txt");
     assertThat(assertionsEntryPointContent).isEqualTo(expectedContent);
   }
 
@@ -88,7 +88,7 @@ public class AssertionsEntryPointGeneratorTest {
     File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet,
                                                                                    STANDARD, "my.custom.package");
     // THEN
-    String expectedContent = readFileToString(new File("src/test/resources/AssertionsWithCustomPackage.expected.txt"));
+    String expectedContent = readExpectedContentFromFile("AssertionsWithCustomPackage.expected.txt");
     assertThat(assertionsEntryPointFile).as("check entry point class content")
                                         .hasContent(expectedContent)
                                         .hasParent("target/my/custom/package");
@@ -104,7 +104,7 @@ public class AssertionsEntryPointGeneratorTest {
     // WHEN
     File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet, BDD, null);
     // THEN
-    String expectedContent = readFileToString(new File("src/test/resources/BddAssertions.expected.txt"));
+    String expectedContent = readExpectedContentFromFile("BddAssertions.expected.txt");
     assertThat(assertionsEntryPointFile).as("check BDD entry point class content").hasContent(expectedContent);
   }
 
@@ -118,7 +118,7 @@ public class AssertionsEntryPointGeneratorTest {
     // WHEN
     File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet, SOFT, null);
     // THEN
-    String expectedContent = readFileToString(new File("src/test/resources/SoftAssertions.expected.txt"));
+    String expectedContent = readExpectedContentFromFile("SoftAssertions.expected.txt");
     assertThat(assertionsEntryPointFile).as("check soft assertions entry point class content")
                                         .hasContent(expectedContent);
   }
@@ -134,7 +134,7 @@ public class AssertionsEntryPointGeneratorTest {
     File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet, JUNIT_SOFT,
                                                                                    null);
     // THEN
-    String expectedContent = readFileToString(new File("src/test/resources/JUnitSoftAssertions.expected.txt"));
+    String expectedContent = readExpectedContentFromFile("JUnitSoftAssertions.expected.txt");
     assertThat(assertionsEntryPointFile).as("check JUnit soft assertions entry point class content")
                                         .hasContent(expectedContent);
   }
@@ -150,7 +150,7 @@ public class AssertionsEntryPointGeneratorTest {
     File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet, BDD_SOFT,
                                                                                    null);
     // THEN
-    String expectedContent = readFileToString(new File("src/test/resources/BDDSoftAssertions.expected.txt"));
+    String expectedContent = readExpectedContentFromFile("BDDSoftAssertions.expected.txt");
     assertThat(assertionsEntryPointFile).as("check BDD soft assertions entry point class content")
                                         .hasContent(expectedContent);
   }
@@ -166,7 +166,7 @@ public class AssertionsEntryPointGeneratorTest {
     File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet, JUNIT_BDD_SOFT,
                                                                                    null);
     // THEN
-    String expectedContent = readFileToString(new File("src/test/resources/JUnitBDDSoftAssertions.expected.txt"));
+    String expectedContent = readExpectedContentFromFile("JUnitBDDSoftAssertions.expected.txt");
     assertThat(assertionsEntryPointFile).as("check JUnit BDD soft assertions entry point class content")
                                         .hasContent(expectedContent);
   }
@@ -224,6 +224,10 @@ public class AssertionsEntryPointGeneratorTest {
     BaseAssertionGenerator assertionGenerator = new BaseAssertionGenerator();
     assertionGenerator.setDirectoryWhereAssertionFilesAreGenerated(TARGET_DIRECTORY);
     return assertionGenerator;
+  }
+
+  private String readExpectedContentFromFile(String fileWithExpectedContent) {
+    return contentOf(new File("src/test/resources", fileWithExpectedContent));
   }
 
 }

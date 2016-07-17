@@ -39,7 +39,7 @@ import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.reflect.Modifier.isPublic;
-import static org.apache.commons.io.FileUtils.readFileToString;
+import static java.nio.charset.Charset.defaultCharset;
 import static org.apache.commons.lang3.StringUtils.replace;
 import static org.assertj.assertions.generator.BaseAssertionGenerator.ABSTRACT_ASSERT_CLASS_PREFIX;
 import static org.assertj.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_FILE_SUFFIX;
@@ -47,11 +47,13 @@ import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
 import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClassNotSeparatedByDots;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.contentOf;
 
 @RunWith(Theories.class)
 public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExceptionsTest {
   private static final String LINE_SEPARATOR = System.getProperty("line.separator");
   private static final String TARGET_DIRECTORY = "target";
+  private static final File RESOURCES_DIRECTORY = new File("src/test/resources");
   private static final Logger logger = LoggerFactory.getLogger(AssertionGeneratorTest.class);
   private ClassToClassDescriptionConverter converter;
   private AssertionGenerator assertionGenerator;
@@ -160,7 +162,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   @Theory
   public void should_generate_assertion_for_property_with_exception(Class<?> beanClass) throws Exception {
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(beanClass));
-    String expectedContent = readFileToString(new File("src/test/resources/BeanWithOneException.expected.txt"));
+    String expectedContent = contentOf(new File(RESOURCES_DIRECTORY, "BeanWithOneException.expected.txt"), defaultCharset());
     if (!BEAN_WITH_ONE_EXCEPTION.equals(beanClass)) {
       expectedContent = expectedContent.replace(BEAN_WITH_ONE_EXCEPTION.getSimpleName(), beanClass.getSimpleName());
       expectedContent = expectedContent.replace(" throws java.io.IOException ",
@@ -222,17 +224,17 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   static void assertGeneratedAssertClass(Class<?> clazz, String expectedAssertFile) {
-    File expectedFile = new File("src/test/resources/" + expectedAssertFile).getAbsoluteFile();
+    File expectedFile = new File(RESOURCES_DIRECTORY, expectedAssertFile).getAbsoluteFile();
     assertThat(fileGeneratedFor(clazz)).hasSameContentAs(expectedFile);
   }
 
   private static void assertAbstractGeneratedAssertClass(Class<?> clazz, String expectedAssertFile) {
-    File expectedFile = new File("src/test/resources/" + expectedAssertFile).getAbsoluteFile();
+    File expectedFile = new File(RESOURCES_DIRECTORY, expectedAssertFile).getAbsoluteFile();
     assertThat(abstractFileGeneratedFor(clazz)).hasSameContentAs(expectedFile);
   }
 
   private static String expectedContentFromTemplate(Class<?> clazz, String fileTemplate) throws IOException {
-    String template = readFileToString(new File("src/test/resources/" + fileTemplate));
+    String template = contentOf(new File(RESOURCES_DIRECTORY, fileTemplate), defaultCharset());
     String content = replace(template, "${nestedClass}Assert", getSimpleNameWithOuterClassNotSeparatedByDots(clazz)
                                                                + "Assert");
     content = replace(content, "${nestedClass}", getSimpleNameWithOuterClass(clazz));

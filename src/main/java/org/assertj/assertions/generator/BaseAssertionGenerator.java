@@ -28,6 +28,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.capitalize;
@@ -73,7 +75,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   // assertions classes are generated in their package directory starting from targetBaseDirectory.
   // ex : com.nba.Player -> targetBaseDirectory/com/nba/PlayerAssert.java
   private String targetBaseDirectory = ".";
-  private TemplateRegistry templateRegistry;
+  private TemplateRegistry templateRegistry;// the pattern to search for
+
+  // used to infer the class name from the entry point custom template (specially if the template is custom)
+  // - [\s]*    : any number of white space character
+  // - \b(.*)\b : capture word
+  private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("public class[\\s]+\\b(.*)\\b");
 
   /**
    * Creates a new </code>{@link BaseAssertionGenerator}</code> with default templates directory.
@@ -85,7 +92,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   /**
-   * Creates a new </code>{@link BaseAssertionGenerator}</code> with in the specified directory.
+   * Creates a new </code>{@link BaseAssertionGenerator}</code> with the templates from the given directory.
    *
    * @param templatesDirectory path where to find templates
    * @throws IOException if some template file could not be found or read
@@ -271,8 +278,19 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     String assertionsEntryPointFileContent = generateAssertionsEntryPointClassContentFor(classDescriptionSet,
                                                                                          assertionsEntryPointType,
                                                                                          entryPointClassPackage);
-    return createAssertionsFileFor(classDescriptionSet, assertionsEntryPointFileContent,
-                                   assertionsEntryPointType.getFileName(), entryPointClassPackage);
+    String fileName = determineFileName(assertionsEntryPointFileContent, assertionsEntryPointType);
+    return createAssertionsFileFor(classDescriptionSet, assertionsEntryPointFileContent, fileName,
+                                   entryPointClassPackage);
+  }
+
+  private String determineFileName(String assertionsEntryPointFileContent,
+                                   AssertionsEntryPointType assertionsEntryPointType) {
+    // expecting the class name to be here : "class <class name> "
+    Matcher classNameMatcher = CLASS_NAME_PATTERN.matcher(assertionsEntryPointFileContent);
+    // if we find a match return it
+    if (classNameMatcher.find()) return classNameMatcher.group(1)+ ".java";
+    // otherwise use the default name
+    return assertionsEntryPointType.getFileName();
   }
 
   private String generateAssertionsEntryPointClassContent(final Set<ClassDescription> classDescriptionSet,

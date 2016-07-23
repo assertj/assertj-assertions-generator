@@ -21,6 +21,7 @@ import static org.assertj.assertions.generator.AssertionsEntryPointType.JUNIT_BD
 import static org.assertj.assertions.generator.AssertionsEntryPointType.JUNIT_SOFT;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.SOFT;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.STANDARD;
+import static org.assertj.assertions.generator.DefaultTemplateRegistryProducer.DEFAULT_ASSERTIONS_ENTRY_POINT_CLASS_TEMPLATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.contentOf;
 
@@ -45,7 +46,7 @@ import org.assertj.assertions.generator.description.converter.ClassToClassDescri
 
 public class AssertionsEntryPointGeneratorTest {
   private static final String TARGET_DIRECTORY = "target";
-  private AssertionsEntryPointGenerator generator;
+  private BaseAssertionGenerator generator;
 
   @Before
   public void beforeEachTest() throws IOException {
@@ -181,7 +182,8 @@ public class AssertionsEntryPointGeneratorTest {
                                                                        TolkienCharacter.class, TreeEnum.class,
                                                                        Movie.PublicCategory.class);
     // WHEN
-    File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet, AUTO_CLOSEABLE_SOFT,
+    File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet,
+                                                                                   AUTO_CLOSEABLE_SOFT,
                                                                                    null);
     // THEN
     String expectedContent = readExpectedContentFromFile("AutoCloseableSoftAssertions.expected.txt");
@@ -197,12 +199,30 @@ public class AssertionsEntryPointGeneratorTest {
                                                                        TolkienCharacter.class, TreeEnum.class,
                                                                        Movie.PublicCategory.class);
     // WHEN
-    File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet, AUTO_CLOSEABLE_BDD_SOFT,
+    File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet,
+                                                                                   AUTO_CLOSEABLE_BDD_SOFT,
                                                                                    null);
     // THEN
     String expectedContent = readExpectedContentFromFile("AutoCloseableBDDSoftAssertions.expected.txt");
     assertThat(assertionsEntryPointFile).as("check auto closeable BDD soft assertions entry point class content")
                                         .hasContent(expectedContent);
+  }
+
+  @Test
+  public void should_generate_an_assertions_entry_point_class_file_that_matches_given_class_name() throws Exception {
+    // GIVEN : custom entry point class template changing the class name.
+    Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class);
+    generator.register(new Template(Template.Type.ASSERTIONS_ENTRY_POINT_CLASS,
+                                    new File("customtemplates" + File.separator,
+                                             "my_assertion_entry_point_class.txt")));
+    // WHEN
+    File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet, STANDARD, null);
+
+    // THEN
+    String expectedContent = readExpectedContentFromFile("MyAssertions.expected.txt");
+    assertThat(assertionsEntryPointFile).as("check custom assertions entry point class")
+                                        .hasContent(expectedContent)
+                                        .hasName("MyAssertions.java");
   }
 
   @Test
@@ -217,7 +237,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_return_empty_assertion_entry_point_class_if_no_classes_description_are_given() throws Exception {
+  public void should_return_empty_assertion_entry_point_class_content_if_no_classes_description_are_given() throws Exception {
     // GIVEN no ClassDescription
     Set<ClassDescription> emptySet = newLinkedHashSet();
     // THEN generated entry points content are empty
@@ -254,7 +274,7 @@ public class AssertionsEntryPointGeneratorTest {
     return classDescriptionSet;
   }
 
-  private AssertionsEntryPointGenerator buildAssertionGenerator() throws IOException {
+  private BaseAssertionGenerator buildAssertionGenerator() throws IOException {
     BaseAssertionGenerator assertionGenerator = new BaseAssertionGenerator();
     assertionGenerator.setDirectoryWhereAssertionFilesAreGenerated(TARGET_DIRECTORY);
     return assertionGenerator;

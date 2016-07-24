@@ -12,22 +12,29 @@
  */
 package org.assertj.assertions.generator.description.converter;
 
+import com.google.common.collect.Sets;
+
 import java.util.Collections;
 import java.util.Set;
 
+/**
+ * Defines which annotations to use to annotate getters method or class to generate assertions for.
+ * <p>
+ * @see org.assertj.assertions.generator.GenerateAssertion
+ */
 public class AnnotationConfiguration {
 
-  private final Set<Class<?>> includeAnnotations;
+  private final Set<Class<?>> includedAnnotations;
 
-  public AnnotationConfiguration(Set<Class<?>> includeAnnotations) {
-    this.includeAnnotations = includeAnnotations;
+  public AnnotationConfiguration(Set<Class<?>> includedAnnotations) {
+    this.includedAnnotations = includedAnnotations;
   }
 
-  public AnnotationConfiguration() {
-    this(Collections.<Class<?>>emptySet());
+  public AnnotationConfiguration(Class<?>... includedAnnotations) {
+    this.includedAnnotations = Sets.newHashSet(includedAnnotations);
   }
 
-  public Set<Class<?>> getIncludeAnnotations() {
-    return includeAnnotations;
+  public Set<Class<?>> includedAnnotations() {
+    return includedAnnotations;
   }
 }

@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.assertj.assertions.generator.GenerateAssertion;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.FieldDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
@@ -40,14 +41,14 @@ import org.assertj.assertions.generator.util.ClassUtil;
 
 public class ClassToClassDescriptionConverter implements ClassDescriptionConverter<Class<?>> {
 
-  private final AnnotationConfiguration config;
+  private final AnnotationConfiguration annotationConfiguration;
 
   public ClassToClassDescriptionConverter() {
-	this(new AnnotationConfiguration());
+    this(new AnnotationConfiguration(GenerateAssertion.class));
   }
 
   public ClassToClassDescriptionConverter(AnnotationConfiguration annotationConfiguration) {
-	this.config = annotationConfiguration;
+    this.annotationConfiguration = annotationConfiguration;
   }
 
   public ClassDescription convertToClassDescription(Class<?> clazz) {
@@ -61,11 +62,11 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
   }
 
   private Set<GetterDescription> getterDescriptionsOf(Class<?> clazz) {
-    return doGetterDescriptionsOf(getterMethodsOf(clazz, config.getIncludeAnnotations()), clazz);
+    return doGetterDescriptionsOf(getterMethodsOf(clazz, annotationConfiguration.includedAnnotations()), clazz);
   }
 
   private Set<GetterDescription> declaredGetterDescriptionsOf(Class<?> clazz) {
-    return doGetterDescriptionsOf(declaredGetterMethodsOf(clazz, config.getIncludeAnnotations()), clazz);
+    return doGetterDescriptionsOf(declaredGetterMethodsOf(clazz, annotationConfiguration.includedAnnotations()), clazz);
   }
 
   private Set<GetterDescription> doGetterDescriptionsOf(Set<Method> getters, Class<?> clazz) {

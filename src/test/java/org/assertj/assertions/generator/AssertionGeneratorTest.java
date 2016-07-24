@@ -12,8 +12,10 @@
  */
 package org.assertj.assertions.generator;
 
-import org.assertj.assertions.generator.data.Annotations;
+import org.assertj.assertions.generator.data.AnnotatedClass;
 import org.assertj.assertions.generator.data.ArtWork;
+import org.assertj.assertions.generator.data.AutoValue;
+import org.assertj.assertions.generator.data.AutoValueAnnotatedClass;
 import org.assertj.assertions.generator.data.BooleanPredicates;
 import org.assertj.assertions.generator.data.FieldPropertyClash;
 import org.assertj.assertions.generator.data.InterferencePrimitives;
@@ -184,11 +186,6 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     assertThat(fileGeneratedFor(beanClass)).hasContent(expectedContent);
   }
 
-  private String generateThrowsClause(Class<?> exception, String property, boolean booleanType) {
-    String getter = (booleanType ? "is" : "get") + Character.toUpperCase(property.charAt(0)) + property.substring(1);
-    return "   * @throws " + exception.getName() + " if actual." + getter + "() throws one." + LINE_SEPARATOR;
-  }
-
   @Test
   public void should_generate_assertion_for_classes_in_package() throws Exception {
     Set<Class<?>> classes = collectClasses("org.assertj.assertions.generator.data");
@@ -227,11 +224,23 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   @Test
-  public void should_generate_assertion_for_annotated_properties() throws IOException {
-    Set<Class<?>> assertions = Collections.<Class<?>>singleton(Annotations.Property.class);
-    converter = new ClassToClassDescriptionConverter(new AnnotationConfiguration(assertions));
-    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Annotations.class));
-    assertGeneratedAssertClass(Annotations.class, "Annotations.expected.txt");
+  public void should_generate_assertion_for_annotated_methods() throws IOException {
+    converter = new ClassToClassDescriptionConverter(new AnnotationConfiguration(GenerateAssertion.class));
+    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(AnnotatedClass.class));
+    assertGeneratedAssertClass(AnnotatedClass.class, "AnnotatedClassAssert.expected.txt");
+  }
+
+  @Test
+  public void should_generate_assertion_for_methods_annotated_with_GenerateAssertion_by_default() throws IOException {
+    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(AnnotatedClass.class));
+    assertGeneratedAssertClass(AnnotatedClass.class, "AnnotatedClassAssert.expected.txt");
+  }
+
+  @Test
+  public void should_generate_assertion_for_annotated_class() throws IOException {
+    converter = new ClassToClassDescriptionConverter(new AnnotationConfiguration(AutoValue.class));
+    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(AutoValueAnnotatedClass.class));
+    assertGeneratedAssertClass(AutoValueAnnotatedClass.class, "AutoValueAnnotatedClassAssert.expected.txt");
   }
 
   static void assertGeneratedAssertClass(Class<?> clazz, String expectedAssertFile) {
@@ -271,6 +280,11 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     public MyClassLoader(ClassLoader parent) {
       super(parent);
     }
+  }
+
+  private String generateThrowsClause(Class<?> exception, String property, boolean booleanType) {
+    String getter = (booleanType ? "is" : "get") + Character.toUpperCase(property.charAt(0)) + property.substring(1);
+    return "   * @throws " + exception.getName() + " if actual." + getter + "() throws one." + LINE_SEPARATOR;
   }
 
 }

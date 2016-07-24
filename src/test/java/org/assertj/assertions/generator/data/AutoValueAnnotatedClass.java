@@ -12,26 +12,24 @@
  */
 package org.assertj.assertions.generator.data;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import org.assertj.assertions.generator.GenerateAssertion;
 
 /**
- * This is a class whose properties are marked with annotations.
+ * class with annotated non standard getters in order to generate assertions for them.
  */
-public class Annotations {
-  @Retention(RetentionPolicy.RUNTIME)
-  public @interface Property {
-  }
+@AutoValue
+public class AutoValueAnnotatedClass {
 
-  @Annotations.Property public boolean thisIsAProperty() {
+  public boolean thisIsAProperty() {
     return false;
   }
 
-  public boolean thisIsNotAProperty() {
+  // assertion will be generated as this is a standard getter
+  public boolean getStuff() {
     return false;
   }
 
-  @Annotations.Property public Object anotherProperty() {
+  public Object anotherProperty() {
     return null;
   }
 }

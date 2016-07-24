@@ -13,7 +13,7 @@
     String assertjErrorMessage = "\nExpecting ${property} of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
 
     // null safe check
-    ${propertyType} actual${Property} = actual.get${Property}();
+    ${propertyType} actual${Property} = actual.${getter}();
     if (!Objects.areEqual(actual${Property}, ${property_safe})) {
       failWithMessage(assertjErrorMessage, actual, ${property_safe}, actual${Property});
     }
@@ -35,7 +35,7 @@
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
-    ${propertyType} actual${Property} = actual.get${Property}();
+    ${propertyType} actual${Property} = actual.${getter}();
     
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting ${property}:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",

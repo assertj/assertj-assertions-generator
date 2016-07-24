@@ -40,6 +40,16 @@ import org.assertj.assertions.generator.util.ClassUtil;
 
 public class ClassToClassDescriptionConverter implements ClassDescriptionConverter<Class<?>> {
 
+  private final AnnotationConfiguration config;
+
+  public ClassToClassDescriptionConverter() {
+	this(new AnnotationConfiguration());
+  }
+
+  public ClassToClassDescriptionConverter(AnnotationConfiguration annotationConfiguration) {
+	this.config = annotationConfiguration;
+  }
+
   public ClassDescription convertToClassDescription(Class<?> clazz) {
     ClassDescription classDescription = new ClassDescription(new TypeName(clazz));
     classDescription.addGetterDescriptions(getterDescriptionsOf(clazz));
@@ -51,11 +61,11 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
   }
 
   private Set<GetterDescription> getterDescriptionsOf(Class<?> clazz) {
-    return doGetterDescriptionsOf(getterMethodsOf(clazz), clazz);
+    return doGetterDescriptionsOf(getterMethodsOf(clazz, config.getIncludeAnnotations()), clazz);
   }
 
   private Set<GetterDescription> declaredGetterDescriptionsOf(Class<?> clazz) {
-    return doGetterDescriptionsOf(declaredGetterMethodsOf(clazz), clazz);
+    return doGetterDescriptionsOf(declaredGetterMethodsOf(clazz, config.getIncludeAnnotations()), clazz);
   }
 
   private Set<GetterDescription> doGetterDescriptionsOf(Set<Method> getters, Class<?> clazz) {

@@ -17,6 +17,7 @@ import org.assertj.assertions.generator.GenerateAssertion;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.FieldDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
+import org.assertj.assertions.generator.util.ClassUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -78,17 +79,17 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
   }
 
   private Set<FieldDescription> declaredFieldDescriptionsOf(TypeToken<?> type) {
-    return doFieldDescriptionsOf(type, declaredPublicFieldsOf(type));
+    return doFieldDescriptionsOf(type, declaredFieldsOf(type));
   }
 
   private Set<FieldDescription> fieldDescriptionsOf(TypeToken<?> type) {
-    return doFieldDescriptionsOf(type, nonStaticPublicFieldsOf(type));
+    return doFieldDescriptionsOf(type, nonStaticFieldsOf(type));
   }
 
   private Set<FieldDescription> doFieldDescriptionsOf(TypeToken<?> type, List<Field> fields) {
     Set<FieldDescription> fieldDescriptions = new TreeSet<>();
     for (Field field : fields) {
-      fieldDescriptions.add(new FieldDescription(field, type));
+      fieldDescriptions.add(new FieldDescription(field, ClassUtil.visibilityOf(field), type));
     }
     return fieldDescriptions;
   }

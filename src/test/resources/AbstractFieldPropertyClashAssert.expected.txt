@@ -184,9 +184,4 @@ public abstract class AbstractFieldPropertyClashAssert<S extends AbstractFieldPr
     return myself;
   }
 
-
-
-
-
-
 }

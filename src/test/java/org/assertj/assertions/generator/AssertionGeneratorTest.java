@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -55,7 +54,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   private static final String LINE_SEPARATOR = "\n";
   private static final Logger logger = LoggerFactory.getLogger(AssertionGeneratorTest.class);
   private ClassToClassDescriptionConverter converter;
-  private AssertionGenerator assertionGenerator;
+  private BaseAssertionGenerator assertionGenerator;
 
   @Rule
   public final GenerationPathHandler generationPathHandler = new GenerationPathHandler(AssertionGeneratorTest.class,
@@ -90,6 +89,14 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_generate_assertion_for_comparable_class() throws Exception {
     verifyFlatAssertionGenerationFor(Name.class);
     verifyHierarchicalAssertionGenerationFor(Name.class);
+  }
+
+  @Test
+  public void should_generate_assertion_for_class_with_private_fields() throws Exception {
+    Set<TypeToken<?>> classesInHierarchy = setOfTypeTokens(WithPrivateFieldsParent.class);
+    assertionGenerator.setGenerateAssertionsForAllFields(true);
+    verifyFlatAssertionGenerationFor(WithPrivateFields.class);
+    verifyHierarchicalAssertionGenerationFor(WithPrivateFields.class, classesInHierarchy);
   }
 
   @Test
@@ -135,8 +142,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 
   @Test
   public void should_generate_hierarchical_assertion_for_artwork_classes() throws Exception {
-    Set<TypeToken<?>> artClasses =
-        new HashSet<>(Arrays.<TypeToken<?>>asList(TypeToken.of(Movie.class), TypeToken.of(ArtWork.class), TypeToken.of(BlockBuster.class)));
+    Set<TypeToken<?>> artClasses = setOfTypeTokens(Movie.class, ArtWork.class, BlockBuster.class);
     verifyHierarchicalAssertionGenerationFor(BlockBuster.class, artClasses);
   }
 
@@ -151,7 +157,8 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   @Theory
   public void should_generate_hierarchical_assertion_for_nested_class(NestedClass nestedClass) throws Exception {
     Class<?> clazz = nestedClass.nestedClass;
-    assertionGenerator.generateHierarchicalCustomAssertionFor(converter.convertToClassDescription(clazz), EMPTY_HIERARCHY);
+    assertionGenerator.generateHierarchicalCustomAssertionFor(converter.convertToClassDescription(clazz),
+                                                              EMPTY_HIERARCHY);
     assertThat(generationPathHandler.fileGeneratedFor(clazz)).hasContent(expectedContentFromTemplate(nestedClass,
                                                                                                      "NestedClassAssert.hierarchical.template.expected.txt"));
   }
@@ -160,10 +167,12 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_generate_assertion_for_property_with_exception(TypeToken<?> beanType) throws Exception {
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(beanType));
     Class<?> clazz = beanType.getRawType();
-    String expectedContent = contentOf(generationPathHandler.getResourcesDir().resolve("BeanWithOneException.expected.txt").toFile(),
+    String expectedContent = contentOf(generationPathHandler.getResourcesDir()
+                                                            .resolve("BeanWithOneException.expected.txt").toFile(),
                                        defaultCharset());
     if (!BEAN_WITH_ONE_EXCEPTION.equals(beanType)) {
-      expectedContent = expectedContent.replace(BEAN_WITH_ONE_EXCEPTION.getRawType().getSimpleName(), clazz.getSimpleName());
+      expectedContent = expectedContent.replace(BEAN_WITH_ONE_EXCEPTION.getRawType().getSimpleName(),
+                                                clazz.getSimpleName());
       expectedContent = expectedContent.replace(" throws java.io.IOException ",
                                                 " throws java.io.IOException, java.sql.SQLException ");
 
@@ -189,7 +198,8 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
       assertThat(clazz.isAnonymousClass()).as("check that <" + clazz.getSimpleName() + "> is not anonymous").isFalse();
       assertThat(clazz.isLocalClass()).as("check that " + clazz.getSimpleName() + " is not local").isFalse();
       assertThat(isPublic(clazz.getModifiers())).as("check that " + clazz.getSimpleName() + " is public").isTrue();
-      assertThat(clazz.getName()).as("check that " + clazz.getSimpleName() + " is not package-info").doesNotContain("package-info");
+      assertThat(clazz.getName()).as("check that " + clazz.getSimpleName() + " is not package-info")
+                                 .doesNotContain("package-info");
       logger.info("Generating assertions for {}", clazz.getName());
       final ClassDescription classDescription = converter.convertToClassDescription(clazz);
       File customAssertionFile = assertionGenerator.generateCustomAssertionFor(classDescription);
@@ -203,7 +213,8 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     Set<TypeToken<?>> types = collectClasses(customClassLoader, "org.assertj.assertions.generator.data");
     for (TypeToken<?> type : types) {
       Class<?> clazz = type.getRawType();
-      assertThat(clazz.getName()).as("check that " + clazz.getSimpleName() + " is not package-info").doesNotContain("package-info");
+      assertThat(clazz.getName()).as("check that " + clazz.getSimpleName() + " is not package-info")
+                                 .doesNotContain("package-info");
       assertThat(clazz.isAnonymousClass()).as("check that " + clazz.getSimpleName() + " is not anonymous").isFalse();
       assertThat(clazz.isLocalClass()).as("check that " + clazz.getSimpleName() + " is not local").isFalse();
       assertThat(isPublic(clazz.getModifiers())).as("check that " + clazz.getSimpleName() + " is public").isTrue();
@@ -258,13 +269,16 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   private String expectedContentFromTemplate(NestedClass nestedClass, String fileTemplate) throws IOException {
-    String template = contentOf(generationPathHandler.getResourcesDir().resolve(fileTemplate).toFile(), defaultCharset());
-    String content = replace(template, "${nestedClass}Assert", remove(nestedClass.classNameWithOuterClass, '.') + "Assert");
+    String template = contentOf(generationPathHandler.getResourcesDir().resolve(fileTemplate).toFile(),
+                                defaultCharset());
+    String content = replace(template, "${nestedClass}Assert",
+                             remove(nestedClass.classNameWithOuterClass, '.') + "Assert");
     content = replace(content, "${nestedClass}", nestedClass.classNameWithOuterClass);
     return content;
   }
 
-  @SuppressWarnings("WeakerAccess") class MyClassLoader extends ClassLoader {
+  @SuppressWarnings("WeakerAccess")
+  class MyClassLoader extends ClassLoader {
     public MyClassLoader(ClassLoader parent) {
       super(parent);
     }
@@ -282,7 +296,8 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     verifyHierarchicalAssertionGenerationFor(clazz, EMPTY_HIERARCHY);
   }
 
-  private void verifyHierarchicalAssertionGenerationFor(Class<?> aClass, Set<TypeToken<?>> typeHierarchy) throws IOException {
+  private void verifyHierarchicalAssertionGenerationFor(Class<?> aClass,
+                                                        Set<TypeToken<?>> typeHierarchy) throws IOException {
 
     List<File> generatedAssertFiles = newArrayList();
     Set<Class<?>> classes = toClasses(aClass, typeHierarchy);
@@ -290,7 +305,8 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 
     for (Class<?> clazz : classes) {
       ClassDescription classDescription = converter.convertToClassDescription(clazz);
-      generatedAssertFiles.addAll(asList(assertionGenerator.generateHierarchicalCustomAssertionFor(classDescription, typeHierarchy)));
+      generatedAssertFiles.addAll(asList(assertionGenerator.generateHierarchicalCustomAssertionFor(classDescription,
+                                                                                                   typeHierarchy)));
 
       String expectedConcreteAssertFile = clazz.getSimpleName() + "Assert.expected.txt";
       generationPathHandler.assertGeneratedAssertClass(clazz, expectedConcreteAssertFile, false);
@@ -313,6 +329,14 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   private String generateThrowsClause(Class<?> exception, String property, boolean booleanType) {
     String getter = (booleanType ? "is" : "get") + Character.toUpperCase(property.charAt(0)) + property.substring(1);
     return "   * @throws " + exception.getName() + " if actual." + getter + "() throws one." + LINE_SEPARATOR;
+  }
+
+  private static Set<TypeToken<?>> setOfTypeTokens(Class<?>... classes) {
+    Set<TypeToken<?>> types = new HashSet<>();
+    for (Class<?> clazz:         classes) {
+      types.add(TypeToken.of(clazz));
+    }
+    return types;
   }
 
 }

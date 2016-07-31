@@ -76,10 +76,61 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     }
   };
 
-  // assertions classes are generated in their package directory starting from targetBaseDirectory.
-  // ex : com.nba.Player -> targetBaseDirectory/com/nba/PlayerAssert.java
-  private File targetBaseDirectory = Paths.get(".").toFile();
-  private TemplateRegistry templateRegistry;// the pattern to search for
+  private static final Set<String> JAVA_KEYWORDS = newHashSet("abstract",
+                                                              "assert",
+                                                              "boolean",
+                                                              "break",
+                                                              "byte",
+                                                              "case",
+                                                              "catch",
+                                                              "char",
+                                                              // This one's not strictly required because you can't have
+                                                              // a property called "class"
+                                                              "class",
+                                                              "const",
+                                                              "continue",
+                                                              "default",
+                                                              "do",
+                                                              "double",
+                                                              "else",
+                                                              "enum",
+                                                              "extends",
+                                                              "false",
+                                                              "final",
+                                                              "finally",
+                                                              "float",
+                                                              "for",
+                                                              "goto",
+                                                              "if",
+                                                              "implements",
+                                                              "import",
+                                                              "instanceof",
+                                                              "int",
+                                                              "interface",
+                                                              "long",
+                                                              "native",
+                                                              "new",
+                                                              "null",
+                                                              "package",
+                                                              "protected",
+                                                              "private",
+                                                              "public",
+                                                              "return",
+                                                              "short",
+                                                              "static",
+                                                              "strictfp",
+                                                              "super",
+                                                              "switch",
+                                                              "synchronized",
+                                                              "this",
+                                                              "throw",
+                                                              "throws",
+                                                              "transient",
+                                                              "true",
+                                                              "try",
+                                                              "void",
+                                                              "volatile",
+                                                              "while");
 
   /**
    * This regexp shall match a java class's name inside an user template.
@@ -102,10 +153,17 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
    * @see Character#isJavaIdentifierStart
    * @see Character#isJavaIdentifierPart
    */
-  private static final Pattern CLASS_NAME_PATTERN = Pattern
-                                                           .compile("(?m)^public class[\\s]+(?<CLASSNAME>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)\\b");
+  private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("(?m)^public class[\\s]+(?<CLASSNAME>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)\\b");
 
   private static final Set<TypeToken<?>> EMPTY_HIERARCHY = new HashSet<>();
+
+  private static final String NON_PUBLIC_FIELD_VALUE_EXTRACTION = "org.assertj.core.util.introspection.FieldSupport.EXTRACTION.fieldValue(\"%s\", %s.class, actual)";
+
+  // assertions classes are generated in their package directory starting from targetBaseDirectory.
+  // ex : com.nba.Player -> targetBaseDirectory/com/nba/PlayerAssert.java
+  private File targetBaseDirectory = Paths.get(".").toFile();
+  private TemplateRegistry templateRegistry;// the pattern to search for
+  private boolean generateAssertionsForAllFields = false;
 
   /**
    * Creates a new </code>{@link BaseAssertionGenerator}</code> with default templates directory.
@@ -128,6 +186,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
   public void setDirectoryWhereAssertionFilesAreGenerated(File targetBaseDirectory) {
     this.targetBaseDirectory = targetBaseDirectory;
+  }
+
+  public void setGenerateAssertionsForAllFields(boolean generateAssertionsForAllFields) {
+    this.generateAssertionsForAllFields = generateAssertionsForAllFields;
   }
 
   @Override
@@ -166,9 +228,9 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     String abstractAssertClassContent = templateRegistry.getTemplate(ABSTRACT_ASSERT_CLASS).getContent();
     StringBuilder abstractAssertClassContentBuilder = new StringBuilder(abstractAssertClassContent);
 
-    // generate assertion method for each property with a public getter
+    // generate assertion method for each property with a public getter or field
     generateAssertionsForDeclaredGettersOf(abstractAssertClassContentBuilder, classDescription);
-    generateAssertionsForDeclaredPublicFieldsOf(abstractAssertClassContentBuilder, classDescription);
+    generateAssertionsForDeclaredFieldsOf(abstractAssertClassContentBuilder, classDescription);
 
     // close class with }
     abstractAssertClassContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
@@ -230,7 +292,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
     // in case the domain class is Comparable we want the assert class to inherit from AbstractComparableAssert
     template = switchToComparableAssertIfPossible(template, classDescription);
-    
+
     return template;
   }
 
@@ -247,7 +309,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
     // generate assertion method for each property with a public getter
     generateAssertionsForGettersOf(assertionFileContentBuilder, classDescription);
-    generateAssertionsForPublicFieldsOf(assertionFileContentBuilder, classDescription);
+    generateAssertionsForFieldsOf(assertionFileContentBuilder, classDescription);
 
     // close class with }
     assertionFileContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
@@ -452,21 +514,26 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     }
   }
 
-  protected void generateAssertionsForPublicFieldsOf(StringBuilder contentBuilder, ClassDescription classDescription) {
-    generateAssertionsForPublicFields(contentBuilder, classDescription.getFieldsDescriptions(), classDescription);
+  protected void generateAssertionsForFieldsOf(StringBuilder contentBuilder, ClassDescription classDescription) {
+    generateAssertionsForFields(contentBuilder, classDescription.getFieldsDescriptions(), classDescription);
   }
 
-  protected void generateAssertionsForDeclaredPublicFieldsOf(StringBuilder contentBuilder,
-                                                             ClassDescription classDescription) {
-    generateAssertionsForPublicFields(contentBuilder, classDescription.getDeclaredFieldsDescriptions(),
-                                      classDescription);
+  protected void generateAssertionsForDeclaredFieldsOf(StringBuilder contentBuilder,
+                                                       ClassDescription classDescription) {
+    generateAssertionsForFields(contentBuilder, classDescription.getDeclaredFieldsDescriptions(),
+                                classDescription);
   }
 
-  protected void generateAssertionsForPublicFields(StringBuilder assertionsForPublicFields,
-                                                   Set<FieldDescription> fields, ClassDescription classDescription) {
+  protected void generateAssertionsForFields(StringBuilder assertionsForPublicFields,
+                                             Set<FieldDescription> fields, ClassDescription classDescription) {
     for (FieldDescription field : fields) {
-      String assertionContent = assertionContentForField(field, classDescription);
-      assertionsForPublicFields.append(assertionContent).append(LINE_SEPARATOR);
+      if (generateAssertionsForAllFields || field.isPublic()) {
+        String assertionContent = assertionContentForField(field, classDescription);
+        // assertion can be empty if we have a getter for the field
+        if (!assertionContent.isEmpty()) {
+          assertionsForPublicFields.append(assertionContent).append(LINE_SEPARATOR);
+        }
+      }
     }
   }
 
@@ -483,29 +550,19 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // we reuse template for properties to have consistent assertions for property and field but change the way we get
     // the value since it's a field and not a property:
     assertionContent = assertionContent.replace("${getter}()", PROPERTY_WITH_LOWERCASE_FIRST_CHAR);
-    // - remove also ${throws} and ${throws_javadoc} since it does not make any sense for a field
-    assertionContent = remove(assertionContent, "${throws}");
-    assertionContent = remove(assertionContent, "${throws_javadoc}");
+    // - remove also ${throws} and ${throws_javadoc} as it does not make sense for a field
+    assertionContent = remove(assertionContent, THROWS);
+    assertionContent = remove(assertionContent, THROWS_JAVADOC);
 
-    // replace ${Property} and ${property} by field name (starting with uppercase/lowercase)
+    if (!field.isPublic()) {
+      // if field is not public, we need to use reflection to get its value, ex :
+      // org.assertj.core.util.introspection.FieldSupport.EXTRACTION.fieldValue("grade", Grade.class, actual);
+      assertionContent = assertionContent.replace("actual." + PROPERTY_WITH_LOWERCASE_FIRST_CHAR,
+                                                  format(NON_PUBLIC_FIELD_VALUE_EXTRACTION,
+                                                         PROPERTY_WITH_LOWERCASE_FIRST_CHAR, PROPERTY_TYPE));
+    }
     if (field.isPredicate()) {
-      assertionContent = assertionContent
-                                         .replace("actual." + PREDICATE + "()",
-                                                  "actual." + field.getOriginalMember().getName());
-      assertionContent = assertionContent.replace(PREDICATE_FOR_JAVADOC,
-                                                  field.getPredicateForJavadoc());
-      assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_JAVADOC,
-                                                  field.getNegativePredicateForJavadoc());
-      assertionContent = assertionContent.replace(PREDICATE_FOR_FOR_ERROR_MESSAGE_PART1,
-                                                  field.getPredicateForErrorMessagePart1());
-      assertionContent = assertionContent.replace(PREDICATE_FOR_FOR_ERROR_MESSAGE_PART2,
-                                                  field.getPredicateForErrorMessagePart2());
-      assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_FOR_ERROR_MESSAGE_PART1,
-                                                  field.getNegativePredicateForErrorMessagePart1());
-      assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_FOR_ERROR_MESSAGE_PART2,
-                                                  field.getNegativePredicateForErrorMessagePart2());
-      assertionContent = replace(assertionContent, PREDICATE, field.getPredicate());
-      assertionContent = replace(assertionContent, PREDICATE_NEG, field.getNegativePredicate());
+      assertionContent = fillAssertionContentForPredicateField(field, assertionContent);
     }
     assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(field.getName()));
     assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE, field.getTypeName());
@@ -518,61 +575,33 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     return assertionContent;
   }
 
-  private static final Set<String> JAVA_KEYWORDS = newHashSet("abstract",
-                                                              "assert",
-                                                              "boolean",
-                                                              "break",
-                                                              "byte",
-                                                              "case",
-                                                              "catch",
-                                                              "char",
-                                                              // This one's not strictly required because you can't have
-                                                              // a property called "class"
-                                                              "class",
-                                                              "const",
-                                                              "continue",
-                                                              "default",
-                                                              "do",
-                                                              "double",
-                                                              "else",
-                                                              "enum",
-                                                              "extends",
-                                                              "false",
-                                                              "final",
-                                                              "finally",
-                                                              "float",
-                                                              "for",
-                                                              "goto",
-                                                              "if",
-                                                              "implements",
-                                                              "import",
-                                                              "instanceof",
-                                                              "int",
-                                                              "interface",
-                                                              "long",
-                                                              "native",
-                                                              "new",
-                                                              "null",
-                                                              "package",
-                                                              "protected",
-                                                              "private",
-                                                              "public",
-                                                              "return",
-                                                              "short",
-                                                              "static",
-                                                              "strictfp",
-                                                              "super",
-                                                              "switch",
-                                                              "synchronized",
-                                                              "this",
-                                                              "throw",
-                                                              "throws",
-                                                              "transient",
-                                                              "true",
-                                                              "try",
-                                                              "void",
-                                                              "volatile",
-                                                              "while");
+  private String fillAssertionContentForPredicateField(FieldDescription field, String assertionContent) {
+    if (field.isPublic()) {
+      assertionContent = assertionContent.replace("actual." + PREDICATE + "()",
+                                                  "actual." + field.getOriginalMember().getName());
+    } else {
+      // if field is not public, we need to use reflection to get its value, ex :
+      // org.assertj.core.util.introspection.FieldSupport.EXTRACTION.fieldValue("active", Boolean.class, actual);
+      assertionContent = assertionContent.replace("actual." + PREDICATE + "()",
+                                                  format(NON_PUBLIC_FIELD_VALUE_EXTRACTION,
+                                                         field.getOriginalMember().getName(), "Boolean"));
+    }
+    assertionContent = assertionContent.replace(PREDICATE_FOR_JAVADOC,
+                                                field.getPredicateForJavadoc());
+    assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_JAVADOC,
+                                                field.getNegativePredicateForJavadoc());
+    assertionContent = assertionContent.replace(PREDICATE_FOR_FOR_ERROR_MESSAGE_PART1,
+                                                field.getPredicateForErrorMessagePart1());
+    assertionContent = assertionContent.replace(PREDICATE_FOR_FOR_ERROR_MESSAGE_PART2,
+                                                field.getPredicateForErrorMessagePart2());
+    assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_FOR_ERROR_MESSAGE_PART1,
+                                                field.getNegativePredicateForErrorMessagePart1());
+    assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_FOR_ERROR_MESSAGE_PART2,
+                                                field.getNegativePredicateForErrorMessagePart2());
+    assertionContent = replace(assertionContent, PREDICATE, field.getPredicate());
+    assertionContent = replace(assertionContent, PREDICATE_NEG, field.getNegativePredicate());
+    return assertionContent;
+  }
 
   static private String getSafeProperty(String unsafe) {
     return JAVA_KEYWORDS.contains(unsafe) ? "expected" + capitalize(unsafe) : unsafe;

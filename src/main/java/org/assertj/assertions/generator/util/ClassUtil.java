@@ -19,6 +19,7 @@ import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.assertions.generator.description.Visibility;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,9 +33,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
+import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.*;
 
 /**
@@ -112,7 +115,7 @@ public class ClassUtil {
   }
 
   private static Set<TypeToken<?>> getPackageClassesFromClasspathJars(String packageName, ClassLoader classLoader)
-      throws IOException {
+                                                                                                                   throws IOException {
     ImmutableSet<ClassInfo> classesInfo = ClassPath.from(classLoader).getTopLevelClassesRecursive(packageName);
     Set<TypeToken<?>> classesInPackage = new HashSet<>();
     for (ClassInfo classInfo : classesInfo) {
@@ -143,8 +146,9 @@ public class ClassUtil {
       return classes;
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(packageName + " does not appear to be a valid package (Unsupported encoding)", e);
-    } catch (IOException ioex) {
-      throw new RuntimeException("IOException was thrown when trying to get all classes for " + packageName, ioex);
+    } catch (IOException ioException) {
+      throw new RuntimeException("IOException was thrown when trying to get all classes for " + packageName,
+                                 ioException);
     }
   }
 
@@ -160,7 +164,7 @@ public class ClassUtil {
    * @throws UnsupportedEncodingException thrown by {@link URLDecoder#decode(String, String)}
    */
   private static Set<TypeToken<?>> getClassesInDirectory(File directory, String packageName, ClassLoader classLoader)
-      throws UnsupportedEncodingException {
+                                                                                                                      throws UnsupportedEncodingException {
     Set<TypeToken<?>> classes = new LinkedHashSet<>();
 
     // Capture all the .class files in this directory
@@ -391,35 +395,47 @@ public class ClassUtil {
            || isAnnotated(method, includeAnnotations, isClassAnnotated);
   }
 
-  public static List<Field> nonStaticPublicFieldsOf(TypeToken<?> type) {
-    Field[] fields = type.getRawType().getFields();
-    List<Field> nonStaticPublicFields = new ArrayList<>();
-    for (Field field : fields) {
-      if (isNotStaticPublicField(field)) {
-        nonStaticPublicFields.add(field);
-      }
-    }
-    return nonStaticPublicFields;
+  public static List<Field> nonStaticFieldsOf(TypeToken<?> clazz) {
+    List<Field> fields = getAllFieldsInHierarchy(clazz);
+    return filterNonStaticFields(fields);
   }
 
-  public static List<Field> declaredPublicFieldsOf(TypeToken<?> type) {
+  private static List<Field> filterNonStaticFields(List<Field> fields) {
+    List<Field> nonStaticFields = new ArrayList<>();
+    for (Field field : fields) {
+      if (isNotStaticField(field)) {
+        nonStaticFields.add(field);
+      }
+    }
+    return nonStaticFields;
+  }
+
+  public static List<Field> declaredFieldsOf(TypeToken<?> type) {
     Field[] fields = type.getRawType().getDeclaredFields();
-    List<Field> nonStaticPublicFields = new ArrayList<>();
-    for (Field field : fields) {
-      if (isNotStaticPublicField(field)) {
-        nonStaticPublicFields.add(field);
-      }
-    }
-    return nonStaticPublicFields;
+    return filterNonStaticFields(asList(fields));
   }
 
-  private static boolean isNotStaticPublicField(Field field) {
-    final int modifiers = field.getModifiers();
-    return !Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers);
+  /**
+   * Retrieves all fields (whatever access levels) in the hierarchy of a class up to Object.class excluded.
+   *
+   * @param clazz the class whose fields should be retrieved
+   * @return all fields (whatever access levels) in the hierarchy of a class up to Object.class excluded.
+   */
+  public static List<Field> getAllFieldsInHierarchy(TypeToken<?> clazz) {
+    List<Field> fields = newArrayList(clazz.getRawType().getDeclaredFields());
+    Class<?> parentClass = clazz.getRawType().getSuperclass();
+    if (parentClass != null && !Object.class.equals(parentClass)) {
+      fields.addAll(getAllFieldsInHierarchy(TypeToken.of(parentClass)));
+    }
+    return fields;
+  }
+
+  private static boolean isNotStaticField(Field field) {
+    return !Modifier.isStatic(field.getModifiers());
   }
 
   private static boolean isNotDefinedInObjectClass(Method method) {
-    return !method.getDeclaringClass().equals(Object.class);
+    return !Object.class.equals(method.getDeclaringClass());
   }
 
   public static Set<Class<?>> getClassesRelatedTo(Type type) {
@@ -689,5 +705,13 @@ public class ClassUtil {
 
   public static String packageNameRegex(String packageName) {
     return Pattern.quote(packageName + ".") + "(?=[A-Z])";
+  }
+
+  public static Visibility visibilityOf(Field field) {
+    int fieldModifiers = field.getModifiers();
+    if (isPublic(fieldModifiers)) return Visibility.PUBLIC;
+    if (Modifier.isProtected(fieldModifiers)) return Visibility.PROTECTED;
+    if (Modifier.isPrivate(fieldModifiers)) return Visibility.PRIVATE;
+    return Visibility.PACKAGE;
   }
 }

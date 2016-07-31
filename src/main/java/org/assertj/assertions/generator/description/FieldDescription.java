@@ -18,10 +18,10 @@ import org.assertj.assertions.generator.util.ClassUtil;
 import java.lang.reflect.Field;
 
 import static org.apache.commons.lang3.StringUtils.capitalize;
-
+import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
 
 /**
- * Stores the information needed to generate an assertion for a public field.
+ * Stores the information needed to generate an assertion for a field.
  * <p>
  * Let's say we have the following method in class <code>Person</code> :
  * 
@@ -34,6 +34,7 @@ import static org.apache.commons.lang3.StringUtils.capitalize;
  * <ul>
  * <li>the field name, here "age"</li>
  * <li>the field valueType</li>
+ * <li>its visibility to determine how to access the field value</li>
  * </ul>
  * This class is immutable.
  * 
@@ -42,17 +43,27 @@ import static org.apache.commons.lang3.StringUtils.capitalize;
 public class FieldDescription extends DataDescription implements Comparable<FieldDescription> {
 
   public FieldDescription(Field field, TypeToken<?> owningType) {
-    super(ClassUtil.propertyNameOf(field), field, owningType.resolveType(field.getGenericType()), owningType);
+    this(field, Visibility.PUBLIC, owningType);
+  }
+
+  public FieldDescription(Field field, Visibility visibility, TypeToken<?> owningType) {
+    super(propertyNameOf(field), field, visibility, owningType.resolveType(field.getGenericType()), owningType);
   }
 
   @Override
   public int compareTo(FieldDescription other) {
     return super.compareTo(other);
   }
-  
+
   @Override
   public Field getOriginalMember() {
     return (Field) super.getOriginalMember();
+  }
+
+  @Override
+  public String toString() {
+    return "FieldDescription[originalMember=" + originalMember + ", valueType=" + valueType + ", visibility="
+           + visibility + ']';
   }
 
   @Override
@@ -64,7 +75,7 @@ public class FieldDescription extends DataDescription implements Comparable<Fiel
   public String getPredicate() {
     return hasNegativePredicate() ? originalMember.getName() : "is" + capitalize(originalMember.getName());
   }
-  
+
   @Override
   public String getNegativePredicate() {
     return !hasNegativePredicate() ? "isNot" + capitalize(originalMember.getName()) : super.getNegativePredicate();

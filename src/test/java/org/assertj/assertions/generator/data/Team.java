@@ -30,7 +30,7 @@ public class Team {
   public List<int[]> points = new ArrayList<int[]>();
   public String[] oldNames = {};
   
-  // private field : no assertion should be generated
+  // private field : assertion should be generated if configured so 
   @SuppressWarnings("unused")
   private String privateField;
   
@@ -42,7 +42,6 @@ public class Team {
   }
 
   public Team(String name, String division) {
-    super();
     this.name = name;
     this.division = division;
   }

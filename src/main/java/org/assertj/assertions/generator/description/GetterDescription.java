@@ -23,7 +23,7 @@ import static org.assertj.assertions.generator.util.ClassUtil.isBoolean;
 import static org.assertj.assertions.generator.util.ClassUtil.isValidPredicateName;
 
 /**
- * Stores the information needed to generate an assertion for a getter method.
+ * Stores the information needed to generate an assertion for a public getter method.
  * <p>
  * Let's say we have the following method in class <code>Person</code> :
  * 
@@ -49,7 +49,7 @@ public class GetterDescription extends DataDescription implements Comparable<Get
   private final ImmutableList<TypeToken<? extends Throwable>> exceptions;
 
   public GetterDescription(String propertyName, TypeToken<?> owningType, Method method) {
-    super(propertyName, method, owningType.method(method).getReturnType(), owningType);
+    super(propertyName, method, Visibility.PUBLIC, owningType.method(method).getReturnType(), owningType);
     this.invokable = owningType.method(method);
     this.exceptions = invokable.getExceptionTypes();
   }

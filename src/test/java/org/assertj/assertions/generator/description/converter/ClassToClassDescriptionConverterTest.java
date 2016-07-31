@@ -19,6 +19,8 @@ import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.Name;
 import org.assertj.assertions.generator.data.Team;
 import org.assertj.assertions.generator.data.TreeEnum;
+import org.assertj.assertions.generator.data.WithPrivateFields;
+import org.assertj.assertions.generator.data.WithPrivateFieldsParent;
 import org.assertj.assertions.generator.data.art.ArtWork;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
 import org.assertj.assertions.generator.data.nba.Player;
@@ -77,9 +79,9 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Movie");
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(classDescription.getGettersDescriptions()).hasSize(3);
-    assertThat(classDescription.getFieldsDescriptions()).hasSize(4);
+    assertThat(classDescription.getFieldsDescriptions()).hasSize(7);
     assertThat(classDescription.getDeclaredGettersDescriptions()).hasSize(2);
-    assertThat(classDescription.getDeclaredFieldsDescriptions()).hasSize(3);
+    assertThat(classDescription.getDeclaredFieldsDescriptions()).hasSize(5);
     assertThat(classDescription.getSuperType()).isEqualTo(TypeToken.of(ArtWork.class));
     assertThat(classDescription.getAssertClassName()).isEqualTo("MovieAssert");
     assertThat(classDescription.getAssertClassFilename()).isEqualTo("MovieAssert.java");
@@ -99,6 +101,18 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     // Then
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Name");
     assertThat(classDescription.implementsComparable()).as("implementsComparable ? ").isTrue();
+  }
+
+  @Test
+  public void should_build_WithPrivateFields_class_description() throws Exception {
+    ClassDescription classDescription = converter.convertToClassDescription(WithPrivateFields.class);
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("WithPrivateFields");
+    assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
+		assertThat(classDescription.getFieldsDescriptions()).hasSize(8);
+		assertThat(classDescription.getGettersDescriptions()).hasSize(2);
+    assertThat(classDescription.getDeclaredGettersDescriptions()).hasSize(1);
+    assertThat(classDescription.getDeclaredFieldsDescriptions()).hasSize(5);
+    assertThat(classDescription.getSuperType()).isEqualTo(TypeToken.of(WithPrivateFieldsParent.class));
   }
 
   @Theory
@@ -295,7 +309,9 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
                                                                       "rank",
                                                                       "players",
                                                                       "points",
-                                                                      "victoryRatio");
+                                                                      "victoryRatio",
+                                                                      "division", 
+                                                                      "privateField");
   }
 
   class Bug21_SQLException extends SQLException {

@@ -26,6 +26,7 @@ import org.assertj.assertions.generator.data.OuterClass;
 import org.assertj.assertions.generator.data.Primitives;
 import org.assertj.assertions.generator.data.Team;
 import org.assertj.assertions.generator.data.TreeEnum;
+import org.assertj.assertions.generator.data.WithPrivateFields;
 import org.assertj.assertions.generator.data.art.ArtWork;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
 import org.assertj.assertions.generator.data.lotr.Race;
@@ -34,6 +35,7 @@ import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.PlayerAgent;
 import org.assertj.assertions.generator.description.GetterDescriptionTest;
+import org.assertj.assertions.generator.description.Visibility;
 import org.assertj.core.api.BooleanAssert;
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
@@ -43,6 +45,7 @@ import org.junit.runner.RunWith;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -65,7 +68,7 @@ public class ClassUtilTest implements NestedClassesTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void should_thow_exception_when_classLoader_null() {
+  public void should_throw_exception_when_classLoader_null() {
     collectClasses((ClassLoader) null, "org.assertj.assertions.generator.data");
   }
 
@@ -146,7 +149,7 @@ public class ClassUtilTest implements NestedClassesTest {
   public void should_return_false_if_method_is_not_a_standard_getter() throws Exception {
     assertThat(isStandardGetter(Player.class.getMethod("isRookie", NO_PARAMS))).isFalse();
     assertThat(isStandardGetter(Player.class.getMethod("getVoid", NO_PARAMS))).isFalse();
-    assertThat(isStandardGetter(Player.class.getMethod("getWithParam", new Class[] { String.class }))).isFalse();
+    assertThat(isStandardGetter(Player.class.getMethod("getWithParam", String.class))).isFalse();
   }
 
   @Test
@@ -160,15 +163,15 @@ public class ClassUtilTest implements NestedClassesTest {
   public void should_return_false_if_method_is_not_a_boolean_getter() throws Exception {
     assertThat(isPredicate(Player.class.getMethod("getTeam", NO_PARAMS))).isFalse();
     assertThat(isPredicate(Player.class.getMethod("isVoid", NO_PARAMS))).isFalse();
-    assertThat(isPredicate(Player.class.getMethod("isWithParam", new Class[] { String.class }))).isFalse();
+    assertThat(isPredicate(Player.class.getMethod("isWithParam", String.class))).isFalse();
   }
 
   @Test
   public void should_return_negative_predicate() {
-    for (String[] pair : new String[][] {
-        { "isADog", "isNotADog" },
-        { "canRun", "cannotRun" },
-        { "hasAHandle", "doesNotHaveAHandle" },
+    for (String[] pair : new String[][]{
+        {"isADog", "isNotADog"},
+        {"canRun", "cannotRun"},
+        {"hasAHandle", "doesNotHaveAHandle"},
     }) {
       assertThat(getNegativePredicateFor(pair[0])).as(pair[0]).isEqualTo(pair[1]);
       assertThat(getNegativePredicateFor(pair[1])).as(pair[1]).isEqualTo(pair[0]);
@@ -177,8 +180,8 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Test
   public void should_return_true_if_string_follows_getter_name_pattern() throws Exception {
-    for (String name : new String[] { "isRookie", "getTeam", "wasTeam", "canRun", "shouldWin",
-        "hasTrophy", "doesNotHaveFun", "cannotWin", "shouldNotPlay" }) {
+    for (String name : new String[]{"isRookie", "getTeam", "wasTeam", "canRun", "shouldWin",
+        "hasTrophy", "doesNotHaveFun", "cannotWin", "shouldNotPlay"}) {
       assertThat(isValidGetterName(name)).as(name).isTrue();
     }
   }
@@ -197,7 +200,8 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Test
   public void should_return_false_if_string_does_not_follow_getter_name_pattern() throws Exception {
-    for (String name : new String[] { "isrookie", "getteam", "GetTeam", "get", "is", "wascool", "hastRophy", "shouldnotWin" }) {
+    for (String name : new String[]{"isrookie", "getteam", "GetTeam", "get", "is", "wascool", "hastRophy",
+        "shouldnotWin"}) {
       assertThat(isValidGetterName(name)).as(name).isFalse();
     }
   }
@@ -373,7 +377,25 @@ public class ClassUtilTest implements NestedClassesTest {
         .isFalse();
 
   }
-  
+
+  @Test
+  public void should_return_all_fields_in_hierarchy_except_Object_fields() throws Exception {
+    List<Field> fields = getAllFieldsInHierarchy(TypeToken.of(WithPrivateFields.class));
+    assertThat(fields).extracting("name")
+                      .contains("age", "name", "address", "country", "nickname", "city");
+  }
+
+  @Test
+  public void should_determine_fields_visibility() throws Exception {
+    List<Field> fields = ClassUtil.declaredFieldsOf(TypeToken.of(WithPrivateFields.class));
+    List<Visibility> fieldsVisibility = new ArrayList<>();
+    for (Field field : fields) fieldsVisibility.add(visibilityOf(field));
+    assertThat(fieldsVisibility).containsOnly(Visibility.PUBLIC,
+                                              Visibility.PACKAGE,
+                                              Visibility.PRIVATE,
+                                              Visibility.PROTECTED);
+  }
+
   @SuppressWarnings("unused")
   static class Foo<T> {
     List<T> listOfT;

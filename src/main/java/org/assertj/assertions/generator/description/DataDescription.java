@@ -109,10 +109,12 @@ public abstract class DataDescription {
   final Member originalMember;
   final TypeToken<?> valueType;
   private final TypeToken<?> owningType;
+  protected final Visibility visibility;
 
-  DataDescription(String name, Member originalMember, TypeToken<?> type, TypeToken<?> owningType) {
+  DataDescription(String name, Member originalMember, Visibility visibility, TypeToken<?> type, TypeToken<?> owningType) {
     this.name = name;
     this.originalMember = originalMember;
+    this.visibility = visibility;
     this.valueType = type;
     this.owningType = owningType;
   }
@@ -277,6 +279,10 @@ public abstract class DataDescription {
     return getClass().getSimpleName() + "[name=" + getName()
            + ", valueType=" + valueType
            + ", member=" + originalMember + "]";
+  }
+
+  public boolean isPublic() {
+    return visibility == Visibility.PUBLIC;
   }
 
   int compareTo(final DataDescription other) {

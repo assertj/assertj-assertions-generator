@@ -81,7 +81,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   // used to infer the class name from the entry point custom template (specially if the template is custom)
   // - [\s]*    : any number of white space character
   // - \b(.*)\b : capture word
-  private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("public class[\\s]+\\b(.*)\\b");
+  private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("public class[\\s]+(\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)\\b");
 
   /**
    * Creates a new </code>{@link BaseAssertionGenerator}</code> with default templates directory.

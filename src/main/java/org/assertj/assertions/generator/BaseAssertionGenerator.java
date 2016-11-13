@@ -78,14 +78,19 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private String targetBaseDirectory = ".";
   private TemplateRegistry templateRegistry;// the pattern to search for
 
-  // used to infer the class name from the entry point custom template (specially if the template is custom)
-  // - [\s]*    : any number of white space character
-  // - \b(.*)\b : capture word
   /**
    * This regexp shall match a java class's name inside an user template.
    * <p>
    * For this, we use the two character class {@code javaJavaIdentifierStart} and {@code javaJavaIdentifierPart} to match
    * a valid name.
+   * <p>
+   * <i>Description of the pattern:</i>
+   * 
+   * <ol>
+   * <li><code>public class[\\s]+</code> the "public class" with a set of whitespace (either tabs, space or new lines).</li>
+   * <li><code>(?&llt;CLASSNAME&gt;[...])</code> create a named group that would match a Java identifier (here the class name).</li>
+   * <li><code>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*</code> match said identifieir using character class.</li>
+   * </ol>
    *
    * @see java.util.regex.Pattern
    * @see Character#isJavaIdentifierStart

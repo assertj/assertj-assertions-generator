@@ -87,9 +87,9 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
    * <i>Description of the pattern:</i>
    * 
    * <ol>
-   * <li><code>public class[\\s]+</code> the "public class" with a set of whitespace (either tabs, space or new lines).</li>
-   * <li><code>(?&llt;CLASSNAME&gt;[...])</code> create a named group that would match a Java identifier (here the class name).</li>
-   * <li><code>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*</code> match said identifieir using character class.</li>
+   * <li><code>public class[\\s]+</code> the "public class" followed by one or more whitespace (either tabs, space or new lines).</li>
+   * <li><code>(?&lt;CLASSNAME&gt;...)</code> create a named group that would match a Java identifier (here the class name).</li>
+   * <li><code>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*</code> match said identifier using character class.</li>
    * </ol>
    *
    * @see java.util.regex.Pattern

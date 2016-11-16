@@ -78,10 +78,25 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private String targetBaseDirectory = ".";
   private TemplateRegistry templateRegistry;// the pattern to search for
 
-  // used to infer the class name from the entry point custom template (specially if the template is custom)
-  // - [\s]*    : any number of white space character
-  // - \b(.*)\b : capture word
-  private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("public class[\\s]+\\b(.*)\\b");
+  /**
+   * This regexp shall match a java class's name inside an user template.
+   * <p>
+   * For this, we use the two character class {@code javaJavaIdentifierStart} and {@code javaJavaIdentifierPart} to match
+   * a valid name.
+   * <p>
+   * <i>Description of the pattern:</i>
+   * 
+   * <ol>
+   * <li><code>public class[\\s]+</code> the "public class" followed by one or more whitespace (either tabs, space or new lines).</li>
+   * <li><code>(?&lt;CLASSNAME&gt;...)</code> create a named group that would match a Java identifier (here the class name).</li>
+   * <li><code>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*</code> match said identifier using character class.</li>
+   * </ol>
+   *
+   * @see java.util.regex.Pattern
+   * @see Character#isJavaIdentifierStart
+   * @see Character#isJavaIdentifierPart
+   */
+  private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("public class[\\s]+(?<CLASSNAME>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)\\b");
 
   /**
    * Creates a new </code>{@link BaseAssertionGenerator}</code> with default templates directory.
@@ -289,7 +304,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // expecting the class name to be here : "class <class name> "
     Matcher classNameMatcher = CLASS_NAME_PATTERN.matcher(assertionsEntryPointFileContent);
     // if we find a match return it
-    if (classNameMatcher.find()) return classNameMatcher.group(1)+ ".java";
+    if (classNameMatcher.find()) return classNameMatcher.group("CLASSNAME")+ ".java";
     // otherwise use the default name
     return assertionsEntryPointType.getFileName();
   }

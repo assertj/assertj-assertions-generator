@@ -47,6 +47,7 @@ public class TypeName implements Comparable<TypeName> {
   private String typeSimpleNameWithOuterClass;
   private String typeSimpleNameWithOuterClassNotSeparatedByDots;
   private String packageName;
+  private String outerClassName;
 
   public TypeName(String typeSimpleName, String packageName) {
     if (typeSimpleName == null) throw new IllegalArgumentException("type simple name should not be null");
@@ -82,6 +83,7 @@ public class TypeName implements Comparable<TypeName> {
     this.typeSimpleNameWithOuterClass = ClassUtil.getSimpleNameWithOuterClass(clazz);
     this.typeSimpleNameWithOuterClassNotSeparatedByDots = ClassUtil.getSimpleNameWithOuterClassNotSeparatedByDots(clazz);
     this.packageName = clazz.getPackage() == null ? NO_PACKAGE : clazz.getPackage().getName();
+    this.outerClassName = ClassUtil.getSimpleNameOuterClass(clazz);
   }
 
   public String getSimpleName() {
@@ -102,6 +104,10 @@ public class TypeName implements Comparable<TypeName> {
 
   private void setPackageName(String packageName) {
     this.packageName = packageName == null ? NO_PACKAGE : packageName;
+  }
+
+  public String getOuterClassName() {
+    return outerClassName;
   }
 
   public boolean isPrimitive() {

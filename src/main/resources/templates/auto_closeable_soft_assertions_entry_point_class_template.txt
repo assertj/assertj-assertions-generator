@@ -1,5 +1,6 @@
 package ${package};
 
+${imports}
 /**
  * A version of {@link SoftAssertions} that uses try-with-resources statement to automatically call
  * {@link SoftAssertions#assertAll()} so that you don't forget to.

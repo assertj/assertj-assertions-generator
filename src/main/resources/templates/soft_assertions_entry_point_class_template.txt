@@ -1,5 +1,6 @@
 package ${package};
 
+${imports}
 /**
  * Entry point for soft assertions of different data types.
  */

@@ -1,5 +1,23 @@
 package my.custom.package;
 
+import org.assertj.assertions.generator.data.ArtWork;
+import org.assertj.assertions.generator.data.ArtWorkAssert;
+import org.assertj.assertions.generator.data.Movie;
+import org.assertj.assertions.generator.data.MovieAssert;
+import org.assertj.assertions.generator.data.MoviePublicCategoryAssert;
+import org.assertj.assertions.generator.data.Name;
+import org.assertj.assertions.generator.data.NameAssert;
+import org.assertj.assertions.generator.data.TreeEnum;
+import org.assertj.assertions.generator.data.TreeEnumAssert;
+import org.assertj.assertions.generator.data.lotr.Race;
+import org.assertj.assertions.generator.data.lotr.RaceAssert;
+import org.assertj.assertions.generator.data.lotr.Ring;
+import org.assertj.assertions.generator.data.lotr.RingAssert;
+import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
+import org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert;
+import org.assertj.assertions.generator.data.nba.Player;
+import org.assertj.assertions.generator.data.nba.PlayerAssert;
+
 /**
  * Entry point for assertions of different data types. Each method in this class is a static factory for the
  * type-specific assertion objects.
@@ -8,102 +26,102 @@ package my.custom.package;
 public class Assertions {
 
   /**
-   * Creates a new instance of <code>{@link org.assertj.assertions.generator.data.ArtWorkAssert}</code>.
+   * Creates a new instance of <code>{@link ArtWorkAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created assertion object.
    */
   @org.assertj.core.util.CheckReturnValue
-  public static org.assertj.assertions.generator.data.ArtWorkAssert assertThat(org.assertj.assertions.generator.data.ArtWork actual) {
-    return new org.assertj.assertions.generator.data.ArtWorkAssert(actual);
+  public static ArtWorkAssert assertThat(ArtWork actual) {
+    return new ArtWorkAssert(actual);
   }
 
   /**
-   * Creates a new instance of <code>{@link org.assertj.assertions.generator.data.MovieAssert}</code>.
+   * Creates a new instance of <code>{@link MovieAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created assertion object.
    */
   @org.assertj.core.util.CheckReturnValue
-  public static org.assertj.assertions.generator.data.MovieAssert assertThat(org.assertj.assertions.generator.data.Movie actual) {
-    return new org.assertj.assertions.generator.data.MovieAssert(actual);
+  public static MovieAssert assertThat(Movie actual) {
+    return new MovieAssert(actual);
   }
 
   /**
-   * Creates a new instance of <code>{@link org.assertj.assertions.generator.data.MoviePublicCategoryAssert}</code>.
+   * Creates a new instance of <code>{@link MoviePublicCategoryAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created assertion object.
    */
   @org.assertj.core.util.CheckReturnValue
-  public static org.assertj.assertions.generator.data.MoviePublicCategoryAssert assertThat(org.assertj.assertions.generator.data.Movie.PublicCategory actual) {
-    return new org.assertj.assertions.generator.data.MoviePublicCategoryAssert(actual);
+  public static MoviePublicCategoryAssert assertThat(Movie.PublicCategory actual) {
+    return new MoviePublicCategoryAssert(actual);
   }
 
   /**
-   * Creates a new instance of <code>{@link org.assertj.assertions.generator.data.NameAssert}</code>.
+   * Creates a new instance of <code>{@link NameAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created assertion object.
    */
   @org.assertj.core.util.CheckReturnValue
-  public static org.assertj.assertions.generator.data.NameAssert assertThat(org.assertj.assertions.generator.data.Name actual) {
-    return new org.assertj.assertions.generator.data.NameAssert(actual);
+  public static NameAssert assertThat(Name actual) {
+    return new NameAssert(actual);
   }
 
   /**
-   * Creates a new instance of <code>{@link org.assertj.assertions.generator.data.TreeEnumAssert}</code>.
+   * Creates a new instance of <code>{@link TreeEnumAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created assertion object.
    */
   @org.assertj.core.util.CheckReturnValue
-  public static org.assertj.assertions.generator.data.TreeEnumAssert assertThat(org.assertj.assertions.generator.data.TreeEnum actual) {
-    return new org.assertj.assertions.generator.data.TreeEnumAssert(actual);
+  public static TreeEnumAssert assertThat(TreeEnum actual) {
+    return new TreeEnumAssert(actual);
   }
 
   /**
-   * Creates a new instance of <code>{@link org.assertj.assertions.generator.data.lotr.RaceAssert}</code>.
+   * Creates a new instance of <code>{@link RaceAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created assertion object.
    */
   @org.assertj.core.util.CheckReturnValue
-  public static org.assertj.assertions.generator.data.lotr.RaceAssert assertThat(org.assertj.assertions.generator.data.lotr.Race actual) {
-    return new org.assertj.assertions.generator.data.lotr.RaceAssert(actual);
+  public static RaceAssert assertThat(Race actual) {
+    return new RaceAssert(actual);
   }
 
   /**
-   * Creates a new instance of <code>{@link org.assertj.assertions.generator.data.lotr.RingAssert}</code>.
+   * Creates a new instance of <code>{@link RingAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created assertion object.
    */
   @org.assertj.core.util.CheckReturnValue
-  public static org.assertj.assertions.generator.data.lotr.RingAssert assertThat(org.assertj.assertions.generator.data.lotr.Ring actual) {
-    return new org.assertj.assertions.generator.data.lotr.RingAssert(actual);
+  public static RingAssert assertThat(Ring actual) {
+    return new RingAssert(actual);
   }
 
   /**
-   * Creates a new instance of <code>{@link org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert}</code>.
+   * Creates a new instance of <code>{@link TolkienCharacterAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created assertion object.
    */
   @org.assertj.core.util.CheckReturnValue
-  public static org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert assertThat(org.assertj.assertions.generator.data.lotr.TolkienCharacter actual) {
-    return new org.assertj.assertions.generator.data.lotr.TolkienCharacterAssert(actual);
+  public static TolkienCharacterAssert assertThat(TolkienCharacter actual) {
+    return new TolkienCharacterAssert(actual);
   }
 
   /**
-   * Creates a new instance of <code>{@link org.assertj.assertions.generator.data.nba.PlayerAssert}</code>.
+   * Creates a new instance of <code>{@link PlayerAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created assertion object.
    */
   @org.assertj.core.util.CheckReturnValue
-  public static org.assertj.assertions.generator.data.nba.PlayerAssert assertThat(org.assertj.assertions.generator.data.nba.Player actual) {
-    return new org.assertj.assertions.generator.data.nba.PlayerAssert(actual);
+  public static PlayerAssert assertThat(Player actual) {
+    return new PlayerAssert(actual);
   }
 
   /**

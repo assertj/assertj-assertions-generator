@@ -22,26 +22,31 @@ import org.junit.experimental.theories.DataPoint;
 public interface NestedClassesTest {
   @DataPoint
   public static final NestedClass SNC = new NestedClass(OuterClass.StaticNestedPerson.class,
-                                                        "OuterClass.StaticNestedPerson");
+                                                        "OuterClass.StaticNestedPerson", "OuterClass");
   @DataPoint
   public static final NestedClass SNC_SNC = new NestedClass(OuterClass.StaticNestedPerson.SNP_StaticNestedPerson.class,
-                                                            "OuterClass.StaticNestedPerson.SNP_StaticNestedPerson");
+                                                            "OuterClass.StaticNestedPerson.SNP_StaticNestedPerson",
+                                                            "OuterClass");
   @DataPoint
   public static final NestedClass SNC_IC = new NestedClass(OuterClass.StaticNestedPerson.SNP_InnerPerson.class,
-                                                           "OuterClass.StaticNestedPerson.SNP_InnerPerson");
+                                                           "OuterClass.StaticNestedPerson.SNP_InnerPerson",
+                                                           "OuterClass");
   @DataPoint
-  public static final NestedClass IC = new NestedClass(OuterClass.InnerPerson.class, "OuterClass.InnerPerson");
+  public static final NestedClass IC = new NestedClass(OuterClass.InnerPerson.class, "OuterClass.InnerPerson",
+                                                       "OuterClass");
   @DataPoint
   public static final NestedClass IC_IC = new NestedClass(OuterClass.InnerPerson.IP_InnerPerson.class,
-                                                          "OuterClass.InnerPerson.IP_InnerPerson");
+                                                          "OuterClass.InnerPerson.IP_InnerPerson", "OuterClass");
 
   public static class NestedClass {
     private final Class<?> nestedClass;
     private final String classNameWithOuterClass;
+    private final String outerClassName;
 
-    public NestedClass(Class<?> nestedClass, String classNameWithOuterClass) {
+    public NestedClass(Class<?> nestedClass, String classNameWithOuterClass, String outerClassName) {
       this.nestedClass = nestedClass;
       this.classNameWithOuterClass = classNameWithOuterClass;
+      this.outerClassName = outerClassName;
     }
 
     public String getClassNameWithOuterClass() {
@@ -54,6 +59,10 @@ public interface NestedClassesTest {
 
     public Class<?> getNestedClass() {
       return nestedClass;
+    }
+
+    public String getOuterClassName() {
+      return outerClassName;
     }
   }
 }

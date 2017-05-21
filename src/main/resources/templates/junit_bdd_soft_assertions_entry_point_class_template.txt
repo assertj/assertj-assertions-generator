@@ -1,5 +1,6 @@
 package ${package};
 
+${imports}
 /**
  * Like {@link BDDSoftAssertions} but as a junit rule that takes care of calling
  * {@link SoftAssertions#assertAll() assertAll()} at the end of each test.

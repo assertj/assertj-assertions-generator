@@ -60,7 +60,11 @@ public class ClassDescription implements Comparable<ClassDescription> {
   public String getClassNameWithOuterClassNotSeparatedByDots() {
     return classTypeName.getSimpleNameWithOuterClassNotSeparatedByDots();
   }
-  
+
+  public String getOuterClassName() {
+    return classTypeName.getOuterClassName();
+  }
+
   public String getPackageName() {
     return classTypeName.getPackageName();
   }

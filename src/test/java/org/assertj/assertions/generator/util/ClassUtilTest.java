@@ -17,6 +17,7 @@ import static org.assertj.assertions.generator.util.ClassUtil.declaredGetterMeth
 import static org.assertj.assertions.generator.util.ClassUtil.getClassesRelatedTo;
 import static org.assertj.assertions.generator.util.ClassUtil.getNegativePredicateFor;
 import static org.assertj.assertions.generator.util.ClassUtil.getPredicatePrefix;
+import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameOuterClass;
 import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
 import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClassNotSeparatedByDots;
 import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
@@ -212,6 +213,13 @@ public class ClassUtilTest implements NestedClassesTest {
   }
 
   @Theory
+  public void should_return_outer_class_name_for_nested_class(NestedClass nestedClass) {
+    String actualName = getSimpleNameOuterClass(nestedClass.getNestedClass());
+    assertThat(actualName).isEqualTo(nestedClass.getOuterClassName());
+  }
+
+
+  @Theory
   public void should_return_inner_class_name_with_outer_class_name_not_separated_by_dots(NestedClass nestedClass) {
     String actualName = getSimpleNameWithOuterClassNotSeparatedByDots(nestedClass.getNestedClass());
     assertThat(actualName).isEqualTo(nestedClass.getClassNameWithOuterClassNotSeparatedBytDots());
@@ -226,6 +234,11 @@ public class ClassUtilTest implements NestedClassesTest {
   @Test
   public void testGetSimpleNameWithOuterClass_notNestedClass() throws Exception {
     assertThat(ClassUtil.getSimpleNameWithOuterClass(String.class)).isEqualTo("String");
+  }
+
+  @Test
+  public void testGetSimpleNameOuterClass_notNestedClass() throws Exception {
+    assertThat(ClassUtil.getSimpleNameOuterClass(String.class)).isEqualTo("String");
   }
 
   @Test

@@ -1,5 +1,6 @@
 package ${package};
 
+${imports}
 /**
  * A version of {@link BDDSoftAssertions} that uses try-with-resources statement to automatically call
  * {@link BDDSoftAssertions#assertAll()} so that you don't forget to.

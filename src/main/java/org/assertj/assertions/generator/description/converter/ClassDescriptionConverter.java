@@ -18,7 +18,7 @@ import org.assertj.assertions.generator.description.ClassDescription;
  * 
  * General contract to convert an object to a {@link ClassDescription}.
  *  
- * @param <T> the type to convert to {@link ClassDescription}. 
+ * @param <T> the valueType to convert to {@link ClassDescription}.
  * @author Joel Costigliola 
  *
  */

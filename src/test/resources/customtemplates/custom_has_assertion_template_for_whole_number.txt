@@ -13,7 +13,7 @@
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting ${property} of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // check
     ${propertyType} actual${Property} = actual.get${Property}();
     if (actual${Property} != ${property_safe}) {

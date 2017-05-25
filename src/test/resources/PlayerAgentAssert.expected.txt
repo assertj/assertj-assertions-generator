@@ -40,7 +40,7 @@ public class PlayerAgentAssert extends AbstractObjectAssert<PlayerAgentAssert, P
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting managedPlayer of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     Player actualManagedPlayer = actual.getManagedPlayer();
     if (!Objects.areEqual(actualManagedPlayer, managedPlayer)) {

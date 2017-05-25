@@ -41,7 +41,7 @@ public class CarAssert extends AbstractObjectAssert<CarAssert, Car> {
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting wheelsCount of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // check
     int actualWheelsCount = actual.getWheelsCount();
     if (actualWheelsCount != wheelsCount) {

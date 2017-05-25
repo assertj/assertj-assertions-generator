@@ -43,7 +43,7 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
 
     // check that given String varargs is not null.
     if (arrayPropertyThrowsException == null) failWithMessage("Expecting arrayPropertyThrowsException parameter not to be null.");
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.getArrayPropertyThrowsException()).contains(arrayPropertyThrowsException);
 
@@ -65,7 +65,7 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
 
     // check that given String varargs is not null.
     if (arrayPropertyThrowsException == null) failWithMessage("Expecting arrayPropertyThrowsException parameter not to be null.");
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.getArrayPropertyThrowsException()).containsOnly(arrayPropertyThrowsException);
 
@@ -87,7 +87,7 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
 
     // check that given String varargs is not null.
     if (arrayPropertyThrowsException == null) failWithMessage("Expecting arrayPropertyThrowsException parameter not to be null.");
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.getArrayPropertyThrowsException()).doesNotContain(arrayPropertyThrowsException);
 
@@ -107,16 +107,54 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
 
     // we override the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have arrayPropertyThrowsException but had :\n  <%s>";
-    
-    // check
+
+    // check that it is not empty
     if (actual.getArrayPropertyThrowsException().length > 0)  {
       failWithMessage(assertjErrorMessage, actual, java.util.Arrays.toString(actual.getArrayPropertyThrowsException()));
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
-  
+
+
+  /**
+   * Verifies that the actual BeanWithOneException is boolean property throws exception.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual BeanWithOneException is not boolean property throws exception.
+   * @throws java.io.IOException if actual.isBooleanPropertyThrowsException() throws one.
+   */
+  public BeanWithOneExceptionAssert isBooleanPropertyThrowsException() throws java.io.IOException {
+    // check that actual BeanWithOneException we want to make assertions on is not null.
+    isNotNull();
+
+    // check that property call/field access is true
+    if (!actual.isBooleanPropertyThrowsException()) {
+      failWithMessage("\nExpecting that actual BeanWithOneException is boolean property throws exception but is not.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual BeanWithOneException is not boolean property throws exception.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual BeanWithOneException is boolean property throws exception.
+   * @throws java.io.IOException if actual.isBooleanPropertyThrowsException() throws one.
+   */
+  public BeanWithOneExceptionAssert isNotBooleanPropertyThrowsException() throws java.io.IOException {
+    // check that actual BeanWithOneException we want to make assertions on is not null.
+    isNotNull();
+
+    // check that property call/field access is false
+    if (actual.isBooleanPropertyThrowsException()) {
+      failWithMessage("\nExpecting that actual BeanWithOneException is not boolean property throws exception but is.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
 
   /**
    * Verifies that the actual BeanWithOneException's iterablePropertyThrowsException contains the given String elements.
@@ -131,14 +169,14 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
 
     // check that given String varargs is not null.
     if (iterablePropertyThrowsException == null) failWithMessage("Expecting iterablePropertyThrowsException parameter not to be null.");
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.getIterablePropertyThrowsException(), iterablePropertyThrowsException);
 
     // return the current assertion for method chaining
     return this;
   }
-  
+
   /**
    * Verifies that the actual BeanWithOneException's iterablePropertyThrowsException contains the given String elements in Collection.
    * @param iterablePropertyThrowsException the given elements that should be contained in actual BeanWithOneException's iterablePropertyThrowsException.
@@ -155,7 +193,7 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
       failWithMessage("Expecting iterablePropertyThrowsException parameter not to be null.");
       return this; // to fool Eclipse "Null pointer access" warning on toArray.
     }
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.getIterablePropertyThrowsException(), iterablePropertyThrowsException.toArray());
 
@@ -176,7 +214,7 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
 
     // check that given String varargs is not null.
     if (iterablePropertyThrowsException == null) failWithMessage("Expecting iterablePropertyThrowsException parameter not to be null.");
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContainsOnly(info, actual.getIterablePropertyThrowsException(), iterablePropertyThrowsException);
 
@@ -200,7 +238,7 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
       failWithMessage("Expecting iterablePropertyThrowsException parameter not to be null.");
       return this; // to fool Eclipse "Null pointer access" warning on toArray.
     }
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContainsOnly(info, actual.getIterablePropertyThrowsException(), iterablePropertyThrowsException.toArray());
 
@@ -222,7 +260,7 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
 
     // check that given String varargs is not null.
     if (iterablePropertyThrowsException == null) failWithMessage("Expecting iterablePropertyThrowsException parameter not to be null.");
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Iterables.instance().assertDoesNotContain(info, actual.getIterablePropertyThrowsException(), iterablePropertyThrowsException);
 
@@ -247,7 +285,7 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
       failWithMessage("Expecting iterablePropertyThrowsException parameter not to be null.");
       return this; // to fool Eclipse "Null pointer access" warning on toArray.
     }
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Iterables.instance().assertDoesNotContain(info, actual.getIterablePropertyThrowsException(), iterablePropertyThrowsException.toArray());
 
@@ -267,16 +305,16 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
 
     // we override the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have iterablePropertyThrowsException but had :\n  <%s>";
-    
+
     // check
     if (actual.getIterablePropertyThrowsException().iterator().hasNext()) {
       failWithMessage(assertjErrorMessage, actual, actual.getIterablePropertyThrowsException());
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
-  
+
 
   /**
    * Verifies that the actual BeanWithOneException's stringPropertyThrowsException is equal to the given one.
@@ -291,51 +329,13 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting stringPropertyThrowsException of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     String actualStringPropertyThrowsException = actual.getStringPropertyThrowsException();
     if (!Objects.areEqual(actualStringPropertyThrowsException, stringPropertyThrowsException)) {
       failWithMessage(assertjErrorMessage, actual, stringPropertyThrowsException, actualStringPropertyThrowsException);
     }
 
-    // return the current assertion for method chaining
-    return this;
-  }
-
-  /**
-   * Verifies that the actual BeanWithOneException is boolean property throws exception.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual BeanWithOneException is not boolean property throws exception.
-   * @throws java.io.IOException if actual.isBooleanPropertyThrowsException() throws one.
-   */
-  public BeanWithOneExceptionAssert isBooleanPropertyThrowsException() throws java.io.IOException {
-    // check that actual BeanWithOneException we want to make assertions on is not null.
-    isNotNull();
-
-    // check
-    if (!actual.isBooleanPropertyThrowsException()) {
-      failWithMessage("\nExpecting that actual BeanWithOneException is boolean property throws exception but is not.");
-    }
-    
-    // return the current assertion for method chaining
-    return this;
-  }
-
-  /**
-   * Verifies that the actual BeanWithOneException is not boolean property throws exception.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual BeanWithOneException is boolean property throws exception.
-   * @throws java.io.IOException if actual.isBooleanPropertyThrowsException() throws one.
-   */
-  public BeanWithOneExceptionAssert isNotBooleanPropertyThrowsException() throws java.io.IOException {
-    // check that actual BeanWithOneException we want to make assertions on is not null.
-    isNotNull();
-
-    // check
-    if (actual.isBooleanPropertyThrowsException()) {
-      failWithMessage("\nExpecting that actual BeanWithOneException is not boolean property throws exception but is.");
-    }
-    
     // return the current assertion for method chaining
     return this;
   }

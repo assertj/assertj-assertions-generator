@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -12,34 +12,22 @@
  */
 package org.assertj.assertions.generator.description.converter;
 
-import static org.apache.commons.lang3.StringUtils.remove;
-import static org.assertj.assertions.generator.util.ClassUtil.declaredGetterMethodsOf;
-import static org.assertj.assertions.generator.util.ClassUtil.declaredPublicFieldsOf;
-import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
-import static org.assertj.assertions.generator.util.ClassUtil.inheritsCollectionOrIsIterable;
-import static org.assertj.assertions.generator.util.ClassUtil.isArray;
-import static org.assertj.assertions.generator.util.ClassUtil.nonStaticPublicFieldsOf;
-import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
+import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.GenerateAssertion;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.FieldDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
-import org.assertj.assertions.generator.description.TypeDescription;
-import org.assertj.assertions.generator.description.TypeName;
-import org.assertj.assertions.generator.util.ClassUtil;
 
-public class ClassToClassDescriptionConverter implements ClassDescriptionConverter<Class<?>> {
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static org.assertj.assertions.generator.util.ClassUtil.*;
+
+public class ClassToClassDescriptionConverter implements ClassDescriptionConverter<TypeToken<?>> {
 
   private final AnnotationConfiguration annotationConfiguration;
 
@@ -51,124 +39,62 @@ public class ClassToClassDescriptionConverter implements ClassDescriptionConvert
     this.annotationConfiguration = annotationConfiguration;
   }
 
-  public ClassDescription convertToClassDescription(Class<?> clazz) {
-    ClassDescription classDescription = new ClassDescription(new TypeName(clazz));
-    classDescription.addGetterDescriptions(getterDescriptionsOf(clazz));
-    classDescription.addFieldDescriptions(fieldDescriptionsOf(clazz));
-    classDescription.addDeclaredGetterDescriptions(declaredGetterDescriptionsOf(clazz));
-    classDescription.addDeclaredFieldDescriptions(declaredFieldDescriptionsOf(clazz));
-    classDescription.setSuperType(clazz.getSuperclass());
+  @Override
+  public ClassDescription convertToClassDescription(TypeToken<?> type) {
+    checkArgument(!type.getRawType().isLocalClass(), "Can not support Local class %s", type);
+    ClassDescription classDescription = new ClassDescription(type);
+    classDescription.addGetterDescriptions(getterDescriptionsOf(type));
+    classDescription.addFieldDescriptions(fieldDescriptionsOf(type));
+    classDescription.addDeclaredGetterDescriptions(declaredGetterDescriptionsOf(type));
+    classDescription.addDeclaredFieldDescriptions(declaredFieldDescriptionsOf(type));
+    classDescription.setSuperType(type.getRawType().getSuperclass());
     return classDescription;
   }
 
-  private Set<GetterDescription> getterDescriptionsOf(Class<?> clazz) {
-    return doGetterDescriptionsOf(getterMethodsOf(clazz, annotationConfiguration.includedAnnotations()), clazz);
+  public ClassDescription convertToClassDescription(Class<?> clazz) {
+    checkArgument(!clazz.isLocalClass(), "Can not support Local class %s", clazz);
+    return convertToClassDescription(TypeToken.of(clazz));
   }
 
-  private Set<GetterDescription> declaredGetterDescriptionsOf(Class<?> clazz) {
-    return doGetterDescriptionsOf(declaredGetterMethodsOf(clazz, annotationConfiguration.includedAnnotations()), clazz);
+  private Set<GetterDescription> getterDescriptionsOf(TypeToken<?> type) {
+    return doGetterDescriptionsOf(getterMethodsOf(type, annotationConfiguration.includedAnnotations()), type);
   }
 
-  private Set<GetterDescription> doGetterDescriptionsOf(Set<Method> getters, Class<?> clazz) {
+  private Set<GetterDescription> declaredGetterDescriptionsOf(TypeToken<?> type) {
+    return doGetterDescriptionsOf(declaredGetterMethodsOf(type, annotationConfiguration.includedAnnotations()), type);
+  }
+
+  private Set<GetterDescription> doGetterDescriptionsOf(Set<Method> getters, TypeToken<?> type) {
     Set<GetterDescription> getterDescriptions = new TreeSet<>();
     for (Method getter : getters) {
       // ignore getDeclaringClass if Enum
-      if (isGetDeclaringClassEnumGetter(getter, clazz)) continue;
-      final TypeDescription typeDescription = getTypeDescription(getter);
-      final List<TypeName> exceptionTypeNames = getExceptionTypeNames(getter);
+      if (isGetDeclaringClassEnumGetter(getter, type.getRawType())) continue;
+
       String propertyName = propertyNameOf(getter);
-      getterDescriptions.add(new GetterDescription(propertyName, getter.getName(), typeDescription,
-                                                   exceptionTypeNames));
+
+      getterDescriptions.add(new GetterDescription(propertyName, type, getter));
     }
     return getterDescriptions;
   }
 
-  private Set<FieldDescription> declaredFieldDescriptionsOf(Class<?> clazz) {
-    return doFieldDescriptionsOf(declaredPublicFieldsOf(clazz));
+  private Set<FieldDescription> declaredFieldDescriptionsOf(TypeToken<?> type) {
+    return doFieldDescriptionsOf(type, declaredPublicFieldsOf(type));
   }
 
-  private Set<FieldDescription> fieldDescriptionsOf(Class<?> clazz) {
-    return doFieldDescriptionsOf(nonStaticPublicFieldsOf(clazz));
+  private Set<FieldDescription> fieldDescriptionsOf(TypeToken<?> type) {
+    return doFieldDescriptionsOf(type, nonStaticPublicFieldsOf(type));
   }
 
-  private Set<FieldDescription> doFieldDescriptionsOf(List<Field> fields) {
+  private Set<FieldDescription> doFieldDescriptionsOf(TypeToken<?> type, List<Field> fields) {
     Set<FieldDescription> fieldDescriptions = new TreeSet<>();
     for (Field field : fields) {
-      fieldDescriptions.add(new FieldDescription(field.getName(), getTypeDescription(field)));
+      fieldDescriptions.add(new FieldDescription(field, type));
     }
     return fieldDescriptions;
   }
 
   private boolean isGetDeclaringClassEnumGetter(final Method getter, final Class<?> clazz) {
     return clazz.isEnum() && getter.getName().equals("getDeclaringClass");
-  }
-
-  private List<TypeName> getExceptionTypeNames(final Method getter) {
-    List<TypeName> exceptions = new ArrayList<>();
-    for (Class<?> exception : getter.getExceptionTypes()) {
-      exceptions.add(new TypeName(exception));
-    }
-    return exceptions;
-  }
-
-  private TypeDescription getTypeDescription(Member member) {
-    final Class<?> type = getTypeOf(member);
-    if (isArray(type)) return buildArrayTypeDescription(type);
-    // we are interested in collections and iterable but not subtype of Iterable that are not collection.
-    // e.g. java.file.nio.Path that implements Iterable but has no ParameterizedType (ex : Path.getParent() -> Path)
-    if (inheritsCollectionOrIsIterable(type)) return buildIterableTypeDescription(member, type);
-    // "simple" type
-    return new TypeDescription(new TypeName(type));
-  }
-
-  private TypeDescription buildIterableTypeDescription(Member member, final Class<?> type) {
-    final TypeDescription typeDescription = new TypeDescription(new TypeName(type));
-    typeDescription.setIterable(true);
-    if (methodReturnTypeHasNoParameterInfo(member)) {
-      // not a ParameterizedType, i.e. no parameter information => use Object as element type.
-      typeDescription.setElementTypeName(new TypeName(Object.class));
-      return typeDescription;
-    }
-    ParameterizedType parameterizedType = getParameterizedTypeOf(member);
-    if (parameterizedType.getActualTypeArguments()[0] instanceof GenericArrayType) {
-      GenericArrayType genericArrayType = (GenericArrayType) parameterizedType.getActualTypeArguments()[0];
-      typeDescription.setElementTypeName(new TypeName(genericArrayType.toString()));
-      return typeDescription;
-    }
-    // Due to http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7151486,
-    // java 7 is not able to detect GenericArrayType correctly => let's use a different way to detect array
-    Class<?> internalClass = ClassUtil.getClass(parameterizedType.getActualTypeArguments()[0]);
-    if (internalClass.isArray()) {
-      String componentTypeWithoutClassPrefix = remove(internalClass.getComponentType().toString(), "class ");
-      typeDescription.setElementTypeName(new TypeName(componentTypeWithoutClassPrefix + "[]"));
-    } else {
-      typeDescription.setElementTypeName(new TypeName(internalClass));
-    }
-    return typeDescription;
-  }
-
-  private static boolean methodReturnTypeHasNoParameterInfo(Member member) {
-    // java loose generic info if getter is overridden :(
-    return member instanceof Method && !(((Method) member).getGenericReturnType() instanceof ParameterizedType);
-  }
-
-  private static Class<?> getTypeOf(Member member) {
-    if (member instanceof Method) return ((Method) member).getReturnType();
-    if (member instanceof Field) return ((Field) member).getType();
-    throw new IllegalArgumentException("argument should be a Method or Field but was " + member.getClass());
-  }
-
-  private static ParameterizedType getParameterizedTypeOf(Member member) {
-    if (member instanceof Method) return (ParameterizedType) ((Method) member).getGenericReturnType();
-    if (member instanceof Field) return (ParameterizedType) ((Field) member).getGenericType();
-    throw new IllegalArgumentException("argument should be a Method or Field but was " + member.getClass());
-  }
-
-  private static TypeDescription buildArrayTypeDescription(final Class<?> arrayType) {
-    final TypeDescription typeDescription = new TypeDescription(new TypeName(arrayType));
-    typeDescription.setElementTypeName(new TypeName(arrayType.getComponentType()));
-    typeDescription.setArray(true);
-    return typeDescription;
   }
 
 }

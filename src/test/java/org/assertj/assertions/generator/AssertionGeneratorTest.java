@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -12,17 +12,8 @@
  */
 package org.assertj.assertions.generator;
 
-import org.assertj.assertions.generator.data.AnnotatedClass;
-import org.assertj.assertions.generator.data.ArtWork;
-import org.assertj.assertions.generator.data.AutoValue;
-import org.assertj.assertions.generator.data.AutoValueAnnotatedClass;
-import org.assertj.assertions.generator.data.BooleanPredicates;
-import org.assertj.assertions.generator.data.FieldPropertyClash;
-import org.assertj.assertions.generator.data.InterferencePrimitives;
-import org.assertj.assertions.generator.data.Keywords;
-import org.assertj.assertions.generator.data.Movie;
-import org.assertj.assertions.generator.data.Primitives;
-import org.assertj.assertions.generator.data.Team;
+import com.google.common.reflect.TypeToken;
+import org.assertj.assertions.generator.data.*;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.PlayerAgent;
 import org.assertj.assertions.generator.description.ClassDescription;
@@ -39,7 +30,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
@@ -48,21 +41,20 @@ import static java.nio.charset.Charset.defaultCharset;
 import static org.apache.commons.lang3.StringUtils.replace;
 import static org.assertj.assertions.generator.BaseAssertionGenerator.ABSTRACT_ASSERT_CLASS_PREFIX;
 import static org.assertj.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_FILE_SUFFIX;
-import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
-import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
-import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClassNotSeparatedByDots;
+import static org.assertj.assertions.generator.util.ClassUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.contentOf;
 
 @RunWith(Theories.class)
 public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExceptionsTest {
-  private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+  private static final String LINE_SEPARATOR = "\n";
   private static final String TARGET_DIRECTORY = "target";
   private static final File RESOURCES_DIRECTORY = new File("src/test/resources");
   private static final Logger logger = LoggerFactory.getLogger(AssertionGeneratorTest.class);
   private ClassToClassDescriptionConverter converter;
   private AssertionGenerator assertionGenerator;
-  private static final Set<Class<?>> allClasses = newHashSet(new Class<?>[] { Movie.class, ArtWork.class });
+  private static final Set<TypeToken<?>> allClasses =
+      newHashSet(Arrays.<TypeToken<?>>asList(TypeToken.of(Movie.class), TypeToken.of(ArtWork.class)));
 
   @Before
   public void beforeEachTest() throws IOException {
@@ -108,7 +100,8 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 
   @Test
   public void should_generate_assertion_for_class_with_predicates() throws Exception {
-    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(BooleanPredicates.class));
+    ClassDescription classDescription = converter.convertToClassDescription(BooleanPredicates.class);
+    assertionGenerator.generateCustomAssertionFor(classDescription);
     assertGeneratedAssertClass(BooleanPredicates.class, "BooleanPredicates.expected.txt");
   }
 
@@ -126,7 +119,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 
   @Test
   public void should_generate_flat_assertion_for_movie_class() throws Exception {
-    abstractFileGeneratedFor(Movie.class).delete();
+    assertThat(abstractFileGeneratedFor(Movie.class).delete()).isTrue();
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Movie.class));
     assertGeneratedAssertClass(Movie.class, "MovieAssert.flat.expected.txt");
     assertThat(abstractFileGeneratedFor(Movie.class)).doesNotExist();
@@ -165,16 +158,18 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   @Theory
-  public void should_generate_assertion_for_property_with_exception(Class<?> beanClass) throws Exception {
-    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(beanClass));
+  public void should_generate_assertion_for_property_with_exception(TypeToken<?> beanType) throws Exception {
+    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(beanType));
+    Class<?> clazz = beanType.getRawType();
     String expectedContent = contentOf(new File(RESOURCES_DIRECTORY, "BeanWithOneException.expected.txt"), defaultCharset());
-    if (!BEAN_WITH_ONE_EXCEPTION.equals(beanClass)) {
-      expectedContent = expectedContent.replace(BEAN_WITH_ONE_EXCEPTION.getSimpleName(), beanClass.getSimpleName());
+    if (!BEAN_WITH_ONE_EXCEPTION.equals(beanType)) {
+      expectedContent = expectedContent.replace(BEAN_WITH_ONE_EXCEPTION.getRawType().getSimpleName(), clazz.getSimpleName());
       expectedContent = expectedContent.replace(" throws java.io.IOException ",
                                                 " throws java.io.IOException, java.sql.SQLException ");
 
-      GetterWithException[] getters = { STRING_1_EXCEPTION, BOOLEAN_1_EXCEPTION, ARRAY_1_EXCEPTION,
-          ITERABLE_1_EXCEPTION };
+      List<GetterWithException> getters = Arrays.asList(STRING_1_EXCEPTION, BOOLEAN_1_EXCEPTION, ARRAY_1_EXCEPTION,
+          ITERABLE_1_EXCEPTION);
+      Collections.sort(getters);
       for (GetterWithException getter : getters) {
         String throwsClause = generateThrowsClause(IOException.class, getter.getPropertyName(), getter.isBooleanType());
         String replacement = throwsClause
@@ -183,13 +178,14 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
         expectedContent = expectedContent.replace(throwsClause, replacement);
       }
     }
-    assertThat(fileGeneratedFor(beanClass)).hasContent(expectedContent);
+    assertThat(fileGeneratedFor(clazz)).hasContent(expectedContent);
   }
 
   @Test
   public void should_generate_assertion_for_classes_in_package() throws Exception {
-    Set<Class<?>> classes = collectClasses("org.assertj.assertions.generator.data");
-    for (Class<?> clazz : classes) {
+    Set<TypeToken<?>> classes = collectClasses("org.assertj.assertions.generator.data");
+    for (TypeToken<?> type : classes) {
+      Class<?> clazz = type.getRawType();
       assertThat(clazz.isAnonymousClass()).as("check that <" + clazz.getSimpleName() + "> is not anonymous").isFalse();
       assertThat(clazz.isLocalClass()).as("check that " + clazz.getSimpleName() + " is not local").isFalse();
       assertThat(isPublic(clazz.getModifiers())).as("check that " + clazz.getSimpleName() + " is public").isTrue();
@@ -203,8 +199,9 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   @Test
   public void should_generate_assertion_for_classes_in_package_using_provided_class_loader() throws Exception {
     ClassLoader customClassLoader = new MyClassLoader(Thread.currentThread().getContextClassLoader());
-    Set<Class<?>> classes = collectClasses(customClassLoader, "org.assertj.assertions.generator.data");
-    for (Class<?> clazz : classes) {
+    Set<TypeToken<?>> types = collectClasses(customClassLoader, "org.assertj.assertions.generator.data");
+    for (TypeToken<?> type : types) {
+      Class<?> clazz = type.getRawType();
       assertThat(clazz.isAnonymousClass()).as("check that " + clazz.getSimpleName() + " is not anonymous").isFalse();
       assertThat(clazz.isLocalClass()).as("check that " + clazz.getSimpleName() + " is not local").isFalse();
       assertThat(isPublic(clazz.getModifiers())).as("check that " + clazz.getSimpleName() + " is public").isTrue();

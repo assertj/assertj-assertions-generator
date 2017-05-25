@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -12,10 +12,13 @@
  */
 package org.assertj.assertions.generator.description;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.common.collect.ImmutableList;
+import com.google.common.reflect.Invokable;
+import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.util.ClassUtil;
+import org.assertj.assertions.generator.util.TypeUtil;
+
+import java.lang.reflect.Method;
 
 /**
  * Stores the information needed to generate an assertion for a getter method.
@@ -30,7 +33,7 @@ import org.assertj.assertions.generator.util.ClassUtil;
  * need to know :
  * <ul>
  * <li>the property name, here "age"</li>
- * <li>property type</li>
+ * <li>property valueType</li>
  * </ul>
  * Note that <code>Person</code> doesn't need to have an <code>age</code> field, just the <code>getAge</code> method.
  * <p>
@@ -40,35 +43,36 @@ import org.assertj.assertions.generator.util.ClassUtil;
  */
 public class GetterDescription extends DataDescription implements Comparable<GetterDescription> {
 
-  private final List<TypeName> exceptions;
+  private final Invokable<?, ?> invokable;
+  private final ImmutableList<TypeToken<? extends Throwable>> exceptions;
 
-  public GetterDescription(String propertyName, String origMethodName, TypeDescription typeDescription,
-                           List<TypeName> exceptions) {
-    super(propertyName, origMethodName, typeDescription);
-    this.exceptions = new ArrayList<TypeName>(exceptions);
+  public GetterDescription(String propertyName, TypeToken<?> owningType, Method method) {
+    super(propertyName, method, owningType.method(method).getReturnType());
+
+    this.invokable = owningType.method(method);
+    this.exceptions = invokable.getExceptionTypes();
   }
 
-  public String getPropertyName() {
-    return getName();
+  @Override
+  public Method getOriginalMember() {
+    return (Method) super.getOriginalMember();
   }
 
   @Override
   public int compareTo(GetterDescription other) {
-    return getOriginalMember().compareTo(other.getOriginalMember());
+    return super.compareTo(other);
   }
 
-  @Override
-  public String toString() {
-    return "GetterDescription [propertyName=" + getName() + ", typeDescription=" + typeDescription + "]";
-  }
-
-  public List<TypeName> getExceptions() {
+  public ImmutableList<TypeToken<? extends Throwable>> getExceptions() {
     return exceptions;
   }
 
   @Override
   public boolean isPredicate() {
-    return typeDescription.isBoolean() && ClassUtil.isValidPredicateName(originalMember);
+    return TypeUtil.isBoolean(valueType) && ClassUtil.isValidPredicateName(originalMember.getName());
   }
 
+  public Invokable<?, ?> getInvokable() {
+    return invokable;
+  }
 }

@@ -30,6 +30,78 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
   }
 
   /**
+   * Verifies that the actual Primitives is boolean.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives is not boolean.
+   */
+  public PrimitivesAssert isBoolean() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // check that property call/field access is true
+    if (!actual.isBoolean()) {
+      failWithMessage("\nExpecting that actual Primitives is boolean but is not.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives is not boolean.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives is boolean.
+   */
+  public PrimitivesAssert isNotBoolean() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // check that property call/field access is false
+    if (actual.isBoolean()) {
+      failWithMessage("\nExpecting that actual Primitives is not boolean but is.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives is boolean wrapper.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives is not boolean wrapper.
+   */
+  public PrimitivesAssert isBooleanWrapper() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // null safe check
+    if (Objects.areEqual(Boolean.FALSE, actual.isBooleanWrapper())) {
+      failWithMessage("\nExpecting that actual Primitives is boolean wrapper but is not.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives is not boolean wrapper.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives is boolean wrapper.
+   */
+  public PrimitivesAssert isNotBooleanWrapper() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // null safe check
+    if (Objects.areEqual(Boolean.TRUE, actual.isBooleanWrapper())) {
+      failWithMessage("\nExpecting that actual Primitives is not boolean wrapper but is.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Primitives's byte is equal to the given one.
    * @param expectedByte the given byte to compare the actual Primitives's byte to.
    * @return this assertion object.
@@ -41,7 +113,7 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting byte of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // check
     byte actualByte = actual.getByte();
     if (actualByte != expectedByte) {
@@ -64,7 +136,7 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting byteWrapper of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     Byte actualByteWrapper = actual.getByteWrapper();
     if (!Objects.areEqual(actualByteWrapper, byteWrapper)) {
@@ -87,8 +159,8 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting char of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
-    // check
+
+    // check char char matches
     char actualChar = actual.getChar();
     if (actualChar != expectedChar) {
       failWithMessage(assertjErrorMessage, actual, expectedChar, actualChar);
@@ -110,7 +182,7 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting character of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     Character actualCharacter = actual.getCharacter();
     if (!Objects.areEqual(actualCharacter, character)) {
@@ -134,7 +206,7 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting double of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
 
-    // check
+    // check value for double
     double actualDouble = actual.getDouble();
     if (actualDouble != expectedDouble) {
       failWithMessage(assertjErrorMessage, actual, expectedDouble, actualDouble);
@@ -158,11 +230,11 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
     isNotNull();
 
     double actualDouble = actual.getDouble();
-    
+
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting double:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
                                                actualDouble, expectedDouble, offset, Math.abs(expectedDouble - actualDouble));
-    
+
     // check
     Assertions.assertThat(actualDouble).overridingErrorMessage(assertjErrorMessage).isCloseTo(expectedDouble, Assertions.within(offset));
 
@@ -207,13 +279,49 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
     isNotNull();
 
     Double actualDoubleWrapper = actual.getDoubleWrapper();
-    
+
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting doubleWrapper:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
                                                actualDoubleWrapper, doubleWrapper, offset, Math.abs(doubleWrapper - actualDoubleWrapper));
-    
+
     // check
     Assertions.assertThat(actualDoubleWrapper).overridingErrorMessage(assertjErrorMessage).isCloseTo(doubleWrapper, Assertions.within(offset));
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives is enabled.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives is not enabled.
+   */
+  public PrimitivesAssert isEnabled() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // null safe check
+    if (Objects.areEqual(Boolean.FALSE, actual.isEnabled())) {
+      failWithMessage("\nExpecting that actual Primitives is enabled but is not.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives is not enabled.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives is enabled.
+   */
+  public PrimitivesAssert isNotEnabled() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // null safe check
+    if (Objects.areEqual(Boolean.TRUE, actual.isEnabled())) {
+      failWithMessage("\nExpecting that actual Primitives is not enabled but is.");
+    }
 
     // return the current assertion for method chaining
     return this;
@@ -232,7 +340,7 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting float of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
 
-    // check
+    // check value for float
     float actualFloat = actual.getFloat();
     if (actualFloat != expectedFloat) {
       failWithMessage(assertjErrorMessage, actual, expectedFloat, actualFloat);
@@ -256,11 +364,11 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
     isNotNull();
 
     float actualFloat = actual.getFloat();
-    
+
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting float:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
                                                actualFloat, expectedFloat, offset, Math.abs(expectedFloat - actualFloat));
-    
+
     // check
     Assertions.assertThat(actualFloat).overridingErrorMessage(assertjErrorMessage).isCloseTo(expectedFloat, Assertions.within(offset));
 
@@ -305,11 +413,11 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
     isNotNull();
 
     Float actualFloatWrapper = actual.getFloatWrapper();
-    
+
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting floatWrapper:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
                                                actualFloatWrapper, floatWrapper, offset, Math.abs(floatWrapper - actualFloatWrapper));
-    
+
     // check
     Assertions.assertThat(actualFloatWrapper).overridingErrorMessage(assertjErrorMessage).isCloseTo(floatWrapper, Assertions.within(offset));
 
@@ -329,7 +437,7 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting int of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // check
     int actualInt = actual.getInt();
     if (actualInt != expectedInt) {
@@ -352,7 +460,7 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting integer of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     Integer actualInteger = actual.getInteger();
     if (!Objects.areEqual(actualInteger, integer)) {
@@ -375,7 +483,7 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting long of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // check
     long actualLong = actual.getLong();
     if (actualLong != expectedLong) {
@@ -398,7 +506,7 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting longWrapper of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     Long actualLongWrapper = actual.getLongWrapper();
     if (!Objects.areEqual(actualLongWrapper, longWrapper)) {
@@ -421,7 +529,7 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting short of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // check
     short actualShort = actual.getShort();
     if (actualShort != expectedShort) {
@@ -444,121 +552,13 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting shortWrapper of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     Short actualShortWrapper = actual.getShortWrapper();
     if (!Objects.areEqual(actualShortWrapper, shortWrapper)) {
       failWithMessage(assertjErrorMessage, actual, shortWrapper, actualShortWrapper);
     }
 
-    // return the current assertion for method chaining
-    return this;
-  }
-
-  /**
-   * Verifies that the actual Primitives is boolean.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual Primitives is not boolean.
-   */
-  public PrimitivesAssert isBoolean() {
-    // check that actual Primitives we want to make assertions on is not null.
-    isNotNull();
-
-    // check
-    if (!actual.isBoolean()) {
-      failWithMessage("\nExpecting that actual Primitives is boolean but is not.");
-    }
-    
-    // return the current assertion for method chaining
-    return this;
-  }
-
-  /**
-   * Verifies that the actual Primitives is not boolean.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual Primitives is boolean.
-   */
-  public PrimitivesAssert isNotBoolean() {
-    // check that actual Primitives we want to make assertions on is not null.
-    isNotNull();
-
-    // check
-    if (actual.isBoolean()) {
-      failWithMessage("\nExpecting that actual Primitives is not boolean but is.");
-    }
-    
-    // return the current assertion for method chaining
-    return this;
-  }
-
-  /**
-   * Verifies that the actual Primitives is boolean wrapper.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual Primitives is not boolean wrapper.
-   */
-  public PrimitivesAssert isBooleanWrapper() {
-    // check that actual Primitives we want to make assertions on is not null.
-    isNotNull();
-
-    // null safe check
-    if (Objects.areEqual(Boolean.FALSE, actual.isBooleanWrapper())) {
-      failWithMessage("\nExpecting that actual Primitives is boolean wrapper but is not.");
-    }
-    
-    // return the current assertion for method chaining
-    return this;
-  }
-
-  /**
-   * Verifies that the actual Primitives is not boolean wrapper.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual Primitives is boolean wrapper.
-   */
-  public PrimitivesAssert isNotBooleanWrapper() {
-    // check that actual Primitives we want to make assertions on is not null.
-    isNotNull();
-
-    // null safe check
-    if (Objects.areEqual(Boolean.TRUE, actual.isBooleanWrapper())) {
-      failWithMessage("\nExpecting that actual Primitives is not boolean wrapper but is.");
-    }
-    
-    // return the current assertion for method chaining
-    return this;
-  }
-
-  /**
-   * Verifies that the actual Primitives is enabled.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual Primitives is not enabled.
-   */
-  public PrimitivesAssert isEnabled() {
-    // check that actual Primitives we want to make assertions on is not null.
-    isNotNull();
-
-    // null safe check
-    if (Objects.areEqual(Boolean.FALSE, actual.isEnabled())) {
-      failWithMessage("\nExpecting that actual Primitives is enabled but is not.");
-    }
-    
-    // return the current assertion for method chaining
-    return this;
-  }
-
-  /**
-   * Verifies that the actual Primitives is not enabled.
-   * @return this assertion object.
-   * @throws AssertionError - if the actual Primitives is enabled.
-   */
-  public PrimitivesAssert isNotEnabled() {
-    // check that actual Primitives we want to make assertions on is not null.
-    isNotNull();
-
-    // null safe check
-    if (Objects.areEqual(Boolean.TRUE, actual.isEnabled())) {
-      failWithMessage("\nExpecting that actual Primitives is not enabled but is.");
-    }
-    
     // return the current assertion for method chaining
     return this;
   }

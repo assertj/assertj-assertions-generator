@@ -36,11 +36,11 @@
     isNotNull();
 
     ${propertyType} actual${Property} = actual.${getter}();
-    
+
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting ${property}:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
                                                actual${Property}, ${property_safe}, offset, Math.abs(${property_safe} - actual${Property}));
-    
+
     // check
     Assertions.assertThat(actual${Property}).overridingErrorMessage(assertjErrorMessage).isCloseTo(${property_safe}, Assertions.within(offset));
 

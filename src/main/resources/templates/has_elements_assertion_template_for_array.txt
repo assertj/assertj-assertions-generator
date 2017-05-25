@@ -11,7 +11,7 @@
 
     // check that given ${elementType} varargs is not null.
     if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.${getter}()).contains(${property_safe});
 
@@ -32,7 +32,7 @@
 
     // check that given ${elementType} varargs is not null.
     if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.${getter}()).containsOnly(${property_safe});
 
@@ -53,7 +53,7 @@
 
     // check that given ${elementType} varargs is not null.
     if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.${getter}()).doesNotContain(${property_safe});
 
@@ -72,13 +72,12 @@
 
     // we override the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
-    
-    // check
+
+    // check that it is not empty
     if (actual.${getter}().length > 0)  {
       failWithMessage(assertjErrorMessage, actual, java.util.Arrays.toString(actual.${getter}()));
     }
-    
+
     // return the current assertion for method chaining
     return ${myself};
   }
-  

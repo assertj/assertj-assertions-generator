@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -11,6 +11,12 @@
  * Copyright 2012-2015 the original author or authors.
  */
 package org.assertj.assertions.generator.description;
+
+import com.google.common.reflect.TypeToken;
+import org.assertj.assertions.generator.util.ClassUtil;
+import org.assertj.assertions.generator.util.TypeUtil;
+
+import java.lang.reflect.Field;
 
 import static org.apache.commons.lang3.StringUtils.capitalize;
 
@@ -28,7 +34,7 @@ import static org.apache.commons.lang3.StringUtils.capitalize;
  * need to know :
  * <ul>
  * <li>the field name, here "age"</li>
- * <li>the field type</li>
+ * <li>the field valueType</li>
  * </ul>
  * This class is immutable.
  * 
@@ -36,35 +42,42 @@ import static org.apache.commons.lang3.StringUtils.capitalize;
  */
 public class FieldDescription extends DataDescription implements Comparable<FieldDescription> {
 
-  public FieldDescription(String name, TypeDescription typeDescription) {
-    super(name, name, typeDescription);
+  private final TypeToken<?> owningType;
+
+  public FieldDescription(Field field, TypeToken<?> owningType) {
+    super(ClassUtil.propertyNameOf(field), field, owningType.resolveType(field.getGenericType()));
+
+    this.owningType = owningType;
   }
 
   @Override
   public int compareTo(FieldDescription other) {
-    return getName().compareTo(other.getName());
+    return super.compareTo(other);
   }
-
+  
   @Override
-  public String toString() {
-    return "FieldDescription[name=" + getName() + ", typeDescription=" + typeDescription + "]";
+  public Field getOriginalMember() {
+    return (Field) super.getOriginalMember();
   }
 
   @Override
   public boolean isPredicate() {
-    return typeDescription.isBoolean();
+    return TypeUtil.isBoolean(valueType);
   }
 
   @Override
   public String getPredicate() {
-	final String retval = super.getNegativePredicate();
-	return retval == null ? "is" + capitalize(originalMember) : originalMember;
+    final String retval = super.getNegativePredicate();
+    return retval == null ? "is" + capitalize(originalMember.getName()) : originalMember.getName();
   }
   
   @Override
   public String getNegativePredicate() {
-	final String retval = super.getNegativePredicate();
-	return retval == null ? "isNot" + capitalize(originalMember) : retval;
+    final String retval = super.getNegativePredicate();
+    return retval == null ? "isNot" + capitalize(originalMember.getName()) : retval;
   }
 
+  public TypeToken<?> getOwningType() {
+    return owningType;
+  }
 }

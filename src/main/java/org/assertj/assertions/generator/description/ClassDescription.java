@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -12,7 +12,11 @@
  */
 package org.assertj.assertions.generator.description;
 
+import com.google.common.reflect.TypeToken;
+import org.assertj.assertions.generator.util.TypeUtil;
+
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -29,40 +33,41 @@ public class ClassDescription implements Comparable<ClassDescription> {
   private Set<FieldDescription> fieldsDescriptions;
   private Set<GetterDescription> declaredGettersDescriptions;
   private Set<FieldDescription> declaredFieldsDescriptions;
-  private TypeName classTypeName;
-  private Class<?> superType;
+  private TypeToken<?> type;
+  private TypeToken<?> superType;
 
-  public ClassDescription(TypeName typeName) {
+  public ClassDescription(TypeToken<?> type) {
     super();
-    this.classTypeName = typeName;
-    this.gettersDescriptions = new TreeSet<GetterDescription>();
-    this.fieldsDescriptions = new TreeSet<FieldDescription>();
-    this.declaredGettersDescriptions = new TreeSet<GetterDescription>();
-    this.declaredFieldsDescriptions = new TreeSet<FieldDescription>();
+    this.type = type;
+    this.superType = null;
+    this.gettersDescriptions = new TreeSet<>();
+    this.fieldsDescriptions = new TreeSet<>();
+    this.declaredGettersDescriptions = new TreeSet<>();
+    this.declaredFieldsDescriptions = new TreeSet<>();
   }
 
   public String getClassName() {
-    return classTypeName.getSimpleName();
+    return type.getRawType().getName();
   }
   
   public String getFullyQualifiedClassName() {
-    return classTypeName.getFullyQualifiedClassName();
+    return TypeUtil.getTypeDeclaration(type, false, true);
   }
 
-  public TypeName getTypeName() {
-    return classTypeName;
+  public TypeToken<?> getType() {
+    return type;
   }
 
   public String getClassNameWithOuterClass() {
-    return classTypeName.getSimpleNameWithOuterClass();
+    return TypeUtil.getTypeDeclaration(type, false, false);
   }
 
   public String getClassNameWithOuterClassNotSeparatedByDots() {
-    return classTypeName.getSimpleNameWithOuterClassNotSeparatedByDots();
+    return TypeUtil.getTypeNameWithoutDots(getClassNameWithOuterClass()); //classTypeName.getSimpleNameWithOuterClassNotSeparatedByDots();
   }
   
   public String getPackageName() {
-    return classTypeName.getPackageName();
+    return type.getRawType().getPackage().getName();
   }
 
   public Set<GetterDescription> getGettersDescriptions() {
@@ -99,7 +104,7 @@ public class ClassDescription implements Comparable<ClassDescription> {
   
   @Override
   public String toString() {
-    return "ClassDescription [classTypeName=" + classTypeName + "]";
+    return "ClassDescription [valueType=" + type + "]";
   }
 
   @Override
@@ -108,25 +113,28 @@ public class ClassDescription implements Comparable<ClassDescription> {
     if (!(o instanceof ClassDescription)) return false;
 
     final ClassDescription that = (ClassDescription) o;
-    if (classTypeName != null ? !classTypeName.equals(that.classTypeName) : that.classTypeName != null) return false;
-    return true;
+    return (Objects.equals(type, that.type));
   }
 
   @Override
   public int hashCode() {
-    return classTypeName != null ? classTypeName.hashCode() : 0;
+    return Objects.hash(type);
   }
   
   @Override
   public int compareTo(ClassDescription o) {
-    return classTypeName.compareTo(o.classTypeName);
+    return type.getRawType().getName().compareTo(o.type.getRawType().getName());
   }
 
-  public Class<?> getSuperType() {
+  public TypeToken<?> getSuperType() {
     return superType;
   }
 
+  @SuppressWarnings("unchecked")
   public void setSuperType(Class<?> superType) {
-    this.superType = superType;
+    // TypeToken#getSupertype(..) checks to make sure it is a super type
+    if (superType != null) {
+      this.superType = type.getSupertype((Class)superType);
+    }
   }
 }

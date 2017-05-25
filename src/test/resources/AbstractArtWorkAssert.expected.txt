@@ -29,7 +29,7 @@ public abstract class AbstractArtWorkAssert<S extends AbstractArtWorkAssert<S, A
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting title of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     String actualTitle = actual.getTitle();
     if (!Objects.areEqual(actualTitle, title)) {
@@ -52,7 +52,7 @@ public abstract class AbstractArtWorkAssert<S extends AbstractArtWorkAssert<S, A
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting creator of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     String actualCreator = actual.creator;
     if (!Objects.areEqual(actualCreator, creator)) {

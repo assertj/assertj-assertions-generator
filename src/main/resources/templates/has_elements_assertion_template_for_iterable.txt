@@ -11,14 +11,14 @@
 
     // check that given ${elementType} varargs is not null.
     if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.${getter}(), ${property_safe});
 
     // return the current assertion for method chaining
     return ${myself};
   }
-  
+
   /**
    * Verifies that the actual ${class_to_assert}'s ${property} contains the given ${elementType} elements in Collection.
    * @param ${property_safe} the given elements that should be contained in actual ${class_to_assert}'s ${property}.
@@ -34,7 +34,7 @@
       failWithMessage("Expecting ${property} parameter not to be null.");
       return ${myself}; // to fool Eclipse "Null pointer access" warning on toArray.
     }
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.${getter}(), ${property_safe}.toArray());
 
@@ -54,7 +54,7 @@
 
     // check that given ${elementType} varargs is not null.
     if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContainsOnly(info, actual.${getter}(), ${property_safe});
 
@@ -77,7 +77,7 @@
       failWithMessage("Expecting ${property} parameter not to be null.");
       return ${myself}; // to fool Eclipse "Null pointer access" warning on toArray.
     }
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContainsOnly(info, actual.${getter}(), ${property_safe}.toArray());
 
@@ -98,7 +98,7 @@
 
     // check that given ${elementType} varargs is not null.
     if (${property_safe} == null) failWithMessage("Expecting ${property} parameter not to be null.");
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Iterables.instance().assertDoesNotContain(info, actual.${getter}(), ${property_safe});
 
@@ -122,7 +122,7 @@
       failWithMessage("Expecting ${property} parameter not to be null.");
       return ${myself}; // to fool Eclipse "Null pointer access" warning on toArray.
     }
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Iterables.instance().assertDoesNotContain(info, actual.${getter}(), ${property_safe}.toArray());
 
@@ -141,13 +141,12 @@
 
     // we override the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
-    
+
     // check
     if (actual.${getter}().iterator().hasNext()) {
       failWithMessage(assertjErrorMessage, actual, actual.${getter}());
     }
-    
+
     // return the current assertion for method chaining
     return ${myself};
   }
-  

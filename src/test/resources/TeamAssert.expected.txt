@@ -42,7 +42,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting division of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     String actualDivision = actual.getDivision();
     if (!Objects.areEqual(actualDivision, division)) {
@@ -65,7 +65,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting name of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     String actualName = actual.name;
     if (!Objects.areEqual(actualName, name)) {
@@ -88,7 +88,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // check that given String varargs is not null.
     if (oldNames == null) failWithMessage("Expecting oldNames parameter not to be null.");
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.oldNames).contains(oldNames);
 
@@ -109,7 +109,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // check that given String varargs is not null.
     if (oldNames == null) failWithMessage("Expecting oldNames parameter not to be null.");
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.oldNames).containsOnly(oldNames);
 
@@ -130,7 +130,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // check that given String varargs is not null.
     if (oldNames == null) failWithMessage("Expecting oldNames parameter not to be null.");
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Assertions.assertThat(actual.oldNames).doesNotContain(oldNames);
 
@@ -149,16 +149,16 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // we override the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have oldNames but had :\n  <%s>";
-    
-    // check
+
+    // check that it is not empty
     if (actual.oldNames.length > 0)  {
       failWithMessage(assertjErrorMessage, actual, java.util.Arrays.toString(actual.oldNames));
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
-  
+
 
   /**
    * Verifies that the actual Team's players contains the given org.assertj.assertions.generator.data.nba.Player elements.
@@ -172,14 +172,14 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // check that given org.assertj.assertions.generator.data.nba.Player varargs is not null.
     if (players == null) failWithMessage("Expecting players parameter not to be null.");
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.players, players);
 
     // return the current assertion for method chaining
     return this;
   }
-  
+
   /**
    * Verifies that the actual Team's players contains the given org.assertj.assertions.generator.data.nba.Player elements in Collection.
    * @param players the given elements that should be contained in actual Team's players.
@@ -195,7 +195,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
       failWithMessage("Expecting players parameter not to be null.");
       return this; // to fool Eclipse "Null pointer access" warning on toArray.
     }
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.players, players.toArray());
 
@@ -215,7 +215,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // check that given org.assertj.assertions.generator.data.nba.Player varargs is not null.
     if (players == null) failWithMessage("Expecting players parameter not to be null.");
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContainsOnly(info, actual.players, players);
 
@@ -238,7 +238,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
       failWithMessage("Expecting players parameter not to be null.");
       return this; // to fool Eclipse "Null pointer access" warning on toArray.
     }
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContainsOnly(info, actual.players, players.toArray());
 
@@ -259,7 +259,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // check that given org.assertj.assertions.generator.data.nba.Player varargs is not null.
     if (players == null) failWithMessage("Expecting players parameter not to be null.");
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Iterables.instance().assertDoesNotContain(info, actual.players, players);
 
@@ -283,7 +283,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
       failWithMessage("Expecting players parameter not to be null.");
       return this; // to fool Eclipse "Null pointer access" warning on toArray.
     }
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Iterables.instance().assertDoesNotContain(info, actual.players, players.toArray());
 
@@ -302,16 +302,16 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // we override the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have players but had :\n  <%s>";
-    
+
     // check
     if (actual.players.iterator().hasNext()) {
       failWithMessage(assertjErrorMessage, actual, actual.players);
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
-  
+
 
   /**
    * Verifies that the actual Team's points contains the given int[] elements.
@@ -325,14 +325,14 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // check that given int[] varargs is not null.
     if (points == null) failWithMessage("Expecting points parameter not to be null.");
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.points, points);
 
     // return the current assertion for method chaining
     return this;
   }
-  
+
   /**
    * Verifies that the actual Team's points contains the given int[] elements in Collection.
    * @param points the given elements that should be contained in actual Team's points.
@@ -348,7 +348,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
       failWithMessage("Expecting points parameter not to be null.");
       return this; // to fool Eclipse "Null pointer access" warning on toArray.
     }
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContains(info, actual.points, points.toArray());
 
@@ -368,7 +368,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // check that given int[] varargs is not null.
     if (points == null) failWithMessage("Expecting points parameter not to be null.");
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContainsOnly(info, actual.points, points);
 
@@ -391,7 +391,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
       failWithMessage("Expecting points parameter not to be null.");
       return this; // to fool Eclipse "Null pointer access" warning on toArray.
     }
-    
+
     // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
     Iterables.instance().assertContainsOnly(info, actual.points, points.toArray());
 
@@ -412,7 +412,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // check that given int[] varargs is not null.
     if (points == null) failWithMessage("Expecting points parameter not to be null.");
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Iterables.instance().assertDoesNotContain(info, actual.points, points);
 
@@ -436,7 +436,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
       failWithMessage("Expecting points parameter not to be null.");
       return this; // to fool Eclipse "Null pointer access" warning on toArray.
     }
-    
+
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
     Iterables.instance().assertDoesNotContain(info, actual.points, points.toArray());
 
@@ -455,16 +455,16 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // we override the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have points but had :\n  <%s>";
-    
+
     // check
     if (actual.points.iterator().hasNext()) {
       failWithMessage(assertjErrorMessage, actual, actual.points);
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
-  
+
 
   /**
    * Verifies that the actual Team's rank is equal to the given one.
@@ -478,7 +478,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting rank of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // check
     int actualRank = actual.rank;
     if (actualRank != rank) {
@@ -502,7 +502,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting victoryRatio of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
 
-    // check
+    // check value for victoryRatio
     double actualVictoryRatio = actual.victoryRatio;
     if (actualVictoryRatio != victoryRatio) {
       failWithMessage(assertjErrorMessage, actual, victoryRatio, actualVictoryRatio);
@@ -526,11 +526,11 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
     isNotNull();
 
     double actualVictoryRatio = actual.victoryRatio;
-    
+
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting victoryRatio:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
                                                actualVictoryRatio, victoryRatio, offset, Math.abs(victoryRatio - actualVictoryRatio));
-    
+
     // check
     Assertions.assertThat(actualVictoryRatio).overridingErrorMessage(assertjErrorMessage).isCloseTo(victoryRatio, Assertions.within(offset));
 
@@ -547,11 +547,11 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
     // check that actual Team we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is true
     if (!actual.westCoast) {
       failWithMessage("\nExpecting that actual Team is westCoast but is not.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -565,11 +565,11 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
     // check that actual Team we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is false
     if (actual.westCoast) {
       failWithMessage("\nExpecting that actual Team is not westCoast but is.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }

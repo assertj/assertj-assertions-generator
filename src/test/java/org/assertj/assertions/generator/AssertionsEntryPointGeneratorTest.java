@@ -12,26 +12,7 @@
  */
 package org.assertj.assertions.generator;
 
-import static com.google.common.collect.Sets.newLinkedHashSet;
-import static org.assertj.assertions.generator.AssertionsEntryPointType.AUTO_CLOSEABLE_BDD_SOFT;
-import static org.assertj.assertions.generator.AssertionsEntryPointType.AUTO_CLOSEABLE_SOFT;
-import static org.assertj.assertions.generator.AssertionsEntryPointType.BDD;
-import static org.assertj.assertions.generator.AssertionsEntryPointType.BDD_SOFT;
-import static org.assertj.assertions.generator.AssertionsEntryPointType.JUNIT_BDD_SOFT;
-import static org.assertj.assertions.generator.AssertionsEntryPointType.JUNIT_SOFT;
-import static org.assertj.assertions.generator.AssertionsEntryPointType.SOFT;
-import static org.assertj.assertions.generator.AssertionsEntryPointType.STANDARD;
-import static org.assertj.assertions.generator.DefaultTemplateRegistryProducer.DEFAULT_ASSERTIONS_ENTRY_POINT_CLASS_TEMPLATE;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.contentOf;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.junit.Before;
-import org.junit.Test;
+import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.data.ArtWork;
 import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.Name;
@@ -43,6 +24,18 @@ import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.Team;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import static com.google.common.collect.Sets.newLinkedHashSet;
+import static org.assertj.assertions.generator.AssertionsEntryPointType.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.contentOf;
 
 public class AssertionsEntryPointGeneratorTest {
   private static final String TARGET_DIRECTORY = "target";
@@ -269,7 +262,7 @@ public class AssertionsEntryPointGeneratorTest {
     Set<ClassDescription> classDescriptionSet = new LinkedHashSet<>(classes.length);
     ClassToClassDescriptionConverter converter = new ClassToClassDescriptionConverter();
     for (Class<?> clazz : classes) {
-      classDescriptionSet.add(converter.convertToClassDescription(clazz));
+      classDescriptionSet.add(converter.convertToClassDescription(TypeToken.of(clazz)));
     }
     return classDescriptionSet;
   }

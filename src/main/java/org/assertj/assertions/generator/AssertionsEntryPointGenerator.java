@@ -12,12 +12,11 @@
  */
 package org.assertj.assertions.generator;
 
+import org.assertj.assertions.generator.description.ClassDescription;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
-
-import org.assertj.assertions.generator.AssertionsEntryPointType;
-import org.assertj.assertions.generator.description.ClassDescription;
 
 public interface AssertionsEntryPointGenerator {
 
@@ -34,7 +33,7 @@ public interface AssertionsEntryPointGenerator {
    * a.b.c.
    * 
    * @param classDescriptionSet the set of ClassDescription we want to generate an entry point for.
-   * @param assertionsEntryPointType the type of entry point class to generate
+   * @param assertionsEntryPointType the valueType of entry point class to generate
    * @param entryPointClassPackage the package of the generated entry point class
    * @return the assertions entry point class content
    */

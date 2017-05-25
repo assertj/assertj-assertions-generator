@@ -12,31 +12,38 @@
  */
 package org.assertj.assertions.generator.data.nba;
 
-import static java.lang.String.format;
-import static org.assertj.core.util.Objects.areEqual;
+import org.assertj.assertions.generator.data.Name;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.assertj.assertions.generator.data.Name;
+import static java.lang.String.format;
+import static org.assertj.core.util.Objects.areEqual;
 
 /**
  * @author Joel Costigliola
  */
+@SuppressWarnings("unused")
 public class Player {
 
   private Name name;
   private boolean rookie;
   private int pointsPerGame;
+  private Integer pointerPerGameWrapped;
   private int assistsPerGame;
   private int reboundsPerGame;
   private String team;
   private float size;
+  private Float sizeAsFloatWrapper;
+  private double sizeDouble;
+  private Double sizeAsDoubleWrapper;
   // boolean property to test #46
   private boolean isDisabled;
   private List<Player> teamMates = new ArrayList<Player>();
   private List<int[]> points = new ArrayList<int[]>();
   private String[] previousTeams = {};
+
+  private boolean bad;
 
   public Player(Name name, String team) {
     setName(name);
@@ -109,6 +116,38 @@ public class Player {
 
   public boolean isRookie() {
     return rookie;
+  }
+
+  public boolean wasRookie() {
+    return rookie;
+  }
+
+  public boolean shouldWin() {
+    return false;
+  }
+
+  public boolean canWin() {
+    return false;
+  }
+
+  public boolean willWin() {
+    return false;
+  }
+
+  public boolean cannotWin() {
+    return !canWin();
+  }
+
+  public boolean hasTrophy() {
+    return false;
+  }
+
+  public boolean doesNotHaveFun() {
+    return false;
+  }
+
+  public boolean shouldNotPlay() {
+    return false;
   }
 
   public void setRookie(boolean rookie) {

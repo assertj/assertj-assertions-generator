@@ -12,11 +12,12 @@
  */
 package org.assertj.assertions.generator;
 
+import com.google.common.reflect.TypeToken;
+import org.assertj.assertions.generator.description.ClassDescription;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
-
-import org.assertj.assertions.generator.description.ClassDescription;
 
 
 public interface AssertionGenerator {
@@ -127,7 +128,7 @@ public interface AssertionGenerator {
    *         containing the file for the concrete final assertion.
    * @throws IOException if something went wrong when creating the assertion files.
    */
-  File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription, Set<Class<?>> allClasses) throws IOException;
+  File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription, Set<TypeToken<?>> allClasses) throws IOException;
 
   /**
    * Builds and returns the custom assertion java file content for the given {@link ClassDescription}.
@@ -240,7 +241,7 @@ public interface AssertionGenerator {
    * @throws RuntimeException
    *             if something went wrong when creating the assertion content.
    */
-  String[] generateHierarchicalCustomAssertionContentFor(ClassDescription classDescription, Set<Class<?>> allClasses);
+  String[] generateHierarchicalCustomAssertionContentFor(ClassDescription classDescription, Set<TypeToken<?>> allClasses);
 
     /**
      * Registers a template in the internal TemplateRegistry so that customers can override default templates.

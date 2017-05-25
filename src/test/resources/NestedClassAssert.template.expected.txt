@@ -40,7 +40,7 @@ public class ${nestedClass}Assert extends AbstractObjectAssert<${nestedClass}Ass
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting name of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     String actualName = actual.getName();
     if (!Objects.areEqual(actualName, name)) {

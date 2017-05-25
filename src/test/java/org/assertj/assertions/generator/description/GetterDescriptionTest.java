@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -12,130 +12,124 @@
  */
 package org.assertj.assertions.generator.description;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Collections;
-import java.util.List;
-
+import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.data.nba.Player;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.lang.reflect.Method;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetterDescriptionTest {
 
-  private static final TypeDescription PLAYER_TYPE_DESCRIPTION = new TypeDescription(new TypeName(Player.class));
-  private static final TypeDescription BOOLEAN_TYPE_DESCRIPTION = new TypeDescription(new TypeName(boolean.class));
-  private static final List<TypeName> EMPTY_TYPENAME_LIST = Collections.<TypeName> emptyList();;
+  private static final TypeToken<Player> PLAYER_TYPE_DESCRIPTION = TypeToken.of(Player.class);
 
   private GetterDescription getterDescription;
 
-  @Test
-  public void should_create_valid_typename_from_class() {
-    getterDescription = new GetterDescription("bestPlayer", "getBestPlayer", PLAYER_TYPE_DESCRIPTION,
-                                              EMPTY_TYPENAME_LIST);
-    assertThat(getterDescription.getPropertyName()).isEqualTo("bestPlayer");
-    assertThat(getterDescription.getTypeName()).isEqualTo("Player");
-    assertThat(getterDescription.getElementTypeName(Player.class.getPackage().getName())).isNull();
+  private static Method PLAYER_GET_POINTS_METHOD;
+
+  @BeforeClass
+  public static void setupClass() throws Exception {
+    PLAYER_GET_POINTS_METHOD = Player.class.getMethod("getPoints");
   }
 
   @Test
-  public void should_show_information_in_toString() {
-    getterDescription = new GetterDescription("bestPlayer", "getBestPlayer", PLAYER_TYPE_DESCRIPTION,
-                                              EMPTY_TYPENAME_LIST);
-    assertThat(getterDescription.toString()).contains("bestPlayer").contains(Player.class.getName());
+  public void should_create_valid_typename_from_class() throws Exception {
+    getterDescription = new GetterDescription("points", PLAYER_TYPE_DESCRIPTION, PLAYER_GET_POINTS_METHOD);
+    assertThat(getterDescription.getName()).isEqualTo("points");
+    assertThat(getterDescription.getTypeName(false, false)).isEqualTo("List<int[]>");
+    assertThat(getterDescription.getElementTypeName(Player.class.getPackage().getName())).isEqualTo("int[]");
   }
 
   @Test
-  public void should_not_be_predicate() {
-    getterDescription = new GetterDescription("bestPlayer", "getBestPlayer", PLAYER_TYPE_DESCRIPTION,
-                                              EMPTY_TYPENAME_LIST);
-    assertThat(getterDescription.isPredicate()).as("bestPlayer").isFalse();
-    getterDescription = new GetterDescription("runFlag", "getRunFlag", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
-    assertThat(getterDescription.isPredicate()).as("runFlag").isFalse();
+  public void should_show_information_in_toString() throws Exception {
+    getterDescription = new GetterDescription("points", PLAYER_TYPE_DESCRIPTION, PLAYER_GET_POINTS_METHOD);
+    assertThat(getterDescription.toString()).contains("points").contains("List<int[]>");
   }
 
   @Test
-  public void should_be_predicate() {
-    for (String p : new String[] { "is", "can", "was", "has", "should" }) {
-      getterDescription = new GetterDescription("bestPlayer", p + "BestPlayer", BOOLEAN_TYPE_DESCRIPTION,
-                                                EMPTY_TYPENAME_LIST);
-      assertThat(getterDescription.isPredicate()).as(p).isTrue();
-    }
+  public void should_not_be_predicate() throws Exception {
+    getterDescription = new GetterDescription("points", PLAYER_TYPE_DESCRIPTION, PLAYER_GET_POINTS_METHOD);
+    assertThat(getterDescription.isPredicate()).as("points").isFalse();
+    getterDescription = new GetterDescription("rookie", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("isRookie"));
+    assertThat(getterDescription.isPredicate()).as("rookie").isTrue();
   }
 
   @Test
-  public void should_generate_predicate_for_javadoc() {
-    getterDescription = new GetterDescription("rookie", "isRookie", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+  public void should_generate_predicate_for_javadoc() throws Exception {
+    getterDescription = new GetterDescription("rookie", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("isRookie"));
     assertThat(getterDescription.getPredicateForJavadoc()).isEqualTo("is rookie");
     assertThat(getterDescription.getNegativePredicateForJavadoc()).isEqualTo("is not rookie");
 
-    getterDescription = new GetterDescription("", "wasRookie", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("rookie", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("wasRookie"));
     assertThat(getterDescription.getPredicateForJavadoc()).isEqualTo("was rookie");
     assertThat(getterDescription.getNegativePredicateForJavadoc()).isEqualTo("was not rookie");
 
-    getterDescription = new GetterDescription("", "shouldWin", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("win", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("shouldWin"));
     assertThat(getterDescription.getPredicateForJavadoc()).isEqualTo("should win");
     assertThat(getterDescription.getNegativePredicateForJavadoc()).isEqualTo("should not win");
 
-    getterDescription = new GetterDescription("", "canWin", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("win", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("canWin"));
     assertThat(getterDescription.getPredicateForJavadoc()).isEqualTo("can win");
     assertThat(getterDescription.getNegativePredicateForJavadoc()).isEqualTo("cannot win");
 
-    getterDescription = new GetterDescription("", "willWin", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("win", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("willWin"));
     assertThat(getterDescription.getPredicateForJavadoc()).isEqualTo("will win");
     assertThat(getterDescription.getNegativePredicateForJavadoc()).isEqualTo("will not win");
 
-    getterDescription = new GetterDescription("", "hasTrophy", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("trophy", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("hasTrophy"));
     assertThat(getterDescription.getPredicateForJavadoc()).isEqualTo("has trophy");
     assertThat(getterDescription.getNegativePredicateForJavadoc()).isEqualTo("does not have trophy");
 
-    getterDescription = new GetterDescription("", "doesNotHaveFun", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("fun", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("doesNotHaveFun"));
     assertThat(getterDescription.getPredicateForJavadoc()).isEqualTo("does not have fun");
     assertThat(getterDescription.getNegativePredicateForJavadoc()).isEqualTo("has fun");
 
-    getterDescription = new GetterDescription("", "cannotWin", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("win", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("cannotWin"));
     assertThat(getterDescription.getPredicateForJavadoc()).isEqualTo("cannot win");
     assertThat(getterDescription.getNegativePredicateForJavadoc()).isEqualTo("can win");
 
-    getterDescription = new GetterDescription("", "shouldNotPlay", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("play", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("shouldNotPlay"));
     assertThat(getterDescription.getPredicateForJavadoc()).isEqualTo("should not play");
     assertThat(getterDescription.getNegativePredicateForJavadoc()).isEqualTo("should play");
   }
 
   @Test
-  public void should_generate_predicate_for_error_message() {
-    getterDescription = new GetterDescription("rookie", "isRookie", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+  public void should_generate_predicate_for_error_message() throws Exception {
+    getterDescription = new GetterDescription("rookie", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("isRookie"));
     assertThat(getterDescription.getPredicateForErrorMessagePart1()).isEqualTo("is rookie");
     assertThat(getterDescription.getPredicateForErrorMessagePart2()).isEqualTo("is not");
 
-    getterDescription = new GetterDescription("", "wasRookie", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("rookie", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("wasRookie"));
     assertThat(getterDescription.getPredicateForErrorMessagePart1()).isEqualTo("was rookie");
     assertThat(getterDescription.getPredicateForErrorMessagePart2()).isEqualTo("was not");
 
-    getterDescription = new GetterDescription("", "shouldWin", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("win", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("shouldWin"));
     assertThat(getterDescription.getPredicateForErrorMessagePart1()).isEqualTo("should win");
     assertThat(getterDescription.getPredicateForErrorMessagePart2()).isEqualTo("should not");
 
-    getterDescription = new GetterDescription("", "canWin", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("win", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("canWin"));
     assertThat(getterDescription.getPredicateForErrorMessagePart1()).isEqualTo("can win");
     assertThat(getterDescription.getPredicateForErrorMessagePart2()).isEqualTo("cannot");
 
-    getterDescription = new GetterDescription("", "willWin", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("win", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("willWin"));
     assertThat(getterDescription.getPredicateForErrorMessagePart1()).isEqualTo("will win");
     assertThat(getterDescription.getPredicateForErrorMessagePart2()).isEqualTo("will not");
 
-    getterDescription = new GetterDescription("", "hasTrophy", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("trophy", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("hasTrophy"));
     assertThat(getterDescription.getPredicateForErrorMessagePart1()).isEqualTo("has trophy");
     assertThat(getterDescription.getPredicateForErrorMessagePart2()).isEqualTo("does not have");
 
-    getterDescription = new GetterDescription("", "doesNotHaveFun", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("fun", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("doesNotHaveFun"));
     assertThat(getterDescription.getPredicateForErrorMessagePart1()).isEqualTo("does not have fun");
     assertThat(getterDescription.getPredicateForErrorMessagePart2()).isEqualTo("has");
 
-    getterDescription = new GetterDescription("", "cannotWin", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("win", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("cannotWin"));
     assertThat(getterDescription.getPredicateForErrorMessagePart1()).isEqualTo("cannot win");
     assertThat(getterDescription.getPredicateForErrorMessagePart2()).isEqualTo("can");
 
-    getterDescription = new GetterDescription("", "shouldNotPlay", BOOLEAN_TYPE_DESCRIPTION, EMPTY_TYPENAME_LIST);
+    getterDescription = new GetterDescription("play", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("shouldNotPlay"));
     assertThat(getterDescription.getPredicateForErrorMessagePart1()).isEqualTo("should not play");
     assertThat(getterDescription.getPredicateForErrorMessagePart2()).isEqualTo("should");
   }

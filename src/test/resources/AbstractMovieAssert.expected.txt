@@ -29,7 +29,7 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting publicCategory of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     Movie.PublicCategory actualPublicCategory = actual.getPublicCategory();
     if (!Objects.areEqual(actualPublicCategory, publicCategory)) {
@@ -52,7 +52,7 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting releaseDate of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     java.util.Date actualReleaseDate = actual.getReleaseDate();
     if (!Objects.areEqual(actualReleaseDate, releaseDate)) {
@@ -75,7 +75,7 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting producer of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     String actualProducer = actual.producer;
     if (!Objects.areEqual(actualProducer, producer)) {
@@ -99,7 +99,7 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting rating of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
 
-    // check
+    // check value for rating
     double actualRating = actual.rating;
     if (actualRating != rating) {
       failWithMessage(assertjErrorMessage, actual, rating, actualRating);
@@ -123,11 +123,11 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
     isNotNull();
 
     double actualRating = actual.rating;
-    
+
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting rating:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
                                                actualRating, rating, offset, Math.abs(rating - actualRating));
-    
+
     // check
     Assertions.assertThat(actualRating).overridingErrorMessage(assertjErrorMessage).isCloseTo(rating, Assertions.within(offset));
 
@@ -144,11 +144,11 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
     // check that actual Movie we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is true
     if (!actual.xrated) {
       failWithMessage("\nExpecting that actual Movie is xrated but is not.");
     }
-    
+
     // return the current assertion for method chaining
     return myself;
   }
@@ -162,11 +162,11 @@ public abstract class AbstractMovieAssert<S extends AbstractMovieAssert<S, A>, A
     // check that actual Movie we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is false
     if (actual.xrated) {
       failWithMessage("\nExpecting that actual Movie is not xrated but is.");
     }
-    
+
     // return the current assertion for method chaining
     return myself;
   }

@@ -12,40 +12,11 @@
  */
 package org.assertj.assertions.generator.util;
 
-import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
-import static org.assertj.assertions.generator.util.ClassUtil.declaredGetterMethodsOf;
-import static org.assertj.assertions.generator.util.ClassUtil.getClassesRelatedTo;
-import static org.assertj.assertions.generator.util.ClassUtil.getNegativePredicateFor;
-import static org.assertj.assertions.generator.util.ClassUtil.getPredicatePrefix;
-import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
-import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClassNotSeparatedByDots;
-import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
-import static org.assertj.assertions.generator.util.ClassUtil.inheritsCollectionOrIsIterable;
-import static org.assertj.assertions.generator.util.ClassUtil.isPredicate;
-import static org.assertj.assertions.generator.util.ClassUtil.isStandardGetter;
-import static org.assertj.assertions.generator.util.ClassUtil.isValidGetterName;
-import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.NestedClassesTest;
-import org.assertj.assertions.generator.data.ArtWork;
-import org.assertj.assertions.generator.data.BeanWithOneException;
-import org.assertj.assertions.generator.data.BeanWithTwoExceptions;
-import org.assertj.assertions.generator.data.Dollar$;
-import org.assertj.assertions.generator.data.Movie;
-import org.assertj.assertions.generator.data.Name;
-import org.assertj.assertions.generator.data.OuterClass;
-import org.assertj.assertions.generator.data.OuterClass.StaticNestedPerson;
-import org.assertj.assertions.generator.data.Primitives;
-import org.assertj.assertions.generator.data.Team;
-import org.assertj.assertions.generator.data.TreeEnum;
+import org.assertj.assertions.generator.data.*;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
 import org.assertj.assertions.generator.data.lotr.Race;
 import org.assertj.assertions.generator.data.lotr.Ring;
@@ -57,14 +28,23 @@ import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.util.*;
+
+import static org.assertj.assertions.generator.util.ClassUtil.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
 @RunWith(Theories.class)
 public class ClassUtilTest implements NestedClassesTest {
 
   private static final Class<?>[] NO_PARAMS = new Class[0];
 
+  private static final TypeToken<Player> PLAYER_TYPE = TypeToken.of(Player.class);
+
   @Test
   public void should_get_class_only() {
-    assertThat(collectClasses(getClass().getClassLoader(), Movie.class.getName())).containsOnly(Movie.class);
+    assertThat(collectClasses(getClass().getClassLoader(), Movie.class.getName())).containsOnly(TypeToken.of(Movie.class));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -72,30 +52,43 @@ public class ClassUtilTest implements NestedClassesTest {
     collectClasses((ClassLoader) null, "org.assertj.assertions.generator.data");
   }
 
+  // Could easily be a method reference in Java 8 for TypeToken::of
+  private static final Function<Class<?>, TypeToken<?>> TYPE_TOKEN_TRANSFORM = new Function<Class<?>, TypeToken<?>>() {
+    @Override
+    public TypeToken<?> apply(final Class<?> input) {
+      return TypeToken.of(input);
+    }
+  };
+
   @Test
   public void should_get_classes_in_package_and_subpackages() {
-    Set<Class<?>> classesInPackage = collectClasses("org.assertj.assertions.generator.data");
-    assertThat(classesInPackage).contains(Player.class, PlayerAgent.class, ArtWork.class, Name.class, Movie.class,
-                                          Movie.PublicCategory.class, Ring.class, Race.class,
-                                          FellowshipOfTheRing.class, TolkienCharacter.class,
-                                          Team.class,
-                                          Dollar$.class,
-                                          org.assertj.assertions.generator.data.nba.Team.class,
-                                          TreeEnum.class,
-                                          OuterClass.InnerPerson.IP_InnerPerson.class,
-                                          OuterClass.InnerPerson.class,
-                                          OuterClass.class,
-                                          StaticNestedPerson.SNP_InnerPerson.class,
-                                          StaticNestedPerson.class,
-                                          StaticNestedPerson.SNP_StaticNestedPerson.class,
-                                          BeanWithOneException.class, BeanWithTwoExceptions.class);
+    Set<TypeToken<?>> classesInPackage = collectClasses("org.assertj.assertions.generator.data");
+    List<Class<?>> classes = Arrays.asList(Player.class, PlayerAgent.class, ArtWork.class, Name.class, Movie.class,
+        Movie.PublicCategory.class, Ring.class, Race.class,
+        FellowshipOfTheRing.class, TolkienCharacter.class,
+        Team.class,
+        Dollar$.class,
+        org.assertj.assertions.generator.data.nba.Team.class,
+        TreeEnum.class,
+        OuterClass.InnerPerson.IP_InnerPerson.class,
+        OuterClass.InnerPerson.class,
+        OuterClass.class,
+        OuterClass.StaticNestedPerson.SNP_InnerPerson.class,
+        OuterClass.StaticNestedPerson.class,
+        OuterClass.StaticNestedPerson.SNP_StaticNestedPerson.class,
+        BeanWithOneException.class, BeanWithTwoExceptions.class);
+
+    // Java 8? :(
+    assertThat(classesInPackage).containsAll(Lists.transform(classes, TYPE_TOKEN_TRANSFORM));
   }
 
   @Test
   public void should_get_classes_with_provided_class_loader() {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-    Set<Class<?>> classesInPackage = collectClasses(classLoader, "org.assertj.assertions.generator.data");
-    assertThat(classesInPackage).contains(Player.class, ArtWork.class, Name.class, Movie.class, Ring.class, Race.class);
+    Set<TypeToken<?>> classesInPackage = collectClasses(classLoader, "org.assertj.assertions.generator.data");
+    List<Class<?>> classes = Arrays.asList(Player.class, ArtWork.class, Name.class, Movie.class, Ring.class, Race.class);
+
+    assertThat(classesInPackage).containsAll(Lists.transform(classes, TYPE_TOKEN_TRANSFORM));
   }
 
   @Test
@@ -186,21 +179,21 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Test
   public void should_return_getters_methods_only() throws Exception {
-	Set<Method> playerGetterMethods = getterMethodsOf(Player.class, Collections.<Class<?>>emptySet());
+	  Set<Method> playerGetterMethods = getterMethodsOf(PLAYER_TYPE, Collections.<Class<?>>emptySet());
     assertThat(playerGetterMethods).contains(Player.class.getMethod("getTeam", NO_PARAMS))
                                    .doesNotContain(Player.class.getMethod("isInTeam", String.class));
   }
 
   @Test
   public void should_also_return_inherited_getters_methods() throws Exception {
-    Set<Method> playerGetterMethods = getterMethodsOf(Movie.class, Collections.<Class<?>>emptySet());
+    Set<Method> playerGetterMethods = getterMethodsOf(TypeToken.of(Movie.class), Collections.<Class<?>>emptySet());
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS),
                                              ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }
 
   @Test
   public void should_not_return_inherited_getters_methods() throws Exception {
-	Set<Method> playerGetterMethods = declaredGetterMethodsOf(Movie.class, Collections.<Class<?>>emptySet());
+	Set<Method> playerGetterMethods = declaredGetterMethodsOf(TypeToken.of(Movie.class), Collections.<Class<?>>emptySet());
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS))
                                    .doesNotContain(ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }

@@ -36,11 +36,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is true
     if (!actual.canBeGood()) {
-      failWithMessage("\nExpecting that actual BooleanPredicates can be good but cannot.");
+      failWithMessage("\nExpecting that actual BooleanPredicates can be good but is not.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -54,11 +54,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is false
     if (actual.canBeGood()) {
-      failWithMessage("\nExpecting that actual BooleanPredicates cannot be good but can.");
+      failWithMessage("\nExpecting that actual BooleanPredicates cannot be good but is not.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -75,7 +75,7 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting good of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // check
     boolean actualGood = actual.getGood();
     if (actualGood != good) {
@@ -95,11 +95,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is true
     if (!actual.hasGood()) {
       failWithMessage("\nExpecting that actual BooleanPredicates has good but does not have.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -113,11 +113,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is false
     if (actual.hasGood()) {
       failWithMessage("\nExpecting that actual BooleanPredicates does not have good but has.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -131,11 +131,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is true
     if (!actual.isGood()) {
       failWithMessage("\nExpecting that actual BooleanPredicates is good but is not.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -149,11 +149,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is false
     if (actual.isGood()) {
       failWithMessage("\nExpecting that actual BooleanPredicates is not good but is.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -167,11 +167,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is true
     if (!actual.shouldBeGood()) {
-      failWithMessage("\nExpecting that actual BooleanPredicates should be good but should not.");
+      failWithMessage("\nExpecting that actual BooleanPredicates should be good but is not.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -185,11 +185,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is false
     if (actual.shouldBeGood()) {
-      failWithMessage("\nExpecting that actual BooleanPredicates should not be good but should.");
+      failWithMessage("\nExpecting that actual BooleanPredicates should not be good but should be.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -203,11 +203,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is true
     if (!actual.wasGood()) {
       failWithMessage("\nExpecting that actual BooleanPredicates was good but was not.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -221,11 +221,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is false
     if (actual.wasGood()) {
       failWithMessage("\nExpecting that actual BooleanPredicates was not good but was.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -239,11 +239,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is true
     if (!actual.willBeGood()) {
-      failWithMessage("\nExpecting that actual BooleanPredicates will be good but will not.");
+      failWithMessage("\nExpecting that actual BooleanPredicates will be good but will not be.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -257,11 +257,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is false
     if (actual.willBeGood()) {
-      failWithMessage("\nExpecting that actual BooleanPredicates will not be good but will.");
+      failWithMessage("\nExpecting that actual BooleanPredicates will not be good but will be.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -275,11 +275,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is true
     if (!actual.bad) {
       failWithMessage("\nExpecting that actual BooleanPredicates is bad but is not.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -293,11 +293,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is false
     if (actual.bad) {
       failWithMessage("\nExpecting that actual BooleanPredicates is not bad but is.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -311,11 +311,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
-    if (!actual.canBeGoodField) {
-      failWithMessage("\nExpecting that actual BooleanPredicates can be good field but cannot.");
+    // check that property call/field access is true
+    if (!actual.goodField) {
+      failWithMessage("\nExpecting that actual BooleanPredicates can be good field but is not.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -329,11 +329,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
-    if (actual.canBeGoodField) {
-      failWithMessage("\nExpecting that actual BooleanPredicates cannot be good field but can.");
+    // check that property call/field access is false
+    if (actual.goodField) {
+      failWithMessage("\nExpecting that actual BooleanPredicates cannot be good field but is not.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -347,11 +347,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
-    if (!actual.hasGoodField) {
+    // check that property call/field access is true
+    if (!actual.goodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates has good field but does not have.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -365,11 +365,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
-    if (actual.hasGoodField) {
+    // check that property call/field access is false
+    if (actual.goodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates does not have good field but has.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -383,11 +383,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
-    if (!actual.isGoodField) {
+    // check that property call/field access is true
+    if (!actual.goodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates is good field but is not.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -401,11 +401,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
-    if (actual.isGoodField) {
+    // check that property call/field access is false
+    if (actual.goodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates is not good field but is.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -419,11 +419,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
-    if (!actual.shouldBeGoodField) {
-      failWithMessage("\nExpecting that actual BooleanPredicates should be good field but should not.");
+    // check that property call/field access is true
+    if (!actual.goodField) {
+      failWithMessage("\nExpecting that actual BooleanPredicates should be good field but is not.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -437,11 +437,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
-    if (actual.shouldBeGoodField) {
-      failWithMessage("\nExpecting that actual BooleanPredicates should not be good field but should.");
+    // check that property call/field access is false
+    if (actual.goodField) {
+      failWithMessage("\nExpecting that actual BooleanPredicates should not be good field but should be.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -455,11 +455,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
-    if (!actual.wasGoodField) {
+    // check that property call/field access is true
+    if (!actual.goodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates was good field but was not.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -473,11 +473,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
-    if (actual.wasGoodField) {
+    // check that property call/field access is false
+    if (actual.goodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates was not good field but was.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -491,11 +491,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
-    if (!actual.willBeGoodField) {
-      failWithMessage("\nExpecting that actual BooleanPredicates will be good field but will not.");
+    // check that property call/field access is true
+    if (!actual.goodField) {
+      failWithMessage("\nExpecting that actual BooleanPredicates will be good field but will not be.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -509,11 +509,11 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     // check that actual BooleanPredicates we want to make assertions on is not null.
     isNotNull();
 
-    // check
-    if (actual.willBeGoodField) {
-      failWithMessage("\nExpecting that actual BooleanPredicates will not be good field but will.");
+    // check that property call/field access is false
+    if (actual.goodField) {
+      failWithMessage("\nExpecting that actual BooleanPredicates will not be good field but will be.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }

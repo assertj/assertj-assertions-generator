@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -12,55 +12,38 @@
  */
 package org.assertj.assertions.generator.util;
 
-import static com.google.common.collect.Sets.newLinkedHashSet;
-import static java.lang.reflect.Modifier.isPublic;
-import static java.lang.reflect.Modifier.isStatic;
-import static org.apache.commons.lang3.StringUtils.uncapitalize;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.ClassPath;
+import com.google.common.reflect.ClassPath.ClassInfo;
+import com.google.common.reflect.TypeToken;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
+import java.lang.reflect.*;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.ClassPath;
-import com.google.common.reflect.ClassPath.ClassInfo;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Sets.newLinkedHashSet;
+import static java.lang.reflect.Modifier.isPublic;
+import static java.lang.reflect.Modifier.isStatic;
+import static org.apache.commons.lang3.StringUtils.uncapitalize;
 
 /**
  * Some utilities methods related to classes and packages.
  *
  * @author Joel Costigliola
  */
+@SuppressWarnings("WeakerAccess")
 public class ClassUtil {
 
-  public static final String IS_PREFIX = "is";
   public static final String GET_PREFIX = "get";
   private static final String CLASS_SUFFIX = ".class";
   private static final Comparator<Method> GETTER_COMPARATOR = new Comparator<Method>() {
@@ -74,7 +57,7 @@ public class ClassUtil {
    * Call {@link #collectClasses(ClassLoader, String...)} with <code>Thread.currentThread().getContextClassLoader()
    * </code>
    */
-  public static Set<Class<?>> collectClasses(String... classOrPackageNames) {
+  public static Set<TypeToken<?>> collectClasses(String... classOrPackageNames) {
     return collectClasses(Thread.currentThread().getContextClassLoader(), classOrPackageNames);
   }
 
@@ -90,10 +73,10 @@ public class ClassUtil {
    * @return the set of {@link Class}es found
    * @throws RuntimeException if any error occurs
    */
-  public static Set<Class<?>> collectClasses(ClassLoader classLoader, String... classOrPackageNames) {
-    Set<Class<?>> classes = newLinkedHashSet();
+  public static Set<TypeToken<?>> collectClasses(ClassLoader classLoader, String... classOrPackageNames) {
+    Set<TypeToken<?>> classes = newLinkedHashSet();
     for (String classOrPackageName : classOrPackageNames) {
-      Class<?> clazz = tryToLoadClass(classOrPackageName, classLoader);
+      TypeToken<?> clazz = tryToLoadClass(classOrPackageName, classLoader);
       if (clazz != null) {
         classes.add(clazz);
       } else {
@@ -112,12 +95,12 @@ public class ClassUtil {
    * @return the list of Class found
    * @throws RuntimeException if any error occurs
    */
-  private static Set<Class<?>> getClassesInPackage(String packageName, ClassLoader classLoader) {
+  private static Set<TypeToken<?>> getClassesInPackage(String packageName, ClassLoader classLoader) {
     if (classLoader == null) {
       throw new IllegalArgumentException("Null class loader.");
     }
     // load classes from classpath file system, this won't load classes in jars
-    Set<Class<?>> packageClasses = getPackageClassesFromClasspathFiles(packageName, classLoader);
+    Set<TypeToken<?>> packageClasses = getPackageClassesFromClasspathFiles(packageName, classLoader);
     // load classes from classpath jars
     try {
       packageClasses.addAll(getPackageClassesFromClasspathJars(packageName, classLoader));
@@ -127,16 +110,16 @@ public class ClassUtil {
     return packageClasses;
   }
 
-  private static Set<Class<?>> getPackageClassesFromClasspathJars(String packageName, ClassLoader classLoader)
+  private static Set<TypeToken<?>> getPackageClassesFromClasspathJars(String packageName, ClassLoader classLoader)
       throws IOException {
     ImmutableSet<ClassInfo> classesInfo = ClassPath.from(classLoader).getTopLevelClassesRecursive(packageName);
-    Set<Class<?>> classesInPackage = new HashSet<Class<?>>();
+    Set<TypeToken<?>> classesInPackage = new HashSet<>();
     for (ClassInfo classInfo : classesInfo) {
-      classesInPackage.add(classInfo.load());
+      classesInPackage.add(TypeToken.of(classInfo.load()));
     }
 
-    Set<Class<?>> filteredClassesInPackage = new HashSet<Class<?>>();
-    for (Class<?> classFromJar : classesInPackage) {
+    Set<TypeToken<?>> filteredClassesInPackage = new HashSet<>();
+    for (TypeToken<?> classFromJar : classesInPackage) {
       if (isClassCandidateToAssertionsGeneration(classFromJar)) {
         filteredClassesInPackage.add(classFromJar);
       }
@@ -144,12 +127,12 @@ public class ClassUtil {
     return filteredClassesInPackage;
   }
 
-  private static Set<Class<?>> getPackageClassesFromClasspathFiles(String packageName, ClassLoader classLoader) {
+  private static Set<TypeToken<?>> getPackageClassesFromClasspathFiles(String packageName, ClassLoader classLoader) {
     try {
       String packagePath = packageName.replace('.', File.separatorChar);
       // Ask for all resources for the path
       Enumeration<URL> resources = classLoader.getResources(packagePath);
-      Set<Class<?>> classes = newLinkedHashSet();
+      Set<TypeToken<?>> classes = newLinkedHashSet();
       while (resources.hasMoreElements()) {
         File directory = new File(URLDecoder.decode(resources.nextElement().getPath(), "UTF-8"));
         if (directory.canRead()) {
@@ -172,15 +155,17 @@ public class ClassUtil {
    * @param directory directory where to look for classes
    * @param packageName package name corresponding to directory
    * @param classLoader used classloader
-   * @return
-   * @throws UnsupportedEncodingException
+   * @return Set of all of the types in the directory
+   * @throws UnsupportedEncodingException thrown by {@link URLDecoder#decode(String, String)}
    */
-  private static Set<Class<?>> getClassesInDirectory(File directory, String packageName, ClassLoader classLoader)
+  private static Set<TypeToken<?>> getClassesInDirectory(File directory, String packageName, ClassLoader classLoader)
       throws UnsupportedEncodingException {
-    Set<Class<?>> classes = newLinkedHashSet();
+    Set<TypeToken<?>> classes = new LinkedHashSet<>();
+
     // Capture all the .class files in this directory
     // Get the list of the files contained in the package
     File[] files = directory.listFiles();
+    checkNotNull(files, "No files were present in directory: %s", directory);
     for (File currentFile : files) {
       String currentFileName = currentFile.getName();
       if (isClass(currentFileName)) {
@@ -188,7 +173,7 @@ public class ClassUtil {
         try {
           // removes the .class extension
           String className = packageName + '.' + StringUtils.remove(currentFileName, CLASS_SUFFIX);
-          Class<?> loadedClass = loadClass(className, classLoader);
+          TypeToken<?> loadedClass = loadClass(className, classLoader);
           // we are only interested in public classes that are neither anonymous nor local
           if (isClassCandidateToAssertionsGeneration(loadedClass)) {
             classes.add(loadedClass);
@@ -201,9 +186,11 @@ public class ClassUtil {
         // It's another package
         String subPackageName = packageName + ClassUtils.PACKAGE_SEPARATOR + currentFileName;
         // Ask for all resources for the path
-        URL resource = classLoader.getResource(subPackageName.replace('.', File.separatorChar));
+        String path = subPackageName.replace('.', File.separatorChar);
+        URL resource = classLoader.getResource(path);
+        checkNotNull(resource, "resource URL from package is null, package %s", path);
         File subDirectory = new File(URLDecoder.decode(resource.getPath(), "UTF-8"));
-        Set<Class<?>> classesForSubPackage = getClassesInDirectory(subDirectory, subPackageName, classLoader);
+        Set<TypeToken<?>> classesForSubPackage = getClassesInDirectory(subDirectory, subPackageName, classLoader);
         classes.addAll(classesForSubPackage);
       }
     }
@@ -214,16 +201,20 @@ public class ClassUtil {
    * @param loadedClass
    * @return
    */
-  private static boolean isClassCandidateToAssertionsGeneration(Class<?> loadedClass) {
-    return loadedClass != null && isPublic(loadedClass.getModifiers()) && !loadedClass.isAnonymousClass()
-           && !loadedClass.isLocalClass();
+  private static boolean isClassCandidateToAssertionsGeneration(TypeToken<?> loadedClass) {
+    if (loadedClass == null) {
+      return false;
+    }
+
+    Class<?> raw = loadedClass.getRawType();
+    return isPublic(raw.getModifiers()) && !raw.isAnonymousClass() && !raw.isLocalClass();
   }
 
   private static boolean isClass(String fileName) {
     return fileName.endsWith(CLASS_SUFFIX);
   }
 
-  private static Class<?> tryToLoadClass(String className, ClassLoader classLoader) {
+  private static TypeToken<?> tryToLoadClass(String className, ClassLoader classLoader) {
     try {
       return loadClass(className, classLoader);
     } catch (ClassNotFoundException e) {
@@ -231,8 +222,8 @@ public class ClassUtil {
     }
   }
 
-  private static Class<?> loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
-    return Class.forName(className, false, classLoader);
+  private static TypeToken<?> loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
+    return TypeToken.of(Class.forName(className, false, classLoader));
   }
 
   /**
@@ -248,27 +239,25 @@ public class ClassUtil {
    * isMostValuablePlayer -> mostValuablePlayer
    * </pre>
    *
-   * @param getter getter method to deduce property from.
+   * @param member getter method to deduce property from.
    * @return the property name of given getter method
    */
-  public static String propertyNameOf(Method getter) {
-    String methodName = getter.getName();
-    String prefixToRemove = isPredicate(getter) ? IS_PREFIX : GET_PREFIX;
-    int pos = methodName.indexOf(prefixToRemove);
+  public static String propertyNameOf(Member member) {
+    String memberName = member.getName();
+    String predicatePrefix = getPredicatePrefix(memberName);
+    String prefixToRemove = predicatePrefix != null ? predicatePrefix : GET_PREFIX;
+
+    int pos = memberName.indexOf(prefixToRemove);
     if (pos != StringUtils.INDEX_NOT_FOUND) {
-      String propertyWithCapitalLetter = methodName.substring(pos + prefixToRemove.length());
+      String propertyWithCapitalLetter = memberName.substring(pos + prefixToRemove.length());
       return uncapitalize(propertyWithCapitalLetter);
     } else {
-      return methodName;
+      return memberName;
     }
   }
 
   public static boolean inheritsCollectionOrIsIterable(Class<?> returnType) {
     return Collection.class.isAssignableFrom(returnType) || Iterable.class.equals(returnType);
-  }
-
-  public static boolean isArray(Class<?> returnType) {
-    return returnType.isArray();
   }
 
   public static boolean isStandardGetter(Method method) {
@@ -323,17 +312,20 @@ public class ClassUtil {
         { "is", "isNot" },
         { "was", "wasNot" },
         { "can", "cannot" },
+        { "canBe", "cannotBe" },
         { "should", "shouldNot" },
+        { "shouldBe", "shouldNotBe" },
         { "has", "doesNotHave" },
+        { "willBe", "willNotBe" },
         { "will", "willNot" },
     };
     StringBuilder pattern = new StringBuilder("^(?:get");
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, String> map = new HashMap<>();
     for (String[] pair : predicates) {
       map.put(pair[0], pair[1]);
       map.put(pair[1], pair[0]);
     }
-    TreeSet<String> sort = new TreeSet<String>(LONGEST_TO_SHORTEST);
+    TreeSet<String> sort = new TreeSet<>(LONGEST_TO_SHORTEST);
     sort.addAll(map.keySet());
     for (String prefix : sort) {
       pattern.append('|').append(prefix);
@@ -367,21 +359,22 @@ public class ClassUtil {
     return null;
   }
 
-  public static Set<Method> declaredGetterMethodsOf(Class<?> clazz, Set<Class<?>> includeAnnotations) {
+  public static Set<Method> declaredGetterMethodsOf(TypeToken<?> type, Set<Class<?>> includeAnnotations) {
+    Class<?> clazz = type.getRawType();
     boolean isClassAnnotated = containsAny(clazz.getDeclaredAnnotations(), includeAnnotations);
     return filterGetterMethods(clazz.getDeclaredMethods(), includeAnnotations, isClassAnnotated);
   }
 
-  public static Set<Method> getterMethodsOf(Class<?> clazz, Set<Class<?>> includeAnnotations) {
+  public static Set<Method> getterMethodsOf(TypeToken<?> type, Set<Class<?>> includeAnnotations) {
+    Class<?> clazz = type.getRawType();
     boolean isClassAnnotated = containsAny(clazz.getDeclaredAnnotations(), includeAnnotations);
     return filterGetterMethods(clazz.getMethods(), includeAnnotations, isClassAnnotated);
   }
 
   private static Set<Method> filterGetterMethods(Method[] methods, Set<Class<?>> includeAnnotations,
                                                  boolean isClassAnnotated) {
-    Set<Method> getters = new TreeSet<Method>(GETTER_COMPARATOR);
-    for (int i = 0; i < methods.length; i++) {
-      Method method = methods[i];
+    Set<Method> getters = new TreeSet<>(GETTER_COMPARATOR);
+    for (Method method : methods) {
       if (isPublic(method.getModifiers())
           && isNotDefinedInObjectClass(method)
           && isGetter(method, includeAnnotations, isClassAnnotated)) {
@@ -397,9 +390,9 @@ public class ClassUtil {
            || isAnnotated(method, includeAnnotations, isClassAnnotated);
   }
 
-  public static List<Field> nonStaticPublicFieldsOf(Class<?> clazz) {
-    Field[] fields = clazz.getFields();
-    List<Field> nonStaticPublicFields = new ArrayList<Field>();
+  public static List<Field> nonStaticPublicFieldsOf(TypeToken<?> type) {
+    Field[] fields = type.getRawType().getFields();
+    List<Field> nonStaticPublicFields = new ArrayList<>();
     for (Field field : fields) {
       if (isNotStaticPublicField(field)) {
         nonStaticPublicFields.add(field);
@@ -408,9 +401,9 @@ public class ClassUtil {
     return nonStaticPublicFields;
   }
 
-  public static List<Field> declaredPublicFieldsOf(Class<?> clazz) {
-    Field[] fields = clazz.getDeclaredFields();
-    List<Field> nonStaticPublicFields = new ArrayList<Field>();
+  public static List<Field> declaredPublicFieldsOf(TypeToken<?> type) {
+    Field[] fields = type.getRawType().getDeclaredFields();
+    List<Field> nonStaticPublicFields = new ArrayList<>();
     for (Field field : fields) {
       if (isNotStaticPublicField(field)) {
         nonStaticPublicFields.add(field);
@@ -429,15 +422,15 @@ public class ClassUtil {
   }
 
   public static Set<Class<?>> getClassesRelatedTo(Type type) {
-    Set<Class<?>> classes = new HashSet<Class<?>>();
+    Set<Class<?>> classes = new HashSet<>();
 
-    // non generic type : just add current type.
+    // non generic valueType : just add current valueType.
     if (type instanceof Class) {
       classes.add((Class<?>) type);
       return classes;
     }
 
-    // generic type : add current type and its parameter types
+    // generic valueType : add current valueType and its parameter types
     if (type instanceof ParameterizedType) {
       ParameterizedType parameterizedType = (ParameterizedType) type;
       for (Type actualTypeArgument : parameterizedType.getActualTypeArguments()) {
@@ -468,8 +461,7 @@ public class ClassUtil {
     if (isNotNestedClass(clazz)) {
       return clazz.getSimpleName();
     }
-    String nestedClassName = null;
-    nestedClassName = clazz.getName();
+    String nestedClassName = clazz.getName();
     nestedClassName = nestedClassName.substring(clazz.getPackage().getName().length() + 1);
     nestedClassName = nestedClassName.replace('$', '.');
     return nestedClassName;
@@ -492,8 +484,7 @@ public class ClassUtil {
     if (isNotNestedClass(clazz)) {
       return clazz.getSimpleName();
     }
-    String nestedClassName = null;
-    nestedClassName = clazz.getName();
+    String nestedClassName = clazz.getName();
     nestedClassName = nestedClassName.substring(clazz.getPackage().getName().length() + 1);
     nestedClassName = StringUtils.remove(nestedClassName, '$');
     return nestedClassName;
@@ -504,9 +495,9 @@ public class ClassUtil {
   }
 
   /**
-   * Get the underlying class for a type, or null if the type is a variable type.
+   * Get the underlying class for a valueType, or null if the valueType is a variable valueType.
    *
-   * @param type the type
+   * @param type the valueType
    * @return the underlying class
    */
   public static Class<?> getClass(final Type type) {

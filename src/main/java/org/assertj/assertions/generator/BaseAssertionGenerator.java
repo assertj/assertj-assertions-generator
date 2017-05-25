@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -12,32 +12,28 @@
  */
 package org.assertj.assertions.generator;
 
+import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.Template.Type;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.DataDescription;
 import org.assertj.assertions.generator.description.FieldDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
-import org.assertj.assertions.generator.description.TypeName;
+import org.assertj.assertions.generator.util.TypeUtil;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.lang.reflect.Method;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.format;
-import static org.apache.commons.lang3.StringUtils.capitalize;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.remove;
-import static org.apache.commons.lang3.StringUtils.replace;
+import static org.apache.commons.lang3.StringUtils.*;
 import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
 
+@SuppressWarnings("WeakerAccess")
 public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEntryPointGenerator {
 
   static final String ABSTRACT_ASSERT_CLASS_PREFIX = "Abstract";
@@ -72,7 +68,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String IMPORTS = "${imports}";
   private static final String THROWS = "${throws}";
   private static final String THROWS_JAVADOC = "${throws_javadoc}";
-  private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+  private static final String LINE_SEPARATOR = "\n";
   // assertions classes are generated in their package directory starting from targetBaseDirectory.
   // ex : com.nba.Player -> targetBaseDirectory/com/nba/PlayerAssert.java
   private String targetBaseDirectory = ".";
@@ -134,7 +130,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   @Override
-  public File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription, Set<Class<?>> allClasses)
+  public File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription, Set<TypeToken<?>> allClasses)
                                                                                                                     throws IOException {
 
     // Assertion content
@@ -153,49 +149,47 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
   @Override
   public String[] generateHierarchicalCustomAssertionContentFor(ClassDescription classDescription,
-                                                                Set<Class<?>> allClasses) {
+                                                                Set<TypeToken<?>> allClasses) {
     // use abstract class template first
     String abstractClassTemplateContent = templateRegistry.getTemplate(Type.ABSTRACT_ASSERT_CLASS).getContent();
     StringBuilder abstractAssertClassContentBuilder = new StringBuilder(abstractClassTemplateContent);
 
     // generate assertion method for each property with a public getter
-    abstractAssertClassContentBuilder.append(generateAssertionsForDeclaredGettersOf(classDescription));
-    abstractAssertClassContentBuilder.append(generateAssertionsForDeclaredPublicFieldsOf(classDescription));
+    generateAssertionsForDeclaredGettersOf(abstractAssertClassContentBuilder, classDescription);
+    generateAssertionsForDeclaredPublicFieldsOf(abstractAssertClassContentBuilder, classDescription);
 
     // close class with }
     abstractAssertClassContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
 
     // use concrete class template for the subclass of the generated abstract assert
     String concreteAssertClassContent = templateRegistry.getTemplate(Type.HIERARCHICAL_ASSERT_CLASS).getContent();
-    StringBuilder concreteAssertClassContentBuilder = new StringBuilder(concreteAssertClassContent);
 
     // return a String array with the actual generated of the assertion class hierarchy
     String[] assertionClassesContent = new String[2];
     assertionClassesContent[0] = fillAssertClassTemplate(abstractAssertClassContentBuilder.toString(),
                                                          classDescription, allClasses, false);
-    assertionClassesContent[1] = fillAssertClassTemplate(concreteAssertClassContentBuilder.toString(),
+    assertionClassesContent[1] = fillAssertClassTemplate(concreteAssertClassContent,
                                                          classDescription, null, true);
     return assertionClassesContent;
   }
 
   private String fillAssertClassTemplate(String template, ClassDescription classDescription,
-                                         Set<Class<?>> classesHierarchy, boolean concrete) {
+                                         Set<TypeToken<?>> classesHierarchy, boolean concrete) {
     // Add any AssertJ needed imports only, other types are used with their fully qualified names to avoid a compilation
     // error when two types have the same
-    TreeSet<TypeName> assertjImports = new TreeSet<TypeName>();
-    if (template.contains("Assertions.")) assertjImports.add(new TypeName("org.assertj.core.api.Assertions"));
-    if (template.contains("Objects.")) assertjImports.add(new TypeName("org.assertj.core.util.Objects"));
-    if (template.contains("Iterables.")) assertjImports.add(new TypeName("org.assertj.core.internal.Iterables"));
+    TreeSet<String> assertjImports = new TreeSet<>();
+    if (template.contains("Assertions.")) assertjImports.add("org.assertj.core.api.Assertions");
+    if (template.contains("Objects.")) assertjImports.add("org.assertj.core.util.Objects");
+    if (template.contains("Iterables.")) assertjImports.add("org.assertj.core.internal.Iterables");
 
-    final TypeName superAssertionClass;
+    final String superAssertionClassName;
     // Add assertion supertype to imports if needed
     if (classesHierarchy == null || !classesHierarchy.contains(classDescription.getSuperType())) {
-      superAssertionClass = new TypeName("org.assertj.core.api.AbstractObjectAssert");
+      superAssertionClassName = "org.assertj.core.api.AbstractObjectAssert";
     } else {
-      final TypeName superTypeName = new TypeName(classDescription.getSuperType());
-      superAssertionClass = new TypeName(abstractAssertClassNameOf(superTypeName), superTypeName.getPackageName());
+      superAssertionClassName = abstractAssertClassNameOf(classDescription.getSuperType());
     }
-    assertjImports.add(superAssertionClass);
+    assertjImports.add(superAssertionClassName);
 
     final String customAssertionClass = concrete ? assertClassNameOf(classDescription)
         : abstractAssertClassNameOf(classDescription);
@@ -207,7 +201,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // className could be a nested class like "OuterClass.NestedClass", in that case assert class will be
     // OuterClassNestedClass
     template = replace(template, SUPER_ASSERTION_CLASS,
-                       superAssertionClass.getSimpleNameWithOuterClassNotSeparatedByDots());
+                       TypeUtil.getTypeNameWithoutDots(superAssertionClassName));
     template = replace(template, CLASS_TO_ASSERT, classDescription.getClassNameWithOuterClass());
     template = replace(template, SELF_TYPE, selfType);
     template = replace(template, MYSELF, myself);
@@ -228,8 +222,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     StringBuilder assertionFileContentBuilder = new StringBuilder(classTemplateContent);
 
     // generate assertion method for each property with a public getter
-    assertionFileContentBuilder.append(generateAssertionsForGettersOf(classDescription));
-    assertionFileContentBuilder.append(generateAssertionsForPublicFieldsOf(classDescription));
+    generateAssertionsForGettersOf(assertionFileContentBuilder, classDescription);
+    generateAssertionsForPublicFieldsOf(assertionFileContentBuilder, classDescription);
 
     // close class with }
     assertionFileContentBuilder.append(LINE_SEPARATOR).append("}").append(LINE_SEPARATOR);
@@ -354,10 +348,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private String generateAssertionEntryPointMethodsFor(final Set<ClassDescription> classDescriptionSet,
                                                        Template assertionEntryPointMethodTemplate) {
     // sort ClassDescription according to their class name.
-    SortedSet<ClassDescription> sortedClassDescriptionSet = new TreeSet<ClassDescription>(classDescriptionSet);
+    SortedSet<ClassDescription> sortedClassDescriptionSet = new TreeSet<>(classDescriptionSet);
     // generate for each classDescription the entry point method, e.g. assertThat(MyClass) or then(MyClass)
     StringBuilder allAssertThatsContentBuilder = new StringBuilder();
-    final String lineSeparator = System.getProperty("line.separator");
+    final char lineSeparator = '\n';
     for (ClassDescription classDescription : sortedClassDescriptionSet) {
       String assertionEntryPointMethodContent = assertionEntryPointMethodTemplate.getContent();
       // resolve class assert (ex: PlayerAssert)
@@ -374,7 +368,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private String determineBestEntryPointsAssertionsClassPackage(final Set<ClassDescription> classDescriptionSet) {
-    SortedSet<String> packages = new TreeSet<String>(new Comparator<String>() {
+    SortedSet<String> packages = new TreeSet<>(new Comparator<String>() {
       @Override
       public int compare(final String o1, final String o2) {
         return o1.length() - o2.length();
@@ -389,18 +383,18 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private static String assertClassNameOf(ClassDescription classDescription) {
-    return assertClassNameOf(classDescription.getTypeName());
+    return assertClassNameOf(classDescription.getType());
   }
 
-  private static String assertClassNameOf(TypeName type) {
-    return type.getSimpleNameWithOuterClassNotSeparatedByDots() + ASSERT_CLASS_SUFFIX;
+  private static String assertClassNameOf(TypeToken<?> type) {
+    return TypeUtil.getTypeNameWithoutDots(TypeUtil.getTypeDeclaration(type, false, false)) + ASSERT_CLASS_SUFFIX;
   }
 
   private static String abstractAssertClassNameOf(ClassDescription classDescription) {
-    return abstractAssertClassNameOf(classDescription.getTypeName());
+    return abstractAssertClassNameOf(classDescription.getType());
   }
 
-  private static String abstractAssertClassNameOf(TypeName type) {
+  private static String abstractAssertClassNameOf(TypeToken<?> type) {
     return ABSTRACT_ASSERT_CLASS_PREFIX + assertClassNameOf(type);
   }
 
@@ -419,70 +413,78 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     return targetBaseDirectory + File.separator + packageName.replace('.', File.separatorChar);
   }
 
-  private static String listNeededImports(Set<TypeName> typesToImport, String classPackage) {
+  private static String listNeededImports(Set<String> typesToImport, String classPackage) {
     StringBuilder importsBuilder = new StringBuilder();
-    for (TypeName type : typesToImport) {
-      if (!type.isPrimitive() && !type.belongsToJavaLangPackage() && !type.getPackageName().equals(classPackage)) {
-        importsBuilder.append(format(IMPORT_LINE, type, LINE_SEPARATOR));
+    for (String type : typesToImport) {
+      try {
+        Class<?> clazz = Class.forName(type);
+        if (!clazz.isPrimitive() && !TypeUtil.isJavaLangType(clazz)
+            && !TypeUtil.isInnerPackageOf(type, classPackage) && !Objects.equals(classPackage, type)) {
+          importsBuilder.append(format(IMPORT_LINE, type, LINE_SEPARATOR));
+        }
+      } catch (ClassNotFoundException cfne) {
+        // continue iteration;
       }
     }
     return importsBuilder.toString();
   }
 
-  protected String generateAssertionsForGettersOf(ClassDescription classDescription) {
-    return generateAssertionsForGetters(classDescription.getGettersDescriptions(), classDescription);
+  protected void generateAssertionsForGettersOf(StringBuilder contentBuilder, ClassDescription classDescription) {
+    generateAssertionsForGetters(contentBuilder, classDescription.getGettersDescriptions(), classDescription);
   }
 
-  protected String generateAssertionsForDeclaredGettersOf(ClassDescription classDescription) {
-    return generateAssertionsForGetters(classDescription.getDeclaredGettersDescriptions(), classDescription);
+  protected void generateAssertionsForDeclaredGettersOf(StringBuilder contentBuilder, ClassDescription classDescription) {
+    generateAssertionsForGetters(contentBuilder, classDescription.getDeclaredGettersDescriptions(), classDescription);
   }
 
-  protected String generateAssertionsForGetters(Set<GetterDescription> getters, ClassDescription classDescription) {
-    StringBuilder assertionsForGetters = new StringBuilder();
+  protected void generateAssertionsForGetters(StringBuilder assertionsForGetters, Set<GetterDescription> getters, ClassDescription classDescription) {
     for (GetterDescription getter : getters) {
       String assertionContent = assertionContentForProperty(getter, classDescription);
       assertionsForGetters.append(assertionContent).append(LINE_SEPARATOR);
     }
-    return assertionsForGetters.toString();
   }
 
-  protected String generateAssertionsForPublicFieldsOf(ClassDescription classDescription) {
-    return generateAssertionsForPublicFields(classDescription.getFieldsDescriptions(), classDescription);
+  protected void generateAssertionsForPublicFieldsOf(StringBuilder contentBuilder, ClassDescription classDescription) {
+    generateAssertionsForPublicFields(contentBuilder, classDescription.getFieldsDescriptions(), classDescription);
   }
 
-  protected String generateAssertionsForDeclaredPublicFieldsOf(ClassDescription classDescription) {
-    return generateAssertionsForPublicFields(classDescription.getDeclaredFieldsDescriptions(), classDescription);
+  protected void generateAssertionsForDeclaredPublicFieldsOf(StringBuilder contentBuilder, ClassDescription classDescription) {
+    generateAssertionsForPublicFields(contentBuilder, classDescription.getDeclaredFieldsDescriptions(), classDescription);
   }
 
-  protected String generateAssertionsForPublicFields(Set<FieldDescription> fields, ClassDescription classDescription) {
-    StringBuilder assertionsForPublicFields = new StringBuilder();
+  protected void generateAssertionsForPublicFields(StringBuilder assertionsForPublicFields, Set<FieldDescription> fields, ClassDescription classDescription) {
     for (FieldDescription field : fields) {
       String assertionContent = assertionContentForField(field, classDescription);
       assertionsForPublicFields.append(assertionContent).append(LINE_SEPARATOR);
     }
-    return assertionsForPublicFields.toString();
   }
 
   private String assertionContentForField(FieldDescription field, ClassDescription classDescription) {
+    final TypeToken<?> owningType = field.getOwningType();
+
     final String fieldName = field.getName();
     final String fieldNameCap = capitalize(field.getName());
-    if (classDescription.getGettersDescriptions().contains(new GetterDescription(fieldName, "get" + fieldNameCap,
-                                                                                 field.getTypeDescription(),
-                                                                                 Collections.<TypeName> emptyList()))) {
-      return "";
+    try {
+      Method m = owningType.getRawType().getMethod("get" + fieldNameCap);
+      if (classDescription.getGettersDescriptions().contains(new GetterDescription(fieldName, owningType, m))) {
+        return "";
+      }
+    } catch (NoSuchMethodException nsme) {
+      // ignore it, let flow keep going
     }
+
     String assertionContent = baseAssertionContentFor(field, classDescription);
 
     // we reuse template for properties to have consistent assertions for property and field but change the way we get
     // the value since it's a field and not a property:
-    assertionContent = assertionContent.replace("${getter}()", "${property}");
+    assertionContent = assertionContent.replace("${getter}()", PROPERTY_WITH_LOWERCASE_FIRST_CHAR);
     // - remove also ${throws} and ${throws_javadoc} since it does not make any sense for a field
     assertionContent = remove(assertionContent, "${throws}");
     assertionContent = remove(assertionContent, "${throws_javadoc}");
 
     // replace ${Property} and ${property} by field name (starting with uppercase/lowercase)
     if (field.isPredicate()) {
-      assertionContent = assertionContent.replace("actual." + PREDICATE + "()", "actual." + field.getOriginalMember());
+      assertionContent = assertionContent.replace("actual." + PREDICATE + "()", "actual." + field.getName());
       assertionContent = assertionContent.replace(PREDICATE_FOR_JAVADOC,
                                                   field.getPredicateForJavadoc());
       assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_JAVADOC,
@@ -500,7 +502,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     }
     assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, fieldNameCap);
     assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE,
-                               field.getTypeName());
+                               field.getTypeName(false, false));
     assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,
                                field.getAssertTypeName(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_TYPE,
@@ -511,7 +513,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     return assertionContent;
   }
 
-  static private final Set<String> JAVA_KEYWORDS = new HashSet<String>();
+  static private final Set<String> JAVA_KEYWORDS = new HashSet<>();
 
   static {
     String[] keywords = new String[] {
@@ -582,7 +584,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
     assertionContent = declareExceptions(getter, assertionContent, classDescription);
 
-    String propertyName = getter.getPropertyName();
+    String propertyName = getter.getName();
     if (getter.isPredicate()) {
       assertionContent = assertionContent.replace(PREDICATE_FOR_JAVADOC,
                                                   getter.getPredicateForJavadoc());
@@ -596,13 +598,13 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
                                                   getter.getNegativePredicateForErrorMessagePart1());
       assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_FOR_ERROR_MESSAGE_PART2,
                                                   getter.getNegativePredicateForErrorMessagePart2());
-      assertionContent = replace(assertionContent, PREDICATE, getter.getOriginalMember());
+      assertionContent = replace(assertionContent, PREDICATE, getter.getOriginalMember().getName());
       assertionContent = replace(assertionContent, PREDICATE_NEG, getter.getNegativePredicate());
     }
-    assertionContent = replace(assertionContent, PROPERTY_GETTER_CALL, getter.getOriginalMember());
+    assertionContent = replace(assertionContent, PROPERTY_GETTER_CALL, getter.getOriginalMember().getName());
     assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(propertyName));
     assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE,
-                               getter.getTypeName());
+                               getter.getTypeName(false, false));
     assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,
                                getter.getAssertTypeName(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_TYPE,
@@ -646,7 +648,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.HAS_FOR_CHARACTER : Type.HAS_FOR_CHAR;
       assertionContent = templateRegistry.getTemplate(type).getContent();
     } else if (fieldOrProperty.isPrimitiveType()) {
-      // use case : boolean getFoo -> not a predicate, but a primitive type
+      // use case : boolean getFoo -> not a predicate, but a primitive valueType
       Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.HAS_FOR_PRIMITIVE_WRAPPER : Type.HAS_FOR_PRIMITIVE;
       assertionContent = templateRegistry.getTemplate(type).getContent();
     }
@@ -668,7 +670,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private boolean hasAlreadyNegativePredicate(final DataDescription fieldOrProperty,
                                               final ClassDescription classDescription) {
     for (final GetterDescription getterDescription : classDescription.getGettersDescriptions()) {
-      if (getterDescription.getOriginalMember().equals(fieldOrProperty.getNegativePredicate())) return true;
+      if (getterDescription.getOriginalMember().getName().equals(fieldOrProperty.getNegativePredicate())) return true;
     }
     return false;
   }
@@ -686,11 +688,11 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     StringBuilder throwsClause = new StringBuilder();
     StringBuilder throwsJavaDoc = new StringBuilder();
     boolean first = true;
-    for (TypeName exception : getter.getExceptions()) {
+    for (TypeToken<?> exception : getter.getExceptions()) {
       if (first) throwsClause.append("throws ");
       else throwsClause.append(", ");
       first = false;
-      String exceptionName = exception.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName());
+      String exceptionName = TypeUtil.getFullyQualifiedTypeNameIfNeeded(exception, classDescription.getPackageName());
       throwsClause.append(exceptionName);
       throwsJavaDoc.append(LINE_SEPARATOR).append("   * @throws ").append(exceptionName);
       throwsJavaDoc.append(" if actual.").append("${getter}() throws one.");
@@ -703,14 +705,15 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private void fillFile(String customAssertionContent, File assertionJavaFile) throws IOException {
-    try (FileWriter fileWriter = new FileWriter(assertionJavaFile)) {
+    try (FileWriter fileWriter = new FileWriter(assertionJavaFile, false)) {
       fileWriter.write(customAssertionContent);
     }
   }
 
   private File createFile(String fileContent, String fileName, String targetDirectory) throws IOException {
     File file = new File(targetDirectory, fileName);
-    file.createNewFile();
+    checkState(file.createNewFile(),
+        "Could not create file: dir=%s, file=%s", targetDirectory, fileName);
     fillFile(fileContent, file);
     return file;
   }
@@ -720,7 +723,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private static void buildTargetDirectory(String targetDirectory) {
-    new File(targetDirectory).mkdirs();
+    checkState(new File(targetDirectory).mkdirs(),
+        "Could not create targetDirectory: %s", targetDirectory);
   }
 
   @Override

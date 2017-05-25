@@ -41,7 +41,7 @@ public class MovieAssert extends AbstractObjectAssert<MovieAssert, Movie> {
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting publicCategory of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     Movie.PublicCategory actualPublicCategory = actual.getPublicCategory();
     if (!Objects.areEqual(actualPublicCategory, publicCategory)) {
@@ -64,7 +64,7 @@ public class MovieAssert extends AbstractObjectAssert<MovieAssert, Movie> {
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting releaseDate of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     java.util.Date actualReleaseDate = actual.getReleaseDate();
     if (!Objects.areEqual(actualReleaseDate, releaseDate)) {
@@ -87,7 +87,7 @@ public class MovieAssert extends AbstractObjectAssert<MovieAssert, Movie> {
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting title of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     String actualTitle = actual.getTitle();
     if (!Objects.areEqual(actualTitle, title)) {
@@ -110,7 +110,7 @@ public class MovieAssert extends AbstractObjectAssert<MovieAssert, Movie> {
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting creator of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     String actualCreator = actual.creator;
     if (!Objects.areEqual(actualCreator, creator)) {
@@ -133,7 +133,7 @@ public class MovieAssert extends AbstractObjectAssert<MovieAssert, Movie> {
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting producer of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
-    
+
     // null safe check
     String actualProducer = actual.producer;
     if (!Objects.areEqual(actualProducer, producer)) {
@@ -157,7 +157,7 @@ public class MovieAssert extends AbstractObjectAssert<MovieAssert, Movie> {
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = "\nExpecting rating of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
 
-    // check
+    // check value for rating
     double actualRating = actual.rating;
     if (actualRating != rating) {
       failWithMessage(assertjErrorMessage, actual, rating, actualRating);
@@ -181,11 +181,11 @@ public class MovieAssert extends AbstractObjectAssert<MovieAssert, Movie> {
     isNotNull();
 
     double actualRating = actual.rating;
-    
+
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting rating:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
                                                actualRating, rating, offset, Math.abs(rating - actualRating));
-    
+
     // check
     Assertions.assertThat(actualRating).overridingErrorMessage(assertjErrorMessage).isCloseTo(rating, Assertions.within(offset));
 
@@ -202,11 +202,11 @@ public class MovieAssert extends AbstractObjectAssert<MovieAssert, Movie> {
     // check that actual Movie we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is true
     if (!actual.xrated) {
       failWithMessage("\nExpecting that actual Movie is xrated but is not.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }
@@ -220,11 +220,11 @@ public class MovieAssert extends AbstractObjectAssert<MovieAssert, Movie> {
     // check that actual Movie we want to make assertions on is not null.
     isNotNull();
 
-    // check
+    // check that property call/field access is false
     if (actual.xrated) {
       failWithMessage("\nExpecting that actual Movie is not xrated but is.");
     }
-    
+
     // return the current assertion for method chaining
     return this;
   }

@@ -53,7 +53,7 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
 
   /**
    * Verifies that the actual BeanWithOneException's arrayPropertyThrowsException contains <b>only</b> the given String elements and nothing else in whatever order.
-   * 
+   *
    * @param arrayPropertyThrowsException the given elements that should be contained in actual BeanWithOneException's arrayPropertyThrowsException.
    * @return this assertion object.
    * @throws AssertionError if the actual BeanWithOneException's arrayPropertyThrowsException does not contain all given String elements and nothing else.

@@ -5,7 +5,7 @@
    * @return this assertion object.
    * @throws AssertionError - if the actual ${class_to_assert}'s ${property} is not equal to the given one.${throws_javadoc}
    */
-  public ${self_type} has${Property}(${propertyType} ${property_safe}) ${throws}{
+  public ${self_type} has${Property}(${propertyType_parameter} ${property_safe}) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 
@@ -31,7 +31,7 @@
    * @return this assertion object.
    * @throws AssertionError - if the actual ${class_to_assert}'s ${property} is not close enough to the given value.${throws_javadoc}
    */
-  public ${self_type} has${Property}CloseTo(${propertyType} ${property_safe}, ${propertyType} offset) ${throws}{
+  public ${self_type} has${Property}CloseTo(${propertyType_parameter} ${property_safe}, ${propertyType} offset) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
     isNotNull();
 

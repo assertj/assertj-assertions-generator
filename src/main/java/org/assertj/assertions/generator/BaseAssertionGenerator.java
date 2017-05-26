@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -28,7 +28,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
@@ -55,6 +54,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String PROPERTY_WITH_SAFE = "${property_safe}";
   private static final String PACKAGE = "${package}";
   private static final String PROPERTY_TYPE = "${propertyType}";
+  private static final String PROPERTY_TYPE_PARAM = "${propertyType_parameter}";
   private static final String PROPERTY_SIMPLE_TYPE = "${propertySimpleType}";
   private static final String PROPERTY_ASSERT_TYPE = "${propertyAssertType}";
   private static final String CLASS_TO_ASSERT = "${class_to_assert}";
@@ -119,7 +119,6 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
   @Override
   public File generateCustomAssertionFor(ClassDescription classDescription) throws IOException {
-
     // Assertion content
     String assertionFileContent = generateCustomAssertionContentFor(classDescription);
     // finally create the assertion file, located in its package directory starting from targetBaseDirectory
@@ -506,7 +505,9 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,
                                field.getAssertTypeName(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_TYPE,
-                               field.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
+                               field.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName(), false));
+    assertionContent = replace(assertionContent, PROPERTY_TYPE_PARAM,
+                               field.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName(), true));
     assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, fieldName);
     // It should not be possible to have a field that is a keyword - compiler won't allow it.
     assertionContent = replace(assertionContent, PROPERTY_WITH_SAFE, fieldName);
@@ -608,7 +609,9 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,
                                getter.getAssertTypeName(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_TYPE,
-                               getter.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
+                               getter.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName(), false));
+    assertionContent = replace(assertionContent, PROPERTY_TYPE_PARAM,
+                               getter.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName(), true));
     assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, propertyName);
     assertionContent = replace(assertionContent, PROPERTY_WITH_SAFE, getSafeProperty(propertyName));
     return assertionContent;
@@ -692,7 +695,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       if (first) throwsClause.append("throws ");
       else throwsClause.append(", ");
       first = false;
-      String exceptionName = TypeUtil.getFullyQualifiedTypeNameIfNeeded(exception, classDescription.getPackageName());
+      String exceptionName = TypeUtil.getTypeDeclarationWithinPackage(exception, classDescription.getPackageName(), false);
       throwsClause.append(exceptionName);
       throwsJavaDoc.append(LINE_SEPARATOR).append("   * @throws ").append(exceptionName);
       throwsJavaDoc.append(" if actual.").append("${getter}() throws one.");
@@ -712,8 +715,11 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
   private File createFile(String fileContent, String fileName, String targetDirectory) throws IOException {
     File file = new File(targetDirectory, fileName);
-    checkState(file.createNewFile(),
-        "Could not create file: dir=%s, file=%s", targetDirectory, fileName);
+
+    // Ignore the result as it only returns false when the file existed previously
+    // which is not _wrong_.
+    //noinspection ResultOfMethodCallIgnored
+    file.createNewFile();
     fillFile(fileContent, file);
     return file;
   }
@@ -723,8 +729,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private static void buildTargetDirectory(String targetDirectory) {
-    checkState(new File(targetDirectory).mkdirs(),
-        "Could not create targetDirectory: %s", targetDirectory);
+    //noinspection ResultOfMethodCallIgnored
+    // Ignore the result as it only returns true iff the dir was created, false is
+    // not bad.
+    new File(targetDirectory).mkdirs();
   }
 
   @Override

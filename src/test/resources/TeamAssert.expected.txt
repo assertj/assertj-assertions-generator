@@ -98,7 +98,7 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
   /**
    * Verifies that the actual Team's oldNames contains <b>only</b> the given String elements and nothing else in whatever order.
-   * 
+   *
    * @param oldNames the given elements that should be contained in actual Team's oldNames.
    * @return this assertion object.
    * @throws AssertionError if the actual Team's oldNames does not contain all given String elements and nothing else.

@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -30,38 +30,40 @@ import static org.apache.commons.lang3.StringUtils.remove;
  */
 public class TypeUtil {
 
-  public static final Package JAVA_LANG_PACKAGE = Object.class.getPackage();
+  private static final Package JAVA_LANG_PACKAGE = Object.class.getPackage();
 
   /**
-   * return the simple element valueType name if element valueType belongs to given the package and the fully qualified element
-   * valueType name otherwise.
+   * Checks if the package, {@code child} is under the package {@code parent}.
+   * @param child Child package
+   * @param parent Parent package
+   * @return True iff the child package is under the parent, false if not or either is {@code null}.
    *
-   * @param packageName typically the package of the enclosing Class
-   * @return the simple element valueType name if element valueType belongs to given the package and the fully qualified element
-   *         valueType name otherwise.
+   * @see #isInnerPackageOf(String, String) String argument equivalent
    */
-  public static String getFullyQualifiedTypeNameIfNeeded(TypeToken<?> type, String packageName) {
-    Package toCheck = Package.getPackage(packageName);
-    return getFullyQualifiedTypeNameIfNeeded(type, toCheck);
-  }
-
-  /**
-   * return the simple element valueType name if element valueType belongs to given the package and the fully qualified element
-   * valueType name otherwise.
-   *
-   * @param toCheck typically the package of the enclosing Class
-   * @return the simple element valueType name if element valueType belongs to given the package and the fully qualified element
-   *         valueType name otherwise.
-   */
-  public static String getFullyQualifiedTypeNameIfNeeded(TypeToken<?> type, Package toCheck) {
-    return getTypeDeclarationWithinPackage(type, (toCheck == null ? null : toCheck.getName()), false);
-  }
-
   public static boolean isInnerPackageOf(Package child, Package parent) {
-    return child != null && parent != null && child.getName().startsWith(parent.getName());
-
+    return child != null && parent != null
+        && child.getName().startsWith(parent.getName());
   }
 
+  /**
+   * Utility version that allows to pass a string and {@link Package}.
+   * <br/>
+   * Delegates to {@link #isInnerPackageOf(String, String)}.
+   *
+   * @see #isInnerPackageOf(String, String)
+   */
+  public static boolean isInnerPackageOf(Package child, String parent) {
+    return child != null && isInnerPackageOf(child.getName(), parent);
+  }
+
+  /**
+   * Checks if the package, {@code child} is under the package {@code parent}.
+   * @param parentPackage Parent package
+   * @param childPackage Child package
+   * @return True iff the child package is under the parent, false if not or either is {@code null}.
+   *
+   * @see #isInnerPackageOf(String, String) String argument equivalent
+   */
   public static boolean isInnerPackageOf(String childPackage, String parentPackage) {
     checkArgument(!Strings.isNullOrEmpty(childPackage), "childPackage is null or empty");
     checkNotNull(parentPackage, "parentPackage is null or empty");
@@ -70,15 +72,34 @@ public class TypeUtil {
   }
 
 
+  /**
+   * Checks if the type passed is a member of {@code java.lang} or is a "built-in" type (e.g. primitive or array).
+   * @return true if part of java language
+   */
   public static boolean isJavaLangType(TypeToken<?> type) {
     return type.isPrimitive() || type.isArray() || Objects.equals(JAVA_LANG_PACKAGE, type.getRawType().getPackage());
   }
 
+  /**
+   * Checks if the type passed is a member of {@code java.lang} or is a "built-in" type (e.g. primitive or array).
+   * @return true if part of java language
+   *
+   * @see #isJavaLangType(TypeToken)
+   */
   public static boolean isJavaLangType(Type type) {
     return isJavaLangType(TypeToken.of(type));
   }
 
-
+  /**
+   * Generates a "type declaration" that could be used in Java code based on the {@code type} and if it is a parameter,
+   * it will try to be as "flexible" as possible.
+   *
+   * @param type Type to get declaration for
+   * @param asParameter True if the type is being used as a parameter
+   * @return String representation of the type
+   *
+   * @see #getTypeDeclaration(TypeToken, boolean, boolean)
+   */
   public static String getTypeDeclaration(TypeToken<?> type, final boolean asParameter, boolean fullyQualified) {
     StringBuilder bld = new StringBuilder();
     Class<?> raw = type.getRawType();
@@ -89,10 +110,12 @@ public class TypeUtil {
   /**
    * Uses the package name as a "local package" and tries to discern whether or not to generate
    * fully qualified names.
-   * @param type
-   * @param packageName
-   * @param asParameter
-   * @return
+   * @param type Type to get declaration for
+   * @param packageName local package name
+   * @param asParameter True if the type is being used as a parameter
+   * @return String representation of the type
+   *
+   * @see #getTypeDeclaration(TypeToken, boolean, boolean)
    */
   public static String getTypeDeclarationWithinPackage(TypeToken<?> type, String packageName, final boolean asParameter) {
 
@@ -104,7 +127,12 @@ public class TypeUtil {
   }
 
 
-  public static void getTypeDeclaration(StringBuilder bld, String basePackage, TypeToken<?> type, boolean asParameter, boolean fullyQualified) {
+  /**
+   * helper method for {@code #getTypeDeclarationXXX()}
+   * @see #getTypeDeclaration(TypeToken, boolean, boolean)
+   * @see #getTypeDeclarationWithinPackage(TypeToken, String, boolean)
+   */
+  private static void getTypeDeclaration(StringBuilder bld, String basePackage, TypeToken<?> type, boolean asParameter, boolean fullyQualified) {
 
     Class<?> raw = type.getRawType();
 
@@ -133,85 +161,127 @@ public class TypeUtil {
 
       bld.append(raw.getSimpleName());
 
+      // Now handle generics
       if (raw.getTypeParameters().length > 0) {
         bld.append("<");
+        boolean first = true;
         for (TypeVariable tv : raw.getTypeParameters()) {
+          // only append at the end
+          if (!first) {
+            bld.append(',');
+          }
+          first = false;
+
           TypeToken<?> paramType = type.resolveType(tv);
           Class<?> rawParam = paramType.getRawType();
+          String typeString = StringUtils.removeAll(paramType.toString(), "capture#\\d+-of\\s+");
+          typeString = typeString.replace("(\\?\\s+extends\\s+){2,}", "? extends ");
 
-          if (rawParam.equals(Object.class)) {
+          boolean isWildCard = typeString.contains("?");
+
+          // Some specializations need to be done to make sure that the arguments
+          // are property pulled out and written
+
+          // If its a wild card and it has no boundary other than Object,
+          // we just use the wild card
+          if (isWildCard && rawParam.equals(Object.class)) {
             bld.append("?");
-          } else {
-            if (asParameter && !rawParam.equals(Object.class) && tv.getBounds().length > 0) {
-              String typeString = StringUtils.removeAll(paramType.toString(), "capture#\\d+-of\\s+");
-              typeString = typeString.replace("(\\?\\s+extends\\s+){2,}", "? extends ");
-
-              if (!typeString.contains("?")) {
-                bld.append("? extends ");
-              }
-
-              // fall through
-            }
-
-            Package paramPackage = paramType.getRawType().getPackage();
-
-            getTypeDeclaration(bld, basePackage, paramType, asParameter,
-                fullyQualified
-                    || ((paramPackage != null && !Objects.equals(basePackage, paramPackage.getName()))
-                    && Objects.equals(paramPackage, raw.getPackage())));
+            continue;
           }
 
-          bld.append(",");
+          if (asParameter) {
+            // We handle parameters differently so that it's accepted more "flexibility"
+            bld.append("? extends ");
+          }
+
+          // now we recursively add the type parameter, we set `asParameter` to false
+          // because odds are it will become wrong to keep adding the "extends" boundaries
+          Package paramPackage = paramType.getRawType().getPackage();
+
+          getTypeDeclaration(bld, basePackage, paramType, false,
+              fullyQualified
+                  || ((paramPackage != null && !Objects.equals(basePackage, paramPackage.getName()))
+                  && Objects.equals(paramPackage, raw.getPackage())));
         }
 
-        bld.deleteCharAt(bld.length() - 1);
         bld.append(">");
       }
     }
 
   }
 
+  /**
+   * Gets the name of the class that will be the "assert".
+   * @param type Type being tested
+   * @param packageName package this type will reside in
+   * @return Name for "assert" type
+   */
   // used to support navigation assertion
   // https://github.com/joel-costigliola/assertj-assertions-generator/issues/67
   public static String getAssertType(TypeToken<?> type, String packageName) {
 
-    Class<?> raw = type.getRawType();
-    Package typePackage = raw.getPackage();
+    TypeToken<?> wrapped = type.wrap();
+    Class<?> raw = wrapped.getRawType();
 
-    if (isInnerPackageOf(typePackage, Package.getPackage("java"))) {
+    String typeName = null;
+    if (isJavaLangType(wrapped)) {
       try {
-        String name = "org.assertj.core.api." + raw.getSimpleName() + "Assert";
+        String builtInName = "org.assertj.core.api." + raw.getSimpleName() + "Assert";
         // try to get the class, if it exists, then we know its valid
-        Class.forName(name);
+        Class.forName(builtInName);
 
-        return name;
+        typeName = builtInName.substring(0, builtInName.length() - "Assert".length());
       } catch (ClassNotFoundException cfne) {
-        // it wasn't found, this means the class doesn't exist, so fall back
+        // it wasn't found, this means the class doesn't exist, so fall through
       }
     }
 
-    String typeName = resolveTypeNameInPackage(type, packageName);
-    return typeName + "Assert";
-  }
-
-  public static String resolveTypeNameInPackage(TypeToken<?> type, Package currentPackage) {
-    Class<?> raw = type.getRawType();
-
-    if (Objects.equals(raw.getPackage(), currentPackage)) {
-      return raw.getSimpleName();
-    } else {
-      return raw.getName();
+    if (typeName == null) {
+      typeName = type.getRawType().getName();
     }
+
+    return resolveTypeNameInPackage(typeName + "Assert", packageName);
   }
 
+  /**
+   * Gets the name of a type without the package if {@code currentPackage} is the same as
+   * {@link Class#getPackage() type's package}.
+   *
+   * @param type Type to import
+   * @param currentPackage package context for the string
+   * @return String Name resolved within the package
+   */
   public static String resolveTypeNameInPackage(TypeToken<?> type, String currentPackage) {
-    return resolveTypeNameInPackage(type,
-        checkNotNull(Package.getPackage(currentPackage),
-            "Package %s does not exist", currentPackage));
+    // we special case java.lang types because they never need a FQN.
+    if (isJavaLangType(type)) {
+      return type.getRawType().getSimpleName();
+    }
+
+    return resolveTypeNameInPackage(type.getRawType().getName(), currentPackage);
   }
 
-  public static String resolveTypeNameInPackage(String type, String currentPackage) {
-    if (type.startsWith(currentPackage)) {
+  /**
+   * Gets the name of a type without the package if {@code currentPackage} is the same as
+   * {@link Class#getPackage() type's package}.
+   *
+   * @param type Type to import
+   * @param currentPackage package context for the string
+   * @return String Name resolved within the package
+   */
+  public static String resolveTypeNameInPackage(Type type, String currentPackage) {
+    return resolveTypeNameInPackage(TypeToken.of(type), currentPackage);
+  }
+
+  /**
+   * Gets the name of a type without the package if {@code currentPackage} is the same as
+   * {@link Class#getPackage() type's package}.
+   *
+   * @param type Type to import
+   * @param currentPackage package context for the string
+   * @return Name resolved within the package
+   */
+  private static String resolveTypeNameInPackage(String type, String currentPackage) {
+    if (!Strings.isNullOrEmpty(currentPackage) && type.startsWith(currentPackage)) {
       return type.substring(currentPackage.length() + 1, type.length());
     } else {
       return type;
@@ -220,6 +290,11 @@ public class TypeUtil {
 
   private static final String CAPITAL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+  /**
+   * Gets a type name without any dots in it if they are present -- this is for nested classes
+   * @param typeName String name of the type
+   * @return Type without any {@code '.'} characters
+   */
   public static String getTypeNameWithoutDots(String typeName) {
     int indexOfClassName = indexOfAny(typeName, CAPITAL_LETTERS);
     final String typeSimpleNameWithOuterClass;
@@ -233,6 +308,11 @@ public class TypeUtil {
     return remove(typeSimpleNameWithOuterClass, ".");
   }
 
+  /**
+   * Checks if a type is a boolean type
+   * @param type Type to check
+   * @return true iff the type is a boolean.
+   */
   public static boolean isBoolean(TypeToken<?> type) {
     TypeToken<?> unwrapped = type.unwrap();
     return unwrapped.isSubtypeOf(boolean.class);

@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -192,10 +192,10 @@ public abstract class DataDescription {
    */
   public String getElementTypeName(String packageName) {
     if (valueType.isArray()) {
-      return TypeUtil.getFullyQualifiedTypeNameIfNeeded(valueType.getComponentType(), packageName);
+      return TypeUtil.getTypeDeclarationWithinPackage(valueType.getComponentType(), packageName, false);
     } else if (valueType.isSubtypeOf(Iterable.class)) {
       TypeToken<?> componentType = valueType.resolveType(Iterable.class.getTypeParameters()[0]);
-      return TypeUtil.getFullyQualifiedTypeNameIfNeeded(componentType, packageName);
+      return TypeUtil.getTypeDeclarationWithinPackage(componentType, packageName, false);
     }
 
     return null;
@@ -206,7 +206,7 @@ public abstract class DataDescription {
     return elementType == null ? null : TypeUtil.getAssertType(elementType, packageName);
   }
 
-  public String getFullyQualifiedTypeNameIfNeeded(String packageName) {
+  public String getFullyQualifiedTypeNameIfNeeded(String packageName, final boolean asParameter) {
     return TypeUtil.getTypeDeclarationWithinPackage(valueType, packageName, false);
   }
 

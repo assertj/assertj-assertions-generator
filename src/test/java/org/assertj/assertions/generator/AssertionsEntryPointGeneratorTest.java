@@ -25,10 +25,12 @@ import org.assertj.assertions.generator.data.nba.Team;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -38,12 +40,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.contentOf;
 
 public class AssertionsEntryPointGeneratorTest {
-  private static final String TARGET_DIRECTORY = "target";
   private BaseAssertionGenerator generator;
+
+  @Rule
+  public final GenerationPathHandler genHandle = new GenerationPathHandler(AssertionsEntryPointGeneratorTest.class,
+                                                                           Paths.get("src/test/resources"));
 
   @Before
   public void beforeEachTest() throws IOException {
-    generator = buildAssertionGenerator();
+    generator = genHandle.buildAssertionGenerator();
   }
 
   @Test
@@ -87,7 +92,7 @@ public class AssertionsEntryPointGeneratorTest {
     String expectedContent = readExpectedContentFromFile("AssertionsWithCustomPackage.expected.txt");
     assertThat(assertionsEntryPointFile).as("check entry point class content")
                                         .hasContent(expectedContent)
-                                        .hasParent("target/my/custom/package");
+                                        .hasParent(genHandle.getRoot().toPath().resolve("my/custom/package").toFile());
   }
 
   @Test
@@ -265,12 +270,6 @@ public class AssertionsEntryPointGeneratorTest {
       classDescriptionSet.add(converter.convertToClassDescription(TypeToken.of(clazz)));
     }
     return classDescriptionSet;
-  }
-
-  private BaseAssertionGenerator buildAssertionGenerator() throws IOException {
-    BaseAssertionGenerator assertionGenerator = new BaseAssertionGenerator();
-    assertionGenerator.setDirectoryWhereAssertionFilesAreGenerated(TARGET_DIRECTORY);
-    return assertionGenerator;
   }
 
   private String readExpectedContentFromFile(String fileWithExpectedContent) {

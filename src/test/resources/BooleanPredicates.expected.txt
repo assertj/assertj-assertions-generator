@@ -312,7 +312,7 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     isNotNull();
 
     // check that property call/field access is true
-    if (!actual.goodField) {
+    if (!actual.canBeGoodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates can be good field but is not.");
     }
 
@@ -330,7 +330,7 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     isNotNull();
 
     // check that property call/field access is false
-    if (actual.goodField) {
+    if (actual.canBeGoodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates cannot be good field but is not.");
     }
 
@@ -348,7 +348,7 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     isNotNull();
 
     // check that property call/field access is true
-    if (!actual.goodField) {
+    if (!actual.hasGoodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates has good field but does not have.");
     }
 
@@ -366,7 +366,7 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     isNotNull();
 
     // check that property call/field access is false
-    if (actual.goodField) {
+    if (actual.hasGoodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates does not have good field but has.");
     }
 
@@ -384,7 +384,7 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     isNotNull();
 
     // check that property call/field access is true
-    if (!actual.goodField) {
+    if (!actual.isGoodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates is good field but is not.");
     }
 
@@ -402,7 +402,7 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     isNotNull();
 
     // check that property call/field access is false
-    if (actual.goodField) {
+    if (actual.isGoodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates is not good field but is.");
     }
 
@@ -420,7 +420,7 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     isNotNull();
 
     // check that property call/field access is true
-    if (!actual.goodField) {
+    if (!actual.shouldBeGoodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates should be good field but is not.");
     }
 
@@ -438,7 +438,7 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     isNotNull();
 
     // check that property call/field access is false
-    if (actual.goodField) {
+    if (actual.shouldBeGoodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates should not be good field but should be.");
     }
 
@@ -456,7 +456,7 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     isNotNull();
 
     // check that property call/field access is true
-    if (!actual.goodField) {
+    if (!actual.wasGoodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates was good field but was not.");
     }
 
@@ -474,7 +474,7 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     isNotNull();
 
     // check that property call/field access is false
-    if (actual.goodField) {
+    if (actual.wasGoodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates was not good field but was.");
     }
 
@@ -492,7 +492,7 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     isNotNull();
 
     // check that property call/field access is true
-    if (!actual.goodField) {
+    if (!actual.willBeGoodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates will be good field but will not be.");
     }
 
@@ -510,7 +510,7 @@ public class BooleanPredicatesAssert extends AbstractObjectAssert<BooleanPredica
     isNotNull();
 
     // check that property call/field access is false
-    if (actual.goodField) {
+    if (actual.willBeGoodField) {
       failWithMessage("\nExpecting that actual BooleanPredicates will not be good field but will be.");
     }
 

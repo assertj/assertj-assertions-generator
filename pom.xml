@@ -53,6 +53,21 @@
       <version>4.11</version><!--$NO-MVN-MAN-VER$-->
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.5</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/com.google.testing.compile/compile-testing -->
+    <dependency>
+      <groupId>com.google.testing.compile</groupId>
+      <artifactId>compile-testing</artifactId>
+      <version>0.11</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -106,7 +121,7 @@
           </archive>
         </configuration>
       </plugin>
-      <!-- generate jacoco report -->
+       <!-- generate jacoco report -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -122,6 +137,9 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <argLine>${argLine}</argLine>
+          <!-- Needed because otherwise the classloader does not properly bring in the dependencies from
+               maven. Source: http://maven.apache.org/surefire/maven-surefire-plugin/examples/class-loading.html -->
+          <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>
       </plugin>
     </plugins>

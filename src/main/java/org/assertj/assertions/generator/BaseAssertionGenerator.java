@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,7 +72,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String LINE_SEPARATOR = "\n";
   // assertions classes are generated in their package directory starting from targetBaseDirectory.
   // ex : com.nba.Player -> targetBaseDirectory/com/nba/PlayerAssert.java
-  private String targetBaseDirectory = ".";
+  private File targetBaseDirectory = Paths.get(".").toFile();
   private TemplateRegistry templateRegistry;// the pattern to search for
 
   /**
@@ -113,7 +114,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     templateRegistry = DefaultTemplateRegistryProducer.create(templatesDirectory);
   }
 
-  public void setDirectoryWhereAssertionFilesAreGenerated(String targetBaseDirectory) {
+  public void setDirectoryWhereAssertionFilesAreGenerated(File targetBaseDirectory) {
     this.targetBaseDirectory = targetBaseDirectory;
   }
 
@@ -483,7 +484,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
     // replace ${Property} and ${property} by field name (starting with uppercase/lowercase)
     if (field.isPredicate()) {
-      assertionContent = assertionContent.replace("actual." + PREDICATE + "()", "actual." + field.getName());
+      assertionContent = assertionContent.replace("actual." + PREDICATE + "()", "actual." + field.getOriginalMember().getName());
       assertionContent = assertionContent.replace(PREDICATE_FOR_JAVADOC,
                                                   field.getPredicateForJavadoc());
       assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_JAVADOC,

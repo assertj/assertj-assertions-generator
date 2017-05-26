@@ -12,24 +12,27 @@
  */
 package org.assertj.assertions.generator;
 
-import static org.assertj.assertions.generator.AssertionGeneratorTest.assertGeneratedAssertClass;
-
-import java.io.File;
-import java.io.IOException;
-
 import org.assertj.assertions.generator.data.cars.Car;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 
 public class AssertionGeneratorOverrideTemplateTest {
   private BaseAssertionGenerator assertionGenerator;
   private ClassToClassDescriptionConverter converter;
 
+  @Rule
+  public final GenerationPathHandler genHandle = new GenerationPathHandler(AssertionGeneratorOverrideTemplateTest.class,
+      Paths.get("src/test/resources"));
+
   @Before
   public void before() throws IOException {
-    assertionGenerator = new BaseAssertionGenerator();
-    assertionGenerator.setDirectoryWhereAssertionFilesAreGenerated("target");
+    assertionGenerator = genHandle.buildAssertionGenerator();
     converter = new ClassToClassDescriptionConverter();
   }
 
@@ -55,6 +58,6 @@ public class AssertionGeneratorOverrideTemplateTest {
                                                       "custom_has_assertion_template_for_whole_number.txt")));
 
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Car.class));
-    assertGeneratedAssertClass(Car.class, "CarAssert.expected.txt");
+    genHandle.assertGeneratedAssertClass(Car.class, "CarAssert.expected.txt", true);
   }
 }

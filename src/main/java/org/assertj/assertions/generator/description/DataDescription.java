@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -18,7 +18,7 @@ import com.google.common.collect.Ordering;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Primitives;
 import com.google.common.reflect.TypeToken;
-import org.assertj.assertions.generator.util.TypeUtil;
+import org.assertj.assertions.generator.util.ClassUtil;
 
 import java.lang.reflect.Member;
 import java.util.List;
@@ -129,15 +129,15 @@ public abstract class DataDescription {
 
   /**
    * Get the type of the value stored by the {@link #originalMember}
-   * @return
    * @param isFQN Whether or not to get the fully qualified name
    * @param asParameter if true, this will generate a type-name that is best for
    *                    passing as a parameter, for example, for a {@link java.util.Collection Collection<String>}
    *                    this would return {@code Collection&lt;? extends String&gt;} instead of
    *                    just {@code String}
+   * @return
    */
   public String getTypeName(boolean isFQN, final boolean asParameter) {
-    return TypeUtil.getTypeDeclaration(valueType, false, isFQN);
+    return ClassUtil.getTypeDeclaration(valueType, asParameter, isFQN);
   }
 
   public boolean isIterableType() {
@@ -192,10 +192,10 @@ public abstract class DataDescription {
    */
   public String getElementTypeName(String packageName) {
     if (valueType.isArray()) {
-      return TypeUtil.getTypeDeclarationWithinPackage(valueType.getComponentType(), packageName, false);
+      return ClassUtil.getTypeDeclarationWithinPackage(valueType.getComponentType(), packageName, false);
     } else if (valueType.isSubtypeOf(Iterable.class)) {
       TypeToken<?> componentType = valueType.resolveType(Iterable.class.getTypeParameters()[0]);
-      return TypeUtil.getTypeDeclarationWithinPackage(componentType, packageName, false);
+      return ClassUtil.getTypeDeclarationWithinPackage(componentType, packageName, false);
     }
 
     return null;
@@ -203,15 +203,15 @@ public abstract class DataDescription {
 
   public String getElementAssertTypeName(String packageName) {
     TypeToken<?> elementType = valueType.getComponentType();
-    return elementType == null ? null : TypeUtil.getAssertType(elementType, packageName);
+    return elementType == null ? null : ClassUtil.getAssertType(elementType, packageName);
   }
 
   public String getFullyQualifiedTypeNameIfNeeded(String packageName, final boolean asParameter) {
-    return TypeUtil.getTypeDeclarationWithinPackage(valueType, packageName, false);
+    return ClassUtil.getTypeDeclarationWithinPackage(valueType, packageName, false);
   }
 
   public String getAssertTypeName(String packageName) {
-    return TypeUtil.getAssertType(valueType, packageName);
+    return ClassUtil.getAssertType(valueType, packageName);
   }
 
   public String getPredicateForJavadoc() {

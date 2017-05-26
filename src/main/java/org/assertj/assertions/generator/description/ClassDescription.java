@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -13,7 +13,7 @@
 package org.assertj.assertions.generator.description;
 
 import com.google.common.reflect.TypeToken;
-import org.assertj.assertions.generator.util.TypeUtil;
+import org.assertj.assertions.generator.util.ClassUtil;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -51,7 +51,7 @@ public class ClassDescription implements Comparable<ClassDescription> {
   }
   
   public String getFullyQualifiedClassName() {
-    return TypeUtil.getTypeDeclaration(type, false, true);
+    return ClassUtil.getTypeDeclaration(type, false, true);
   }
 
   public TypeToken<?> getType() {
@@ -59,11 +59,11 @@ public class ClassDescription implements Comparable<ClassDescription> {
   }
 
   public String getClassNameWithOuterClass() {
-    return TypeUtil.getTypeDeclaration(type, false, false);
+    return ClassUtil.getTypeDeclaration(type, false, false);
   }
 
   public String getClassNameWithOuterClassNotSeparatedByDots() {
-    return TypeUtil.getTypeNameWithoutDots(getClassNameWithOuterClass()); //classTypeName.getSimpleNameWithOuterClassNotSeparatedByDots();
+    return ClassUtil.getTypeNameWithoutDots(getClassNameWithOuterClass()); //classTypeName.getSimpleNameWithOuterClassNotSeparatedByDots();
   }
   
   public String getPackageName() {

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -16,7 +16,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.util.ClassUtil;
-import org.assertj.assertions.generator.util.TypeUtil;
 
 import java.lang.reflect.Method;
 
@@ -69,7 +68,7 @@ public class GetterDescription extends DataDescription implements Comparable<Get
 
   @Override
   public boolean isPredicate() {
-    return TypeUtil.isBoolean(valueType) && ClassUtil.isValidPredicateName(originalMember.getName());
+    return ClassUtil.isBoolean(valueType) && ClassUtil.isValidPredicateName(originalMember.getName());
   }
 
   public Invokable<?, ?> getInvokable() {

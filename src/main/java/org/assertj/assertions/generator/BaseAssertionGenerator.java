@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -18,7 +18,7 @@ import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.DataDescription;
 import org.assertj.assertions.generator.description.FieldDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
-import org.assertj.assertions.generator.util.TypeUtil;
+import org.assertj.assertions.generator.util.ClassUtil;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -200,7 +200,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // className could be a nested class like "OuterClass.NestedClass", in that case assert class will be
     // OuterClassNestedClass
     template = replace(template, SUPER_ASSERTION_CLASS,
-                       TypeUtil.getTypeNameWithoutDots(superAssertionClassName));
+                       ClassUtil.getTypeNameWithoutDots(superAssertionClassName));
     template = replace(template, CLASS_TO_ASSERT, classDescription.getClassNameWithOuterClass());
     template = replace(template, SELF_TYPE, selfType);
     template = replace(template, MYSELF, myself);
@@ -386,7 +386,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private static String assertClassNameOf(TypeToken<?> type) {
-    return TypeUtil.getTypeNameWithoutDots(TypeUtil.getTypeDeclaration(type, false, false)) + ASSERT_CLASS_SUFFIX;
+    return ClassUtil.getTypeNameWithoutDots(ClassUtil.getTypeDeclaration(type, false, false)) + ASSERT_CLASS_SUFFIX;
   }
 
   private static String abstractAssertClassNameOf(ClassDescription classDescription) {
@@ -417,8 +417,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     for (String type : typesToImport) {
       try {
         Class<?> clazz = Class.forName(type);
-        if (!clazz.isPrimitive() && !TypeUtil.isJavaLangType(clazz)
-            && !TypeUtil.isInnerPackageOf(type, classPackage) && !Objects.equals(classPackage, type)) {
+        if (!clazz.isPrimitive() && !ClassUtil.isJavaLangType(clazz)
+            && !ClassUtil.isInnerPackageOf(type, classPackage) && !Objects.equals(classPackage, type)) {
           importsBuilder.append(format(IMPORT_LINE, type, LINE_SEPARATOR));
         }
       } catch (ClassNotFoundException cfne) {
@@ -695,7 +695,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       if (first) throwsClause.append("throws ");
       else throwsClause.append(", ");
       first = false;
-      String exceptionName = TypeUtil.getTypeDeclarationWithinPackage(exception, classDescription.getPackageName(), false);
+      String exceptionName = ClassUtil.getTypeDeclarationWithinPackage(exception, classDescription.getPackageName(), false);
       throwsClause.append(exceptionName);
       throwsJavaDoc.append(LINE_SEPARATOR).append("   * @throws ").append(exceptionName);
       throwsJavaDoc.append(" if actual.").append("${getter}() throws one.");
@@ -729,9 +729,9 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private static void buildTargetDirectory(String targetDirectory) {
-    //noinspection ResultOfMethodCallIgnored
     // Ignore the result as it only returns true iff the dir was created, false is
     // not bad.
+    //noinspection ResultOfMethodCallIgnored
     new File(targetDirectory).mkdirs();
   }
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -24,7 +24,7 @@ import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.PlayerAgent;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
-import org.assertj.assertions.generator.util.TypeUtil;
+import org.assertj.assertions.generator.util.ClassUtil;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
@@ -202,7 +202,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
 				.isTrue();
 		assertThat(getterDescription.getElementTypeName(WithIterableObjectType.class.getPackage().getName()))
 				.as("getterDesc element type must return correct array type")
-				.isEqualTo(TypeUtil.getTypeDeclaration(new TypeToken<Player[]>() {}, false, false));
+				.isEqualTo(ClassUtil.getTypeDeclaration(new TypeToken<Player[]>() {}, false, false));
 		assertThat(getterDescription.isArrayType()).as("getterDescription is not an array").isFalse();
 	}
 
@@ -293,7 +293,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
 	}
 
 	public interface InterfaceWithGetter {
-		public abstract List<String> getMyList();
+		List<String> getMyList();
 	}
 
 	class ClassOverridingGetter implements InterfaceWithGetter {

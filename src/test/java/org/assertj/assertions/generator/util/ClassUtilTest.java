@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -15,6 +15,7 @@ package org.assertj.assertions.generator.util;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
+import org.assertj.assertions.generator.AssertionGeneratorTest;
 import org.assertj.assertions.generator.NestedClassesTest;
 import org.assertj.assertions.generator.data.*;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
@@ -23,11 +24,14 @@ import org.assertj.assertions.generator.data.lotr.Ring;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.PlayerAgent;
+import org.assertj.assertions.generator.description.GetterDescriptionTest;
+import org.assertj.core.api.BooleanAssert;
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
@@ -268,6 +272,181 @@ public class ClassUtilTest implements NestedClassesTest {
     Class<?> classes = ClassUtil.getClass(method.getGenericReturnType());
     assertThat(classes).isEqualTo(Number.class);
   }
+  
+  public static class Inner {}
+
+  @Test
+  public void resolve_type_name_in_package() throws Exception {
+    assertThat(ClassUtil.resolveTypeNameInPackage(String.class, String.class.getPackage().getName()))
+        .as("java lang type has simple name with package")
+        .isEqualTo(String.class.getSimpleName());
+    assertThat(ClassUtil.resolveTypeNameInPackage(String.class, null))
+        .as("java lang type has simple name without package")
+        .isEqualTo(String.class.getSimpleName());
+
+    assertThat(ClassUtil.resolveTypeNameInPackage(ClassUtilTest.class, null))
+        .as("normal type has FQN without package")
+        .isEqualTo(ClassUtilTest.class.getName());
+    assertThat(ClassUtil.resolveTypeNameInPackage(ClassUtilTest.class, ClassUtilTest.class.getPackage().getName()))
+        .as("normal type does not has FQN with package")
+        .isEqualTo(ClassUtilTest.class.getSimpleName());
+    assertThat(ClassUtil.resolveTypeNameInPackage(ClassUtilTest.class, String.class.getPackage().getName()))
+        .as("normal type does not have FQN with other package")
+        .isEqualTo(ClassUtilTest.class.getName());
+
+    assertThat(ClassUtil.resolveTypeNameInPackage(Inner.class, null))
+        .as("inner type has FQN without package")
+        .isEqualTo(Inner.class.getName());
+    assertThat(ClassUtil.resolveTypeNameInPackage(Inner.class, Inner.class.getPackage().getName()))
+        .as("inner type does not have FQN with package")
+        .isEqualTo(String.format("%s$%s", ClassUtilTest.class.getSimpleName(), Inner.class.getSimpleName()));
+  }
+
+
+  @Test
+  public void java_lang_types_should_work_with_isJavaLangType() throws Exception {
+    assertThat(ClassUtil.isJavaLangType(Object.class)).isTrue();
+    assertThat(ClassUtil.isJavaLangType(boolean.class)).isTrue();
+    assertThat(ClassUtil.isJavaLangType(Boolean.class)).isTrue();
+
+    // wrong
+    assertThat(ClassUtil.isJavaLangType(ClassUtilTest.class)).isFalse();
+  }
+
+  @Test
+  public void can_properly_compute_Assert_types() throws Exception {
+    TypeToken<ClassUtilTest> thisType = TypeToken.of(ClassUtilTest.class);
+
+    assertThat(ClassUtil.getAssertType(thisType, thisType.getRawType().getPackage().getName()))
+        .as("resolves non-built-in type correctly")
+        .isEqualTo("ClassUtilTestAssert");
+
+    TypeToken<Boolean> primitive = TypeToken.of(boolean.class);
+    assertThat(ClassUtil.getAssertType(primitive, thisType.getRawType().getPackage().getName()))
+        .as("resolves primitive correctly")
+        .isEqualTo(BooleanAssert.class.getName());
+
+    TypeToken<Boolean> wrapper = TypeToken.of(Boolean.class);
+    assertThat(ClassUtil.getAssertType(wrapper, thisType.getRawType().getPackage().getName()))
+        .as("resolves primitive wrapper correctly")
+        .isEqualTo(BooleanAssert.class.getName());
+
+    assertThat(ClassUtil.getAssertType(wrapper, BooleanAssert.class.getPackage().getName()))
+        .as("resolves package correctly for built-in package")
+        .isEqualTo(BooleanAssert.class.getSimpleName());
+  }
+
+  @Test
+  public void properly_check_if_types_are_boolean() throws Exception {
+    TypeToken<Boolean> wrapper = new TypeToken<Boolean>(getClass()) {};
+    TypeToken<Boolean> primitive = TypeToken.of(boolean.class);
+    TypeToken<ClassUtilTest> neither = TypeToken.of(ClassUtilTest.class);
+
+    assertThat(ClassUtil.isBoolean(wrapper)).as("for wrapper").isTrue();
+    assertThat(ClassUtil.isBoolean(primitive)).as("for primitive").isTrue();
+    assertThat(ClassUtil.isBoolean(neither)).as("for non-boolean").isFalse();
+  }
+
+  @Test
+  public void should_check_that_nested_packages_work() throws Exception {
+
+    assertThat(ClassUtil.isInnerPackageOf(ClassUtilTest.class.getPackage(),
+        AssertionGeneratorTest.class.getPackage()))
+        .as("from 'super' package")
+        .isTrue();
+
+    assertThat(ClassUtil.isInnerPackageOf(ClassUtilTest.class.getPackage(),
+        ClassUtilTest.class.getPackage()))
+        .as("same package")
+        .isTrue();
+
+    assertThat(ClassUtil.isInnerPackageOf(ClassUtilTest.class.getPackage(),
+        GetterDescriptionTest.class.getPackage()))
+        .as("sibling package")
+        .isFalse();
+
+  }
+
+  @SuppressWarnings("unused")
+  static class Foo<T> {
+    List<T> listOfT;
+    List<Foo<String>> listOfFooString;
+    List<Foo<Integer>[]> listOfFooIntArr;
+    List<Foo<int[][]>[]> listOfFooIntArrArrArr;
+    Class<?> clazz;
+    Class<Foo<?>> clazzFoo;
+  }
+
+  @Test
+  public void create_generic_type_declaration() throws Exception {
+    TypeToken<Foo<Integer>> fooInteger = new TypeToken<Foo<Integer>>(getClass()) {};
+    String result = ClassUtil.getTypeDeclaration(fooInteger, false, true);
+    String expected = String.format("%s.%s.%s<Integer>", ClassUtilTest.class.getPackage().getName(), ClassUtilTest.class.getSimpleName(), Foo.class.getSimpleName());
+    assertThat(result).isEqualTo(expected);
+
+    // nested!
+    TypeToken<Foo<Foo<Integer>>> fooFooInteger = new TypeToken<Foo<Foo<Integer>>>(getClass()){};
+    result = ClassUtil.getTypeDeclaration(fooFooInteger, false, false);
+    expected = String.format("%s.%s<%s.%s<Integer>>", ClassUtilTest.class.getSimpleName(), Foo.class.getSimpleName(),
+        ClassUtilTest.class.getSimpleName(), Foo.class.getSimpleName());
+    assertThat(result).isEqualTo(expected);
+
+    // check getting the field's type
+    Field listOfTField = Foo.class.getDeclaredField("listOfT");
+    result = ClassUtil.getTypeDeclaration(fooFooInteger.resolveType(listOfTField.getGenericType()), false, false);
+    expected = String.format("List<%s.%s<Integer>>", ClassUtilTest.class.getSimpleName(), Foo.class.getSimpleName());
+    assertThat(result).isEqualTo(expected);
+
+    result = ClassUtil.getTypeDeclaration(fooFooInteger.resolveType(listOfTField.getGenericType()), true, false);
+    expected = String.format("List<? extends %s.%s<Integer>>", ClassUtilTest.class.getSimpleName(), Foo.class.getSimpleName());
+    assertThat(result).isEqualTo(expected);
+
+    // List of non-T type
+    Field listOfFooStringField = Foo.class.getDeclaredField("listOfFooString");
+    result = ClassUtil.getTypeDeclaration(fooInteger.resolveType(listOfFooStringField.getGenericType()), false, false);
+    expected = String.format("List<%s.%s<String>>", ClassUtilTest.class.getSimpleName(), Foo.class.getSimpleName());
+    assertThat(result).isEqualTo(expected);
+
+    result = ClassUtil.getTypeDeclaration(fooInteger.resolveType(listOfFooStringField.getGenericType()), true, false);
+    expected = String.format("List<? extends %s.%s<String>>", ClassUtilTest.class.getSimpleName(), Foo.class.getSimpleName());
+    assertThat(result).isEqualTo(expected);
+
+    // List of Foo<Integer>[]
+
+    Field listOfFooIntArr = Foo.class.getDeclaredField("listOfFooIntArr");
+    result = ClassUtil.getTypeDeclaration(fooInteger.resolveType(listOfFooIntArr.getGenericType()), false, false);
+    expected = String.format("List<%s.%s<Integer>[]>", ClassUtilTest.class.getSimpleName(), Foo.class.getSimpleName());
+    assertThat(result).isEqualTo(expected);
+
+    // List of Foo<int[][]>[]
+    Field listOfFooIntArrArrArr = Foo.class.getDeclaredField("listOfFooIntArrArrArr");
+    result = ClassUtil.getTypeDeclaration(fooInteger.resolveType(listOfFooIntArrArrArr.getGenericType()), false, false);
+    expected = String.format("List<%s.%s<int[][]>[]>", ClassUtilTest.class.getSimpleName(), Foo.class.getSimpleName());
+    assertThat(result).isEqualTo(expected);
+  }
+
+
+  @Test
+  public void create_wildcard_version() throws Exception {
+    TypeToken<Foo<Integer>> fooInteger = new TypeToken<Foo<Integer>>(getClass()) {};
+    Field clazz = Foo.class.getDeclaredField("clazz");
+    String result = ClassUtil.getTypeDeclaration(fooInteger.resolveType(clazz.getGenericType()), false, true);
+    String expected = "Class<?>";
+    assertThat(result).isEqualTo(expected);
+
+    result = ClassUtil.getTypeDeclaration(fooInteger.resolveType(clazz.getGenericType()), true, false);
+    assertThat(result).isEqualTo(expected);
+
+    Field clazzFoo = Foo.class.getDeclaredField("clazzFoo");
+    result = ClassUtil.getTypeDeclaration(fooInteger.resolveType(clazzFoo.getGenericType()), true, false);
+    expected = String.format("Class<? extends %s.%s<?>>", ClassUtilTest.class.getSimpleName(), Foo.class.getSimpleName());
+    assertThat(result).isEqualTo(expected);
+
+    result = ClassUtil.getTypeDeclaration(fooInteger.resolveType(clazzFoo.getGenericType()), false, false);
+    expected = String.format("Class<%s.%s<?>>", ClassUtilTest.class.getSimpleName(), Foo.class.getSimpleName());
+    assertThat(result).isEqualTo(expected);
+  }
+
 
   private static class Generic {
     @SuppressWarnings("unused")

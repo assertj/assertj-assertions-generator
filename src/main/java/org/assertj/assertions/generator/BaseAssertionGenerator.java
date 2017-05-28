@@ -322,47 +322,52 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
         ? determineBestEntryPointsAssertionsClassPackage(classDescriptionSet)
         : entryPointClassPackage;
     entryPointAssertionsClassContent = replace(entryPointAssertionsClassContent, PACKAGE, classPackage);
-    Set<String> imports;
-    if (entryPointAssertionsClassContent.contains(IMPORTS)) {
-      imports = extractImports(classDescriptionSet);
-      entryPointAssertionsClassContent = replace(entryPointAssertionsClassContent, IMPORTS, listNeededImports(imports));
-    } else {
-      imports = new HashSet<>();
-    }
+    String imports = buildImports(classDescriptionSet);
+    entryPointAssertionsClassContent = replace(entryPointAssertionsClassContent, IMPORTS, imports);
     String allEntryPointsAssertionContent = generateAssertionEntryPointMethodsFor(classDescriptionSet,
-                                                                                  entryPointAssertionMethodTemplate,
-                                                                                  imports);
+                                                                                  entryPointAssertionMethodTemplate);
     entryPointAssertionsClassContent = replace(entryPointAssertionsClassContent, ALL_ASSERTIONS_ENTRY_POINTS,
                                                allEntryPointsAssertionContent);
     return entryPointAssertionsClassContent;
   }
 
-  private static String listNeededImports(Collection<String> imports) {
+  private static String buildImports(Set<ClassDescription> classDescriptionSet) {
     StringBuilder builder = new StringBuilder();
-    for (String anImport : imports) {
+    for (String anImport : extractImports(classDescriptionSet)) {
       builder.append(format(IMPORT_LINE, anImport, LINE_SEPARATOR));
     }
     return builder.toString();
   }
 
-  private static Set<String> extractImports(Set<ClassDescription> classDescriptionSet) {
-    Set<String> imports = new TreeSet<>();
+  /**
+   * The set will contain all the FQN of the imports for which simple class names can be used.
+   * <p>
+   * Example:
+   * <pre>
+   *   org.example.Outer -> part of the set
+   *   org.example.Outer.Inner -> org.example.Outer in the result
+   *   org.example.other.Outer -> not in the set because another FQN for the same simple class name Outer already exists
+   *   org.example.other.Outer.Inner -> same as above, another FQN for the same outer class name exists
+   * </pre>
+   *
+   * @param classDescriptionSet for which we need to extract the imports
+   * @return a sorted set with all the FQN that can be imported
+   */
+  private static SortedSet<String> extractImports(Set<ClassDescription> classDescriptionSet) {
     Map<String, String> importedQualifiedName = new HashMap<>(classDescriptionSet.size() * 2);
-    for (ClassDescription description : new TreeSet<>(classDescriptionSet)) {
-      String outerClassName = description.getOuterClassName();
+    for (final ClassDescription description : new TreeSet<>(classDescriptionSet)) {
+      final String outerClassName = description.getOuterClassName();
       if (!importedQualifiedName.containsKey(outerClassName)) {
         String toImport = description.getPackageName() + "." + outerClassName;
-        imports.add(toImport);
         importedQualifiedName.put(outerClassName, toImport);
       }
 
       if (!importedQualifiedName.containsKey(simpleAssertClassName(description))) {
         String toImport = fullyQualifiedAssertClassName(description);
-        imports.add(toImport);
         importedQualifiedName.put(simpleAssertClassName(description), toImport);
       }
     }
-    return imports;
+    return new TreeSet<>(importedQualifiedName.values());
   }
 
   /**
@@ -390,8 +395,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private String generateAssertionEntryPointMethodsFor(final Set<ClassDescription> classDescriptionSet,
-                                                       Template assertionEntryPointMethodTemplate,
-                                                       Set<String> imports) {
+                                                       Template assertionEntryPointMethodTemplate) {
+    SortedSet<String> resolvedImports = extractImports(classDescriptionSet);
     // sort ClassDescription according to their class name.
     SortedSet<ClassDescription> sortedClassDescriptionSet = new TreeSet<ClassDescription>(classDescriptionSet);
     // generate for each classDescription the entry point method, e.g. assertThat(MyClass) or then(MyClass)
@@ -402,7 +407,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       // resolve class assert (ex: PlayerAssert)
       // in case of inner classes like Movie.PublicCategory, class assert will be MoviePublicCategoryAssert
       String customAssertionClass = fullyQualifiedAssertClassName(classDescription);
-      if (imports.contains(customAssertionClass)) {
+      if (resolvedImports.contains(customAssertionClass)) {
+        // if the FQN exists in the resolved imports then we can use its simple class name instead
         customAssertionClass = simpleAssertClassName(classDescription);
       }
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CUSTOM_ASSERTION_CLASS,
@@ -410,7 +416,9 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       // resolve class (ex: Player)
       // in case of inner classes like Movie.PublicCategory use class name with outer class i.e. Movie.PublicCategory.
       String classToAssert = classDescription.getFullyQualifiedClassName();
-      if (imports.contains(classDescription.getPackageName() + "." + classDescription.getOuterClassName())) {
+      if (resolvedImports.contains(classDescription.getPackageName() + "." + classDescription.getOuterClassName())) {
+        // if the FQN exists in the resolved imports then we can use its simple class name instead or the
+        // simple class name of its outer class like in the case of Movie.PublicCategory
         classToAssert = classDescription.getClassNameWithOuterClass();
       }
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CLASS_TO_ASSERT,

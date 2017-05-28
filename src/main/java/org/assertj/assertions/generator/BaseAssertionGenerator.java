@@ -81,9 +81,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
    * For this, we use the two character class {@code javaJavaIdentifierStart} and {@code javaJavaIdentifierPart} to match
    * a valid name.
    * <p>
+   * <code>(?m)^public class</code> is needed to match the class at the beginning of a line and avoid matching
+   * "public class"  inside javadoc comment as in templates/junit_soft_assertions_entry_point_class_template.txt.
+   * <p>
    * <i>Description of the pattern:</i>
-   * 
    * <ol>
+   * <li><code>(?m)^</code> beginning of line in multi-line mode</li>
    * <li><code>public class[\\s]+</code> the "public class" followed by one or more whitespace (either tabs, space or new lines).</li>
    * <li><code>(?&lt;CLASSNAME&gt;...)</code> create a named group that would match a Java identifier (here the class name).</li>
    * <li><code>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*</code> match said identifier using character class.</li>
@@ -93,7 +96,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
    * @see Character#isJavaIdentifierStart
    * @see Character#isJavaIdentifierPart
    */
-  private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("public class[\\s]+(?<CLASSNAME>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)\\b");
+  private static final Pattern CLASS_NAME_PATTERN = Pattern
+      .compile("(?m)^public class[\\s]+(?<CLASSNAME>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)\\b");
 
   /**
    * Creates a new </code>{@link BaseAssertionGenerator}</code> with default templates directory.
@@ -131,7 +135,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
   @Override
   public File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription, Set<TypeToken<?>> allClasses)
-                                                                                                                    throws IOException {
+      throws IOException {
 
     // Assertion content
     String[] assertionFileContent = generateHierarchicalCustomAssertionContentFor(classDescription, allClasses);
@@ -298,7 +302,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // expecting the class name to be here : "class <class name> "
     Matcher classNameMatcher = CLASS_NAME_PATTERN.matcher(assertionsEntryPointFileContent);
     // if we find a match return it
-    if (classNameMatcher.find()) return classNameMatcher.group("CLASSNAME")+ ".java";
+    if (classNameMatcher.find()) return classNameMatcher.group("CLASSNAME") + ".java";
     // otherwise use the default name
     return assertionsEntryPointType.getFileName();
   }
@@ -433,11 +437,13 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     generateAssertionsForGetters(contentBuilder, classDescription.getGettersDescriptions(), classDescription);
   }
 
-  protected void generateAssertionsForDeclaredGettersOf(StringBuilder contentBuilder, ClassDescription classDescription) {
+  protected void generateAssertionsForDeclaredGettersOf(StringBuilder contentBuilder,
+                                                        ClassDescription classDescription) {
     generateAssertionsForGetters(contentBuilder, classDescription.getDeclaredGettersDescriptions(), classDescription);
   }
 
-  protected void generateAssertionsForGetters(StringBuilder assertionsForGetters, Set<GetterDescription> getters, ClassDescription classDescription) {
+  protected void generateAssertionsForGetters(StringBuilder assertionsForGetters, Set<GetterDescription> getters,
+                                              ClassDescription classDescription) {
     for (GetterDescription getter : getters) {
       String assertionContent = assertionContentForProperty(getter, classDescription);
       assertionsForGetters.append(assertionContent).append(LINE_SEPARATOR);
@@ -448,11 +454,14 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     generateAssertionsForPublicFields(contentBuilder, classDescription.getFieldsDescriptions(), classDescription);
   }
 
-  protected void generateAssertionsForDeclaredPublicFieldsOf(StringBuilder contentBuilder, ClassDescription classDescription) {
-    generateAssertionsForPublicFields(contentBuilder, classDescription.getDeclaredFieldsDescriptions(), classDescription);
+  protected void generateAssertionsForDeclaredPublicFieldsOf(StringBuilder contentBuilder,
+                                                             ClassDescription classDescription) {
+    generateAssertionsForPublicFields(contentBuilder, classDescription.getDeclaredFieldsDescriptions(),
+                                      classDescription);
   }
 
-  protected void generateAssertionsForPublicFields(StringBuilder assertionsForPublicFields, Set<FieldDescription> fields, ClassDescription classDescription) {
+  protected void generateAssertionsForPublicFields(StringBuilder assertionsForPublicFields,
+                                                   Set<FieldDescription> fields, ClassDescription classDescription) {
     for (FieldDescription field : fields) {
       String assertionContent = assertionContentForField(field, classDescription);
       assertionsForPublicFields.append(assertionContent).append(LINE_SEPARATOR);
@@ -484,7 +493,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
     // replace ${Property} and ${property} by field name (starting with uppercase/lowercase)
     if (field.isPredicate()) {
-      assertionContent = assertionContent.replace("actual." + PREDICATE + "()", "actual." + field.getOriginalMember().getName());
+      assertionContent = assertionContent
+          .replace("actual." + PREDICATE + "()", "actual." + field.getOriginalMember().getName());
       assertionContent = assertionContent.replace(PREDICATE_FOR_JAVADOC,
                                                   field.getPredicateForJavadoc());
       assertionContent = assertionContent.replace(NEGATIVE_PREDICATE_FOR_JAVADOC,
@@ -696,7 +706,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       if (first) throwsClause.append("throws ");
       else throwsClause.append(", ");
       first = false;
-      String exceptionName = ClassUtil.getTypeDeclarationWithinPackage(exception, classDescription.getPackageName(), false);
+      String exceptionName = ClassUtil
+          .getTypeDeclarationWithinPackage(exception, classDescription.getPackageName(), false);
       throwsClause.append(exceptionName);
       throwsJavaDoc.append(LINE_SEPARATOR).append("   * @throws ").append(exceptionName);
       throwsJavaDoc.append(" if actual.").append("${getter}() throws one.");

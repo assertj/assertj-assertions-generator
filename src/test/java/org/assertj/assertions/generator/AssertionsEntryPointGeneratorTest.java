@@ -66,7 +66,8 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_generate_correctly_standard_assertions_entry_point_class_for_classes_with_same_name() throws Exception {
+  public void should_generate_correctly_standard_assertions_entry_point_class_for_classes_with_same_name()
+      throws Exception {
     // GIVEN : classes we want to have entry point assertions for
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Team.class,
                                                                        org.assertj.assertions.generator.data.Team.class);
@@ -137,7 +138,8 @@ public class AssertionsEntryPointGeneratorTest {
     // THEN
     String expectedContent = readExpectedContentFromFile("JUnitSoftAssertions.expected.txt");
     assertThat(assertionsEntryPointFile).as("check JUnit soft assertions entry point class content")
-                                        .hasContent(expectedContent);
+                                        .hasContent(expectedContent)
+                                        .hasName("JUnitSoftAssertions.java");
   }
 
   @Test
@@ -235,7 +237,8 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_return_empty_assertion_entry_point_class_content_if_no_classes_description_are_given() throws Exception {
+  public void should_return_empty_assertion_entry_point_class_content_if_no_classes_description_are_given()
+      throws Exception {
     // GIVEN no ClassDescription
     Set<ClassDescription> emptySet = newLinkedHashSet();
     // THEN generated entry points content are empty

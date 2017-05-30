@@ -51,5 +51,42 @@ public class FieldPropertyClashAssert extends AbstractObjectAssert<FieldProperty
     return this;
   }
 
+  /**
+   * Verifies that the actual FieldPropertyClash is boolean.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash is not boolean.
+   */
+  public FieldPropertyClashAssert isBoolean() {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // check
+    if (!actual.isBoolean()) {
+      failWithMessage("\nExpecting that actual FieldPropertyClash is boolean but is not.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual FieldPropertyClash is not boolean.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash is boolean.
+   */
+  public FieldPropertyClashAssert isNotBoolean() {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // check
+    if (!actual.isNotBoolean()) {
+      failWithMessage("\nExpecting that actual FieldPropertyClash is not boolean but is.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+
 
 }

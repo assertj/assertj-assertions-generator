@@ -12,9 +12,12 @@
  */
 package org.assertj.assertions.generator.description;
 
-import java.util.Collection;
-import java.util.Set;
-import java.util.TreeSet;
+import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
+
+import java.util.*;
+
+import org.apache.commons.lang3.StringUtils;
+import org.assertj.assertions.generator.util.ClassUtil;
 
 /**
  * 
@@ -128,5 +131,40 @@ public class ClassDescription implements Comparable<ClassDescription> {
 
   public void setSuperType(Class<?> superType) {
     this.superType = superType;
+  }
+
+  public GetterDescription findGetterDescriptionForField(FieldDescription base) {
+    // Build a map for better look-up
+    Map<String, GetterDescription> fieldMap = new HashMap<>();
+    for (GetterDescription getter: this.gettersDescriptions) {
+      fieldMap.put(getter.getOriginalMember(), getter);
+    }
+    for (GetterDescription getter: this.declaredGettersDescriptions) {
+      fieldMap.put(getter.getOriginalMember(), getter);
+    }
+
+    final String capName = StringUtils.capitalize(propertyNameOf(base.getName()));
+    if (base.getTypeDescription().isBoolean()) {
+      // deal with predicates
+      for (String prefix: ClassUtil.PREDICATE_PREFIXES.keySet()) {
+        String propName = prefix + capName;
+
+        GetterDescription getterDesc = fieldMap.get(propName);
+        if (getterDesc != null) {
+          return getterDesc;
+        }
+      }
+    } else {
+
+      String propName = "get" + capName;
+
+      GetterDescription getterDesc = fieldMap.get(propName);
+      if (getterDesc != null) {
+        return getterDesc;
+      }
+    }
+
+    // wasn't found
+    return null;
   }
 }

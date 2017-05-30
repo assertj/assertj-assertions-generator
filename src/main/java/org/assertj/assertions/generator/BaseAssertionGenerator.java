@@ -466,11 +466,11 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private String assertionContentForField(FieldDescription field, ClassDescription classDescription) {
     final String fieldName = field.getName();
     final String fieldNameCap = capitalize(field.getName());
-    if (classDescription.getGettersDescriptions().contains(new GetterDescription(fieldName, "get" + fieldNameCap,
-                                                                                 field.getTypeDescription(),
-                                                                                 Collections.<TypeName> emptyList()))) {
+    
+    if (classDescription.findGetterDescriptionForField(field) != null) {
       return "";
     }
+
     String assertionContent = baseAssertionContentFor(field, classDescription);
 
     // we reuse template for properties to have consistent assertions for property and field but change the way we get

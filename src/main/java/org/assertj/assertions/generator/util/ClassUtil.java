@@ -21,15 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
+import java.lang.reflect.*;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -238,28 +230,49 @@ public class ClassUtil {
   /**
    * Returns the property name of given getter method, examples :
    * <p/>
-   * 
+   *
    * <pre>
    * getName -> name
    * </pre>
    * <p/>
-   * 
+   *
    * <pre>
    * isMostValuablePlayer -> mostValuablePlayer
    * </pre>
    *
-   * @param getter getter method to deduce property from.
+   * @param member getter method to deduce property from.
    * @return the property name of given getter method
    */
-  public static String propertyNameOf(Method getter) {
-    String methodName = getter.getName();
-    String prefixToRemove = isPredicate(getter) ? IS_PREFIX : GET_PREFIX;
-    int pos = methodName.indexOf(prefixToRemove);
+  public static String propertyNameOf(Member member) {
+    return propertyNameOf(member.getName());
+  }
+
+  /**
+   * Returns the property name of given getter method, examples :
+   * <p/>
+   *
+   * <pre>
+   * getName -> name
+   * </pre>
+   * <p/>
+   *
+   * <pre>
+   * isMostValuablePlayer -> mostValuablePlayer
+   * </pre>
+   *
+   * @param memberName name of getter or field
+   * @return the property name of field or method
+   */
+  public static String propertyNameOf(String memberName) {
+    String predicatePrefix = getPredicatePrefix(memberName);
+    String prefixToRemove = predicatePrefix != null ? predicatePrefix : GET_PREFIX;
+
+    int pos = memberName.indexOf(prefixToRemove);
     if (pos != StringUtils.INDEX_NOT_FOUND) {
-      String propertyWithCapitalLetter = methodName.substring(pos + prefixToRemove.length());
+      String propertyWithCapitalLetter = memberName.substring(pos + prefixToRemove.length());
       return uncapitalize(propertyWithCapitalLetter);
     } else {
-      return methodName;
+      return memberName;
     }
   }
 
@@ -308,7 +321,7 @@ public class ClassUtil {
 
   static private final Pattern PREFIX_PATTERN;
 
-  static private final Map<String, String> PREDICATE_PREFIXES;
+  static public final Map<String, String> PREDICATE_PREFIXES;
 
   static private final Comparator<String> LONGEST_TO_SHORTEST = new Comparator<String>() {
     @Override

@@ -16,8 +16,15 @@ package org.assertj.assertions.generator.data;
  * This is a class with properties that clash with public fields.
  */
 public class FieldPropertyClash {
-  public String string;
-  public String getString() {
-	return "";
-  }
+    public String string;
+    public String getString() {
+        return "";
+    }
+
+    // joel-costigliola/assertj-assertions-generator#105
+    // Predicate properties were not properly discerned vs non-predicate
+    public boolean isBoolean;
+    public boolean isBoolean() { return false; }
+
+    public boolean isNotBoolean() { return false; }
 }

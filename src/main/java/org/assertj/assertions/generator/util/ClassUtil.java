@@ -41,8 +41,6 @@ import static org.apache.commons.lang3.StringUtils.uncapitalize;
 
 /**
  * Some utilities methods related to classes and packages.
- *
- * @author Joel Costigliola
  */
 @SuppressWarnings("WeakerAccess")
 public class ClassUtil {
@@ -202,17 +200,12 @@ public class ClassUtil {
     return classes;
   }
 
-  /**
-   * @param loadedClass
-   * @return
-   */
-  private static boolean isClassCandidateToAssertionsGeneration(TypeToken<?> loadedClass) {
-    if (loadedClass == null) {
-      return false;
-    }
-
-    Class<?> raw = loadedClass.getRawType();
-    return isPublic(raw.getModifiers()) && !raw.isAnonymousClass() && !raw.isLocalClass();
+  private static boolean isClassCandidateToAssertionsGeneration(TypeToken<?> typeToken) {
+    if (typeToken == null) return false;
+    Class<?> raw = typeToken.getRawType();
+    return isPublic(raw.getModifiers())
+           && !raw.isAnonymousClass()
+           && !raw.isLocalClass();
   }
 
   private static boolean isClass(String fileName) {
@@ -234,12 +227,12 @@ public class ClassUtil {
   /**
    * Returns the property name of given getter method, examples :
    * <p/>
-   * 
+   *
    * <pre>
    * getName -> name
    * </pre>
    * <p/>
-   * 
+   *
    * <pre>
    * isMostValuablePlayer -> mostValuablePlayer
    * </pre>
@@ -279,8 +272,8 @@ public class ClassUtil {
 
   private static boolean isAnnotated(Method method, Set<Class<?>> includeAnnotations, boolean isClassAnnotated) {
     if (!Void.TYPE.equals(method.getReturnType())
-            && method.getParameterTypes().length == 0
-            && !isStatic(method.getModifiers())) {
+        && method.getParameterTypes().length == 0
+        && !isStatic(method.getModifiers())) {
       Annotation[] methodAnnotations = method.getAnnotations();
       return isClassAnnotated || containsAny(methodAnnotations, includeAnnotations);
     }
@@ -302,7 +295,7 @@ public class ClassUtil {
 
   static private final Pattern PREFIX_PATTERN;
 
-  static private final Map<String, String> PREDICATE_PREFIXES;
+  static public final Map<String, String> PREDICATE_PREFIXES;
 
   static private final Comparator<String> LONGEST_TO_SHORTEST = new Comparator<String>() {
     @Override
@@ -313,7 +306,7 @@ public class ClassUtil {
   };
 
   static {
-    String[][] predicates = new String[][] {
+    String[][] predicates = {
         { "is", "isNot" },
         { "was", "wasNot" },
         { "can", "cannot" },
@@ -459,16 +452,16 @@ public class ClassUtil {
    * Gets the simple name of the class but, unlike {@link Class#getSimpleName()}, it includes the name of the outer
    * class when <code>clazz</code> is an inner class.
    *
-   * @param clazz
-   * @return
+   * @param clazz the class
+   * @return the simple name of the class prefixed by the outer class if any (separated by dot)
    */
   public static String getSimpleNameWithOuterClass(Class<?> clazz) {
     if (isNotNestedClass(clazz)) {
       return clazz.getSimpleName();
     }
     String nestedClassName = clazz.getName();
-    nestedClassName = nestedClassName.substring(clazz.getPackage().getName().length() + 1);
-    nestedClassName = nestedClassName.replace('$', '.');
+        nestedClassName = nestedClassName.substring(clazz.getPackage().getName().length() + 1);
+        nestedClassName = nestedClassName.replace('$', '.');
     return nestedClassName;
   }
 
@@ -477,13 +470,13 @@ public class ClassUtil {
    * class when <code>clazz</code> is an inner class, both class names are concatenated.
    * <p>
    * Example:
-   * 
+   *
    * <pre>
-   * Outer.Inner -> OuterInner 
+   * Outer.Inner -> OuterInner
    * </pre>
    *
-   * @param clazz
-   * @return
+   * @param clazz the class
+   * @return the simple name of the class prefixed by the outer class if any
    */
   public static String getSimpleNameWithOuterClassNotSeparatedByDots(Class<?> clazz) {
     if (isNotNestedClass(clazz)) {
@@ -535,18 +528,7 @@ public class ClassUtil {
    */
   public static boolean isInnerPackageOf(Package child, Package parent) {
     return child != null && parent != null
-        && child.getName().startsWith(parent.getName());
-  }
-
-  /**
-   * Utility version that allows to pass a string and {@link Package}.
-   * <br/>
-   * Delegates to {@link #isInnerPackageOf(String, String)}.
-   *
-   * @see #isInnerPackageOf(String, String)
-   */
-  public static boolean isInnerPackageOf(Package child, String parent) {
-    return child != null && isInnerPackageOf(child.getName(), parent);
+           && child.getName().startsWith(parent.getName());
   }
 
   /**
@@ -612,7 +594,7 @@ public class ClassUtil {
   public static String getTypeDeclarationWithinPackage(TypeToken<?> type, String packageName, final boolean asParameter) {
 
     boolean reqFQN = !Objects.equals(packageName, JAVA_LANG_PACKAGE.getName())
-        && (!type.isPrimitive() && !type.isArray() && !Objects.equals(packageName, type.getRawType().getPackage().getName()));
+                     && (!type.isPrimitive() && !type.isArray() && !Objects.equals(packageName, type.getRawType().getPackage().getName()));
     StringBuilder bld = new StringBuilder();
     getTypeDeclaration(bld, packageName, type, asParameter, reqFQN);
     return bld.toString();
@@ -623,7 +605,8 @@ public class ClassUtil {
    * @see #getTypeDeclaration(TypeToken, boolean, boolean)
    * @see #getTypeDeclarationWithinPackage(TypeToken, String, boolean)
    */
-  private static void getTypeDeclaration(StringBuilder bld, String basePackage, TypeToken<?> type, boolean asParameter, boolean fullyQualified) {
+  private static void getTypeDeclaration(StringBuilder bld, String basePackage, TypeToken<?> type, boolean asParameter,
+                                         boolean fullyQualified) {
 
     Class<?> raw = type.getRawType();
 
@@ -690,9 +673,9 @@ public class ClassUtil {
           Package paramPackage = paramType.getRawType().getPackage();
 
           getTypeDeclaration(bld, basePackage, paramType, false,
-              fullyQualified
-                  || ((paramPackage != null && !Objects.equals(basePackage, paramPackage.getName()))
-                  && Objects.equals(paramPackage, raw.getPackage())));
+                             fullyQualified
+                             || ((paramPackage != null && !Objects.equals(basePackage, paramPackage.getName()))
+                                 && Objects.equals(paramPackage, raw.getPackage())));
         }
 
         bld.append(">");

@@ -13,19 +13,24 @@
 package org.assertj.assertions.generator.description;
 
 import com.google.common.reflect.TypeToken;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.assertions.generator.util.ClassUtil;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static com.google.common.collect.Sets.union;
+import static org.assertj.assertions.generator.util.ClassUtil.isBoolean;
+
 /**
- * 
+ *
  * Stores the information needed to generate assertions for a given class.
- * 
+ *
  * @author Joel Costigliola
- * 
+ *
  */
 public class ClassDescription implements Comparable<ClassDescription> {
 
@@ -49,7 +54,7 @@ public class ClassDescription implements Comparable<ClassDescription> {
   public String getClassName() {
     return type.getRawType().getName();
   }
-  
+
   public String getFullyQualifiedClassName() {
     return ClassUtil.getTypeDeclaration(type, false, true);
   }
@@ -65,7 +70,7 @@ public class ClassDescription implements Comparable<ClassDescription> {
   public String getClassNameWithOuterClassNotSeparatedByDots() {
     return ClassUtil.getTypeNameWithoutDots(getClassNameWithOuterClass()); //classTypeName.getSimpleNameWithOuterClassNotSeparatedByDots();
   }
-  
+
   public String getPackageName() {
     return type.getRawType().getPackage().getName();
   }
@@ -77,11 +82,11 @@ public class ClassDescription implements Comparable<ClassDescription> {
   public void addGetterDescriptions(Collection<GetterDescription> getterDescriptions) {
     this.gettersDescriptions.addAll(getterDescriptions);
   }
-  
+
   public void addFieldDescriptions(Set<FieldDescription> fieldDescriptions) {
     this.fieldsDescriptions.addAll(fieldDescriptions);
   }
-  
+
   public Set<FieldDescription> getFieldsDescriptions() {
     return fieldsDescriptions;
   }
@@ -101,7 +106,26 @@ public class ClassDescription implements Comparable<ClassDescription> {
   public void addDeclaredFieldDescriptions(Set<FieldDescription> declaredFieldDescriptions) {
     this.declaredFieldsDescriptions.addAll(declaredFieldDescriptions);
   }
-  
+
+  public boolean hasGetterForField(FieldDescription field) {
+    // get all getters with a return type == field type
+    Set<String> gettersCompatibleWithFieldType = new HashSet<>();
+    for (GetterDescription getter : union(this.gettersDescriptions, this.declaredGettersDescriptions)) {
+      if (Objects.equals(field.getValueType(), getter.getValueType())) {
+        gettersCompatibleWithFieldType.add(getter.getOriginalMember().getName());
+      }
+    }
+    // check boolean getters
+    final String capName = StringUtils.capitalize(field.getName());
+    if (field.isPredicate()) {
+      for (String prefix : ClassUtil.PREDICATE_PREFIXES.keySet()) {
+        if (gettersCompatibleWithFieldType.contains(prefix + capName)) return true;
+      }
+    }
+    // standard getter
+    return gettersCompatibleWithFieldType.contains("get" + capName);
+  }
+
   @Override
   public String toString() {
     return "ClassDescription [valueType=" + type + "]";
@@ -120,7 +144,7 @@ public class ClassDescription implements Comparable<ClassDescription> {
   public int hashCode() {
     return Objects.hash(type);
   }
-  
+
   @Override
   public int compareTo(ClassDescription o) {
     return type.getRawType().getName().compareTo(o.type.getRawType().getName());
@@ -134,7 +158,7 @@ public class ClassDescription implements Comparable<ClassDescription> {
   public void setSuperType(Class<?> superType) {
     // TypeToken#getSupertype(..) checks to make sure it is a super type
     if (superType != null) {
-      this.superType = type.getSupertype((Class)superType);
+      this.superType = type.getSupertype((Class) superType);
     }
   }
 }

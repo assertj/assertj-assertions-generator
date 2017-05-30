@@ -12,7 +12,20 @@
  */
 package org.assertj.assertions.generator;
 
-import com.google.common.collect.Sets;
+import static com.google.common.collect.Sets.newHashSet;
+import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.*;
+import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
+import static org.assertj.assertions.generator.util.ClassUtil.getTypeDeclarationWithinPackage;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.Template.Type;
 import org.assertj.assertions.generator.description.ClassDescription;
@@ -20,21 +33,6 @@ import org.assertj.assertions.generator.description.DataDescription;
 import org.assertj.assertions.generator.description.FieldDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.util.ClassUtil;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static com.google.common.collect.Sets.newHashSet;
-import static java.lang.String.format;
-import static org.apache.commons.lang3.StringUtils.*;
-import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
-import static org.assertj.assertions.generator.util.ClassUtil.getTypeDeclarationWithinPackage;
 
 @SuppressWarnings("WeakerAccess")
 public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEntryPointGenerator {
@@ -73,6 +71,14 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String THROWS = "${throws}";
   private static final String THROWS_JAVADOC = "${throws_javadoc}";
   private static final String LINE_SEPARATOR = "\n";
+
+  private static final Comparator<String> ORDER_BY_INCREASING_LENGTH = new Comparator<String>() {
+    @Override
+    public int compare(final String o1, final String o2) {
+      return o1.length() - o2.length();
+    }
+  };
+
   // assertions classes are generated in their package directory starting from targetBaseDirectory.
   // ex : com.nba.Player -> targetBaseDirectory/com/nba/PlayerAssert.java
   private File targetBaseDirectory = Paths.get(".").toFile();
@@ -372,12 +378,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private String determineBestEntryPointsAssertionsClassPackage(final Set<ClassDescription> classDescriptionSet) {
-    SortedSet<String> packages = new TreeSet<>(new Comparator<String>() {
-      @Override
-      public int compare(final String o1, final String o2) {
-        return o1.length() - o2.length();
-      }
-    });
+    SortedSet<String> packages = new TreeSet<>(ORDER_BY_INCREASING_LENGTH);
     for (ClassDescription classDescription : classDescriptionSet) {
       packages.add(classDescription.getPackageName());
     }
@@ -469,19 +470,13 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private String assertionContentForField(FieldDescription field, ClassDescription classDescription) {
-    final TypeToken<?> owningType = field.getOwningType();
 
-    final String fieldName = field.getName();
-    final String fieldNameCap = capitalize(field.getName());
-    try {
-      Method m = owningType.getRawType().getMethod("get" + fieldNameCap);
-      if (classDescription.getGettersDescriptions().contains(new GetterDescription(fieldName, owningType, m))) {
-        return "";
-      }
-    } catch (NoSuchMethodException nsme) {
-      // ignore it, let flow keep going
+    if (classDescription.hasGetterForField(field)) {
+      // the assertion has already been generated using the getter to read the field
+      return "";
     }
 
+    final String fieldName = field.getName();
     String assertionContent = baseAssertionContentFor(field, classDescription);
 
     // we reuse template for properties to have consistent assertions for property and field but change the way we get
@@ -510,7 +505,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       assertionContent = replace(assertionContent, PREDICATE, field.getPredicate());
       assertionContent = replace(assertionContent, PREDICATE_NEG, field.getNegativePredicate());
     }
-    assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, fieldNameCap);
+    assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(field.getName()));
     assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE,
                                field.getTypeName(false, false));
     assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,

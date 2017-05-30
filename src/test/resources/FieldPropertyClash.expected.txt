@@ -29,6 +29,114 @@ public class FieldPropertyClashAssert extends AbstractObjectAssert<FieldProperty
   }
 
   /**
+   * Verifies that the actual FieldPropertyClash is boolean.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash is not boolean.
+   */
+  public FieldPropertyClashAssert isBoolean() {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // check
+    if (!actual.isBoolean()) {
+      failWithMessage("\nExpecting that actual FieldPropertyClash is boolean but is not.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual FieldPropertyClash is not boolean.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash is boolean.
+   */
+  public FieldPropertyClashAssert isNotBoolean() {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // check
+    if (!actual.isNotBoolean()) {
+      failWithMessage("\nExpecting that actual FieldPropertyClash is not boolean but is.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual FieldPropertyClash will not be outside.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash will be outside.
+   */
+  public FieldPropertyClashAssert willNotBeOutside() {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // check that property call/field access is true
+    if (!actual.willNotBeOutside()) {
+      failWithMessage("\nExpecting that actual FieldPropertyClash will not be outside but will be.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual FieldPropertyClash will be outside.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash will not be outside.
+   */
+  public FieldPropertyClashAssert willBeOutside() {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // check that property call/field access is false
+    if (actual.willNotBeOutside()) {
+      failWithMessage("\nExpecting that actual FieldPropertyClash will be outside but will not be.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual FieldPropertyClash should not be somewhere.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash should be somewhere.
+   */
+  public FieldPropertyClashAssert shouldNotBeSomewhere() {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // check that property call/field access is true
+    if (!actual.shouldNotBeSomewhere()) {
+      failWithMessage("\nExpecting that actual FieldPropertyClash should not be somewhere but should be.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual FieldPropertyClash should be somewhere.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash should not be somewhere.
+   */
+  public FieldPropertyClashAssert shouldBeSomewhere() {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // check that property call/field access is false
+    if (actual.shouldNotBeSomewhere()) {
+      failWithMessage("\nExpecting that actual FieldPropertyClash should be somewhere but is not.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual FieldPropertyClash's string is equal to the given one.
    * @param string the given string to compare the actual FieldPropertyClash's string to.
    * @return this assertion object.
@@ -50,6 +158,46 @@ public class FieldPropertyClashAssert extends AbstractObjectAssert<FieldProperty
     // return the current assertion for method chaining
     return this;
   }
+
+  /**
+   * Verifies that the actual FieldPropertyClash will be upside down.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash will not be upside down.
+   */
+  public FieldPropertyClashAssert willBeUpsideDown() {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // check that property call/field access is true
+    if (!actual.willBeUpsideDown()) {
+      failWithMessage("\nExpecting that actual FieldPropertyClash will be upside down but will not be.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual FieldPropertyClash will not be upside down.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash will be upside down.
+   */
+  public FieldPropertyClashAssert willNotBeUpsideDown() {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // check that property call/field access is false
+    if (actual.willBeUpsideDown()) {
+      failWithMessage("\nExpecting that actual FieldPropertyClash will not be upside down but will be.");
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+
+
+
 
 
 }

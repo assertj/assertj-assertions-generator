@@ -20,4 +20,24 @@ public class FieldPropertyClash {
   public String getString() {
 	return "";
   }
+
+  // joel-costigliola/assertj-assertions-generator#105
+  // Predicate properties were not properly discerned vs non-predicate
+  public boolean isBoolean;
+  public boolean isBoolean() { return false; }
+
+  public boolean isNotBoolean() { return false; }
+
+
+  public boolean shouldNotBeSomewhere;
+  public boolean shouldNotBeSomewhere() { return shouldNotBeSomewhere; }
+
+  // different "tenses"
+  public boolean willBeOutside;
+  public boolean willNotBeOutside() { return willBeOutside; }
+
+  //
+  public boolean willNotBeUpsideDown;
+  public boolean willBeUpsideDown() { return !willNotBeUpsideDown; }
+
 }

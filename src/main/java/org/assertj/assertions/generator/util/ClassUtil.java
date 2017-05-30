@@ -302,7 +302,7 @@ public class ClassUtil {
 
   static private final Pattern PREFIX_PATTERN;
 
-  static private final Map<String, String> PREDICATE_PREFIXES;
+  static public final Map<String, String> PREDICATE_PREFIXES;
 
   static private final Comparator<String> LONGEST_TO_SHORTEST = new Comparator<String>() {
     @Override

@@ -460,19 +460,14 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private String assertionContentForField(FieldDescription field, ClassDescription classDescription) {
-    final TypeToken<?> owningType = field.getOwningType();
 
-    final String fieldName = field.getName();
-    final String fieldNameCap = capitalize(field.getName());
-    try {
-      Method m = owningType.getRawType().getMethod("get" + fieldNameCap);
-      if (classDescription.getGettersDescriptions().contains(new GetterDescription(fieldName, owningType, m))) {
-        return "";
-      }
-    } catch (NoSuchMethodException nsme) {
-      // ignore it, let flow keep going
+    // Check for getter existing
+    GetterDescription getter = classDescription.findGetterDescriptionForField(field);
+    if (getter != null) {
+      return "";
     }
 
+    final String fieldName = field.getName();
     String assertionContent = baseAssertionContentFor(field, classDescription);
 
     // we reuse template for properties to have consistent assertions for property and field but change the way we get
@@ -500,7 +495,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       assertionContent = replace(assertionContent, PREDICATE, field.getPredicate());
       assertionContent = replace(assertionContent, PREDICATE_NEG, field.getNegativePredicate());
     }
-    assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, fieldNameCap);
+    assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(field.getName()));
     assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE,
                                field.getTypeName(false, false));
     assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,

@@ -12,7 +12,20 @@
  */
 package org.assertj.assertions.generator;
 
-import com.google.common.collect.Sets;
+import static com.google.common.collect.Sets.newHashSet;
+import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.*;
+import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
+import static org.assertj.assertions.generator.util.ClassUtil.getTypeDeclarationWithinPackage;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.Template.Type;
 import org.assertj.assertions.generator.description.ClassDescription;
@@ -20,21 +33,6 @@ import org.assertj.assertions.generator.description.DataDescription;
 import org.assertj.assertions.generator.description.FieldDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.util.ClassUtil;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static com.google.common.collect.Sets.newHashSet;
-import static java.lang.String.format;
-import static org.apache.commons.lang3.StringUtils.*;
-import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
-import static org.assertj.assertions.generator.util.ClassUtil.getTypeDeclarationWithinPackage;
 
 @SuppressWarnings("WeakerAccess")
 public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEntryPointGenerator {
@@ -372,12 +370,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private String determineBestEntryPointsAssertionsClassPackage(final Set<ClassDescription> classDescriptionSet) {
-    SortedSet<String> packages = new TreeSet<>(new Comparator<String>() {
-      @Override
-      public int compare(final String o1, final String o2) {
-        return o1.length() - o2.length();
-      }
-    });
+    SortedSet<String> packages = new TreeSet<>(Comparator.comparing(String::length));
     for (ClassDescription classDescription : classDescriptionSet) {
       packages.add(classDescription.getPackageName());
     }
@@ -471,8 +464,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private String assertionContentForField(FieldDescription field, ClassDescription classDescription) {
 
     // Check for getter existing
-    GetterDescription getter = classDescription.findGetterDescriptionForField(field);
-    if (getter != null) {
+    if (classDescription.hasGetterForField(field)) {
       return "";
     }
 

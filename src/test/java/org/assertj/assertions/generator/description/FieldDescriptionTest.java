@@ -35,9 +35,7 @@ public class FieldDescriptionTest {
   @Test
   public void should_show_information_in_toString() throws Exception {
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("name"), PLAYER_TYPE);
-    assertThat(fieldDescription.toString()).contains("name")
-        .contains(Player.class.getName())
-        .contains(Name.class.getName());
+    assertThat(fieldDescription.toString()).contains("name", Player.class.getName(), Name.class.getName());
   }
 
   @Test
@@ -59,7 +57,7 @@ public class FieldDescriptionTest {
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("team"), PLAYER_TYPE);
     assertThat(fieldDescription.isRealNumberType()).as("String").isFalse();
   }
-  
+
   @Test
   public void should_generate_default_predicate_correctly() throws Exception {
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("bad"), PLAYER_TYPE);

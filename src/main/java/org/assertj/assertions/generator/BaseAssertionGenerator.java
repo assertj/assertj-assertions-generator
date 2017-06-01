@@ -12,6 +12,7 @@
  */
 package org.assertj.assertions.generator;
 
+import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.Template.Type;
 import org.assertj.assertions.generator.description.ClassDescription;
@@ -29,9 +30,11 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
+import static org.assertj.assertions.generator.util.ClassUtil.getTypeDeclarationWithinPackage;
 
 @SuppressWarnings("WeakerAccess")
 public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEntryPointGenerator {
@@ -195,17 +198,14 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     }
     assertjImports.add(superAssertionClassName);
 
-    final String customAssertionClass = concrete ? assertClassNameOf(classDescription)
-        : abstractAssertClassNameOf(classDescription);
+    final String customAssertionClass = concrete ? assertClassNameOf(classDescription) : abstractAssertClassNameOf(classDescription);
     final String selfType = concrete ? customAssertionClass : "S";
     final String myself = concrete ? "this" : "myself";
 
     template = replace(template, PACKAGE, classDescription.getPackageName());
     template = replace(template, CUSTOM_ASSERTION_CLASS, customAssertionClass);
-    // className could be a nested class like "OuterClass.NestedClass", in that case assert class will be
-    // OuterClassNestedClass
-    template = replace(template, SUPER_ASSERTION_CLASS,
-                       ClassUtil.getTypeNameWithoutDots(superAssertionClassName));
+    // className could be a nested class like "OuterClass.NestedClass", in that case assert class will be OuterClassNestedClass
+    template = replace(template, SUPER_ASSERTION_CLASS, ClassUtil.getTypeNameWithoutDots(superAssertionClassName));
     template = replace(template, CLASS_TO_ASSERT, classDescription.getClassNameWithOuterClass());
     template = replace(template, SELF_TYPE, selfType);
     template = replace(template, MYSELF, myself);
@@ -525,67 +525,60 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     return assertionContent;
   }
 
-  static private final Set<String> JAVA_KEYWORDS = new HashSet<>();
-
-  static {
-    String[] keywords = new String[] {
-        "abstract",
-        "assert",
-        "boolean",
-        "break",
-        "byte",
-        "case",
-        "catch",
-        "char",
-        // This one's not strictly required because you can't have a property called "class"
-        "class",
-        "const",
-        "continue",
-        "default",
-        "do",
-        "double",
-        "else",
-        "enum",
-        "extends",
-        "false",
-        "final",
-        "finally",
-        "float",
-        "for",
-        "goto",
-        "if",
-        "implements",
-        "import",
-        "instanceof",
-        "int",
-        "interface",
-        "long",
-        "native",
-        "new",
-        "null",
-        "package",
-        "protected",
-        "private",
-        "public",
-        "return",
-        "short",
-        "static",
-        "strictfp",
-        "super",
-        "switch",
-        "synchronized",
-        "this",
-        "throw",
-        "throws",
-        "transient",
-        "true",
-        "try",
-        "void",
-        "volatile",
-        "while",
-    };
-    Collections.addAll(JAVA_KEYWORDS, keywords);
-  }
+  private static final Set<String> JAVA_KEYWORDS = newHashSet("abstract",
+                                                              "assert",
+                                                              "boolean",
+                                                              "break",
+                                                              "byte",
+                                                              "case",
+                                                              "catch",
+                                                              "char",
+                                                              // This one's not strictly required because you can't have a property called "class"
+                                                              "class",
+                                                              "const",
+                                                              "continue",
+                                                              "default",
+                                                              "do",
+                                                              "double",
+                                                              "else",
+                                                              "enum",
+                                                              "extends",
+                                                              "false",
+                                                              "final",
+                                                              "finally",
+                                                              "float",
+                                                              "for",
+                                                              "goto",
+                                                              "if",
+                                                              "implements",
+                                                              "import",
+                                                              "instanceof",
+                                                              "int",
+                                                              "interface",
+                                                              "long",
+                                                              "native",
+                                                              "new",
+                                                              "null",
+                                                              "package",
+                                                              "protected",
+                                                              "private",
+                                                              "public",
+                                                              "return",
+                                                              "short",
+                                                              "static",
+                                                              "strictfp",
+                                                              "super",
+                                                              "switch",
+                                                              "synchronized",
+                                                              "this",
+                                                              "throw",
+                                                              "throws",
+                                                              "transient",
+                                                              "true",
+                                                              "try",
+                                                              "void",
+                                                              "volatile",
+                                                              "while");
 
   static private String getSafeProperty(String unsafe) {
     return JAVA_KEYWORDS.contains(unsafe) ? "expected" + capitalize(unsafe) : unsafe;
@@ -651,12 +644,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       assertionContent = replace(assertionContent, ELEMENT_ASSERT_TYPE,
                                  fieldOrProperty.getElementAssertTypeName(classDescription.getPackageName()));
     } else if (fieldOrProperty.isRealNumberType()) {
-      Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.HAS_FOR_REAL_NUMBER_WRAPPER
-          : Type.HAS_FOR_REAL_NUMBER;
+      Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.HAS_FOR_REAL_NUMBER_WRAPPER : Type.HAS_FOR_REAL_NUMBER;
       assertionContent = templateRegistry.getTemplate(type).getContent();
     } else if (fieldOrProperty.isWholeNumberType()) {
-      Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.HAS_FOR_WHOLE_NUMBER_WRAPPER
-          : Type.HAS_FOR_WHOLE_NUMBER;
+      Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.HAS_FOR_WHOLE_NUMBER_WRAPPER : Type.HAS_FOR_WHOLE_NUMBER;
       assertionContent = templateRegistry.getTemplate(type).getContent();
     } else if (fieldOrProperty.isCharType()) {
       Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.HAS_FOR_CHARACTER : Type.HAS_FOR_CHAR;
@@ -706,8 +697,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       if (first) throwsClause.append("throws ");
       else throwsClause.append(", ");
       first = false;
-      String exceptionName = ClassUtil
-          .getTypeDeclarationWithinPackage(exception, classDescription.getPackageName(), false);
+      String exceptionName = getTypeDeclarationWithinPackage(exception, classDescription.getPackageName(), false);
       throwsClause.append(exceptionName);
       throwsJavaDoc.append(LINE_SEPARATOR).append("   * @throws ").append(exceptionName);
       throwsJavaDoc.append(" if actual.").append("${getter}() throws one.");
@@ -741,8 +731,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private static void buildTargetDirectory(String targetDirectory) {
-    // Ignore the result as it only returns true iff the dir was created, false is
-    // not bad.
+    // Ignore the result as it only returns true iff the dir was created, false is not bad.
     //noinspection ResultOfMethodCallIgnored
     new File(targetDirectory).mkdirs();
   }

@@ -12,13 +12,16 @@
  */
 package org.assertj.assertions.generator.description;
 
-import com.google.common.reflect.TypeToken;
-import org.assertj.assertions.generator.util.ClassUtil;
-
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import com.google.common.reflect.TypeToken;
+import org.apache.commons.lang3.StringUtils;
+import org.assertj.assertions.generator.util.ClassUtil;
 
 /**
  * 
@@ -100,6 +103,38 @@ public class ClassDescription implements Comparable<ClassDescription> {
 
   public void addDeclaredFieldDescriptions(Set<FieldDescription> declaredFieldDescriptions) {
     this.declaredFieldsDescriptions.addAll(declaredFieldDescriptions);
+  }
+  
+  Stream<GetterDescription> getGetterStreamForField(FieldDescription base) {
+    final String capName = StringUtils.capitalize(base.getName());
+    
+    Stream<GetterDescription> getterStream = 
+            Stream.concat(this.gettersDescriptions.stream(), 
+                          this.declaredGettersDescriptions.stream())
+            .distinct()
+            .filter(getter -> Objects.equals(base.getValueType(), getter.getValueType()));
+    
+    if (ClassUtil.isBoolean(base.getValueType())) {
+      // deal with predicates by building a set of all of the valid predicates available
+      Set<String> validNames = ClassUtil.PREDICATE_PREFIXES.keySet()
+              .stream()
+              .map(prefix -> prefix + capName)
+              .collect(Collectors.toSet());
+      
+      return getterStream.filter(getter -> validNames.contains(getter.getOriginalMember().getName()));
+    }
+
+    final String propName = "get" + capName;
+    
+    return getterStream.filter(getter -> Objects.equals(getter.getOriginalMember().getName(), propName));
+  }
+  
+  public boolean hasGetterForField(FieldDescription base) {
+    return getGetterStreamForField(base).findAny().isPresent();
+  }
+
+  public Set<GetterDescription> findGettersForField(FieldDescription base) {
+    return getGetterStreamForField(base).collect(Collectors.toCollection(TreeSet::new));
   }
   
   @Override

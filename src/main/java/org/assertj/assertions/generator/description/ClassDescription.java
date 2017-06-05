@@ -23,6 +23,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static com.google.common.collect.Sets.union;
+import static org.apache.commons.lang3.StringUtils.capitalize;
+import static org.assertj.assertions.generator.util.ClassUtil.PREDICATE_PREFIXES;
 
 /**
  *
@@ -115,9 +117,9 @@ public class ClassDescription implements Comparable<ClassDescription> {
       }
     }
     // check boolean getters
-    final String capName = StringUtils.capitalize(field.getName());
+    final String capName = capitalize(field.getName());
     if (field.isPredicate()) {
-      for (String prefix : ClassUtil.PREDICATE_PREFIXES.keySet()) {
+      for (String prefix : PREDICATE_PREFIXES.keySet()) {
         if (gettersCompatibleWithFieldType.contains(prefix + capName)) return true;
       }
     }

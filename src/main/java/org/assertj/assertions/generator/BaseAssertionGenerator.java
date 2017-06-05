@@ -17,9 +17,7 @@ import static java.lang.String.format;
 import static java.util.Collections.EMPTY_SET;
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
-import static org.assertj.assertions.generator.util.ClassUtil.getTypeDeclarationWithinPackage;
-import static org.assertj.assertions.generator.util.ClassUtil.isJavaLangType;
-import static org.assertj.assertions.generator.util.ClassUtil.packageNameOf;
+import static org.assertj.assertions.generator.util.ClassUtil.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -35,8 +33,6 @@ import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.DataDescription;
 import org.assertj.assertions.generator.description.FieldDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
-import org.assertj.assertions.generator.util.ClassUtil;
-import org.assertj.core.api.Assertions;
 
 @SuppressWarnings("WeakerAccess")
 public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEntryPointGenerator {
@@ -215,7 +211,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     template = replace(template, PACKAGE, classDescription.getPackageName());
     template = replace(template, CUSTOM_ASSERTION_CLASS, customAssertionClass);
     // className could be a nested class like "OuterClass.NestedClass", in that case assert class will be OuterClassNestedClass
-    template = replace(template, SUPER_ASSERTION_CLASS, ClassUtil.getTypeNameWithoutDots(parentAssertClassName));
+    template = replace(template, SUPER_ASSERTION_CLASS, getTypeNameWithoutDots(parentAssertClassName));
     template = replace(template, CLASS_TO_ASSERT, classDescription.getClassNameWithOuterClass());
     template = replace(template, SELF_TYPE, selfType);
     template = replace(template, MYSELF, myself);
@@ -396,7 +392,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private static String assertClassNameOf(TypeToken<?> type) {
-    return ClassUtil.getTypeNameWithoutDots(ClassUtil.getTypeDeclaration(type, false, false)) + ASSERT_CLASS_SUFFIX;
+    return getTypeNameWithoutDots(getTypeDeclaration(type, false, false)) + ASSERT_CLASS_SUFFIX;
   }
 
   private static String abstractAssertClassNameOf(ClassDescription classDescription) {

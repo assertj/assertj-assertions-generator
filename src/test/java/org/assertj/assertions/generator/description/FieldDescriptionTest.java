@@ -87,26 +87,29 @@ public class FieldDescriptionTest {
   }
 
   private static final TypeToken<FieldPropertyNames> FIELD_PROP_TYPE = TypeToken.of(FieldPropertyNames.class);
-  
+
+  @SuppressWarnings("unused")
   private static class FieldPropertyNames {
     public boolean isBoolean = true;
+
     public boolean isBoolean() {
       return isBoolean;
     }
-    
+
     public boolean isNotBoolean() {
       return !isBoolean;
     }
 
     public String stringProp;
-    
+
     public String getStringProp() {
       return stringProp;
     }
 
     public int onlyField;
-    
+
     public String badGetter;
+
     public int getBadGetter() {
       return -1;
     }
@@ -118,16 +121,16 @@ public class FieldDescriptionTest {
     fieldDescription = new FieldDescription(FieldPropertyNames.class.getDeclaredField("isBoolean"), FIELD_PROP_TYPE);
 
     GetterDescription posGetter = new GetterDescription("boolean", FIELD_PROP_TYPE,
-            FieldPropertyNames.class.getMethod("isBoolean"));
+                                                        FieldPropertyNames.class.getMethod("isBoolean"));
     GetterDescription negGetter = new GetterDescription("boolean", FIELD_PROP_TYPE,
-            FieldPropertyNames.class.getMethod("isNotBoolean"));
+                                                        FieldPropertyNames.class.getMethod("isNotBoolean"));
 
     ClassDescription classDesc = new ClassDescription(FIELD_PROP_TYPE);
     classDesc.addGetterDescriptions(Arrays.asList(posGetter, negGetter));
 
     assertThat(classDesc.hasGetterForField(fieldDescription))
-            .as("Correctly identifies there is a getter")
-            .isTrue();
+        .as("Correctly identifies there is a getter")
+        .isTrue();
   }
 
   @Test
@@ -136,14 +139,14 @@ public class FieldDescriptionTest {
     fieldDescription = new FieldDescription(FieldPropertyNames.class.getDeclaredField("stringProp"), FIELD_PROP_TYPE);
 
     GetterDescription getter = new GetterDescription("stringProp", FIELD_PROP_TYPE,
-            FieldPropertyNames.class.getMethod("getStringProp"));
+                                                     FieldPropertyNames.class.getMethod("getStringProp"));
 
     ClassDescription classDesc = new ClassDescription(FIELD_PROP_TYPE);
     classDesc.addGetterDescriptions(Collections.singletonList(getter));
 
     assertThat(classDesc.hasGetterForField(fieldDescription))
-            .as("Correctly identifies there is a getter")
-            .isTrue();
+        .as("Correctly identifies there is a getter")
+        .isTrue();
   }
 
   @Test
@@ -152,16 +155,15 @@ public class FieldDescriptionTest {
     fieldDescription = new FieldDescription(FieldPropertyNames.class.getDeclaredField("badGetter"), FIELD_PROP_TYPE);
 
     GetterDescription getter = new GetterDescription("badGetter", FIELD_PROP_TYPE,
-            FieldPropertyNames.class.getMethod("getBadGetter"));
-    
+                                                     FieldPropertyNames.class.getMethod("getBadGetter"));
+
     ClassDescription classDesc = new ClassDescription(FIELD_PROP_TYPE);
     classDesc.addGetterDescriptions(Collections.singletonList(getter));
 
     assertThat(classDesc.hasGetterForField(fieldDescription))
-            .as("Correctly identifies there is no getter")
-            .isFalse();
+        .as("Correctly identifies there is no getter")
+        .isFalse();
   }
-
 
   @Test
   public void should_not_find_getter_method_for_missing_getter() throws Exception {
@@ -171,16 +173,16 @@ public class FieldDescriptionTest {
     ClassDescription classDesc = new ClassDescription(FIELD_PROP_TYPE);
 
     assertThat(classDesc.hasGetterForField(fieldDescription))
-            .as("Correctly identifies there is no getter")
-            .isFalse();
+        .as("Correctly identifies there is no getter")
+        .isFalse();
   }
-  
+
   // Given that everything is written via reflection, we can not actually get access to a 
   // non-existant field anymore. Thus, there is no need to test it!
-//  @Test
-//  public void should_not_find_getter_method_for_non_existant_field() throws Exception {
-//    
-//  }
+  //  @Test
+  //  public void should_not_find_getter_method_for_non_existant_field() throws Exception {
+  //
+  //  }
 
   @Test(expected = NullPointerException.class)
   public void should_fail_find_with_npe_for_null_field_desc() throws Exception {
@@ -197,5 +199,5 @@ public class FieldDescriptionTest {
 
     classDesc.hasGetterForField(null);
   }
-  
+
 }

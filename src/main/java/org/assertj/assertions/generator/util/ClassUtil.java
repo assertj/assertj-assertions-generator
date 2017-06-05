@@ -602,7 +602,7 @@ public class ClassUtil {
     return stringBuilder.toString();
   }
 
-  public static String packageNameOf(String fullyQualifiedType) {
+  public static String packageOf(String fullyQualifiedType) {
     int indexOfClassName = indexOfAny(fullyQualifiedType, CAPITAL_LETTERS);
     if (indexOfClassName > 0) {
       return fullyQualifiedType.substring(0, indexOfClassName-1);
@@ -712,11 +712,11 @@ public class ClassUtil {
     if (isJavaLangType(wrapped)) {
       try {
         String builtInName = "org.assertj.core.api." + raw.getSimpleName() + "Assert";
-        // try to get the class, if it exists, then we know its valid
+        // try to get the class, if it exists then we know it's valid
         Class.forName(builtInName);
 
         typeName = builtInName.substring(0, builtInName.length() - "Assert".length());
-      } catch (ClassNotFoundException cfne) {
+      } catch (ClassNotFoundException e) {
         // it wasn't found, this means the class doesn't exist, so fall through
       }
     }

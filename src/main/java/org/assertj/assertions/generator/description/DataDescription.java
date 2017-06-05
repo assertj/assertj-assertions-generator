@@ -206,7 +206,7 @@ public abstract class DataDescription {
     return elementType == null ? null : ClassUtil.getAssertType(elementType, packageName);
   }
 
-  public String getFullyQualifiedTypeNameIfNeeded(String packageName, final boolean asParameter) {
+  public String getFullyQualifiedTypeNameIfNeeded(String packageName) {
     return ClassUtil.getTypeDeclarationWithinPackage(valueType, packageName, false);
   }
 

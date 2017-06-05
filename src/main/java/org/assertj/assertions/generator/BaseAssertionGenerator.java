@@ -60,7 +60,6 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String PROPERTY_WITH_SAFE = "${property_safe}";
   private static final String PACKAGE = "${package}";
   private static final String PROPERTY_TYPE = "${propertyType}";
-  private static final String PROPERTY_TYPE_PARAM = "${propertyType_parameter}";
   private static final String PROPERTY_SIMPLE_TYPE = "${propertySimpleType}";
   private static final String PROPERTY_ASSERT_TYPE = "${propertyAssertType}";
   private static final String CLASS_TO_ASSERT = "${class_to_assert}";
@@ -517,9 +516,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,
                                field.getAssertTypeName(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_TYPE,
-                               field.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName(), false));
-    assertionContent = replace(assertionContent, PROPERTY_TYPE_PARAM,
-                               field.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName(), true));
+                               field.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, fieldName);
     // It should not be possible to have a field that is a keyword - compiler won't allow it.
     assertionContent = replace(assertionContent, PROPERTY_WITH_SAFE, fieldName);
@@ -614,9 +611,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,
                                getter.getAssertTypeName(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_TYPE,
-                               getter.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName(), false));
-    assertionContent = replace(assertionContent, PROPERTY_TYPE_PARAM,
-                               getter.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName(), true));
+                               getter.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, propertyName);
     assertionContent = replace(assertionContent, PROPERTY_WITH_SAFE, getSafeProperty(propertyName));
     return assertionContent;

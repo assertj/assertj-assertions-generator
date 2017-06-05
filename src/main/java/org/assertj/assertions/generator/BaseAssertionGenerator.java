@@ -513,8 +513,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       assertionContent = replace(assertionContent, PREDICATE_NEG, field.getNegativePredicate());
     }
     assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(field.getName()));
-    assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE,
-                               field.getTypeName(false, false));
+    assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE, field.getTypeName());
     assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,
                                field.getAssertTypeName(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_TYPE,
@@ -608,8 +607,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     }
     assertionContent = replace(assertionContent, PROPERTY_GETTER_CALL, getter.getOriginalMember().getName());
     assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(propertyName));
-    assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE,
-                               getter.getTypeName(false, false));
+    assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE, getter.getTypeName());
     assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,
                                getter.getAssertTypeName(classDescription.getPackageName()));
     assertionContent = replace(assertionContent, PROPERTY_TYPE,

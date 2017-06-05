@@ -129,6 +129,14 @@ public abstract class DataDescription {
 
   /**
    * Get the type of the value stored by the {@link #originalMember}
+   * @return
+   */
+  public String getTypeName() {
+    return getTypeName(false, false);
+  }
+
+  /**
+   * Get the type of the value stored by the {@link #originalMember}
    * @param isFQN Whether or not to get the fully qualified name
    * @param asParameter if true, this will generate a type-name that is best for
    *                    passing as a parameter, for example, for a {@link java.util.Collection Collection<String>}

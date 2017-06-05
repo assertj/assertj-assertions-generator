@@ -419,20 +419,26 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private static String listNeededImports(Set<String> typesToImport, String classPackage) {
-    StringBuilder importsBuilder = new StringBuilder();
+    StringBuilder imports = new StringBuilder();
     for (String type : typesToImport) {
-      boolean samePackage = Objects.equals(classPackage, packageNameOf(type));
-      if (samePackage) continue;
-      try {
-        Class<?> clazz = Class.forName(type);
-        if (!clazz.isPrimitive() && !ClassUtil.isJavaLangType(clazz)) {
-          importsBuilder.append(format(IMPORT_LINE, type, LINE_SEPARATOR));
-        }
-      } catch (ClassNotFoundException cfne) {
-        importsBuilder.append(format(IMPORT_LINE, type, LINE_SEPARATOR));
+      if (isImportNeeded(type, classPackage)) {
+        imports.append(format(IMPORT_LINE, type, LINE_SEPARATOR));
       }
     }
-    return importsBuilder.toString();
+    return imports.toString();
+  }
+
+  private static boolean isImportNeeded(String type, String classPackage) {
+    // no need to import type belonging to the same package
+    if (Objects.equals(classPackage, packageOf(type))) return false;
+    try {
+      Class<?> clazz = Class.forName(type);
+      // primitive and java.lang.* are available by default
+      return !(clazz.isPrimitive() || isJavaLangType(clazz));
+    } catch (ClassNotFoundException e) {
+      // occurs for abstract types (ex: AbstractXXXAssert) or types to generate that are unknown
+      return true;
+    }
   }
 
   protected void generateAssertionsForGettersOf(StringBuilder contentBuilder, ClassDescription classDescription) {

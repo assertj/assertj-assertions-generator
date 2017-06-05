@@ -23,17 +23,6 @@ package org.assertj.assertions.generator.data;
 public class AutoCloseableSoftAssertions extends org.assertj.core.api.SoftAssertions implements AutoCloseable {
 
   /**
-   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.ArtWorkAssert}</code>.
-   *
-   * @param actual the actual value.
-   * @return the created "soft" assertion object.
-   */
-  @org.assertj.core.util.CheckReturnValue
-  public org.assertj.assertions.generator.data.ArtWorkAssert assertThat(org.assertj.assertions.generator.data.ArtWork actual) {
-    return proxy(org.assertj.assertions.generator.data.ArtWorkAssert.class, org.assertj.assertions.generator.data.ArtWork.class, actual);
-  }
-
-  /**
    * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.MovieAssert}</code>.
    *
    * @param actual the actual value.
@@ -75,6 +64,17 @@ public class AutoCloseableSoftAssertions extends org.assertj.core.api.SoftAssert
   @org.assertj.core.util.CheckReturnValue
   public org.assertj.assertions.generator.data.TreeEnumAssert assertThat(org.assertj.assertions.generator.data.TreeEnum actual) {
     return proxy(org.assertj.assertions.generator.data.TreeEnumAssert.class, org.assertj.assertions.generator.data.TreeEnum.class, actual);
+  }
+
+  /**
+   * Creates a new "soft" instance of <code>{@link org.assertj.assertions.generator.data.art.ArtWorkAssert}</code>.
+   *
+   * @param actual the actual value.
+   * @return the created "soft" assertion object.
+   */
+  @org.assertj.core.util.CheckReturnValue
+  public org.assertj.assertions.generator.data.art.ArtWorkAssert assertThat(org.assertj.assertions.generator.data.art.ArtWork actual) {
+    return proxy(org.assertj.assertions.generator.data.art.ArtWorkAssert.class, org.assertj.assertions.generator.data.art.ArtWork.class, actual);
   }
 
   /**

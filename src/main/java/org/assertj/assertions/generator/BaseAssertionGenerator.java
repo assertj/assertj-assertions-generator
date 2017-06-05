@@ -14,9 +14,12 @@ package org.assertj.assertions.generator;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.String.format;
+import static java.util.Collections.EMPTY_SET;
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
 import static org.assertj.assertions.generator.util.ClassUtil.getTypeDeclarationWithinPackage;
+import static org.assertj.assertions.generator.util.ClassUtil.isJavaLangType;
+import static org.assertj.assertions.generator.util.ClassUtil.packageNameOf;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -33,6 +36,7 @@ import org.assertj.assertions.generator.description.DataDescription;
 import org.assertj.assertions.generator.description.FieldDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
 import org.assertj.assertions.generator.util.ClassUtil;
+import org.assertj.core.api.Assertions;
 
 @SuppressWarnings("WeakerAccess")
 public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEntryPointGenerator {
@@ -182,7 +186,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     assertionClassesContent[0] = fillAssertClassTemplate(abstractAssertClassContentBuilder.toString(),
                                                          classDescription, allClasses, false);
     assertionClassesContent[1] = fillAssertClassTemplate(concreteAssertClassContent,
-                                                         classDescription, null, true);
+                                                         classDescription, EMPTY_SET, true);
     return assertionClassesContent;
   }
 
@@ -195,14 +199,15 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     if (template.contains("Objects.")) assertjImports.add("org.assertj.core.util.Objects");
     if (template.contains("Iterables.")) assertjImports.add("org.assertj.core.internal.Iterables");
 
-    final String superAssertionClassName;
+    final String parentAssertClassName;
     // Add assertion supertype to imports if needed
-    if (classesHierarchy == null || !classesHierarchy.contains(classDescription.getSuperType())) {
-      superAssertionClassName = "org.assertj.core.api.AbstractObjectAssert";
+    if (!classesHierarchy.contains(classDescription.getSuperType())) {
+      parentAssertClassName = "org.assertj.core.api.AbstractObjectAssert";
     } else {
-      superAssertionClassName = abstractAssertClassNameOf(classDescription.getSuperType());
+      TypeToken<?> superType = classDescription.getSuperType();
+      parentAssertClassName = superType.getRawType().getPackage().getName() + "." + abstractAssertClassNameOf(superType);
     }
-    assertjImports.add(superAssertionClassName);
+    assertjImports.add(parentAssertClassName);
 
     final String customAssertionClass = concrete ? assertClassNameOf(classDescription) : abstractAssertClassNameOf(classDescription);
     final String selfType = concrete ? customAssertionClass : "S";
@@ -211,7 +216,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     template = replace(template, PACKAGE, classDescription.getPackageName());
     template = replace(template, CUSTOM_ASSERTION_CLASS, customAssertionClass);
     // className could be a nested class like "OuterClass.NestedClass", in that case assert class will be OuterClassNestedClass
-    template = replace(template, SUPER_ASSERTION_CLASS, ClassUtil.getTypeNameWithoutDots(superAssertionClassName));
+    template = replace(template, SUPER_ASSERTION_CLASS, ClassUtil.getTypeNameWithoutDots(parentAssertClassName));
     template = replace(template, CLASS_TO_ASSERT, classDescription.getClassNameWithOuterClass());
     template = replace(template, SELF_TYPE, selfType);
     template = replace(template, MYSELF, myself);
@@ -221,7 +226,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private String fillAssertClassTemplate(String template, ClassDescription classDescription) {
-    return fillAssertClassTemplate(template, classDescription, null, true);
+    return fillAssertClassTemplate(template, classDescription, EMPTY_SET, true);
   }
 
   @Override
@@ -421,14 +426,15 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static String listNeededImports(Set<String> typesToImport, String classPackage) {
     StringBuilder importsBuilder = new StringBuilder();
     for (String type : typesToImport) {
+      boolean samePackage = Objects.equals(classPackage, packageNameOf(type));
+      if (samePackage) continue;
       try {
         Class<?> clazz = Class.forName(type);
-        if (!clazz.isPrimitive() && !ClassUtil.isJavaLangType(clazz)
-            && !ClassUtil.isInnerPackageOf(type, classPackage) && !Objects.equals(classPackage, type)) {
+        if (!clazz.isPrimitive() && !ClassUtil.isJavaLangType(clazz)) {
           importsBuilder.append(format(IMPORT_LINE, type, LINE_SEPARATOR));
         }
       } catch (ClassNotFoundException cfne) {
-        // continue iteration;
+        importsBuilder.append(format(IMPORT_LINE, type, LINE_SEPARATOR));
       }
     }
     return importsBuilder.toString();

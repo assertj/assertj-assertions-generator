@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static com.google.common.collect.Sets.union;
-import static org.assertj.assertions.generator.util.ClassUtil.isBoolean;
 
 /**
  *

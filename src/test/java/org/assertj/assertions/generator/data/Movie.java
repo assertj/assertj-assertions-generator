@@ -12,8 +12,11 @@
  */
 package org.assertj.assertions.generator.data;
 
+import org.assertj.assertions.generator.data.art.ArtWork;
+
 import java.util.Date;
 
+@SuppressWarnings("unused")
 public class Movie extends ArtWork {
 
   private final Date releaseDate;

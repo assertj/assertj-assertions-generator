@@ -17,6 +17,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.common.reflect.TypeToken;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -36,6 +37,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
+import static org.apache.commons.lang3.StringUtils.indexOfAny;
 import static org.apache.commons.lang3.StringUtils.remove;
 import static org.apache.commons.lang3.StringUtils.uncapitalize;
 
@@ -460,8 +462,8 @@ public class ClassUtil {
       return clazz.getSimpleName();
     }
     String nestedClassName = clazz.getName();
-        nestedClassName = nestedClassName.substring(clazz.getPackage().getName().length() + 1);
-        nestedClassName = nestedClassName.replace('$', '.');
+    nestedClassName = nestedClassName.substring(clazz.getPackage().getName().length() + 1);
+    nestedClassName = nestedClassName.replace('$', '.');
     return nestedClassName;
   }
 
@@ -595,9 +597,18 @@ public class ClassUtil {
 
     boolean reqFQN = !Objects.equals(packageName, JAVA_LANG_PACKAGE.getName())
                      && (!type.isPrimitive() && !type.isArray() && !Objects.equals(packageName, type.getRawType().getPackage().getName()));
-    StringBuilder bld = new StringBuilder();
-    getTypeDeclaration(bld, packageName, type, asParameter, reqFQN);
-    return bld.toString();
+    StringBuilder stringBuilder = new StringBuilder();
+    getTypeDeclaration(stringBuilder, packageName, type, asParameter, reqFQN);
+    return stringBuilder.toString();
+  }
+
+  public static String packageNameOf(String fullyQualifiedType) {
+    int indexOfClassName = indexOfAny(fullyQualifiedType, CAPITAL_LETTERS);
+    if (indexOfClassName > 0) {
+      return fullyQualifiedType.substring(0, indexOfClassName-1);
+    }
+    // primitive valueType => no package
+    return "";
   }
 
   /**
@@ -605,44 +616,44 @@ public class ClassUtil {
    * @see #getTypeDeclaration(TypeToken, boolean, boolean)
    * @see #getTypeDeclarationWithinPackage(TypeToken, String, boolean)
    */
-  private static void getTypeDeclaration(StringBuilder bld, String basePackage, TypeToken<?> type, boolean asParameter,
+  private static void getTypeDeclaration(StringBuilder stringBuilder, String basePackage, TypeToken<?> type, boolean asParameter,
                                          boolean fullyQualified) {
 
     Class<?> raw = type.getRawType();
 
     // Gotta do some special casing
     if (type.isArray()) {
-      getTypeDeclaration(bld, basePackage, type.getComponentType(), asParameter, fullyQualified);
-      bld.append("[]");
+      getTypeDeclaration(stringBuilder, basePackage, type.getComponentType(), asParameter, fullyQualified);
+      stringBuilder.append("[]");
     } else if (type.isPrimitive()) {
-      bld.append(raw.toString());
+      stringBuilder.append(raw.toString());
     } else {
       // Now we have some types that could be generic, so we have to do more
       // to serialize it to the declaration
 
       if (raw.isMemberClass()) { // inner class
         TypeToken<?> outerClass = type.resolveType(raw.getEnclosingClass());
-        getTypeDeclaration(bld, basePackage, outerClass, asParameter, fullyQualified);
-        bld.append(".");
+        getTypeDeclaration(stringBuilder, basePackage, outerClass, asParameter, fullyQualified);
+        stringBuilder.append(".");
 
       } else {
         // it's a normal class, so just append the package here if needed
         if (fullyQualified && !isJavaLangType(type)) {
-          bld.append(type.getRawType().getPackage().getName());
-          bld.append(".");
+          stringBuilder.append(type.getRawType().getPackage().getName());
+          stringBuilder.append(".");
         }
       }
 
-      bld.append(raw.getSimpleName());
+      stringBuilder.append(raw.getSimpleName());
 
       // Now handle generics
       if (raw.getTypeParameters().length > 0) {
-        bld.append("<");
+        stringBuilder.append("<");
         boolean first = true;
         for (TypeVariable tv : raw.getTypeParameters()) {
           // only append at the end
           if (!first) {
-            bld.append(',');
+            stringBuilder.append(',');
           }
           first = false;
 
@@ -659,26 +670,26 @@ public class ClassUtil {
           // If its a wild card and it has no boundary other than Object,
           // we just use the wild card
           if (isWildCard && rawParam.equals(Object.class)) {
-            bld.append("?");
+            stringBuilder.append("?");
             continue;
           }
 
           if (asParameter) {
             // We handle parameters differently so that it's accepted more "flexibility"
-            bld.append("? extends ");
+            stringBuilder.append("? extends ");
           }
 
           // now we recursively add the type parameter, we set `asParameter` to false
           // because odds are it will become wrong to keep adding the "extends" boundaries
           Package paramPackage = paramType.getRawType().getPackage();
 
-          getTypeDeclaration(bld, basePackage, paramType, false,
+          getTypeDeclaration(stringBuilder, basePackage, paramType, false,
                              fullyQualified
                              || ((paramPackage != null && !Objects.equals(basePackage, paramPackage.getName()))
                                  && Objects.equals(paramPackage, raw.getPackage())));
         }
 
-        bld.append(">");
+        stringBuilder.append(">");
       }
     }
 
@@ -768,7 +779,7 @@ public class ClassUtil {
    * @return Type without any {@code '.'} characters
    */
   public static String getTypeNameWithoutDots(String typeName) {
-    int indexOfClassName = StringUtils.indexOfAny(typeName, CAPITAL_LETTERS);
+    int indexOfClassName = indexOfAny(typeName, CAPITAL_LETTERS);
     final String typeSimpleNameWithOuterClass;
     if (indexOfClassName > 0) {
       typeSimpleNameWithOuterClass = typeName.substring(indexOfClassName);

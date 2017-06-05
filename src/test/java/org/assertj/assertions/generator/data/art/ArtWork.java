@@ -10,7 +10,7 @@
  *
  * Copyright 2012-2017 the original author or authors.
  */
-package org.assertj.assertions.generator.data;
+package org.assertj.assertions.generator.data.art;
 
 public abstract class ArtWork {
 

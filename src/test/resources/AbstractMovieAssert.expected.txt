@@ -1,5 +1,6 @@
 package org.assertj.assertions.generator.data;
 
+import org.assertj.assertions.generator.data.art.AbstractArtWorkAssert;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Objects;
 

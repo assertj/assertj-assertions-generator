@@ -15,7 +15,7 @@ package org.assertj.assertions.generator.description.converter;
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.BeanWithExceptionsTest;
 import org.assertj.assertions.generator.NestedClassesTest;
-import org.assertj.assertions.generator.data.ArtWork;
+import org.assertj.assertions.generator.data.art.ArtWork;
 import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.Team;
 import org.assertj.assertions.generator.data.TreeEnum;

@@ -44,7 +44,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class GenerationPathHandler extends TemporaryFolder {
 
-
   public static final Path DEFAULT_GENERATION_ROOT = Paths.get("target/generated-test-output");
 
   private final Compiler compiler;
@@ -60,7 +59,7 @@ public class GenerationPathHandler extends TemporaryFolder {
 
     final String currentClasspath = getClasspathFromClassloader(ClassLoader.getSystemClassLoader());
     compiler = Compiler.javac()
-        .withOptions("-classpath", currentClasspath);
+                       .withOptions("-classpath", currentClasspath);
   }
 
   public Path getResourcesDir() {
@@ -68,7 +67,7 @@ public class GenerationPathHandler extends TemporaryFolder {
   }
 
   @Override
-  public Statement apply(final Statement base, final Description description) {
+  public Statement apply(final Statement statement, final Description description) {
 
     return new Statement() {
       @Override
@@ -76,7 +75,7 @@ public class GenerationPathHandler extends TemporaryFolder {
         before();
 
         try {
-          base.evaluate();
+          statement.evaluate();
           after();
         } catch (Exception e) {
           System.err.println("Failed working with folder: " + getRoot());
@@ -94,7 +93,7 @@ public class GenerationPathHandler extends TemporaryFolder {
 
   public Path packagePathFor(Class<?> clazz) {
     return getRoot().toPath()
-        .resolve(clazz.getPackage().getName().replace('.', File.separatorChar));
+                    .resolve(clazz.getPackage().getName().replace('.', File.separatorChar));
   }
 
   public File fileGeneratedFor(Class<?> clazz) {
@@ -106,16 +105,15 @@ public class GenerationPathHandler extends TemporaryFolder {
 
   public File abstractFileGeneratedFor(Class<?> clazz) {
     String generatedFileName = ABSTRACT_ASSERT_CLASS_PREFIX
-        + getSimpleNameWithOuterClassNotSeparatedByDots(clazz)
-        + ASSERT_CLASS_FILE_SUFFIX;
-    return packagePathFor(clazz)
-        .resolve(generatedFileName)
-        .toFile();
+                               + getSimpleNameWithOuterClassNotSeparatedByDots(clazz)
+                               + ASSERT_CLASS_FILE_SUFFIX;
+    return packagePathFor(clazz).resolve(generatedFileName)
+                                .toFile();
   }
 
   public void compileGeneratedFiles(Iterable<? extends File> files) {
     List<JavaFileObject> jfiles = new ArrayList<>();
-    for (File file: files) {
+    for (File file : files) {
       try {
         final URL url = file.toURI().toURL();
         jfiles.add(JavaFileObjects.forResource(url));
@@ -140,7 +138,7 @@ public class GenerationPathHandler extends TemporaryFolder {
 
   public void compileGeneratedFiles(Class<?>... classes) {
     List<File> files = new ArrayList<>(classes.length);
-    for (Class<?> clazz: classes) {
+    for (Class<?> clazz : classes) {
       files.add(fileGeneratedFor(clazz));
 
       // Handle abstract files, too!
@@ -180,13 +178,13 @@ public class GenerationPathHandler extends TemporaryFolder {
 
     // Add all URLClassloaders in the hirearchy till the system classloader.
     List<URLClassLoader> classloaders = new ArrayList<>();
-    while(true) {
+    while (true) {
       if (currentClassloader instanceof URLClassLoader) {
         // We only know how to extract classpaths from URLClassloaders.
         classloaders.add((URLClassLoader) currentClassloader);
       } else {
         throw new IllegalArgumentException("Classpath for compilation could not be extracted "
-            + "since given classloader is not an instance of URLClassloader");
+                                           + "since given classloader is not an instance of URLClassloader");
       }
       if (currentClassloader == systemClassLoader) {
         break;
@@ -201,7 +199,7 @@ public class GenerationPathHandler extends TemporaryFolder {
           classpaths.add(url.getPath());
         } else {
           throw new IllegalArgumentException("Given classloader consists of classpaths which are "
-              + "unsupported for compilation.");
+                                             + "unsupported for compilation.");
         }
       }
     }

@@ -17,7 +17,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.common.reflect.TypeToken;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -605,7 +604,7 @@ public class ClassUtil {
   public static String packageOf(String fullyQualifiedType) {
     int indexOfClassName = indexOfAny(fullyQualifiedType, CAPITAL_LETTERS);
     if (indexOfClassName > 0) {
-      return fullyQualifiedType.substring(0, indexOfClassName-1);
+      return fullyQualifiedType.substring(0, indexOfClassName - 1);
     }
     // primitive valueType => no package
     return "";
@@ -616,83 +615,84 @@ public class ClassUtil {
    * @see #getTypeDeclaration(TypeToken, boolean, boolean)
    * @see #getTypeDeclarationWithinPackage(TypeToken, String, boolean)
    */
-  private static void getTypeDeclaration(StringBuilder stringBuilder, String basePackage, TypeToken<?> type, boolean asParameter,
+  private static void getTypeDeclaration(StringBuilder typeDeclarationBuilder, String basePackage, TypeToken<?> type, boolean asParameter,
                                          boolean fullyQualified) {
+    Class<?> rawClass = type.getRawType();
 
-    Class<?> raw = type.getRawType();
-
-    // Gotta do some special casing
     if (type.isArray()) {
-      getTypeDeclaration(stringBuilder, basePackage, type.getComponentType(), asParameter, fullyQualified);
-      stringBuilder.append("[]");
-    } else if (type.isPrimitive()) {
-      stringBuilder.append(raw.toString());
-    } else {
-      // Now we have some types that could be generic, so we have to do more
-      // to serialize it to the declaration
-
-      if (raw.isMemberClass()) { // inner class
-        TypeToken<?> outerClass = type.resolveType(raw.getEnclosingClass());
-        getTypeDeclaration(stringBuilder, basePackage, outerClass, asParameter, fullyQualified);
-        stringBuilder.append(".");
-
-      } else {
-        // it's a normal class, so just append the package here if needed
-        if (fullyQualified && !isJavaLangType(type)) {
-          stringBuilder.append(type.getRawType().getPackage().getName());
-          stringBuilder.append(".");
-        }
-      }
-
-      stringBuilder.append(raw.getSimpleName());
-
-      // Now handle generics
-      if (raw.getTypeParameters().length > 0) {
-        stringBuilder.append("<");
-        boolean first = true;
-        for (TypeVariable tv : raw.getTypeParameters()) {
-          // only append at the end
-          if (!first) {
-            stringBuilder.append(',');
-          }
-          first = false;
-
-          TypeToken<?> paramType = type.resolveType(tv);
-          Class<?> rawParam = paramType.getRawType();
-          String typeString = StringUtils.removeAll(paramType.toString(), "capture#\\d+-of\\s+");
-          typeString = typeString.replace("(\\?\\s+extends\\s+){2,}", "? extends ");
-
-          boolean isWildCard = typeString.contains("?");
-
-          // Some specializations need to be done to make sure that the arguments
-          // are property pulled out and written
-
-          // If its a wild card and it has no boundary other than Object,
-          // we just use the wild card
-          if (isWildCard && rawParam.equals(Object.class)) {
-            stringBuilder.append("?");
-            continue;
-          }
-
-          if (asParameter) {
-            // We handle parameters differently so that it's accepted more "flexibility"
-            stringBuilder.append("? extends ");
-          }
-
-          // now we recursively add the type parameter, we set `asParameter` to false
-          // because odds are it will become wrong to keep adding the "extends" boundaries
-          Package paramPackage = paramType.getRawType().getPackage();
-
-          getTypeDeclaration(stringBuilder, basePackage, paramType, false,
-                             fullyQualified
-                             || ((paramPackage != null && !Objects.equals(basePackage, paramPackage.getName()))
-                                 && Objects.equals(paramPackage, raw.getPackage())));
-        }
-
-        stringBuilder.append(">");
-      }
+      getTypeDeclaration(typeDeclarationBuilder, basePackage, type.getComponentType(), asParameter, fullyQualified);
+      typeDeclarationBuilder.append("[]");
+      return;
+    }
+    if (type.isPrimitive()) {
+      typeDeclarationBuilder.append(rawClass.toString());
+      return;
+    }
+    // Now we have some types that could be generic, so we have to do more to serialize it to the declaration
+    if (rawClass.isMemberClass()) {
+      // inner class
+      TypeToken<?> outerType = type.resolveType(rawClass.getEnclosingClass());
+      getTypeDeclaration(typeDeclarationBuilder, basePackage, outerType, asParameter, fullyQualified);
+      typeDeclarationBuilder.append(".");
+    } else if (fullyQualified && !isJavaLangType(type)) {
+      // it's a normal class but not in java.lang => add the package name
+      typeDeclarationBuilder.append(type.getRawType().getPackage().getName())
+                            .append(".");
     }
 
+    typeDeclarationBuilder.append(rawClass.getSimpleName());
+
+    if (isGeneric(type)) {
+      addGenericsDeclaration(typeDeclarationBuilder, basePackage, type, asParameter, fullyQualified);
+    }
+
+  }
+
+  private static boolean isGeneric(TypeToken<?> type) {
+    return type.getRawType().getTypeParameters().length > 0;
+  }
+
+  private static void addGenericsDeclaration(StringBuilder typeDeclarationBuilder, String basePackage, TypeToken<?> type, boolean asParameter,
+                                             boolean fullyQualified) {
+    typeDeclarationBuilder.append("<");
+    boolean first = true;
+    for (TypeVariable tv : type.getRawType().getTypeParameters()) {
+      // only append at the end
+      if (!first) {
+        typeDeclarationBuilder.append(',');
+      }
+      first = false;
+
+      TypeToken<?> paramType = type.resolveType(tv);
+      Class<?> rawParam = paramType.getRawType();
+      String typeString = StringUtils.removeAll(paramType.toString(), "capture#\\d+-of\\s+");
+      typeString = typeString.replace("(\\?\\s+extends\\s+){2,}", "? extends ");
+
+      boolean isWildCard = typeString.contains("?");
+
+      // Some specializations need to be done to make sure that the arguments
+      // are property pulled out and written
+
+      // If its a wild card and it has no boundary other than Object,
+      // we just use the wild card
+      if (isWildCard && rawParam.equals(Object.class)) {
+        typeDeclarationBuilder.append("?");
+        continue;
+      }
+
+      if (asParameter) {
+        // We handle parameters differently so that it's accepted more "flexibility"
+        typeDeclarationBuilder.append("? extends ");
+      }
+
+      // now we recursively add the type parameter, we set `asParameter` to false
+      // because odds are it will become wrong to keep adding the "extends" boundaries
+      Package paramPackage = paramType.getRawType().getPackage();
+      boolean notInSamePackage = paramPackage != null && !Objects.equals(basePackage, paramPackage.getName());
+      getTypeDeclaration(typeDeclarationBuilder, basePackage, paramType, false, fullyQualified || notInSamePackage);
+    }
+
+    typeDeclarationBuilder.append(">");
   }
 
   /**

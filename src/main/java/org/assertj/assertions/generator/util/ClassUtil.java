@@ -19,6 +19,7 @@ import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.StrBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -613,77 +614,69 @@ public class ClassUtil {
    * @see #getTypeDeclarationWithinPackage(TypeToken, String, boolean)
    */
   private static String getTypeDeclaration(String basePackage, TypeToken<?> type, boolean asParameter, boolean fullyQualified) {
-    Class<?> rawClass = type.getRawType();
 
-    if (type.isArray()) {
-      return getTypeDeclaration(basePackage, type.getComponentType(), asParameter, fullyQualified) + "[]";
-    }
-    if (type.isPrimitive()) {
-      return rawClass.toString();
-    }
-    String typeDeclaration = "";
+    if (type.isArray()) return getTypeDeclaration(basePackage, type.getComponentType(), asParameter, fullyQualified) + "[]";
+    if (type.isPrimitive()) return type.getRawType().toString();
+
+    Class<?> rawClass = type.getRawType();
+    StringBuilder typeDeclaration = new StringBuilder("");
     // Now we have some types that could be generic, so we have to do more to serialize it to the declaration
     if (rawClass.isMemberClass()) {
       // inner class
       TypeToken<?> outerType = type.resolveType(rawClass.getEnclosingClass());
-      typeDeclaration += getTypeDeclaration(basePackage, outerType, asParameter, fullyQualified) + ".";
+      typeDeclaration.append(getTypeDeclaration(basePackage, outerType, asParameter, fullyQualified))
+                     .append(".");
     } else if (fullyQualified && !isJavaLangType(type)) {
       // it's a normal class but not in java.lang => add the package name
-      typeDeclaration += type.getRawType().getPackage().getName() + ".";
+      typeDeclaration.append(type.getRawType().getPackage().getName())
+                     .append(".");
     }
 
-    typeDeclaration += rawClass.getSimpleName();
+    typeDeclaration.append(rawClass.getSimpleName());
 
-    if (isGeneric(type)) {
-      typeDeclaration += addGenericsDeclaration(basePackage, type, asParameter, fullyQualified);
-    }
-    return typeDeclaration;
+    if (isGeneric(type)) typeDeclaration.append(getGenericTypeDeclaration(basePackage, type, asParameter, fullyQualified));
+
+    return typeDeclaration.toString();
   }
 
   private static boolean isGeneric(TypeToken<?> type) {
     return type.getRawType().getTypeParameters().length > 0;
   }
 
-  private static String addGenericsDeclaration(String basePackage, TypeToken<?> type, boolean asParameter, boolean fullyQualified) {
-    String typeDeclaration = "<";
+  private static String getGenericTypeDeclaration(String basePackage, TypeToken<?> type, boolean asParameter, boolean fullyQualified) {
+    StringBuilder typeDeclaration = new StringBuilder("<");
+
     boolean first = true;
-    for (TypeVariable tv : type.getRawType().getTypeParameters()) {
-      // only append at the end
-      if (!first) {
-        typeDeclaration += ",";
-      }
+    for (TypeVariable typeParameterVariable : type.getRawType().getTypeParameters()) {
+      if (!first) typeDeclaration.append(",");
       first = false;
-
-      TypeToken<?> paramType = type.resolveType(tv);
-      Class<?> rawParam = paramType.getRawType();
-      String typeString = StringUtils.removeAll(paramType.toString(), "capture#\\d+-of\\s+");
-      typeString = typeString.replace("(\\?\\s+extends\\s+){2,}", "? extends ");
-
-      boolean isWildCard = typeString.contains("?");
-
-      // Some specializations need to be done to make sure that the arguments
-      // are property pulled out and written
-
-      // If its a wild card and it has no boundary other than Object,
-      // we just use the wild card
-      if (isWildCard && rawParam.equals(Object.class)) {
-        typeDeclaration += "?";
-        continue;
-      }
-
-      if (asParameter) {
-        // We handle parameters differently so that it's accepted more "flexibility"
-        typeDeclaration += "? extends ";
-      }
-
-      // now we recursively add the type parameter, we set `asParameter` to false
-      // because odds are it will become wrong to keep adding the "extends" boundaries
-      Package paramPackage = paramType.getRawType().getPackage();
-      boolean notInSamePackage = paramPackage != null && !Objects.equals(basePackage, paramPackage.getName());
-      typeDeclaration += getTypeDeclaration(basePackage, paramType, false, fullyQualified || notInSamePackage);
+      TypeToken<?> paramType = type.resolveType(typeParameterVariable);
+      typeDeclaration.append(getParamTypeDeclaration(basePackage, asParameter, fullyQualified, paramType));
     }
 
-    return typeDeclaration + ">";
+    return typeDeclaration.append(">").toString();
+  }
+
+  private static String getParamTypeDeclaration(String basePackage, boolean asParameter, boolean fullyQualified, TypeToken<?> paramType) {
+    Class<?> rawParam = paramType.getRawType();
+    String typeString = StringUtils.removeAll(paramType.toString(), "capture#\\d+-of\\s+");
+    typeString = typeString.replace("(\\?\\s+extends\\s+){2,}", "? extends ");
+
+    boolean isWildCard = typeString.contains("?");
+    // Some specializations need to be done to make sure that the arguments are property pulled out and written
+    if (isWildCard && rawParam.equals(Object.class)) {
+      // it's a wild card and without boundary other than Object => we just use the wild card
+      return "?";
+    }
+
+    // We handle parameters differently so that it's accepted more "flexibility"
+    String typeDeclaration = asParameter ? "? extends " : "";
+
+    // now we recursively add the type parameter, we set `asParameter` to false
+    // because odds are it will become wrong to keep adding the "extends" boundaries
+    Package paramPackage = paramType.getRawType().getPackage();
+    boolean notInSamePackage = paramPackage != null && !Objects.equals(basePackage, paramPackage.getName());
+    return typeDeclaration + getTypeDeclaration(basePackage, paramType, false, fullyQualified || notInSamePackage);
   }
 
   /**

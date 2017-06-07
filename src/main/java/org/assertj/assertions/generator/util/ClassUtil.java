@@ -576,10 +576,9 @@ public class ClassUtil {
    * @see #getTypeDeclaration(TypeToken, boolean, boolean)
    */
   public static String getTypeDeclaration(TypeToken<?> type, final boolean asParameter, boolean fullyQualified) {
-    StringBuilder bld = new StringBuilder();
     Class<?> raw = type.getRawType();
-    getTypeDeclaration(bld, (raw.getPackage() == null ? null : raw.getPackage().getName()), type, asParameter, fullyQualified);
-    return bld.toString();
+    String basePackage = raw.getPackage() == null ? null : raw.getPackage().getName();
+    return getTypeDeclaration(basePackage, type, asParameter, fullyQualified);
   }
 
   /**
@@ -596,9 +595,7 @@ public class ClassUtil {
 
     boolean reqFQN = !Objects.equals(packageName, JAVA_LANG_PACKAGE.getName())
                      && (!type.isPrimitive() && !type.isArray() && !Objects.equals(packageName, type.getRawType().getPackage().getName()));
-    StringBuilder stringBuilder = new StringBuilder();
-    getTypeDeclaration(stringBuilder, packageName, type, asParameter, reqFQN);
-    return stringBuilder.toString();
+    return getTypeDeclaration(packageName, type, asParameter, reqFQN);
   }
 
   public static String packageOf(String fullyQualifiedType) {
@@ -615,51 +612,45 @@ public class ClassUtil {
    * @see #getTypeDeclaration(TypeToken, boolean, boolean)
    * @see #getTypeDeclarationWithinPackage(TypeToken, String, boolean)
    */
-  private static void getTypeDeclaration(StringBuilder typeDeclarationBuilder, String basePackage, TypeToken<?> type, boolean asParameter,
-                                         boolean fullyQualified) {
+  private static String getTypeDeclaration(String basePackage, TypeToken<?> type, boolean asParameter, boolean fullyQualified) {
     Class<?> rawClass = type.getRawType();
 
     if (type.isArray()) {
-      getTypeDeclaration(typeDeclarationBuilder, basePackage, type.getComponentType(), asParameter, fullyQualified);
-      typeDeclarationBuilder.append("[]");
-      return;
+      return getTypeDeclaration(basePackage, type.getComponentType(), asParameter, fullyQualified) + "[]";
     }
     if (type.isPrimitive()) {
-      typeDeclarationBuilder.append(rawClass.toString());
-      return;
+      return rawClass.toString();
     }
+    String typeDeclaration = "";
     // Now we have some types that could be generic, so we have to do more to serialize it to the declaration
     if (rawClass.isMemberClass()) {
       // inner class
       TypeToken<?> outerType = type.resolveType(rawClass.getEnclosingClass());
-      getTypeDeclaration(typeDeclarationBuilder, basePackage, outerType, asParameter, fullyQualified);
-      typeDeclarationBuilder.append(".");
+      typeDeclaration += getTypeDeclaration(basePackage, outerType, asParameter, fullyQualified) + ".";
     } else if (fullyQualified && !isJavaLangType(type)) {
       // it's a normal class but not in java.lang => add the package name
-      typeDeclarationBuilder.append(type.getRawType().getPackage().getName())
-                            .append(".");
+      typeDeclaration += type.getRawType().getPackage().getName() + ".";
     }
 
-    typeDeclarationBuilder.append(rawClass.getSimpleName());
+    typeDeclaration += rawClass.getSimpleName();
 
     if (isGeneric(type)) {
-      addGenericsDeclaration(typeDeclarationBuilder, basePackage, type, asParameter, fullyQualified);
+      typeDeclaration += addGenericsDeclaration(basePackage, type, asParameter, fullyQualified);
     }
-
+    return typeDeclaration;
   }
 
   private static boolean isGeneric(TypeToken<?> type) {
     return type.getRawType().getTypeParameters().length > 0;
   }
 
-  private static void addGenericsDeclaration(StringBuilder typeDeclarationBuilder, String basePackage, TypeToken<?> type, boolean asParameter,
-                                             boolean fullyQualified) {
-    typeDeclarationBuilder.append("<");
+  private static String addGenericsDeclaration(String basePackage, TypeToken<?> type, boolean asParameter, boolean fullyQualified) {
+    String typeDeclaration = "<";
     boolean first = true;
     for (TypeVariable tv : type.getRawType().getTypeParameters()) {
       // only append at the end
       if (!first) {
-        typeDeclarationBuilder.append(',');
+        typeDeclaration += ",";
       }
       first = false;
 
@@ -676,23 +667,23 @@ public class ClassUtil {
       // If its a wild card and it has no boundary other than Object,
       // we just use the wild card
       if (isWildCard && rawParam.equals(Object.class)) {
-        typeDeclarationBuilder.append("?");
+        typeDeclaration += "?";
         continue;
       }
 
       if (asParameter) {
         // We handle parameters differently so that it's accepted more "flexibility"
-        typeDeclarationBuilder.append("? extends ");
+        typeDeclaration += "? extends ";
       }
 
       // now we recursively add the type parameter, we set `asParameter` to false
       // because odds are it will become wrong to keep adding the "extends" boundaries
       Package paramPackage = paramType.getRawType().getPackage();
       boolean notInSamePackage = paramPackage != null && !Objects.equals(basePackage, paramPackage.getName());
-      getTypeDeclaration(typeDeclarationBuilder, basePackage, paramType, false, fullyQualified || notInSamePackage);
+      typeDeclaration += getTypeDeclaration(basePackage, paramType, false, fullyQualified || notInSamePackage);
     }
 
-    typeDeclarationBuilder.append(">");
+    return typeDeclaration + ">";
   }
 
   /**

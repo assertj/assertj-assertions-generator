@@ -13,9 +13,9 @@
 package org.assertj.assertions.generator.description;
 
 import com.google.common.reflect.TypeToken;
-import org.apache.commons.lang3.StringUtils;
 import org.assertj.assertions.generator.util.ClassUtil;
 
+import java.lang.reflect.TypeVariable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
@@ -25,6 +25,8 @@ import java.util.TreeSet;
 import static com.google.common.collect.Sets.union;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.assertj.assertions.generator.util.ClassUtil.PREDICATE_PREFIXES;
+import static org.assertj.assertions.generator.util.ClassUtil.getTypeDeclaration;
+import static org.assertj.assertions.generator.util.ClassUtil.getTypeNameWithoutDots;
 
 /**
  *
@@ -35,6 +37,10 @@ import static org.assertj.assertions.generator.util.ClassUtil.PREDICATE_PREFIXES
  */
 public class ClassDescription implements Comparable<ClassDescription> {
 
+  public static final String ABSTRACT_ASSERT_CLASS_PREFIX = "Abstract";
+
+  private static final String ASSERT_CLASS_SUFFIX = "Assert";
+
   private Set<GetterDescription> gettersDescriptions;
   private Set<FieldDescription> fieldsDescriptions;
   private Set<GetterDescription> declaredGettersDescriptions;
@@ -43,7 +49,6 @@ public class ClassDescription implements Comparable<ClassDescription> {
   private TypeToken<?> superType;
 
   public ClassDescription(TypeToken<?> type) {
-    super();
     this.type = type;
     this.superType = null;
     this.gettersDescriptions = new TreeSet<>();
@@ -56,16 +61,8 @@ public class ClassDescription implements Comparable<ClassDescription> {
     return ClassUtil.getTypeDeclaration(type, false, true);
   }
 
-  public TypeToken<?> getType() {
-    return type;
-  }
-
   public String getClassNameWithOuterClass() {
     return ClassUtil.getTypeDeclaration(type, false, false);
-  }
-
-  public String getClassNameWithOuterClassNotSeparatedByDots() {
-    return ClassUtil.getTypeNameWithoutDots(getClassNameWithOuterClass()); //classTypeName.getSimpleNameWithOuterClassNotSeparatedByDots();
   }
 
   public String getPackageName() {
@@ -158,4 +155,39 @@ public class ClassDescription implements Comparable<ClassDescription> {
       this.superType = type.getSupertype((Class) superType);
     }
   }
+
+  // assert related methods
+
+  public String getAssertClassName() {
+    return assertClassNameOf(type);
+  }
+
+  public String getFullyQualifiedAssertClassName() {
+    TypeVariable<? extends Class<?>>[] typeParameters = type.getRawType().getTypeParameters();
+
+    String typeDeclaration = ClassUtil.getTypeDeclaration(type, false, true);
+    if (typeParameters.length == 0) {
+      return getPackageName() + "." + getTypeNameWithoutDots(getClassNameWithOuterClass()) + ASSERT_CLASS_SUFFIX;
+    }
+    typeDeclaration = typeDeclaration.replace("Object", typeParameters[0].getName());
+    typeDeclaration = new StringBuilder(typeDeclaration).insert(typeDeclaration.indexOf('<'), ASSERT_CLASS_SUFFIX).toString();
+    return typeDeclaration;
+  }
+
+  public String getAbstractAssertClassName() {
+    return abstractAssertClassNameOf(type);
+  }
+
+  public String getParentAssertClassName() {
+    return superType.getRawType().getPackage().getName() + "." + abstractAssertClassNameOf(superType);
+  }
+
+  private static String assertClassNameOf(TypeToken<?> type) {
+    return getTypeNameWithoutDots(getTypeDeclaration(type, false, false)) + ASSERT_CLASS_SUFFIX;
+  }
+
+  private static String abstractAssertClassNameOf(TypeToken<?> type) {
+    return ABSTRACT_ASSERT_CLASS_PREFIX + assertClassNameOf(type);
+  }
+
 }

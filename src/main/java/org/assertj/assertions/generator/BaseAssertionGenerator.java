@@ -37,7 +37,6 @@ import org.assertj.assertions.generator.description.GetterDescription;
 @SuppressWarnings("WeakerAccess")
 public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEntryPointGenerator {
 
-  static final String ABSTRACT_ASSERT_CLASS_PREFIX = "Abstract";
   static final String ASSERT_CLASS_SUFFIX = "Assert";
   static final String ASSERT_CLASS_FILE_SUFFIX = ASSERT_CLASS_SUFFIX + ".java";
   static final String TEMPLATES_DIR = "templates" + File.separator;
@@ -138,7 +137,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     String targetDirectory = getDirectoryPathCorrespondingToPackage(classDescription.getPackageName());
     // build any needed directories
     buildTargetDirectory(targetDirectory);
-    return createFile(assertionFileContent, assertClassNameOf(classDescription) + ".java", targetDirectory);
+    return createFile(assertionFileContent, classDescription.getAssertClassName() + ".java", targetDirectory);
   }
 
   @Override
@@ -152,8 +151,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // build any needed directories
     buildTargetDirectory(targetDirectory);
     File[] assertionClassesFile = new File[2];
-    final String concreteAssertClassFileName = assertClassNameOf(classDescription) + ".java";
-    final String abstractAssertClassFileName = abstractAssertClassNameOf(classDescription) + ".java";
+    final String concreteAssertClassFileName = classDescription.getAssertClassName() + ".java";
+    final String abstractAssertClassFileName = classDescription.getAbstractAssertClassName() + ".java";
     assertionClassesFile[0] = createFile(assertionFileContent[0], abstractAssertClassFileName, targetDirectory);
     assertionClassesFile[1] = createFile(assertionFileContent[1], concreteAssertClassFileName, targetDirectory);
     return assertionClassesFile;
@@ -194,17 +193,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     if (template.contains("Objects.")) assertjImports.add("org.assertj.core.util.Objects");
     if (template.contains("Iterables.")) assertjImports.add("org.assertj.core.internal.Iterables");
 
-    final String parentAssertClassName;
     // Add assertion supertype to imports if needed
-    if (!classesHierarchy.contains(classDescription.getSuperType())) {
-      parentAssertClassName = "org.assertj.core.api.AbstractObjectAssert";
-    } else {
-      TypeToken<?> superType = classDescription.getSuperType();
-      parentAssertClassName = superType.getRawType().getPackage().getName() + "." + abstractAssertClassNameOf(superType);
-    }
+    final String parentAssertClassName = classesHierarchy.contains(classDescription.getSuperType()) ?
+        classDescription.getParentAssertClassName() : "org.assertj.core.api.AbstractObjectAssert";
     assertjImports.add(parentAssertClassName);
 
-    final String customAssertionClass = concrete ? assertClassNameOf(classDescription) : abstractAssertClassNameOf(classDescription);
+    final String customAssertionClass = concrete ? classDescription.getAssertClassName() : classDescription.getAbstractAssertClassName();
     final String selfType = concrete ? customAssertionClass : "S";
     final String myself = concrete ? "this" : "myself";
 
@@ -367,7 +361,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       // resolve class assert (ex: PlayerAssert)
       // in case of inner classes like Movie.PublicCategory, class assert will be MoviePublicCategoryAssert
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CUSTOM_ASSERTION_CLASS,
-                                                 fullyQualifiedAssertClassName(classDescription));
+                                                 classDescription.getFullyQualifiedAssertClassName());
       // resolve class (ex: Player)
       // in case of inner classes like Movie.PublicCategory use class name with outer class i.e. Movie.PublicCategory.
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CLASS_TO_ASSERT,
@@ -385,27 +379,6 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // takes the base package of all given classes assuming they all belong to a common package, i.e a.b.c. over a.b.c.d
     // this can certainly be improved ...
     return packages.first();
-  }
-
-  private static String assertClassNameOf(ClassDescription classDescription) {
-    return assertClassNameOf(classDescription.getType());
-  }
-
-  private static String assertClassNameOf(TypeToken<?> type) {
-    return getTypeNameWithoutDots(getTypeDeclaration(type, false, false)) + ASSERT_CLASS_SUFFIX;
-  }
-
-  private static String abstractAssertClassNameOf(ClassDescription classDescription) {
-    return abstractAssertClassNameOf(classDescription.getType());
-  }
-
-  private static String abstractAssertClassNameOf(TypeToken<?> type) {
-    return ABSTRACT_ASSERT_CLASS_PREFIX + assertClassNameOf(type);
-  }
-
-  private static String fullyQualifiedAssertClassName(ClassDescription classDescription) {
-    return classDescription.getPackageName() + "." + classDescription.getClassNameWithOuterClassNotSeparatedByDots()
-           + ASSERT_CLASS_SUFFIX;
   }
 
   /**

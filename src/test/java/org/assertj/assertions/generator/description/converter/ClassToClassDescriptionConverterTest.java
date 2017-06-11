@@ -39,257 +39,281 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Theories.class)
 public class ClassToClassDescriptionConverterTest implements NestedClassesTest, BeanWithExceptionsTest {
-	private static ClassToClassDescriptionConverter converter;
+  private static ClassToClassDescriptionConverter converter;
 
-	@BeforeClass
-	public static void beforeAllTests() {
-		converter = new ClassToClassDescriptionConverter();
-	}
+  @BeforeClass
+  public static void beforeAllTests() {
+    converter = new ClassToClassDescriptionConverter();
+  }
 
-	@Test
-	public void should_build_player_class_description() throws Exception {
-		// Given
-		Class<?> clazz = Player.class;
+  @Test
+  public void should_build_player_class_description() throws Exception {
+    // Given
+    Class<?> clazz = Player.class;
+    // When
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    // Then
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Player");
+    assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.nba");
+    assertThat(classDescription.getFullyQualifiedClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.Player");
+    assertThat(classDescription.getGettersDescriptions()).hasSize(19);
+    assertThat(classDescription.getAssertClassName()).isEqualTo("PlayerAssert");
+    assertThat(classDescription.getFullyQualifiedAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.PlayerAssert");
+    assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractPlayerAssert");
+    assertThat(classDescription.getParentAssertClassName()).isEqualTo("java.lang.AbstractObjectAssert");
+  }
 
-		ClassDescription classDescription = converter.convertToClassDescription(clazz);
-		assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo(clazz.getSimpleName());
-		assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.nba");
+  @Test
+  public void should_build_movie_class_description() throws Exception {
+    // Given
+    Class<?> clazz = Movie.class;
+    // When
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    // Then
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo(clazz.getSimpleName());
+    assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
 
-		assertThat(classDescription.getGettersDescriptions()).hasSize(19);
-	}
+    assertThat(classDescription.getGettersDescriptions()).hasSize(3);
+    assertThat(classDescription.getFieldsDescriptions()).hasSize(4);
+    assertThat(classDescription.getDeclaredGettersDescriptions()).hasSize(2);
+    assertThat(classDescription.getDeclaredFieldsDescriptions()).hasSize(3);
+    assertThat(classDescription.getSuperType()).isEqualTo(TypeToken.of(ArtWork.class));
+    assertThat(classDescription.getAssertClassName()).isEqualTo("MovieAssert");
+    assertThat(classDescription.getFullyQualifiedAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.MovieAssert");
+    assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractMovieAssert");
+    assertThat(classDescription.getParentAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.art.AbstractArtWorkAssert");
+  }
 
-	@Test
-	public void should_build_movie_class_description() throws Exception {
-		// Given
-		Class<?> clazz = Movie.class;
+  @Theory
+  public void should_build_nested_class_description(NestedClass nestedClass) throws Exception {
+    // Given
+    Class<?> clazz = nestedClass.getNestedClass();
+    // When
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    // Then
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo(nestedClass.getClassNameWithOuterClass());
+    assertThat(classDescription.getPackageName()).isEqualTo(clazz.getPackage().getName());
+    assertThat(classDescription.getGettersDescriptions()).hasSize(1);
+  }
 
-		ClassDescription classDescription = converter.convertToClassDescription(clazz);
-		assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo(clazz.getSimpleName());
-		assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
+  @Theory
+  public void should_build_getter_with_exception_description(GetterWithException getter) throws Exception {
+    // Given
+    TypeToken<?> type = getter.getBeanClass();
+    Class<?> clazz = type.getRawType();
+    // When
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    // Then
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo(clazz.getSimpleName());
+    assertThat(classDescription.getPackageName()).isEqualTo(clazz.getPackage().getName());
+    assertThat(classDescription.getGettersDescriptions()).hasSize(4);
 
-		assertThat(classDescription.getGettersDescriptions()).hasSize(3);
-		assertThat(classDescription.getFieldsDescriptions()).hasSize(4);
-		assertThat(classDescription.getDeclaredGettersDescriptions()).hasSize(2);
-		assertThat(classDescription.getDeclaredFieldsDescriptions()).hasSize(3);
-		assertThat(classDescription.getSuperType()).isEqualTo(TypeToken.of(ArtWork.class));
-	}
+    for (GetterDescription desc : classDescription.getGettersDescriptions()) {
+      if (desc.getName().equals(getter.getPropertyName())) {
+        assertThat(desc.getExceptions()).containsOnly(getter.getExceptions().toArray(new TypeToken[] {}));
+        break;
+      }
+    }
+  }
 
-	@Theory
-	public void should_build_nestedclass_description(NestedClass nestedClass) throws Exception {
-		Class<?> clazz = nestedClass.getNestedClass();
-		ClassDescription classDescription = converter.convertToClassDescription(clazz);
-		assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo(nestedClass.getClassNameWithOuterClass());
-		assertThat(classDescription.getPackageName()).isEqualTo(clazz.getPackage().getName());
-		assertThat(classDescription.getGettersDescriptions()).hasSize(1);
-	}
+  class WithPrimitiveArrayCollection {
+    List<int[]> scores;
 
-	@Theory
-	public void should_build_getter_with_exception_description(GetterWithException getter) throws Exception {
-		TypeToken<?> type = getter.getBeanClass();
-		Class<?> clazz = type.getRawType();
-		ClassDescription classDescription = converter.convertToClassDescription(clazz);
-		assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo(clazz.getSimpleName());
-		assertThat(classDescription.getPackageName()).isEqualTo(clazz.getPackage().getName());
-		assertThat(classDescription.getGettersDescriptions()).hasSize(4);
+    @SuppressWarnings("unused")
+    public List<int[]> getScores() {
+      return scores;
+    }
+  }
 
-		for (GetterDescription desc : classDescription.getGettersDescriptions()) {
-			if (desc.getName().equals(getter.getPropertyName())) {
-				assertThat(desc.getExceptions()).containsOnly(getter.getExceptions().toArray(new TypeToken[]{}));
-				break;
-			}
-		}
-	}
+  @Test
+  public void should_build_class_description_for_iterable_of_primitive_type_array() throws Exception {
+    // Given
+    Class<?> clazz = WithPrimitiveArrayCollection.class;
 
-	class WithPrimitiveArrayCollection {
-		List<int[]> scores;
+    // When
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    assertThat(classDescription.getGettersDescriptions()).hasSize(1);
 
-		@SuppressWarnings("unused")
-		public List<int[]> getScores() {
-			return scores;
-		}
-	}
+    // Then
+    GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
+    assertThat(getterDescription.isIterableType())
+        .as("getterDescription must be iterable")
+        .isTrue();
+    assertThat(getterDescription.getElementTypeName(clazz.getPackage().getName()))
+        .as("getterDesc must have correct element type")
+        .isEqualTo("int[]");
+    assertThat(getterDescription.isArrayType())
+        .as("getterDescription must not be an array")
+        .isFalse();
+  }
 
-	@Test
-	public void should_build_class_description_for_iterable_of_primitive_type_array() throws Exception {
-		// Given
-		Class<?> clazz = WithPrimitiveArrayCollection.class;
+  static class WithPrimitiveArrayArrayCollection {
+    int[][] scores;
 
-		// When
-		ClassDescription classDescription = converter.convertToClassDescription(clazz);
-		assertThat(classDescription.getGettersDescriptions()).hasSize(1);
+    @SuppressWarnings("unused")
+    public int[][] getScores() {
+      return scores;
+    }
+  }
 
-		// Then
-		GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
-		assertThat(getterDescription.isIterableType())
-				.as("getterDescription must be iterable")
-				.isTrue();
-		assertThat(getterDescription.getElementTypeName(clazz.getPackage().getName()))
-				.as("getterDesc must have correct element type")
-				.isEqualTo("int[]");
-		assertThat(getterDescription.isArrayType())
-				.as("getterDescription must not be an array")
-				.isFalse();
-	}
+  @Test(expected = IllegalArgumentException.class)
+  public void should_fail_to_build_class_description_for_local_class() throws Exception {
+    class Local {
+    }
+    converter.convertToClassDescription(Local.class);
+  }
 
-	static class WithPrimitiveArrayArrayCollection {
-		int[][] scores;
+  @Test
+  public void should_build_class_description_for_array_of_primitive_type_array() throws Exception {
+    // When
+    ClassDescription classDescription = converter.convertToClassDescription(WithPrimitiveArrayArrayCollection.class);
+    // Then
+    assertThat(classDescription.getGettersDescriptions()).hasSize(1);
+    GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
+    assertThat(getterDescription.isIterableType()).as("getterDescription is an iterable ?").isFalse();
+    assertThat(getterDescription.isArrayType()).as("getterDescription is an array ?").isTrue();
+    assertThat(getterDescription.getElementTypeName(WithPrimitiveArrayArrayCollection.class.getPackage().getName())).isEqualTo("int[]");
+  }
 
-		@SuppressWarnings("unused")
-		public int[][] getScores() {
-			return scores;
-		}
-	}
+  @Test
+  public void should_build_class_description_for_enum_type() throws Exception {
+    // When
+    ClassDescription classDescription = converter.convertToClassDescription(TreeEnum.class);
+    // Then
+    // should not contain getDeclaringClassGetter as we don't want to have hasDeclaringClass assertion
+    assertThat(classDescription.getGettersDescriptions()).hasSize(1);
+    GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
+    assertThat(getterDescription.isIterableType()).as("getterDescription must be iterable").isTrue();
+    assertThat(getterDescription.getElementTypeName(TreeEnum.class.getPackage().getName()))
+        .as("getterDescription must get the internal component type without package")
+        .isEqualTo(TreeEnum.class.getSimpleName());
+    assertThat(getterDescription.isArrayType()).as("getterDescription must be an array").isFalse();
+  }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void should_fail_to_build_class_description_for_local_class() throws Exception {
-		class Local {}
-		converter.convertToClassDescription(Local.class);
-	}
+  class WithIterableObjectType {
+    List<Player[]> players;
 
-	@Test
-	public void should_build_class_description_for_array_of_primitive_type_array() throws Exception {
-		ClassDescription classDescription = converter.convertToClassDescription(WithPrimitiveArrayArrayCollection.class);
-		assertThat(classDescription.getGettersDescriptions()).hasSize(1);
-		GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
-		assertThat(getterDescription.isIterableType()).as("getterDescription is an iterable ?").isFalse();
-		assertThat(getterDescription.isArrayType()).as("getterDescription is an array ?").isTrue();
-		assertThat(getterDescription.getElementTypeName(WithPrimitiveArrayArrayCollection.class.getPackage().getName())).isEqualTo("int[]");
-	}
+    @SuppressWarnings("unused")
+    public List<Player[]> getPlayers() {
+      return players;
+    }
+  }
 
-	@Test
-	public void should_build_class_description_for_enum_type() throws Exception {
-		ClassDescription classDescription = converter.convertToClassDescription(TreeEnum.class);
-		// should not contain getDeclaringClassGetter as we don't want to have hasDeclaringClass assertion
-		assertThat(classDescription.getGettersDescriptions()).hasSize(1);
-		GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
-		assertThat(getterDescription.isIterableType()).as("getterDescription must be iterable").isTrue();
-		assertThat(getterDescription.getElementTypeName(TreeEnum.class.getPackage().getName()))
-				.as("getterDescription must get the internal component type without package")
-				.isEqualTo(TreeEnum.class.getSimpleName());
-		assertThat(getterDescription.isArrayType()).as("getterDescription must be an array").isFalse();
-	}
+  @Test
+  public void should_build_class_description_for_iterable_of_Object_type() throws Exception {
+    // Given
+    Class<?> clazz = WithIterableObjectType.class;
 
-	class WithIterableObjectType {
-		List<Player[]> players;
+    // When
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
 
-		@SuppressWarnings("unused")
-		public List<Player[]> getPlayers() {
-			return players;
-		}
-	}
+    // Then
+    assertThat(classDescription.getGettersDescriptions()).hasSize(1);
+    GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
+    assertThat(getterDescription.isIterableType())
+        .as("getterDescription must be iterable")
+        .isTrue();
+    assertThat(getterDescription.getElementTypeName(WithIterableObjectType.class.getPackage().getName()))
+        .as("getterDesc element type must return correct array type")
+        .isEqualTo(ClassUtil.getTypeDeclaration(new TypeToken<Player[]>() {
+        }, false, false));
+    assertThat(getterDescription.isArrayType()).as("getterDescription is not an array").isFalse();
+  }
 
-	@Test
-	public void should_build_class_description_for_iterable_of_Object_type() throws Exception {
-		// Given
-		Class<?> clazz = WithIterableObjectType.class;
+  @Test
+  public void should_build_class_description_for_interface() throws Exception {
+    // Given an interface
+    Class<?> clazz = PlayerAgent.class;
+    // When
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
 
-		// When
-		ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    // Then
+    assertThat(classDescription.getSuperType()).isNull();
+    assertThat(classDescription.getGettersDescriptions()).hasSize(1);
+    GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
+    assertThat(getterDescription.isIterableType())
+        .as("getterDescription is not iterable").isFalse();
+    assertThat(getterDescription.getName())
+        .as("getterDesc must have correct name").isEqualTo("managedPlayer");
+    assertThat(getterDescription.getTypeName(false, false))
+        .as("getterDesc must have correct owning type").isEqualTo(Player.class.getSimpleName());
+    assertThat(getterDescription.getTypeName(true, false))
+        .as("getterDesc must have correct owning type").isEqualTo(Player.class.getName());
+  }
 
-		// Then
-		assertThat(classDescription.getGettersDescriptions()).hasSize(1);
-		GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
-		assertThat(getterDescription.isIterableType())
-				.as("getterDescription must be iterable")
-				.isTrue();
-		assertThat(getterDescription.getElementTypeName(WithIterableObjectType.class.getPackage().getName()))
-				.as("getterDesc element type must return correct array type")
-				.isEqualTo(ClassUtil.getTypeDeclaration(new TypeToken<Player[]>() {}, false, false));
-		assertThat(getterDescription.isArrayType()).as("getterDescription is not an array").isFalse();
-	}
+  @Test
+  public void should_build_fellowshipOfTheRing_class_description() throws Exception {
+    // Given
+    Class<?> clazz = FellowshipOfTheRing.class;
 
-	@Test
-	public void should_build_class_description_for_interface() throws Exception {
-		// Given an interface
-		Class<?> clazz = PlayerAgent.class;
-		// When
-		ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    // Then
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("FellowshipOfTheRing");
+    assertThat(classDescription.getFullyQualifiedClassName()).isEqualTo("org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing");
+    assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.lotr");
+    assertThat(classDescription.getGettersDescriptions()).hasSize(1);
+  }
 
-		// Then
-		assertThat(classDescription.getSuperType()).isNull();
-		assertThat(classDescription.getGettersDescriptions()).hasSize(1);
-		GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
-		assertThat(getterDescription.isIterableType())
-				.as("getterDescription is not iterable").isFalse();
-		assertThat(getterDescription.getName())
-				.as("getterDesc must have correct name").isEqualTo("managedPlayer");
-		assertThat(getterDescription.getTypeName(false, false))
-				.as("getterDesc must have correct owning type").isEqualTo(Player.class.getSimpleName());
-		assertThat(getterDescription.getTypeName(true, false))
-				.as("getterDesc must have correct owning type").isEqualTo(Player.class.getName());
-	}
+  @Test
+  public void should_handle_toString() {
+    ClassDescription classDescription = converter.convertToClassDescription(FellowshipOfTheRing.class);
+    assertThat(classDescription.toString()).contains(FellowshipOfTheRing.class.getName());
+  }
 
-	@Test
-	public void should_build_fellowshipOfTheRing_class_description() throws Exception {
-		// Given
-		Class<?> clazz = FellowshipOfTheRing.class;
+  @Test
+  public void should_build_class_description_for_class_with_public_fields() throws Exception {
+    // Given
+    Class<?> clazz = Team.class;
 
-		// Then
-		ClassDescription classDescription = converter.convertToClassDescription(clazz);
-		assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("FellowshipOfTheRing");
-		assertThat(classDescription.getClassNameWithOuterClassNotSeparatedByDots()).isEqualTo("FellowshipOfTheRing");
-		assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.lotr");
-		assertThat(classDescription.getGettersDescriptions()).hasSize(1);
-	}
+    // Then
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Team");
+    assertThat(classDescription.getFullyQualifiedClassName()).isEqualTo("org.assertj.assertions.generator.data.Team");
+    assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
+    assertThat(classDescription.getGettersDescriptions()).extracting("name")
+                                                         .containsExactly("division");
+    assertThat(classDescription.getFieldsDescriptions()).extracting("name")
+                                                        .containsOnly("name",
+                                                                      "oldNames",
+                                                                      "westCoast",
+                                                                      "rank",
+                                                                      "players",
+                                                                      "points",
+                                                                      "victoryRatio");
+  }
 
-	@Test
-	public void should_handle_toString() {
-		ClassDescription classDescription = converter.convertToClassDescription(FellowshipOfTheRing.class);
-		assertThat(classDescription.toString()).contains(FellowshipOfTheRing.class.getName());
-	}
+  class Bug21_SQLException extends SQLException {
+    private static final long serialVersionUID = 1L;
 
-	@Test
-	public void should_build_class_description_for_class_with_public_fields() throws Exception {
-		// Given
-		Class<?> clazz = Team.class;
+    @SuppressWarnings("unused")
+    public SQLException getExceptionChain() {
+      return null;
+    }
+  }
 
-		// Then
-		ClassDescription classDescription = converter.convertToClassDescription(clazz);
-		assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Team");
-		assertThat(classDescription.getClassNameWithOuterClassNotSeparatedByDots()).isEqualTo("Team");
-		assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
-		assertThat(classDescription.getGettersDescriptions()).extracting("name").containsExactly("division");
-		assertThat(classDescription.getFieldsDescriptions()).extracting("name").containsOnly("name",
-				"oldNames",
-				"westCoast",
-				"rank",
-				"players",
-				"points",
-				"victoryRatio");
-	}
+  @Test
+  public void bug21_reflection_error_on_iterable_ParameterizedType() {
+    ClassDescription classDescription = converter.convertToClassDescription(Bug21_SQLException.class);
+    // exceptionChain is a SQLException which is an Iterable<Throwable> but looking only at SQLException we can't deduce
+    // iterable valueType
+    assertThat(classDescription.getGettersDescriptions()).extracting("name").contains("exceptionChain");
+  }
 
-	class Bug21_SQLException extends SQLException {
-		private static final long serialVersionUID = 1L;
+  @Test
+  public void should_only_describe_overridden_getter_once() {
+    ClassDescription myClassDescription = converter.convertToClassDescription(ClassOverridingGetter.class);
+    assertThat(myClassDescription.getGettersDescriptions()).extracting("name").containsOnlyOnce("myList");
+  }
 
-		@SuppressWarnings("unused")
-		public SQLException getExceptionChain() {
-			return null;
-		}
-	}
+  public interface InterfaceWithGetter {
+    List<String> getMyList();
+  }
 
-	@Test
-	public void bug21_reflection_error_on_iterable_ParameterizedType() {
-		ClassDescription classDescription = converter.convertToClassDescription(Bug21_SQLException.class);
-		// exceptionChain is a SQLException which is an Iterable<Throwable> but looking only at SQLException we can't deduce
-		// iterable valueType
-		assertThat(classDescription.getGettersDescriptions()).extracting("name").contains("exceptionChain");
-	}
-
-	@Test
-	public void should_only_describe_overriden_getter_once() {
-		ClassDescription myClassDescription = converter.convertToClassDescription(ClassOverridingGetter.class);
-		assertThat(myClassDescription.getGettersDescriptions()).extracting("name").containsOnlyOnce("myList");
-	}
-
-	public interface InterfaceWithGetter {
-		List<String> getMyList();
-	}
-
-	class ClassOverridingGetter implements InterfaceWithGetter {
-		@Override
-		public ArrayList<String> getMyList() {
-			return null;
-		}
-	}
+  class ClassOverridingGetter implements InterfaceWithGetter {
+    @Override
+    public ArrayList<String> getMyList() {
+      return null;
+    }
+  }
 
 }

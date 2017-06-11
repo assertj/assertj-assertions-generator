@@ -594,9 +594,11 @@ public class ClassUtil {
    */
   public static String getTypeDeclarationWithinPackage(TypeToken<?> type, String packageName, final boolean asParameter) {
 
-    boolean reqFQN = !Objects.equals(packageName, JAVA_LANG_PACKAGE.getName())
-                     && (!type.isPrimitive() && !type.isArray() && !Objects.equals(packageName, type.getRawType().getPackage().getName()));
-    return getTypeDeclaration(packageName, type, asParameter, reqFQN);
+    boolean useFullyQualifiedName = !samePackage(packageName, JAVA_LANG_PACKAGE)
+                                    && !type.isPrimitive()
+                                    && !type.isArray()
+                                    && !samePackage(packageName, type.getRawType().getPackage());
+    return getTypeDeclaration(packageName, type, asParameter, useFullyQualifiedName);
   }
 
   public static String packageOf(String fullyQualifiedType) {
@@ -613,9 +615,9 @@ public class ClassUtil {
    * @see #getTypeDeclaration(TypeToken, boolean, boolean)
    * @see #getTypeDeclarationWithinPackage(TypeToken, String, boolean)
    */
-  private static String getTypeDeclaration(String basePackage, TypeToken<?> type, boolean asParameter, boolean fullyQualified) {
+  private static String getTypeDeclaration(String basePackage, TypeToken<?> type, boolean asParameter, boolean useFullyQualifiedName) {
 
-    if (type.isArray()) return getTypeDeclaration(basePackage, type.getComponentType(), asParameter, fullyQualified) + "[]";
+    if (type.isArray()) return getTypeDeclaration(basePackage, type.getComponentType(), asParameter, useFullyQualifiedName) + "[]";
     if (type.isPrimitive()) return type.getRawType().toString();
 
     Class<?> rawClass = type.getRawType();
@@ -624,9 +626,9 @@ public class ClassUtil {
     if (rawClass.isMemberClass()) {
       // inner class
       TypeToken<?> outerType = type.resolveType(rawClass.getEnclosingClass());
-      typeDeclaration.append(getTypeDeclaration(basePackage, outerType, asParameter, fullyQualified))
+      typeDeclaration.append(getTypeDeclaration(basePackage, outerType, asParameter, useFullyQualifiedName))
                      .append(".");
-    } else if (fullyQualified && !isJavaLangType(type)) {
+    } else if (useFullyQualifiedName && !isJavaLangType(type)) {
       // it's a normal class but not in java.lang => add the package name
       typeDeclaration.append(type.getRawType().getPackage().getName())
                      .append(".");
@@ -634,7 +636,7 @@ public class ClassUtil {
 
     typeDeclaration.append(rawClass.getSimpleName());
 
-    if (isGeneric(type)) typeDeclaration.append(getGenericTypeDeclaration(basePackage, type, asParameter, fullyQualified));
+    if (isGeneric(type)) typeDeclaration.append(getGenericTypeDeclaration(basePackage, type, asParameter, useFullyQualifiedName));
 
     return typeDeclaration.toString();
   }
@@ -643,7 +645,8 @@ public class ClassUtil {
     return type.getRawType().getTypeParameters().length > 0;
   }
 
-  private static String getGenericTypeDeclaration(String basePackage, TypeToken<?> type, boolean asParameter, boolean fullyQualified) {
+  private static String getGenericTypeDeclaration(String basePackage, TypeToken<?> type, boolean asParameter,
+                                                  boolean useFullyQualifiedName) {
     StringBuilder typeDeclaration = new StringBuilder("<");
 
     boolean first = true;
@@ -651,19 +654,20 @@ public class ClassUtil {
       if (!first) typeDeclaration.append(",");
       first = false;
       TypeToken<?> paramType = type.resolveType(typeParameterVariable);
-      typeDeclaration.append(getParamTypeDeclaration(basePackage, asParameter, fullyQualified, paramType));
+      typeDeclaration.append(getParamTypeDeclaration(basePackage, asParameter, useFullyQualifiedName, paramType));
     }
 
     return typeDeclaration.append(">").toString();
   }
 
-  private static String getParamTypeDeclaration(String basePackage, boolean asParameter, boolean fullyQualified, TypeToken<?> paramType) {
-    Class<?> rawParam = paramType.getRawType();
+  private static String getParamTypeDeclaration(String basePackage, boolean asParameter, boolean useFullyQualifiedName,
+                                                TypeToken<?> paramType) {
     String typeString = StringUtils.removeAll(paramType.toString(), "capture#\\d+-of\\s+");
     typeString = typeString.replace("(\\?\\s+extends\\s+){2,}", "? extends ");
 
     boolean isWildCard = typeString.contains("?");
     // Some specializations need to be done to make sure that the arguments are property pulled out and written
+    Class<?> rawParam = paramType.getRawType();
     if (isWildCard && rawParam.equals(Object.class)) {
       // it's a wild card and without boundary other than Object => we just use the wild card
       return "?";
@@ -674,9 +678,13 @@ public class ClassUtil {
 
     // now we recursively add the type parameter, we set `asParameter` to false
     // because odds are it will become wrong to keep adding the "extends" boundaries
-    Package paramPackage = paramType.getRawType().getPackage();
-    boolean notInSamePackage = paramPackage != null && !Objects.equals(basePackage, paramPackage.getName());
-    return typeDeclaration + getTypeDeclaration(basePackage, paramType, false, fullyQualified || notInSamePackage);
+    Package paramPackage = rawParam.getPackage();
+    boolean fullyQualifiedRequired = useFullyQualifiedName || paramPackage != null && !samePackage(basePackage, paramPackage);
+    return typeDeclaration + getTypeDeclaration(basePackage, paramType, false, fullyQualifiedRequired);
+  }
+
+  private static boolean samePackage(String basePackage, Package paramPackage) {
+    return Objects.equals(basePackage, paramPackage.getName());
   }
 
   /**

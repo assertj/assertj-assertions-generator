@@ -416,7 +416,6 @@ public class ClassUtilTest implements NestedClassesTest {
     assertThat(typeDeclaration).isEqualTo("List<? extends org.assertj.assertions.generator.util.ClassUtilTest.Foo<String>>");
 
     // List of Foo<Integer>[]
-
     Field listOfFooIntArr = Foo.class.getDeclaredField("listOfFooIntArr");
     typeDeclaration = getTypeDeclaration(fooInteger.resolveType(listOfFooIntArr.getGenericType()), false, false);
     assertThat(typeDeclaration).isEqualTo("List<ClassUtilTest.Foo<Integer>[]>");

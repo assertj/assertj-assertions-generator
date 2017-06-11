@@ -52,10 +52,6 @@ public class ClassDescription implements Comparable<ClassDescription> {
     this.declaredFieldsDescriptions = new TreeSet<>();
   }
 
-  public String getClassName() {
-    return type.getRawType().getName();
-  }
-
   public String getFullyQualifiedClassName() {
     return ClassUtil.getTypeDeclaration(type, false, true);
   }

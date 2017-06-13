@@ -13,7 +13,6 @@
 package org.assertj.assertions.generator.description;
 
 import com.google.common.reflect.TypeToken;
-import org.assertj.assertions.generator.util.ClassUtil;
 
 import java.lang.reflect.TypeVariable;
 import java.util.Collection;
@@ -24,9 +23,7 @@ import java.util.TreeSet;
 
 import static com.google.common.collect.Sets.union;
 import static org.apache.commons.lang3.StringUtils.capitalize;
-import static org.assertj.assertions.generator.util.ClassUtil.PREDICATE_PREFIXES;
-import static org.assertj.assertions.generator.util.ClassUtil.getTypeDeclaration;
-import static org.assertj.assertions.generator.util.ClassUtil.getTypeNameWithoutDots;
+import static org.assertj.assertions.generator.util.ClassUtil.*;
 
 /**
  *
@@ -58,11 +55,11 @@ public class ClassDescription implements Comparable<ClassDescription> {
   }
 
   public String getFullyQualifiedClassName() {
-    return ClassUtil.getTypeDeclaration(type, false, true);
+    return getTypeDeclaration(type, false, true);
   }
 
   public String getClassNameWithOuterClass() {
-    return ClassUtil.getTypeDeclaration(type, false, false);
+    return getTypeDeclaration(type, false, false);
   }
 
   public String getPackageName() {
@@ -163,27 +160,37 @@ public class ClassDescription implements Comparable<ClassDescription> {
   }
 
   public String getFullyQualifiedAssertClassName() {
-    TypeVariable<? extends Class<?>>[] typeParameters = type.getRawType().getTypeParameters();
-
-    String typeDeclaration = ClassUtil.getTypeDeclaration(type, false, true);
-    if (typeParameters.length == 0) {
-      return getPackageName() + "." + getTypeNameWithoutDots(getClassNameWithOuterClass()) + ASSERT_CLASS_SUFFIX;
-    }
-    typeDeclaration = typeDeclaration.replace("Object", typeParameters[0].getName());
-    typeDeclaration = new StringBuilder(typeDeclaration).insert(typeDeclaration.indexOf('<'), ASSERT_CLASS_SUFFIX).toString();
-    return typeDeclaration;
+    return getPackageName() + "." + getAssertClassName();
   }
 
   public String getAbstractAssertClassName() {
     return abstractAssertClassNameOf(type);
   }
 
-  public String getParentAssertClassName() {
+  public String getFullyQualifiedParentAssertClassName() {
     return superType.getRawType().getPackage().getName() + "." + abstractAssertClassNameOf(superType);
   }
 
   private static String assertClassNameOf(TypeToken<?> type) {
-    return getTypeNameWithoutDots(getTypeDeclaration(type, false, false)) + ASSERT_CLASS_SUFFIX;
+    String typeDeclaration = getTypeDeclaration(type, false, false);
+    String typeNameWithoutDots = getTypeNameWithoutDots(typeDeclaration);
+    if (isGeneric(type)) {
+      String assertClassName = replaceTypeParameters(typeNameWithoutDots, type.getRawType().getTypeParameters());
+      return insertAssertClassSuffixBeforeGenericDeclaration(assertClassName);
+    }
+    return typeNameWithoutDots + ASSERT_CLASS_SUFFIX;
+  }
+
+  private static String insertAssertClassSuffixBeforeGenericDeclaration(String assertClassName) {
+    return new StringBuilder(assertClassName).insert(assertClassName.indexOf('<'), ASSERT_CLASS_SUFFIX).toString();
+  }
+
+  private static String replaceTypeParameters(String assertClassName, TypeVariable<? extends Class<?>>[] typeParameters) {
+    for (int i = 0; i < typeParameters.length; i++) {
+      // since
+      assertClassName = assertClassName.replaceFirst("Object", typeParameters[i].getName());
+    }
+    return assertClassName;
   }
 
   private static String abstractAssertClassNameOf(TypeToken<?> type) {

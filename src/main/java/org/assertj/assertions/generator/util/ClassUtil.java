@@ -641,7 +641,7 @@ public class ClassUtil {
     return typeDeclaration.toString();
   }
 
-  private static boolean isGeneric(TypeToken<?> type) {
+  public static boolean isGeneric(TypeToken<?> type) {
     return type.getRawType().getTypeParameters().length > 0;
   }
 

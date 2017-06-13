@@ -195,7 +195,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
     // Add assertion supertype to imports if needed
     final String parentAssertClassName = classesHierarchy.contains(classDescription.getSuperType()) ?
-        classDescription.getParentAssertClassName() : "org.assertj.core.api.AbstractObjectAssert";
+        classDescription.getFullyQualifiedParentAssertClassName() : "org.assertj.core.api.AbstractObjectAssert";
     assertjImports.add(parentAssertClassName);
 
     final String customAssertionClass = concrete ? classDescription.getAssertClassName() : classDescription.getAbstractAssertClassName();

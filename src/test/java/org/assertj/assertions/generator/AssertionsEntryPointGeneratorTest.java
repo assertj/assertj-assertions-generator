@@ -13,10 +13,11 @@
 package org.assertj.assertions.generator;
 
 import com.google.common.reflect.TypeToken;
-import org.assertj.assertions.generator.data.art.ArtWork;
 import org.assertj.assertions.generator.data.Movie;
+import org.assertj.assertions.generator.data.generic.MyGeneric;
 import org.assertj.assertions.generator.data.Name;
 import org.assertj.assertions.generator.data.TreeEnum;
+import org.assertj.assertions.generator.data.art.ArtWork;
 import org.assertj.assertions.generator.data.lotr.Race;
 import org.assertj.assertions.generator.data.lotr.Ring;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
@@ -264,6 +265,18 @@ public class AssertionsEntryPointGeneratorTest {
     for (AssertionsEntryPointType assertionsEntryPointType : AssertionsEntryPointType.values()) {
       assertThat(generator.generateAssertionsEntryPointClassContentFor(null, assertionsEntryPointType, null)).isEmpty();
     }
+  }
+
+  //@Test
+  public void should_generate_assertion_entry_point_class_for_generic_class() throws Exception {
+    // GIVEN no ClassDescription
+    Set<ClassDescription> classDescriptions = getClassDescriptionsOf(MyGeneric.class);
+    File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptions, STANDARD, null);
+    // THEN generated entry points file are null
+    // String expectedContent = readExpectedContentFromFile("MyAssertions.expected.txt");
+    assertThat(assertionsEntryPointFile).as("check custom assertions entry point class")
+                                        .hasContent("");
+
   }
 
   private Set<ClassDescription> getClassDescriptionsOf(Class<?>... classes) {

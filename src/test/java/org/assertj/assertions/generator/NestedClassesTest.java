@@ -12,7 +12,6 @@
  */
 package org.assertj.assertions.generator;
 
-import org.apache.commons.lang3.StringUtils;
 import org.assertj.assertions.generator.data.OuterClass;
 import org.junit.experimental.theories.DataPoint;
 
@@ -21,39 +20,58 @@ import org.junit.experimental.theories.DataPoint;
  */
 public interface NestedClassesTest {
   @DataPoint
-  public static final NestedClass SNC = new NestedClass(OuterClass.StaticNestedPerson.class,
-                                                        "OuterClass.StaticNestedPerson");
+  NestedClass SNC = new NestedClass(OuterClass.StaticNestedPerson.class,
+                                    "OuterClass.StaticNestedPerson",
+                                    "OuterClassStaticNestedPersonAssert",
+                                    "OuterClassStaticNestedPersonAssert.java",
+                                    "AbstractOuterClassStaticNestedPersonAssert",
+                                    "AbstractOuterClassStaticNestedPersonAssert.java");
   @DataPoint
-  public static final NestedClass SNC_SNC = new NestedClass(OuterClass.StaticNestedPerson.SNP_StaticNestedPerson.class,
-                                                            "OuterClass.StaticNestedPerson.SNP_StaticNestedPerson");
+  NestedClass SNC_SNC = new NestedClass(OuterClass.StaticNestedPerson.SNP_StaticNestedPerson.class,
+                                        "OuterClass.StaticNestedPerson.SNP_StaticNestedPerson",
+                                        "OuterClassStaticNestedPersonSNP_StaticNestedPersonAssert",
+                                        "OuterClassStaticNestedPersonSNP_StaticNestedPersonAssert.java",
+                                        "AbstractOuterClassStaticNestedPersonSNP_StaticNestedPersonAssert",
+                                        "AbstractOuterClassStaticNestedPersonSNP_StaticNestedPersonAssert.java");
   @DataPoint
-  public static final NestedClass SNC_IC = new NestedClass(OuterClass.StaticNestedPerson.SNP_InnerPerson.class,
-                                                           "OuterClass.StaticNestedPerson.SNP_InnerPerson");
+  NestedClass SNC_IC = new NestedClass(OuterClass.StaticNestedPerson.SNP_InnerPerson.class,
+                                       "OuterClass.StaticNestedPerson.SNP_InnerPerson",
+                                       "OuterClassStaticNestedPersonSNP_InnerPersonAssert",
+                                       "OuterClassStaticNestedPersonSNP_InnerPersonAssert.java",
+                                       "AbstractOuterClassStaticNestedPersonSNP_InnerPersonAssert",
+                                       "AbstractOuterClassStaticNestedPersonSNP_InnerPersonAssert.java");
   @DataPoint
-  public static final NestedClass IC = new NestedClass(OuterClass.InnerPerson.class, "OuterClass.InnerPerson");
+  NestedClass IC = new NestedClass(OuterClass.InnerPerson.class,
+                                   "OuterClass.InnerPerson",
+                                   "OuterClassInnerPersonAssert",
+                                   "OuterClassInnerPersonAssert.java",
+                                   "AbstractOuterClassInnerPersonAssert",
+                                   "AbstractOuterClassInnerPersonAssert.java");
   @DataPoint
-  public static final NestedClass IC_IC = new NestedClass(OuterClass.InnerPerson.IP_InnerPerson.class,
-                                                          "OuterClass.InnerPerson.IP_InnerPerson");
+  NestedClass IC_IC = new NestedClass(OuterClass.InnerPerson.IP_InnerPerson.class,
+                                      "OuterClass.InnerPerson.IP_InnerPerson",
+                                      "OuterClassInnerPersonIP_InnerPersonAssert",
+                                      "OuterClassInnerPersonIP_InnerPersonAssert.java",
+                                      "AbstractOuterClassInnerPersonIP_InnerPersonAssert",
+                                      "AbstractOuterClassInnerPersonIP_InnerPersonAssert.java");
 
-  public static class NestedClass {
-    private final Class<?> nestedClass;
-    private final String classNameWithOuterClass;
+  class NestedClass {
+    public final Class<?> nestedClass;
+    public final String assertClassName;
+    public final String assertClassFilename;
+    public final String abstractAssertClassName;
+    public final String abstractAssertClassFilename;
+    public final String classNameWithOuterClass;
 
-    public NestedClass(Class<?> nestedClass, String classNameWithOuterClass) {
+    public NestedClass(Class<?> nestedClass, String classNameWithOuterClass, String assertClassName, String assertClassFilename,
+                       String abstractAssertClassName, String abstractAssertClassFilename) {
       this.nestedClass = nestedClass;
+      this.assertClassName = assertClassName;
       this.classNameWithOuterClass = classNameWithOuterClass;
+      this.assertClassFilename = assertClassFilename;
+      this.abstractAssertClassName = abstractAssertClassName;
+      this.abstractAssertClassFilename = abstractAssertClassFilename;
     }
 
-    public String getClassNameWithOuterClass() {
-      return classNameWithOuterClass;
-    }
-
-    public String getClassNameWithOuterClassNotSeparatedBytDots() {
-      return StringUtils.remove(classNameWithOuterClass, '.');
-    }
-
-    public Class<?> getNestedClass() {
-      return nestedClass;
-    }
   }
 }

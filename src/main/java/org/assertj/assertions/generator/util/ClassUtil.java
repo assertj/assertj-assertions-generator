@@ -467,29 +467,6 @@ public class ClassUtil {
     return nestedClassName;
   }
 
-  /**
-   * Gets the simple name of the class but, unlike {@link Class#getSimpleName()}, it includes the name of the outer
-   * class when <code>clazz</code> is an inner class, both class names are concatenated.
-   * <p>
-   * Example:
-   *
-   * <pre>
-   * Outer.Inner -> OuterInner
-   * </pre>
-   *
-   * @param clazz the class
-   * @return the simple name of the class prefixed by the outer class if any
-   */
-  public static String getSimpleNameWithOuterClassNotSeparatedByDots(Class<?> clazz) {
-    if (isNotNestedClass(clazz)) {
-      return clazz.getSimpleName();
-    }
-    String nestedClassName = clazz.getName();
-    nestedClassName = nestedClassName.substring(clazz.getPackage().getName().length() + 1);
-    nestedClassName = StringUtils.remove(nestedClassName, '$');
-    return nestedClassName;
-  }
-
   private static boolean isNotNestedClass(Class<?> clazz) {
     return clazz.getDeclaringClass() == null;
   }
@@ -525,27 +502,10 @@ public class ClassUtil {
    * @param child Child package
    * @param parent Parent package
    * @return True iff the child package is under the parent, false if not or either is {@code null}.
-   *
-   * @see #isInnerPackageOf(String, String) String argument equivalent
    */
   public static boolean isInnerPackageOf(Package child, Package parent) {
     return child != null && parent != null
            && child.getName().startsWith(parent.getName());
-  }
-
-  /**
-   * Checks if the package, {@code child} is under the package {@code parent}.
-   * @param parentPackage Parent package
-   * @param childPackage Child package
-   * @return True iff the child package is under the parent, false if not or either is {@code null}.
-   *
-   * @see #isInnerPackageOf(String, String) String argument equivalent
-   */
-  public static boolean isInnerPackageOf(String childPackage, String parentPackage) {
-    checkArgument(!Strings.isNullOrEmpty(childPackage), "childPackage is null or empty");
-    checkNotNull(parentPackage, "parentPackage is null or empty");
-
-    return childPackage.startsWith(parentPackage);
   }
 
   /**

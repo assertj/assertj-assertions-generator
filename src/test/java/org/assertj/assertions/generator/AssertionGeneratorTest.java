@@ -13,14 +13,17 @@
 package org.assertj.assertions.generator;
 
 import com.google.common.reflect.TypeToken;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.assertions.generator.data.*;
 import org.assertj.assertions.generator.data.art.ArtWork;
+import org.assertj.assertions.generator.data.generic.MultipleGenerics;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.PlayerAgent;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.converter.AnnotationConfiguration;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
@@ -114,7 +117,8 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 
   @Test
   public void should_generate_flat_assertion_for_movie_class() throws Exception {
-    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Movie.class));
+    ClassDescription classDescription = converter.convertToClassDescription(Movie.class);
+    assertionGenerator.generateCustomAssertionFor(classDescription);
     generationPathHandler.assertGeneratedAssertClass(Movie.class, "MovieAssert.flat.expected.txt", true);
     assertThat(generationPathHandler.abstractFileGeneratedFor(Movie.class)).doesNotExist();
   }
@@ -151,17 +155,17 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 
   @Theory
   public void should_generate_assertion_for_nested_class(NestedClass nestedClass) throws Exception {
-    Class<?> clazz = nestedClass.getNestedClass();
+    Class<?> clazz = nestedClass.nestedClass;
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(clazz));
-    assertThat(generationPathHandler.fileGeneratedFor(clazz)).hasContent(expectedContentFromTemplate(clazz,
+    assertThat(generationPathHandler.fileGeneratedFor(clazz)).hasContent(expectedContentFromTemplate(nestedClass,
                                                                                                      "NestedClassAssert.template.expected.txt"));
   }
 
   @Theory
   public void should_generate_hierarchical_assertion_for_nested_class(NestedClass nestedClass) throws Exception {
-    Class<?> clazz = nestedClass.getNestedClass();
+    Class<?> clazz = nestedClass.nestedClass;
     assertionGenerator.generateHierarchicalCustomAssertionFor(converter.convertToClassDescription(clazz), EMPTY_SET);
-    assertThat(generationPathHandler.fileGeneratedFor(clazz)).hasContent(expectedContentFromTemplate(clazz,
+    assertThat(generationPathHandler.fileGeneratedFor(clazz)).hasContent(expectedContentFromTemplate(nestedClass,
                                                                                                      "NestedClassAssert.hierarchical.template.expected.txt"));
   }
 
@@ -249,11 +253,20 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     generationPathHandler.assertGeneratedAssertClass(AutoValueAnnotatedClass.class, "AutoValueAnnotatedClassAssert.expected.txt", true);
   }
 
-  private String expectedContentFromTemplate(Class<?> clazz, String fileTemplate) throws IOException {
+  @Test @Ignore
+  public void should_generate_assertion_for_generic_class() throws IOException {
+    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(MultipleGenerics.class));
+    generationPathHandler.assertGeneratedAssertClass(MultipleGenerics.class, "MultipleGenericsClassAssert.expected.txt", true);
+  }
+
+  private String expectedContentFromTemplate(NestedClass nestedClass, String fileTemplate) throws IOException {
     String template = contentOf(generationPathHandler.getResourcesDir().resolve(fileTemplate).toFile(), defaultCharset());
-    String content = replace(template, "${nestedClass}Assert", getSimpleNameWithOuterClassNotSeparatedByDots(clazz)
-                                                               + "Assert");
-    content = replace(content, "${nestedClass}", getSimpleNameWithOuterClass(clazz));
+    String content = replace(template,
+                             "${nestedClass}Assert",
+                             StringUtils.remove(nestedClass.classNameWithOuterClass, '.') + "Assert");
+    content = replace(content,
+                      "${nestedClass}",
+                      nestedClass.classNameWithOuterClass);
     return content;
   }
 

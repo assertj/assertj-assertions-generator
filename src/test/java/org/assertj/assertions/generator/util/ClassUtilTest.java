@@ -15,6 +15,7 @@ package org.assertj.assertions.generator.util;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.assertions.generator.AssertionGeneratorTest;
 import org.assertj.assertions.generator.NestedClassesTest;
 import org.assertj.assertions.generator.data.BeanWithOneException;
@@ -225,20 +226,8 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Theory
   public void should_return_inner_class_name_with_outer_class_name(NestedClass nestedClass) {
-    String actualName = getSimpleNameWithOuterClass(nestedClass.getNestedClass());
-    assertThat(actualName).isEqualTo(nestedClass.getClassNameWithOuterClass());
-  }
-
-  @Theory
-  public void should_return_inner_class_name_with_outer_class_name_not_separated_by_dots(NestedClass nestedClass) {
-    String actualName = getSimpleNameWithOuterClassNotSeparatedByDots(nestedClass.getNestedClass());
-    assertThat(actualName).isEqualTo(nestedClass.getClassNameWithOuterClassNotSeparatedBytDots());
-  }
-
-  @Test
-  public void should_return_simple_class_name() {
-    String simpleName = getSimpleNameWithOuterClassNotSeparatedByDots(Player.class);
-    assertThat(simpleName).isEqualTo("Player");
+    String actualName = getSimpleNameWithOuterClass(nestedClass.nestedClass);
+    assertThat(actualName).isEqualTo(nestedClass.classNameWithOuterClass);
   }
 
   @Test

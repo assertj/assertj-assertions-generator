@@ -23,6 +23,8 @@ import java.util.TreeSet;
 
 import static com.google.common.collect.Sets.union;
 import static org.apache.commons.lang3.StringUtils.capitalize;
+import static org.apache.commons.lang3.StringUtils.substringAfterLast;
+import static org.apache.commons.lang3.StringUtils.substringBefore;
 import static org.assertj.assertions.generator.util.ClassUtil.*;
 
 /**
@@ -159,12 +161,22 @@ public class ClassDescription implements Comparable<ClassDescription> {
     return assertClassNameOf(type);
   }
 
+  public String getAssertClassFilename() {
+    String assertClassName = assertClassNameOf(type);
+    return removeGenericFrom(assertClassName) + ".java";
+  }
+
   public String getFullyQualifiedAssertClassName() {
     return getPackageName() + "." + getAssertClassName();
   }
 
   public String getAbstractAssertClassName() {
     return abstractAssertClassNameOf(type);
+  }
+
+  public String getAbstractAssertClassFilename() {
+    String abstractAssertClassName = abstractAssertClassNameOf(type);
+    return removeGenericFrom(abstractAssertClassName) + ".java";
   }
 
   public String getFullyQualifiedParentAssertClassName() {
@@ -197,4 +209,11 @@ public class ClassDescription implements Comparable<ClassDescription> {
     return ABSTRACT_ASSERT_CLASS_PREFIX + assertClassNameOf(type);
   }
 
+  private static String removeGenericFrom(String assertClassName) {
+    return substringBefore(assertClassName,"<") + substringAfterLast(assertClassName, ">");
+  }
+
+  public Class<?> getRawType() {
+    return type.getRawType();
+  }
 }

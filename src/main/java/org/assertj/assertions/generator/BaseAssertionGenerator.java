@@ -137,7 +137,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     String targetDirectory = getDirectoryPathCorrespondingToPackage(classDescription.getPackageName());
     // build any needed directories
     buildTargetDirectory(targetDirectory);
-    return createFile(assertionFileContent, classDescription.getAssertClassName() + ".java", targetDirectory);
+    return createFile(assertionFileContent, classDescription.getAssertClassFilename(), targetDirectory);
   }
 
   @Override
@@ -151,8 +151,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // build any needed directories
     buildTargetDirectory(targetDirectory);
     File[] assertionClassesFile = new File[2];
-    final String concreteAssertClassFileName = classDescription.getAssertClassName() + ".java";
-    final String abstractAssertClassFileName = classDescription.getAbstractAssertClassName() + ".java";
+    final String concreteAssertClassFileName = classDescription.getAssertClassFilename();
+    final String abstractAssertClassFileName = classDescription.getAbstractAssertClassFilename();
     assertionClassesFile[0] = createFile(assertionFileContent[0], abstractAssertClassFileName, targetDirectory);
     assertionClassesFile[1] = createFile(assertionFileContent[1], concreteAssertClassFileName, targetDirectory);
     return assertionClassesFile;

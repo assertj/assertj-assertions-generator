@@ -17,7 +17,7 @@ import com.google.testing.compile.Compilation;
 import com.google.testing.compile.CompilationSubject;
 import com.google.testing.compile.Compiler;
 import com.google.testing.compile.JavaFileObjects;
-import org.assertj.core.api.Assertions;
+import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -31,14 +31,10 @@ import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.assertj.assertions.generator.description.ClassDescription.ABSTRACT_ASSERT_CLASS_PREFIX;
-import static org.assertj.assertions.generator.BaseAssertionGenerator.ASSERT_CLASS_FILE_SUFFIX;
-import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClassNotSeparatedByDots;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -49,6 +45,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class GenerationPathHandler extends TemporaryFolder {
 
   public static final Path DEFAULT_GENERATION_ROOT = Paths.get("target/generated-test-output");
+
+  private static final ClassToClassDescriptionConverter CLASS_DESCRIPTION_CONVERTER = new ClassToClassDescriptionConverter();
 
   private final Compiler compiler;
   private Path resourcesDir;
@@ -101,69 +99,58 @@ public class GenerationPathHandler extends TemporaryFolder {
   }
 
   public File fileGeneratedFor(Class<?> clazz) {
-    String generatedFileName = getSimpleNameWithOuterClassNotSeparatedByDots(clazz) + ASSERT_CLASS_FILE_SUFFIX;
-    return packagePathFor(clazz)
-        .resolve(generatedFileName)
-        .toFile();
+    String generatedFileName = CLASS_DESCRIPTION_CONVERTER.convertToClassDescription(clazz).getAssertClassFilename();
+    return packagePathFor(clazz).resolve(generatedFileName).toFile();
   }
 
   public File abstractFileGeneratedFor(Class<?> clazz) {
-    String generatedFileName = ABSTRACT_ASSERT_CLASS_PREFIX
-                               + getSimpleNameWithOuterClassNotSeparatedByDots(clazz)
-                               + ASSERT_CLASS_FILE_SUFFIX;
-    return packagePathFor(clazz).resolve(generatedFileName)
-                                .toFile();
+    String generatedFileName = CLASS_DESCRIPTION_CONVERTER.convertToClassDescription(clazz).getAbstractAssertClassFilename();
+    return packagePathFor(clazz).resolve(generatedFileName).toFile();
   }
 
   public void compileGeneratedFiles(Iterable<? extends File> files) {
-    List<JavaFileObject> jfiles = new ArrayList<>();
-    for (File file : files) {
-      try {
-        final URL url = file.toURI().toURL();
-        jfiles.add(JavaFileObjects.forResource(url));
-      } catch (MalformedURLException mfue) {
-        Assertions.failBecauseExceptionWasNotThrown(MalformedURLException.class);
-      }
-    }
-
-    Compilation compilation = compiler.compile(jfiles);
-
+    List<JavaFileObject> javaFileObjects = toJavaFileObjects(files);
+    Compilation compilation = compiler.compile(javaFileObjects);
     try {
-
       CompilationSubject.assertThat(compilation).succeeded();
     } catch (AssertionError ex) {
       throw new AssertionError("Error with compilation. JAVAC options:\n" + compiler.options(), ex);
     }
   }
 
-  public void compileGeneratedFiles(File... files) {
-    compileGeneratedFiles(Arrays.asList(files));
+  private List<JavaFileObject> toJavaFileObjects(Iterable<? extends File> files) {
+    List<JavaFileObject> javaFileObjects = new ArrayList<>();
+    for (File file : files) {
+      try {
+        final URL url = file.toURI().toURL();
+        javaFileObjects.add(JavaFileObjects.forResource(url));
+      } catch (MalformedURLException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return javaFileObjects;
   }
 
   public void compileGeneratedFiles(Class<?>... classes) {
     List<File> files = new ArrayList<>(classes.length);
     for (Class<?> clazz : classes) {
       files.add(fileGeneratedFor(clazz));
-
       // Handle abstract files, too!
       File abstractFile = abstractFileGeneratedFor(clazz);
       if (abstractFile.exists()) {
         files.add(abstractFile);
       }
     }
-
     compileGeneratedFiles(files);
   }
 
   public void assertGeneratedAssertClass(Class<?> clazz, String expectedAssertFile, final boolean compileGenerated) throws IOException {
     File expectedFile = resourcesDir.resolve(expectedAssertFile).toAbsolutePath().toFile();
     File actualFile = fileGeneratedFor(clazz);
-    assertThat(actualFile).hasSameContentAs(expectedFile);
-
     // compile it!
-    if (compileGenerated) {
-      compileGeneratedFiles(clazz);
-    }
+    if (compileGenerated) compileGeneratedFiles(clazz);
+
+    assertThat(actualFile).hasSameContentAs(expectedFile);
   }
 
   public void assertAbstractGeneratedAssertClass(Class<?> clazz, String expectedAssertFile) {
@@ -180,7 +167,7 @@ public class GenerationPathHandler extends TemporaryFolder {
   private static String getClasspathFromClassloader(ClassLoader currentClassloader) {
     ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
 
-    // Add all URLClassloaders in the hirearchy till the system classloader.
+    // Add all URLClassloaders in the hierarchy till the system classloader.
     List<URLClassLoader> classloaders = new ArrayList<>();
     while (true) {
       if (currentClassloader instanceof URLClassLoader) {

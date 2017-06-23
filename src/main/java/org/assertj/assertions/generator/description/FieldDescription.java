@@ -41,12 +41,8 @@ import static org.apache.commons.lang3.StringUtils.capitalize;
  */
 public class FieldDescription extends DataDescription implements Comparable<FieldDescription> {
 
-  private final TypeToken<?> owningType;
-
   public FieldDescription(Field field, TypeToken<?> owningType) {
-    super(ClassUtil.propertyNameOf(field), field, owningType.resolveType(field.getGenericType()));
-
-    this.owningType = owningType;
+    super(ClassUtil.propertyNameOf(field), field, owningType.resolveType(field.getGenericType()), owningType);
   }
 
   @Override
@@ -66,17 +62,12 @@ public class FieldDescription extends DataDescription implements Comparable<Fiel
 
   @Override
   public String getPredicate() {
-    final String retval = super.getNegativePredicate();
-    return retval == null ? "is" + capitalize(originalMember.getName()) : originalMember.getName();
+    return hasNegativePredicate() ? originalMember.getName() : "is" + capitalize(originalMember.getName());
   }
   
   @Override
   public String getNegativePredicate() {
-    final String retval = super.getNegativePredicate();
-    return retval == null ? "isNot" + capitalize(originalMember.getName()) : retval;
+    return !hasNegativePredicate() ? "isNot" + capitalize(originalMember.getName()) : super.getNegativePredicate();
   }
 
-  public TypeToken<?> getOwningType() {
-    return owningType;
-  }
 }

@@ -12,8 +12,10 @@
  */
 package org.assertj.assertions.generator.data.generic;
 
+import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.generic.parent.MultipleGenericsParent;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class MultipleGenerics<T, U, V, W> extends MultipleGenericsParent<T, U> {
@@ -24,6 +26,8 @@ public class MultipleGenerics<T, U, V, W> extends MultipleGenericsParent<T, U> {
   public U getValue() {
     return null;
   }
+
+  public Iterable<? extends Movie> movies = new ArrayList<>();
 
   public MyGeneric<W> getMyGeneric() {
     return null;

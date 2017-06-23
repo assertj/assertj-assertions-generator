@@ -28,7 +28,6 @@ import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.PlayerAgent;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
-import org.assertj.assertions.generator.util.ClassUtil;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
@@ -39,6 +38,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.assertions.generator.util.ClassUtil.getTypeDeclaration;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Theories.class)
@@ -58,6 +58,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     ClassDescription classDescription = converter.convertToClassDescription(clazz);
     // Then
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Player");
+    assertThat(classDescription.getGenericTypeDeclaration()).isEmpty();
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.nba");
     assertThat(classDescription.getFullyQualifiedClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.Player");
     assertThat(classDescription.getGettersDescriptions()).hasSize(19);
@@ -76,7 +77,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     // When
     ClassDescription classDescription = converter.convertToClassDescription(clazz);
     // Then
-    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo(clazz.getSimpleName());
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Movie");
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(classDescription.getGettersDescriptions()).hasSize(3);
     assertThat(classDescription.getFieldsDescriptions()).hasSize(4);
@@ -148,7 +149,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(getterDescription.isIterableType())
         .as("getterDescription must be iterable")
         .isTrue();
-    assertThat(getterDescription.getElementTypeName(clazz.getPackage().getName()))
+    assertThat(getterDescription.getElementTypeName())
         .as("getterDesc must have correct element type")
         .isEqualTo("int[]");
     assertThat(getterDescription.isArrayType())
@@ -181,7 +182,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
     assertThat(getterDescription.isIterableType()).as("getterDescription is an iterable ?").isFalse();
     assertThat(getterDescription.isArrayType()).as("getterDescription is an array ?").isTrue();
-    assertThat(getterDescription.getElementTypeName(WithPrimitiveArrayArrayCollection.class.getPackage().getName())).isEqualTo("int[]");
+    assertThat(getterDescription.getElementTypeName()).isEqualTo("int[]");
   }
 
   @Test
@@ -193,7 +194,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
     assertThat(getterDescription.isIterableType()).as("getterDescription must be iterable").isTrue();
-    assertThat(getterDescription.getElementTypeName(TreeEnum.class.getPackage().getName()))
+    assertThat(getterDescription.getElementTypeName())
         .as("getterDescription must get the internal component type without package")
         .isEqualTo(TreeEnum.class.getSimpleName());
     assertThat(getterDescription.isArrayType()).as("getterDescription must be an array").isFalse();
@@ -220,10 +221,10 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(getterDescription.isIterableType())
         .as("getterDescription must be iterable")
         .isTrue();
-    assertThat(getterDescription.getElementTypeName(WithIterableObjectType.class.getPackage().getName()))
+    assertThat(getterDescription.getElementTypeName())
         .as("getterDesc element type must return correct array type")
-        .isEqualTo(ClassUtil.getTypeDeclaration(new TypeToken<Player[]>() {
-        }, false, false));
+        .isEqualTo(getTypeDeclaration(new TypeToken<Player[]>() {
+        }));
     assertThat(getterDescription.isArrayType()).as("getterDescription is not an array").isFalse();
   }
 
@@ -240,11 +241,11 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(getterDescription.isIterableType())
         .as("getterDescription is not iterable").isFalse();
     assertThat(getterDescription.getName())
-        .as("getterDesc must have correct name").isEqualTo("managedPlayer");
-    assertThat(getterDescription.getTypeName(false, false))
-        .as("getterDesc must have correct owning type").isEqualTo(Player.class.getSimpleName());
-    assertThat(getterDescription.getTypeName(true, false))
-        .as("getterDesc must have correct owning type").isEqualTo(Player.class.getName());
+        .as("getterDesc must have correct name")
+        .isEqualTo("managedPlayer");
+    assertThat(getterDescription.getTypeName())
+        .as("getterDesc must have correct type (not fully qualified because in same package)")
+        .isEqualTo("Player");
   }
 
   @Test
@@ -254,6 +255,8 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     // When
     ClassDescription classDescription = converter.convertToClassDescription(clazz);
     // Then
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("MyGeneric<T>");
+    assertThat(classDescription.getGenericTypeDeclaration()).isEqualTo("<T>");
     assertThat(classDescription.getAssertClassName()).isEqualTo("MyGenericAssert<T>");
     assertThat(classDescription.getAssertClassFilename()).isEqualTo("MyGenericAssert.java");
     assertThat(classDescription.getFullyQualifiedAssertClassName())
@@ -274,6 +277,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     // When
     ClassDescription classDescription = converter.convertToClassDescription(clazz);
     // Then
+    assertThat(classDescription.getGenericTypeDeclaration()).isEqualTo("<T,U,V,W>");
     assertThat(classDescription.getAssertClassName()).isEqualTo("MultipleGenericsAssert<T,U,V,W>");
     assertThat(classDescription.getAssertClassFilename()).isEqualTo("MultipleGenericsAssert.java");
     assertThat(classDescription.getFullyQualifiedAssertClassName())
@@ -282,9 +286,10 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getFullyQualifiedParentAssertClassName())
         .isEqualTo("org.assertj.assertions.generator.data.generic.parent.AbstractMultipleGenericsParentAssert<T,U>");
     assertThat(classDescription.getGettersDescriptions()).hasSize(3);
-    assertThat(classDescription.getFieldsDescriptions()).hasSize(2);
+    assertThat(classDescription.getFieldsDescriptions()).hasSize(3);
     assertThat(classDescription.getSuperType()).isEqualTo(TypeToken.of(MultipleGenerics.class).getSupertype(MultipleGenericsParent.class))
-                                               .hasToString("org.assertj.assertions.generator.data.generic.parent.MultipleGenericsParent<T, U>");
+                                               .hasToString(
+                                                   "org.assertj.assertions.generator.data.generic.parent.MultipleGenericsParent<T, U>");
   }
 
   @Test

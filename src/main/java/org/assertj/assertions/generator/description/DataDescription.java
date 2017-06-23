@@ -12,21 +12,22 @@
  */
 package org.assertj.assertions.generator.description;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Primitives;
 import com.google.common.reflect.TypeToken;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.assertions.generator.util.ClassUtil;
 
 import java.lang.reflect.Member;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import static org.apache.commons.lang3.StringUtils.removeAll;
 import static org.apache.commons.lang3.StringUtils.removeStart;
-import static org.assertj.assertions.generator.util.ClassUtil.getNegativePredicateFor;
-import static org.assertj.assertions.generator.util.ClassUtil.getPredicatePrefix;
+import static org.assertj.assertions.generator.util.ClassUtil.*;
 import static org.assertj.assertions.generator.util.StringUtil.camelCaseToWords;
 
 /**
@@ -34,11 +35,7 @@ import static org.assertj.assertions.generator.util.StringUtil.camelCaseToWords;
  */
 public abstract class DataDescription {
 
-  protected final String name;
-  protected final Member originalMember;
-  protected final TypeToken<?> valueType;
-
-  public static final Map<String, String> PREDICATE_PREFIXES_FOR_JAVADOC =
+  private static final Map<String, String> PREDICATE_PREFIXES_FOR_JAVADOC =
       new ImmutableMap.Builder<String, String>().put("is", "is")
                                                 .put("isNot", "is not")
                                                 .put("was", "was")
@@ -59,7 +56,7 @@ public abstract class DataDescription {
                                                 .put("willNotBe", "will not be")
                                                 .build();
 
-  public static final Map<String, String> PREDICATE_PREFIXES_FOR_ERROR_MESSAGE_PART1 =
+  private static final Map<String, String> PREDICATE_PREFIXES_FOR_ERROR_MESSAGE_PART1 =
       new ImmutableMap.Builder<String, String>().put("is", "is")
                                                 .put("isNot", "is not")
                                                 .put("was", "was")
@@ -80,7 +77,7 @@ public abstract class DataDescription {
                                                 .put("willNotBe", "will not be")
                                                 .build();
 
-  public static final Map<String, String> PREDICATE_PREFIXES_FOR_ERROR_MESSAGE_PART2 =
+  private static final Map<String, String> PREDICATE_PREFIXES_FOR_ERROR_MESSAGE_PART2 =
       new ImmutableMap.Builder<String, String>().put("is", "is not")
                                                 .put("isNot", "is")
                                                 .put("was", "was not")
@@ -107,12 +104,17 @@ public abstract class DataDescription {
       return -Ints.compare(left.length(), right.length());
     }
   };
-  
-  DataDescription(String name, Member originalMember, TypeToken<?> type) {
-    super();
+
+  private final String name;
+  final Member originalMember;
+  final TypeToken<?> valueType;
+  private final TypeToken<?> owningType;
+
+  DataDescription(String name, Member originalMember, TypeToken<?> type, TypeToken<?> owningType) {
     this.name = name;
     this.originalMember = originalMember;
     this.valueType = type;
+    this.owningType = owningType;
   }
 
   public String getName() {
@@ -123,29 +125,13 @@ public abstract class DataDescription {
     return originalMember;
   }
 
-  public TypeToken<?> getValueType() {
+  TypeToken<?> getValueType() {
     return valueType;
   }
 
-  /**
-   * Get the type of the value stored by the {@link #originalMember}
-   * @return
-   */
   public String getTypeName() {
-    return getTypeName(false, false);
-  }
-
-  /**
-   * Get the type of the value stored by the {@link #originalMember}
-   * @param isFQN Whether or not to get the fully qualified name
-   * @param asParameter if true, this will generate a type-name that is best for
-   *                    passing as a parameter, for example, for a {@link java.util.Collection Collection<String>}
-   *                    this would return {@code Collection&lt;? extends String&gt;} instead of
-   *                    just {@code String}
-   * @return
-   */
-  public String getTypeName(boolean isFQN, final boolean asParameter) {
-    return ClassUtil.getTypeDeclaration(valueType, asParameter, isFQN);
+    String typeName = getTypeDeclaration(valueType);
+    return removeOwningTypePackageNameIn(typeName);
   }
 
   public boolean isIterableType() {
@@ -168,7 +154,7 @@ public abstract class DataDescription {
   public boolean isWholeNumberType() {
     TypeToken<?> unwrapped = valueType.unwrap();
     return unwrapped.isSubtypeOf(int.class) || unwrapped.isSubtypeOf(long.class)
-            || unwrapped.isSubtypeOf(byte.class) || unwrapped.isSubtypeOf(short.class);
+           || unwrapped.isSubtypeOf(byte.class) || unwrapped.isSubtypeOf(short.class);
   }
 
   public boolean isCharType() {
@@ -190,36 +176,38 @@ public abstract class DataDescription {
     return getNegativePredicateFor(originalMember.getName());
   }
 
+  boolean hasNegativePredicate() {
+    return getNegativePredicateFor(originalMember.getName()) != null;
+  }
+
   /**
    * return the simple element valueType name if element valueType belongs to given the package and the fully qualified element
    * valueType name otherwise.
-   * 
-   * @param packageName typically the package of the enclosing Class
+   *
    * @return the simple element valueType name if element valueType belongs to given the package and the fully qualified element
    *         valueType name otherwise.
    */
-  public String getElementTypeName(String packageName) {
+  public String getElementTypeName() {
+    String elementTypeName = null;
     if (valueType.isArray()) {
-      return ClassUtil.getTypeDeclarationWithinPackage(valueType.getComponentType(), packageName, false);
+      elementTypeName = getTypeDeclaration(valueType.getComponentType());
     } else if (valueType.isSubtypeOf(Iterable.class)) {
       TypeToken<?> componentType = valueType.resolveType(Iterable.class.getTypeParameters()[0]);
-      return ClassUtil.getTypeDeclarationWithinPackage(componentType, packageName, false);
+      elementTypeName = getTypeDeclaration(componentType);
+      // remove any generic type boundaries
+      elementTypeName = removeAll(elementTypeName, "\\? extends").trim();
     }
-
-    return null;
+    return removeOwningTypePackageNameIn(elementTypeName);
   }
 
-  public String getElementAssertTypeName(String packageName) {
+  public String getElementAssertTypeName() {
+    String packageName = owningTypePackageName();
     TypeToken<?> elementType = valueType.getComponentType();
-    return elementType == null ? null : ClassUtil.getAssertType(elementType, packageName);
-  }
-
-  public String getFullyQualifiedTypeNameIfNeeded(String packageName) {
-    return ClassUtil.getTypeDeclarationWithinPackage(valueType, packageName, false);
+    return elementType == null ? null : getAssertType(elementType, packageName);
   }
 
   public String getAssertTypeName(String packageName) {
-    return ClassUtil.getAssertType(valueType, packageName);
+    return getAssertType(valueType, packageName);
   }
 
   public String getPredicateForJavadoc() {
@@ -252,7 +240,7 @@ public abstract class DataDescription {
     return PREDICATE_PREFIXES_FOR_ERROR_MESSAGE_PART2.get(predicatePrefix);
   }
 
-  protected String readablePropertyName() {
+  private String readablePropertyName() {
     // sort by bigger length so that when cannotPlay is given, prefix found is "cannot" instead of "can"
     List<String> prefixesSortedByBiggerLength = BY_BIGGER_LENGTH_ORDERING.immutableSortedCopy(PREDICATE_PREFIXES_FOR_JAVADOC.keySet());
 
@@ -274,24 +262,24 @@ public abstract class DataDescription {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     DataDescription that = (DataDescription) o;
-    return Objects.equal(name, that.name) &&
-        Objects.equal(originalMember, that.originalMember) &&
-        Objects.equal(valueType, that.valueType);
+    return Objects.equals(name, that.name) &&
+           Objects.equals(originalMember, that.originalMember) &&
+           Objects.equals(valueType, that.valueType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(name, originalMember, valueType);
+    return Objects.hash(name, originalMember, valueType);
   }
 
   @Override
   public String toString() {
     return getClass().getSimpleName() + "[name=" + getName()
-        + ", valueType=" + valueType
-        + ", member=" + originalMember + "]";
+           + ", valueType=" + valueType
+           + ", member=" + originalMember + "]";
   }
 
-  protected int compareTo(final DataDescription other) {
+  int compareTo(final DataDescription other) {
     // Use the property name to remove duplicates
     int cmp = getName().compareTo(other.getName());
     if (cmp == 0) {
@@ -300,4 +288,14 @@ public abstract class DataDescription {
 
     return cmp;
   }
+
+  private String owningTypePackageName() {
+    return safePackageName(owningType);
+  }
+
+  private String removeOwningTypePackageNameIn(String value) {
+    String owningTypePackageName = owningTypePackageName();
+    return owningTypePackageName.isEmpty() ? value : removeAll(value, packageNameRegex(owningTypePackageName));
+  }
+
 }

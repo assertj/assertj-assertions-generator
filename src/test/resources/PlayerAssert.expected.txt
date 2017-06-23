@@ -361,82 +361,82 @@ public class PlayerAssert extends AbstractObjectAssert<PlayerAssert, Player> {
   }
 
   /**
-   * Verifies that the actual Player's previousTeams contains the given String elements.
-   * @param previousTeams the given elements that should be contained in actual Player's previousTeams.
+   * Verifies that the actual Player's previousTeamNames contains the given String elements.
+   * @param previousTeamNames the given elements that should be contained in actual Player's previousTeamNames.
    * @return this assertion object.
-   * @throws AssertionError if the actual Player's previousTeams does not contain all given String elements.
+   * @throws AssertionError if the actual Player's previousTeamNames does not contain all given String elements.
    */
-  public PlayerAssert hasPreviousTeams(String... previousTeams) {
+  public PlayerAssert hasPreviousTeamNames(String... previousTeamNames) {
     // check that actual Player we want to make assertions on is not null.
     isNotNull();
 
     // check that given String varargs is not null.
-    if (previousTeams == null) failWithMessage("Expecting previousTeams parameter not to be null.");
+    if (previousTeamNames == null) failWithMessage("Expecting previousTeamNames parameter not to be null.");
 
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
-    Assertions.assertThat(actual.getPreviousTeams()).contains(previousTeams);
+    Assertions.assertThat(actual.getPreviousTeamNames()).contains(previousTeamNames);
 
     // return the current assertion for method chaining
     return this;
   }
 
   /**
-   * Verifies that the actual Player's previousTeams contains <b>only</b> the given String elements and nothing else in whatever order.
+   * Verifies that the actual Player's previousTeamNames contains <b>only</b> the given String elements and nothing else in whatever order.
    *
-   * @param previousTeams the given elements that should be contained in actual Player's previousTeams.
+   * @param previousTeamNames the given elements that should be contained in actual Player's previousTeamNames.
    * @return this assertion object.
-   * @throws AssertionError if the actual Player's previousTeams does not contain all given String elements and nothing else.
+   * @throws AssertionError if the actual Player's previousTeamNames does not contain all given String elements and nothing else.
    */
-  public PlayerAssert hasOnlyPreviousTeams(String... previousTeams) {
+  public PlayerAssert hasOnlyPreviousTeamNames(String... previousTeamNames) {
     // check that actual Player we want to make assertions on is not null.
     isNotNull();
 
     // check that given String varargs is not null.
-    if (previousTeams == null) failWithMessage("Expecting previousTeams parameter not to be null.");
+    if (previousTeamNames == null) failWithMessage("Expecting previousTeamNames parameter not to be null.");
 
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
-    Assertions.assertThat(actual.getPreviousTeams()).containsOnly(previousTeams);
+    Assertions.assertThat(actual.getPreviousTeamNames()).containsOnly(previousTeamNames);
 
     // return the current assertion for method chaining
     return this;
   }
 
   /**
-   * Verifies that the actual Player's previousTeams does not contain the given String elements.
+   * Verifies that the actual Player's previousTeamNames does not contain the given String elements.
    *
-   * @param previousTeams the given elements that should not be in actual Player's previousTeams.
+   * @param previousTeamNames the given elements that should not be in actual Player's previousTeamNames.
    * @return this assertion object.
-   * @throws AssertionError if the actual Player's previousTeams contains any given String elements.
+   * @throws AssertionError if the actual Player's previousTeamNames contains any given String elements.
    */
-  public PlayerAssert doesNotHavePreviousTeams(String... previousTeams) {
+  public PlayerAssert doesNotHavePreviousTeamNames(String... previousTeamNames) {
     // check that actual Player we want to make assertions on is not null.
     isNotNull();
 
     // check that given String varargs is not null.
-    if (previousTeams == null) failWithMessage("Expecting previousTeams parameter not to be null.");
+    if (previousTeamNames == null) failWithMessage("Expecting previousTeamNames parameter not to be null.");
 
     // check with standard error message (use overridingErrorMessage before contains to set your own message).
-    Assertions.assertThat(actual.getPreviousTeams()).doesNotContain(previousTeams);
+    Assertions.assertThat(actual.getPreviousTeamNames()).doesNotContain(previousTeamNames);
 
     // return the current assertion for method chaining
     return this;
   }
 
   /**
-   * Verifies that the actual Player has no previousTeams.
+   * Verifies that the actual Player has no previousTeamNames.
    * @return this assertion object.
-   * @throws AssertionError if the actual Player's previousTeams is not empty.
+   * @throws AssertionError if the actual Player's previousTeamNames is not empty.
    */
-  public PlayerAssert hasNoPreviousTeams() {
+  public PlayerAssert hasNoPreviousTeamNames() {
     // check that actual Player we want to make assertions on is not null.
     isNotNull();
 
     // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have previousTeams but had :\n  <%s>";
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have previousTeamNames but had :\n  <%s>";
 
     // check that it is not empty
-    if (actual.getPreviousTeams().length > 0)  {
-      failWithMessage(assertjErrorMessage, actual, java.util.Arrays.toString(actual.getPreviousTeams()));
+    if (actual.getPreviousTeamNames().length > 0)  {
+      failWithMessage(assertjErrorMessage, actual, java.util.Arrays.toString(actual.getPreviousTeamNames()));
     }
 
     // return the current assertion for method chaining
@@ -907,5 +907,158 @@ public class PlayerAssert extends AbstractObjectAssert<PlayerAssert, Player> {
     // return the current assertion for method chaining
     return this;
   }
+
+  /**
+   * Verifies that the actual Player's previousTeams contains the given org.assertj.assertions.generator.data.nba.team.Team elements.
+   * @param previousTeams the given elements that should be contained in actual Player's previousTeams.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousTeams does not contain all given org.assertj.assertions.generator.data.nba.team.Team elements.
+   */
+  public PlayerAssert hasPreviousTeams(org.assertj.assertions.generator.data.nba.team.Team... previousTeams) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given org.assertj.assertions.generator.data.nba.team.Team varargs is not null.
+    if (previousTeams == null) failWithMessage("Expecting previousTeams parameter not to be null.");
+
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContains(info, actual.previousTeams, previousTeams);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's previousTeams contains the given org.assertj.assertions.generator.data.nba.team.Team elements in Collection.
+   * @param previousTeams the given elements that should be contained in actual Player's previousTeams.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousTeams does not contain all given org.assertj.assertions.generator.data.nba.team.Team elements.
+   */
+  public PlayerAssert hasPreviousTeams(java.util.Collection<? extends org.assertj.assertions.generator.data.nba.team.Team> previousTeams) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given org.assertj.assertions.generator.data.nba.team.Team collection is not null.
+    if (previousTeams == null) {
+      failWithMessage("Expecting previousTeams parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContains(info, actual.previousTeams, previousTeams.toArray());
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's previousTeams contains <b>only</b> the given org.assertj.assertions.generator.data.nba.team.Team elements and nothing else in whatever order.
+   * @param previousTeams the given elements that should be contained in actual Player's previousTeams.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousTeams does not contain all given org.assertj.assertions.generator.data.nba.team.Team elements.
+   */
+  public PlayerAssert hasOnlyPreviousTeams(org.assertj.assertions.generator.data.nba.team.Team... previousTeams) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given org.assertj.assertions.generator.data.nba.team.Team varargs is not null.
+    if (previousTeams == null) failWithMessage("Expecting previousTeams parameter not to be null.");
+
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.previousTeams, previousTeams);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's previousTeams contains <b>only</b> the given org.assertj.assertions.generator.data.nba.team.Team elements in Collection and nothing else in whatever order.
+   * @param previousTeams the given elements that should be contained in actual Player's previousTeams.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousTeams does not contain all given org.assertj.assertions.generator.data.nba.team.Team elements.
+   */
+  public PlayerAssert hasOnlyPreviousTeams(java.util.Collection<? extends org.assertj.assertions.generator.data.nba.team.Team> previousTeams) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given org.assertj.assertions.generator.data.nba.team.Team collection is not null.
+    if (previousTeams == null) {
+      failWithMessage("Expecting previousTeams parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.previousTeams, previousTeams.toArray());
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's previousTeams does not contain the given org.assertj.assertions.generator.data.nba.team.Team elements.
+   *
+   * @param previousTeams the given elements that should not be in actual Player's previousTeams.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousTeams contains any given org.assertj.assertions.generator.data.nba.team.Team elements.
+   */
+  public PlayerAssert doesNotHavePreviousTeams(org.assertj.assertions.generator.data.nba.team.Team... previousTeams) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given org.assertj.assertions.generator.data.nba.team.Team varargs is not null.
+    if (previousTeams == null) failWithMessage("Expecting previousTeams parameter not to be null.");
+
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.previousTeams, previousTeams);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's previousTeams does not contain the given org.assertj.assertions.generator.data.nba.team.Team elements in Collection.
+   *
+   * @param previousTeams the given elements that should not be in actual Player's previousTeams.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousTeams contains any given org.assertj.assertions.generator.data.nba.team.Team elements.
+   */
+  public PlayerAssert doesNotHavePreviousTeams(java.util.Collection<? extends org.assertj.assertions.generator.data.nba.team.Team> previousTeams) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given org.assertj.assertions.generator.data.nba.team.Team collection is not null.
+    if (previousTeams == null) {
+      failWithMessage("Expecting previousTeams parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.previousTeams, previousTeams.toArray());
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player has no previousTeams.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousTeams is not empty.
+   */
+  public PlayerAssert hasNoPreviousTeams() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // we override the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have previousTeams but had :\n  <%s>";
+
+    // check
+    if (actual.previousTeams.iterator().hasNext()) {
+      failWithMessage(assertjErrorMessage, actual, actual.previousTeams);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
 
 }

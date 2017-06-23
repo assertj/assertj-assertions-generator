@@ -10,7 +10,7 @@
  *
  * Copyright 2012-2017 the original author or authors.
  */
-package org.assertj.assertions.generator.data.nba;
+package org.assertj.assertions.generator.data.nba.team;
 
 // another Team class for testing that we generate correctly import of classes  with the same name.
 public class Team {

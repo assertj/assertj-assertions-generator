@@ -10,15 +10,16 @@
  *
  * Copyright 2012-2017 the original author or authors.
  */
-package org.assertj.assertions.generator;
+package org.assertj.assertions.generator.data.generic;
 
-// used in test - getters implemntation don't matter
-public class ClassUsingDifferentClassesWithSameName {
-  public org.assertj.assertions.generator.data.nba.team.Team getNbaTeam() {
-	return null;
+import java.util.Map;
+
+public class ManyBoundsGeneric<T extends Exception & Comparable<T>> {
+
+  public Map<T, MyGeneric<T>>[] genericArray = null;
+
+  public <T extends Exception, V extends String> Map<T, V> getValue(V name, Class<T> type) {
+    return null;
   }
 
-  public org.assertj.assertions.generator.data.Team getTeam() {
-	return null;
-  }
 }

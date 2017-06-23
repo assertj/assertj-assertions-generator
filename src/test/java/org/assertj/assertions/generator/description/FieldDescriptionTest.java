@@ -19,7 +19,9 @@ import java.util.Collections;
 
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.data.Name;
+import org.assertj.assertions.generator.data.generic.ManyBoundsGeneric;
 import org.assertj.assertions.generator.data.nba.Player;
+import org.assertj.assertions.generator.data.nba.team.Team;
 import org.junit.Test;
 
 public class FieldDescriptionTest {
@@ -31,8 +33,8 @@ public class FieldDescriptionTest {
   public void should_create_valid_typename_from_class() throws Exception {
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("name"), PLAYER_TYPE);
     assertThat(fieldDescription.getName()).isEqualTo("name");
-    assertThat(fieldDescription.getTypeName(false, false)).isEqualTo(Name.class.getSimpleName());
-    assertThat(fieldDescription.getElementTypeName(Player.class.getPackage().getName())).isNull();
+    assertThat(fieldDescription.getTypeName()).isEqualTo(Name.class.getName());
+    assertThat(fieldDescription.getElementTypeName()).isNull();
   }
 
   @Test
@@ -66,6 +68,24 @@ public class FieldDescriptionTest {
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("bad"), PLAYER_TYPE);
     assertThat(fieldDescription.getNegativePredicate()).as("negative").isEqualTo("isNotBad");
     assertThat(fieldDescription.getPredicate()).as("positive").isEqualTo("isBad");
+  }
+
+  @Test
+  public void should_describe_generic_field_correctly() throws Exception {
+    fieldDescription = new FieldDescription(Player.class.getDeclaredField("previousTeams"), PLAYER_TYPE);
+    assertThat(fieldDescription.getTypeName()).isEqualTo("java.util.List<? extends org.assertj.assertions.generator.data.nba.team.Team>");
+    assertThat(fieldDescription.getElementTypeName()).isEqualTo("org.assertj.assertions.generator.data.nba.team.Team");
+
+    fieldDescription = new FieldDescription(ManyBoundsGeneric.class.getField("genericArray"), TypeToken.of(ManyBoundsGeneric.class));
+    assertThat(fieldDescription.getTypeName()).isEqualTo("java.util.Map<T,MyGeneric<T>>[]");
+    assertThat(fieldDescription.getElementTypeName()).isEqualTo("java.util.Map<T,MyGeneric<T>>");
+  }
+
+  @Test
+  public void should_describe_array_field_correctly() throws Exception {
+    fieldDescription = new FieldDescription(Player.class.getDeclaredField("previousTeamNames"), PLAYER_TYPE);
+    assertThat(fieldDescription.getTypeName()).isEqualTo("String[]");
+    assertThat(fieldDescription.getElementTypeName()).isEqualTo("String");
   }
 
   @Test
@@ -180,9 +200,7 @@ public class FieldDescriptionTest {
   // Given that everything is written via reflection, we can not actually get access to a 
   // non-existant field anymore. Thus, there is no need to test it!
   //  @Test
-  //  public void should_not_find_getter_method_for_non_existant_field() throws Exception {
-  //
-  //  }
+  //  public void should_not_find_getter_method_for_non_existent_field()
 
   @Test(expected = NullPointerException.class)
   public void should_fail_find_with_npe_for_null_field_desc() throws Exception {

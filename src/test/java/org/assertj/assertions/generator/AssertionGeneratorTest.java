@@ -23,7 +23,6 @@ import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.converter.AnnotationConfiguration;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.theories.Theories;
@@ -36,14 +35,19 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.nio.charset.Charset.defaultCharset;
+import static java.util.Arrays.asList;
 import static java.util.Collections.EMPTY_SET;
 import static org.apache.commons.lang3.StringUtils.replace;
-import static org.assertj.assertions.generator.util.ClassUtil.*;
+import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.contentOf;
 
@@ -128,7 +132,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 
     File[] movieFiles = assertionGenerator.generateHierarchicalCustomAssertionFor(converter.convertToClassDescription(Movie.class),
                                                                                   allClasses);
-    List<File> generated = newArrayList(movieFiles);
+    List<File> generatedFiles = newArrayList(movieFiles);
 
     generationPathHandler.assertGeneratedAssertClass(Movie.class, "MovieAssert.expected.txt", false);
     generationPathHandler.assertAbstractGeneratedAssertClass(Movie.class, "AbstractMovieAssert.expected.txt");
@@ -136,12 +140,12 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     // These should also be generated!
     File[] artWorkFiles = assertionGenerator.generateHierarchicalCustomAssertionFor(converter.convertToClassDescription(ArtWork.class),
                                                                                     allClasses);
-    generated.addAll(Arrays.asList(artWorkFiles));
+    generatedFiles.addAll(asList(artWorkFiles));
     generationPathHandler.assertGeneratedAssertClass(ArtWork.class, "ArtWorkAssert.expected.txt", false);
     generationPathHandler.assertAbstractGeneratedAssertClass(ArtWork.class, "AbstractArtWorkAssert.expected.txt");
 
     // compile them
-    generationPathHandler.compileGeneratedFiles(generated);
+    generationPathHandler.compileGeneratedFiles(generatedFiles);
   }
 
   @Test
@@ -180,7 +184,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
       expectedContent = expectedContent.replace(" throws java.io.IOException ",
                                                 " throws java.io.IOException, java.sql.SQLException ");
 
-      List<GetterWithException> getters = Arrays.asList(STRING_1_EXCEPTION, BOOLEAN_1_EXCEPTION, ARRAY_1_EXCEPTION,
+      List<GetterWithException> getters = asList(STRING_1_EXCEPTION, BOOLEAN_1_EXCEPTION, ARRAY_1_EXCEPTION,
                                                         ITERABLE_1_EXCEPTION);
       Collections.sort(getters);
       for (GetterWithException getter : getters) {
@@ -253,7 +257,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     generationPathHandler.assertGeneratedAssertClass(AutoValueAnnotatedClass.class, "AutoValueAnnotatedClassAssert.expected.txt", true);
   }
 
-  @Test @Ignore
+  @Test
   public void should_generate_assertion_for_generic_class() throws IOException {
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(MultipleGenerics.class));
     generationPathHandler.assertGeneratedAssertClass(MultipleGenerics.class, "MultipleGenericsClassAssert.expected.txt", true);

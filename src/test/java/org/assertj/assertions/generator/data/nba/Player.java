@@ -13,6 +13,7 @@
 package org.assertj.assertions.generator.data.nba;
 
 import org.assertj.assertions.generator.data.Name;
+import org.assertj.assertions.generator.data.nba.team.Team;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +40,10 @@ public class Player {
   private Double sizeAsDoubleWrapper;
   // boolean property to test #46
   private boolean isDisabled;
-  private List<Player> teamMates = new ArrayList<Player>();
-  private List<int[]> points = new ArrayList<int[]>();
-  private String[] previousTeams = {};
+  private List<? extends Player> teamMates = new ArrayList<>();
+  private List<int[]> points = new ArrayList<>();
+  private String[] previousTeamNames = {};
+  public List<? extends Team> previousTeams = new ArrayList<>();
 
   private boolean bad;
 
@@ -98,7 +100,7 @@ public class Player {
     this.team = team;
   }
 
-  public List<Player> getTeamMates() {
+  public List<? extends Player> getTeamMates() {
     return teamMates;
   }
 
@@ -106,12 +108,12 @@ public class Player {
     this.teamMates = teamMates;
   }
 
-  public String[] getPreviousTeams() {
-    return previousTeams;
+  public String[] getPreviousTeamNames() {
+    return previousTeamNames;
   }
 
-  public void setPreviousTeams(String[] previousTeams) {
-    this.previousTeams = previousTeams;
+  public void setPreviousTeamNames(String[] previousTeamNames) {
+    this.previousTeamNames = previousTeamNames;
   }
 
   public boolean isRookie() {

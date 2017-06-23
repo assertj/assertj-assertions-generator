@@ -13,6 +13,8 @@
 package org.assertj.assertions.generator.description;
 
 import com.google.common.reflect.TypeToken;
+import org.assertj.assertions.generator.data.Movie;
+import org.assertj.assertions.generator.data.generic.ManyBoundsGeneric;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -38,8 +40,8 @@ public class GetterDescriptionTest {
   public void should_create_valid_typename_from_class() throws Exception {
     getterDescription = new GetterDescription("points", PLAYER_TYPE_DESCRIPTION, PLAYER_GET_POINTS_METHOD);
     assertThat(getterDescription.getName()).isEqualTo("points");
-    assertThat(getterDescription.getTypeName(false, false)).isEqualTo("List<int[]>");
-    assertThat(getterDescription.getElementTypeName(Player.class.getPackage().getName())).isEqualTo("int[]");
+    assertThat(getterDescription.getTypeName()).isEqualTo("java.util.List<int[]>");
+    assertThat(getterDescription.getElementTypeName()).isEqualTo("int[]");
   }
 
   @Test
@@ -133,4 +135,25 @@ public class GetterDescriptionTest {
     assertThat(getterDescription.getPredicateForErrorMessagePart1()).isEqualTo("should not play");
     assertThat(getterDescription.getPredicateForErrorMessagePart2()).isEqualTo("should");
   }
+
+  @Test
+  public void should_describe_multiple_generic_getter_correctly() throws Exception {
+    Method method = ManyBoundsGeneric.class.getMethod("getValue", String.class, Class.class);
+    getterDescription = new GetterDescription("value",
+                                              TypeToken.of(ManyBoundsGeneric.class),
+                                              method);
+    assertThat(getterDescription.getName()).isEqualTo("value");
+    assertThat(getterDescription.getTypeName()).isEqualTo("java.util.Map<T,V>");
+    assertThat(getterDescription.getElementTypeName()).isNull();
+  }
+
+  @Test
+  public void should_describe_inner_class_getter_correctly() throws Exception {
+    Method getPublicCategory = Movie.class.getMethod("getPublicCategory");
+    getterDescription = new GetterDescription("publicCategory", TypeToken.of(Movie.class), getPublicCategory);
+    assertThat(getterDescription.getName()).isEqualTo("publicCategory");
+    assertThat(getterDescription.getTypeName()).isEqualTo("Movie.PublicCategory");
+    assertThat(getterDescription.getElementTypeName()).isNull();
+  }
+
 }

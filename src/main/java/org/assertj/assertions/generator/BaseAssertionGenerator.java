@@ -37,8 +37,6 @@ import org.assertj.assertions.generator.description.GetterDescription;
 @SuppressWarnings("WeakerAccess")
 public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEntryPointGenerator {
 
-  static final String ASSERT_CLASS_SUFFIX = "Assert";
-  static final String ASSERT_CLASS_FILE_SUFFIX = ASSERT_CLASS_SUFFIX + ".java";
   static final String TEMPLATES_DIR = "templates" + File.separator;
   private static final String IMPORT_LINE = "import %s;%s";
   private static final String PREDICATE = "${predicate}";
@@ -59,6 +57,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String PROPERTY_ASSERT_TYPE = "${propertyAssertType}";
   private static final String CLASS_TO_ASSERT = "${class_to_assert}";
   private static final String CUSTOM_ASSERTION_CLASS = "${custom_assertion_class}";
+  private static final String CUSTOM_ASSERTION_CLASS_WITHOUT_GENERIC = "${custom_assertion_class_without_generic}";
+  private static final String CLASS_GENERIC_TYPE_DECLARATION = "${class_generic_type_declaration}";
   private static final String SUPER_ASSERTION_CLASS = "${super_assertion_class}";
   private static final String SELF_TYPE = "${self_type}";
   private static final String MYSELF = "${myself}";
@@ -203,7 +203,9 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     final String myself = concrete ? "this" : "myself";
 
     template = replace(template, PACKAGE, classDescription.getPackageName());
+    template = replace(template, CUSTOM_ASSERTION_CLASS_WITHOUT_GENERIC, removeGenericFrom(customAssertionClass));
     template = replace(template, CUSTOM_ASSERTION_CLASS, customAssertionClass);
+    template = replaceClassGenericTypeDeclaration(template, classDescription);
     // className could be a nested class like "OuterClass.NestedClass", in that case assert class will be OuterClassNestedClass
     template = replace(template, SUPER_ASSERTION_CLASS, getTypeNameWithoutDots(parentAssertClassName));
     template = replace(template, CLASS_TO_ASSERT, classDescription.getClassNameWithOuterClass());
@@ -211,6 +213,16 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     template = replace(template, MYSELF, myself);
     template = replace(template, IMPORTS, listNeededImports(assertjImports, classDescription.getPackageName()));
 
+    return template;
+  }
+
+  private String replaceClassGenericTypeDeclaration(String template, ClassDescription classDescription) {
+    if (classDescription.isGeneric()) {
+      template = replace(template, CLASS_GENERIC_TYPE_DECLARATION, classDescription.getGenericTypeDeclaration());
+    } else {
+      // remove the variables and the following space for nice formatting.
+      template = replace(template, CLASS_GENERIC_TYPE_DECLARATION + " ", "");
+    }
     return template;
   }
 
@@ -489,8 +501,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE, field.getTypeName());
     assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,
                                field.getAssertTypeName(classDescription.getPackageName()));
-    assertionContent = replace(assertionContent, PROPERTY_TYPE,
-                               field.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
+    assertionContent = replace(assertionContent, PROPERTY_TYPE, field.getTypeName());
     assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, fieldName);
     // It should not be possible to have a field that is a keyword - compiler won't allow it.
     assertionContent = replace(assertionContent, PROPERTY_WITH_SAFE, fieldName);
@@ -559,7 +570,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private String assertionContentForProperty(GetterDescription getter, ClassDescription classDescription) {
     String assertionContent = baseAssertionContentFor(getter, classDescription);
 
-    assertionContent = declareExceptions(getter, assertionContent, classDescription);
+    assertionContent = declareExceptions(getter, assertionContent);
 
     String propertyName = getter.getName();
     if (getter.isPredicate()) {
@@ -581,10 +592,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     assertionContent = replace(assertionContent, PROPERTY_GETTER_CALL, getter.getOriginalMember().getName());
     assertionContent = replace(assertionContent, PROPERTY_WITH_UPPERCASE_FIRST_CHAR, capitalize(propertyName));
     assertionContent = replace(assertionContent, PROPERTY_SIMPLE_TYPE, getter.getTypeName());
-    assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE,
-                               getter.getAssertTypeName(classDescription.getPackageName()));
-    assertionContent = replace(assertionContent, PROPERTY_TYPE,
-                               getter.getFullyQualifiedTypeNameIfNeeded(classDescription.getPackageName()));
+    assertionContent = replace(assertionContent, PROPERTY_ASSERT_TYPE, getter.getAssertTypeName(classDescription.getPackageName()));
+    assertionContent = replace(assertionContent, PROPERTY_TYPE, getter.getTypeName());
     assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, propertyName);
     assertionContent = replace(assertionContent, PROPERTY_WITH_SAFE, getSafeProperty(propertyName));
     return assertionContent;
@@ -604,14 +613,14 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       assertionContent = templateRegistry.getTemplate(type).getContent();
     } else if (fieldOrProperty.isIterableType()) {
       assertionContent = replace(templateRegistry.getTemplate(Type.HAS_FOR_ITERABLE).getContent(), ELEMENT_TYPE,
-                                 fieldOrProperty.getElementTypeName(classDescription.getPackageName()));
+                                 fieldOrProperty.getElementTypeName());
       assertionContent = replace(assertionContent, ELEMENT_ASSERT_TYPE,
-                                 fieldOrProperty.getElementAssertTypeName(classDescription.getPackageName()));
+                                 fieldOrProperty.getElementAssertTypeName());
     } else if (fieldOrProperty.isArrayType()) {
       assertionContent = replace(templateRegistry.getTemplate(Type.HAS_FOR_ARRAY).getContent(), ELEMENT_TYPE,
-                                 fieldOrProperty.getElementTypeName(classDescription.getPackageName()));
+                                 fieldOrProperty.getElementTypeName());
       assertionContent = replace(assertionContent, ELEMENT_ASSERT_TYPE,
-                                 fieldOrProperty.getElementAssertTypeName(classDescription.getPackageName()));
+                                 fieldOrProperty.getElementAssertTypeName());
     } else if (fieldOrProperty.isRealNumberType()) {
       Type type = fieldOrProperty.isPrimitiveWrapperType() ? Type.HAS_FOR_REAL_NUMBER_WRAPPER : Type.HAS_FOR_REAL_NUMBER;
       assertionContent = templateRegistry.getTemplate(type).getContent();
@@ -654,11 +663,9 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
    *
    * @param getter method we want to declare exception for
    * @param assertionContent the assertion content to enrich
-   * @param classDescription use to resolve exception
    * @return assertion content with thrown exceptions
    */
-  private String declareExceptions(GetterDescription getter, String assertionContent,
-                                   ClassDescription classDescription) {
+  private String declareExceptions(GetterDescription getter, String assertionContent) {
     StringBuilder throwsClause = new StringBuilder();
     StringBuilder throwsJavaDoc = new StringBuilder();
     boolean first = true;
@@ -666,7 +673,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       if (first) throwsClause.append("throws ");
       else throwsClause.append(", ");
       first = false;
-      String exceptionName = getTypeDeclarationWithinPackage(exception, classDescription.getPackageName(), false);
+      String exceptionName = getTypeDeclaration(exception);
       throwsClause.append(exceptionName);
       throwsJavaDoc.append(LINE_SEPARATOR).append("   * @throws ").append(exceptionName);
       throwsJavaDoc.append(" if actual.").append("${getter}() throws one.");

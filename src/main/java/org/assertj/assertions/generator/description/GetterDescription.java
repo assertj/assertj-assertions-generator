@@ -19,6 +19,9 @@ import org.assertj.assertions.generator.util.ClassUtil;
 
 import java.lang.reflect.Method;
 
+import static org.assertj.assertions.generator.util.ClassUtil.isBoolean;
+import static org.assertj.assertions.generator.util.ClassUtil.isValidPredicateName;
+
 /**
  * Stores the information needed to generate an assertion for a getter method.
  * <p>
@@ -46,8 +49,7 @@ public class GetterDescription extends DataDescription implements Comparable<Get
   private final ImmutableList<TypeToken<? extends Throwable>> exceptions;
 
   public GetterDescription(String propertyName, TypeToken<?> owningType, Method method) {
-    super(propertyName, method, owningType.method(method).getReturnType());
-
+    super(propertyName, method, owningType.method(method).getReturnType(), owningType);
     this.invokable = owningType.method(method);
     this.exceptions = invokable.getExceptionTypes();
   }
@@ -68,10 +70,7 @@ public class GetterDescription extends DataDescription implements Comparable<Get
 
   @Override
   public boolean isPredicate() {
-    return ClassUtil.isBoolean(valueType) && ClassUtil.isValidPredicateName(originalMember.getName());
+    return isBoolean(valueType) && isValidPredicateName(originalMember.getName());
   }
 
-  public Invokable<?, ?> getInvokable() {
-    return invokable;
-  }
 }

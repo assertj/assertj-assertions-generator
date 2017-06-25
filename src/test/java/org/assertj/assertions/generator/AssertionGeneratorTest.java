@@ -12,6 +12,7 @@
  */
 package org.assertj.assertions.generator;
 
+import com.google.common.base.Optional;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.assertions.generator.data.*;
@@ -295,13 +296,26 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_generate_assertion_for_class_with_$() throws IOException {
     ClassDescription dollar$ClassDescription = converter.convertToClassDescription(Dollar$.class);
     assertionGenerator.generateCustomAssertionFor(dollar$ClassDescription);
-    generationPathHandler.assertGeneratedAssertClass(Dollar$.class, "Dollar$.flat.expected.txt", true);
+    generationPathHandler.assertGeneratedAssertClass(Dollar$.class, "Dollar$Assert.flat.expected.txt", true);
 
-    File[] dollar$Files = assertionGenerator.generateHierarchicalCustomAssertionFor(dollar$ClassDescription, Collections.EMPTY_SET);
+    File[] dollar$Files = assertionGenerator.generateHierarchicalCustomAssertionFor(dollar$ClassDescription, EMPTY_SET);
     generationPathHandler.compileGeneratedFiles(newArrayList(dollar$Files));
 
-    generationPathHandler.assertGeneratedAssertClass(Dollar$.class, "Dollar$.expected.txt", false);
+    generationPathHandler.assertGeneratedAssertClass(Dollar$.class, "Dollar$Assert.expected.txt", false);
     generationPathHandler.assertAbstractGeneratedAssertClass(Dollar$.class, "AbstractDollar$Assert.expected.txt");
+  }
+
+  @Test
+  public void should_generate_assertion_for_guava_optional_class() throws IOException {
+    ClassDescription optionalClassDescription = converter.convertToClassDescription(Optional.class);
+    assertionGenerator.generateCustomAssertionFor(optionalClassDescription);
+    generationPathHandler.assertGeneratedAssertClass(Optional.class, "OptionalAssert.flat.expected.txt", true);
+
+//    File[] dollar$Files = assertionGenerator.generateHierarchicalCustomAssertionFor(optionalClassDescription, EMPTY_SET);
+//    generationPathHandler.compileGeneratedFiles(newArrayList(dollar$Files));
+//
+//    generationPathHandler.assertGeneratedAssertClass(Dollar$.class, "OptionalAssert.expected.txt", false);
+//    generationPathHandler.assertAbstractGeneratedAssertClass(Dollar$.class, "AbstractOptionalAssert.expected.txt");
   }
 
   private String expectedContentFromTemplate(NestedClass nestedClass, String fileTemplate) throws IOException {

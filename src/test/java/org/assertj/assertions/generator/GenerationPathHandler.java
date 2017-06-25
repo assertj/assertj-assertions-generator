@@ -131,7 +131,7 @@ public class GenerationPathHandler extends TemporaryFolder {
     return javaFileObjects;
   }
 
-  public void compileGeneratedFiles(Class<?>... classes) {
+  public void compileGeneratedFilesFor(Class<?>... classes) {
     List<File> files = new ArrayList<>(classes.length);
     for (Class<?> clazz : classes) {
       files.add(fileGeneratedFor(clazz));
@@ -148,7 +148,7 @@ public class GenerationPathHandler extends TemporaryFolder {
     File expectedFile = resourcesDir.resolve(expectedAssertFile).toAbsolutePath().toFile();
     File actualFile = fileGeneratedFor(clazz);
     // compile it!
-    if (compileGenerated) compileGeneratedFiles(clazz);
+    if (compileGenerated) compileGeneratedFilesFor(clazz);
 
     assertThat(actualFile).hasSameContentAs(expectedFile);
   }

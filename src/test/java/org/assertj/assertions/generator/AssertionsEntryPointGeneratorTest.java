@@ -12,6 +12,7 @@
  */
 package org.assertj.assertions.generator;
 
+import com.google.common.base.Optional;
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.generic.MyGeneric;
@@ -58,12 +59,14 @@ public class AssertionsEntryPointGeneratorTest {
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
                                                                        Name.class, Player.class, Movie.class,
                                                                        TolkienCharacter.class, TreeEnum.class,
-                                                                       Movie.PublicCategory.class);
+                                                                       Movie.PublicCategory.class, Optional.class);
     // WHEN
     File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptionSet, STANDARD, null);
     // THEN
     String expectedContent = readExpectedContentFromFile("Assertions.expected.txt");
     assertThat(assertionsEntryPointFile).as("check entry point class content").hasContent(expectedContent);
+
+    // TODO compile with genHandle.compileGeneratedFiles();
   }
 
   @Test
@@ -265,18 +268,6 @@ public class AssertionsEntryPointGeneratorTest {
     for (AssertionsEntryPointType assertionsEntryPointType : AssertionsEntryPointType.values()) {
       assertThat(generator.generateAssertionsEntryPointClassContentFor(null, assertionsEntryPointType, null)).isEmpty();
     }
-  }
-
-  //@Test
-  public void should_generate_assertion_entry_point_class_for_generic_class() throws Exception {
-    // GIVEN no ClassDescription
-    Set<ClassDescription> classDescriptions = getClassDescriptionsOf(MyGeneric.class);
-    File assertionsEntryPointFile = generator.generateAssertionsEntryPointClassFor(classDescriptions, STANDARD, null);
-    // THEN generated entry points file are null
-    // String expectedContent = readExpectedContentFromFile("MyAssertions.expected.txt");
-    assertThat(assertionsEntryPointFile).as("check custom assertions entry point class")
-                                        .hasContent("");
-
   }
 
   private Set<ClassDescription> getClassDescriptionsOf(Class<?>... classes) {

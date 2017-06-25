@@ -384,6 +384,11 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       // in case of inner classes like Movie.PublicCategory use class name with outer class i.e. Movie.PublicCategory.
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CLASS_TO_ASSERT,
                                                  classDescription.getFullyQualifiedClassName());
+
+      // in case we deal with generic type, we must add the generic type declaration
+      // ex: public static <T> OptionalAssert<T> assertThat(Optional<T> actual) {
+      assertionEntryPointMethodContent = replaceClassGenericTypeDeclaration(assertionEntryPointMethodContent, classDescription);
+      
       allAssertThatsContentBuilder.append(lineSeparator).append(assertionEntryPointMethodContent);
     }
     return allAssertThatsContentBuilder.toString();

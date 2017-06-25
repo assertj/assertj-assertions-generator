@@ -535,6 +535,7 @@ public class ClassUtil {
     return getTypeDeclaration(type, false);
   }
 
+  // TODO is it useful ? if field has List<T> type should we generate containsAll(List<? extends T> list)
   public static String getParameterTypeDeclaration(TypeToken<?> type) {
     return getTypeDeclaration(type, true);
   }

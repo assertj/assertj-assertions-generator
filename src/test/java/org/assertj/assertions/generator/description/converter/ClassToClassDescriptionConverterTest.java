@@ -12,6 +12,7 @@
  */
 package org.assertj.assertions.generator.description.converter;
 
+import com.google.common.base.Optional;
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.BeanWithExceptionsTest;
 import org.assertj.assertions.generator.NestedClassesTest;
@@ -67,7 +68,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getFullyQualifiedAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.PlayerAssert");
     assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractPlayerAssert");
     assertThat(classDescription.getAbstractAssertClassFilename()).isEqualTo("AbstractPlayerAssert.java");
-    assertThat(classDescription.getFullyQualifiedParentAssertClassName()).isEqualTo("java.lang.AbstractObjectAssert");
+    assertThat(classDescription.getFullyQualifiedParentAssertClassName()).isEqualTo("org.assertj.core.api.AbstractObjectAssert");
   }
 
   @Test
@@ -290,6 +291,23 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getSuperType()).isEqualTo(TypeToken.of(MultipleGenerics.class).getSupertype(MultipleGenericsParent.class))
                                                .hasToString(
                                                    "org.assertj.assertions.generator.data.generic.parent.MultipleGenericsParent<T, U>");
+  }
+
+  @Test
+  public void should_build_class_description_for_guava_optional() throws Exception {
+    // Given a type with generic parameter
+    Class<?> clazz = Optional.class;
+    // When
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    // Then
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Optional<T>");
+    assertThat(classDescription.getGenericTypeDeclaration()).isEqualTo("<T>");
+    assertThat(classDescription.getAssertClassName()).isEqualTo("OptionalAssert<T>");
+    assertThat(classDescription.getAssertClassFilename()).isEqualTo("OptionalAssert.java");
+    assertThat(classDescription.getFullyQualifiedAssertClassName())
+        .isEqualTo("com.google.common.base.OptionalAssert<T>");
+    assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractOptionalAssert<T>");
+    assertThat(classDescription.getFullyQualifiedParentAssertClassName()).isEqualTo("org.assertj.core.api.AbstractObjectAssert");
   }
 
   @Test

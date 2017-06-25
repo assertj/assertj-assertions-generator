@@ -156,7 +156,8 @@ public class ClassDescription implements Comparable<ClassDescription> {
   }
 
   public String getFullyQualifiedParentAssertClassName() {
-    return superType.getRawType().getPackage().getName() + "." + abstractAssertClassNameOf(superType);
+    if (superType.getRawType().equals(Object.class)) return "org.assertj.core.api.AbstractObjectAssert";
+    else return superType.getRawType().getPackage().getName() + "." + abstractAssertClassNameOf(superType);
   }
 
   public String getGenericTypeDeclaration() {
@@ -186,7 +187,6 @@ public class ClassDescription implements Comparable<ClassDescription> {
   public int compareTo(ClassDescription o) {
     return type.getRawType().getName().compareTo(o.type.getRawType().getName());
   }
-
 
   private static String assertClassNameOf(TypeToken<?> type) {
     String typeDeclaration = getTypeDeclaration(type);

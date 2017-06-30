@@ -12,11 +12,6 @@
  */
 package org.assertj.assertions.generator.data;
 
-import org.assertj.assertions.generator.GenerateAssertion;
-
-/**
- * class with annotated non standard getters in order to generate assertions for them.
- */
 @AutoValue
 public class AutoValueAnnotatedClass {
 

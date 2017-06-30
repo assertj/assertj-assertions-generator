@@ -161,7 +161,13 @@ public class ClassDescription implements Comparable<ClassDescription> {
   }
 
   public String getGenericTypeDeclaration() {
-    return ClassUtil.extractGenericFrom(getClassNameWithOuterClass());
+    return extractGenericFrom(getClassNameWithOuterClass());
+  }
+
+  public String listGenericTypes() {
+    String genericTypeDeclaration = getGenericTypeDeclaration();
+    return genericTypeDeclaration.replace("<", ", ")
+                                 .replace(">", "");
   }
 
   @Override

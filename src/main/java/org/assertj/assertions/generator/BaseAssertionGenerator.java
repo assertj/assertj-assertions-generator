@@ -57,8 +57,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String PROPERTY_TYPE = "${propertyType}";
   private static final String PROPERTY_SIMPLE_TYPE = "${propertySimpleType}";
   private static final String PROPERTY_ASSERT_TYPE = "${propertyAssertType}";
+  private static final String CLASS_TO_ASSERT_WITHOUT_GENERIC = "${class_to_assert_without_generic}";
   private static final String CLASS_TO_ASSERT = "${class_to_assert}";
   private static final String CUSTOM_ASSERTION_CLASS = "${custom_assertion_class}";
+  private static final String CUSTOM_ASSERTION_GENERIC_TYPES = "${custom_assertion_generic_types}";
   private static final String CUSTOM_ASSERTION_CLASS_WITHOUT_GENERIC = "${custom_assertion_class_without_generic}";
   private static final String CLASS_GENERIC_TYPE_DECLARATION = "${class_generic_type_declaration}";
   private static final String ABSTRACT_SUPER_ASSERTION_CLASS = "${super_assertion_class}";
@@ -209,6 +211,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
     template = replace(template, PACKAGE, classDescription.getPackageName());
     template = replace(template, CUSTOM_ASSERTION_CLASS_WITHOUT_GENERIC, removeGenericFrom(customAssertionClass));
+    template = replace(template, CUSTOM_ASSERTION_GENERIC_TYPES, classDescription.listGenericTypes());
     template = replace(template, CUSTOM_ASSERTION_CLASS, customAssertionClass);
     template = replaceClassGenericTypeDeclaration(template, classDescription);
     // use a simple parent class name as we have already imported it
@@ -380,15 +383,19 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       // in case of inner classes like Movie.PublicCategory, class assert will be MoviePublicCategoryAssert
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CUSTOM_ASSERTION_CLASS,
                                                  classDescription.getFullyQualifiedAssertClassName());
+      assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CUSTOM_ASSERTION_CLASS_WITHOUT_GENERIC, 
+                                                 removeGenericFrom(classDescription.getFullyQualifiedAssertClassName()));
       // resolve class (ex: Player)
       // in case of inner classes like Movie.PublicCategory use class name with outer class i.e. Movie.PublicCategory.
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CLASS_TO_ASSERT,
                                                  classDescription.getFullyQualifiedClassName());
+      assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CLASS_TO_ASSERT_WITHOUT_GENERIC,
+                                                 removeGenericFrom(classDescription.getFullyQualifiedClassName()));
 
       // in case we deal with generic type, we must add the generic type declaration
       // ex: public static <T> OptionalAssert<T> assertThat(Optional<T> actual) {
       assertionEntryPointMethodContent = replaceClassGenericTypeDeclaration(assertionEntryPointMethodContent, classDescription);
-      
+
       allAssertThatsContentBuilder.append(lineSeparator).append(assertionEntryPointMethodContent);
     }
     return allAssertThatsContentBuilder.toString();

@@ -5,6 +5,6 @@
    * @return the created assertion object.
    */
   @org.assertj.core.util.CheckReturnValue
-  public static ${custom_assertion_class} then(${class_to_assert} actual) {
+  public static ${class_generic_type_declaration} ${custom_assertion_class} then(${class_to_assert} actual) {
     return new ${custom_assertion_class}(actual);
   }

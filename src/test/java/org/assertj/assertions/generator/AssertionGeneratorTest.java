@@ -311,11 +311,12 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     assertionGenerator.generateCustomAssertionFor(optionalClassDescription);
     generationPathHandler.assertGeneratedAssertClass(Optional.class, "OptionalAssert.flat.expected.txt", true);
 
-//    File[] dollar$Files = assertionGenerator.generateHierarchicalCustomAssertionFor(optionalClassDescription, EMPTY_SET);
-//    generationPathHandler.compileGeneratedFiles(newArrayList(dollar$Files));
-//
-//    generationPathHandler.assertGeneratedAssertClass(Dollar$.class, "OptionalAssert.expected.txt", false);
-//    generationPathHandler.assertAbstractGeneratedAssertClass(Dollar$.class, "AbstractOptionalAssert.expected.txt");
+    File[] optionalFiles = assertionGenerator.generateHierarchicalCustomAssertionFor(optionalClassDescription, EMPTY_SET);
+    generationPathHandler.assertGeneratedAssertClass(Optional.class, "OptionalAssert.expected.txt", false);
+    generationPathHandler.assertAbstractGeneratedAssertClass(Optional.class, "AbstractOptionalAssert.expected.txt");
+    
+    generationPathHandler.compileGeneratedFiles(newArrayList(optionalFiles));
+
   }
 
   private String expectedContentFromTemplate(NestedClass nestedClass, String fileTemplate) throws IOException {

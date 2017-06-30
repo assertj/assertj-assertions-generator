@@ -13,7 +13,7 @@ public abstract class AbstractArtWorkAssert<S extends AbstractArtWorkAssert<S, A
    * Creates a new <code>{@link AbstractArtWorkAssert}</code> to make assertions on actual ArtWork.
    * @param actual the ArtWork we want to make assertions on.
    */
-  protected AbstractArtWorkAssert(A actual, Class<S> selfType) {
+  protected AbstractArtWorkAssert(A actual, Class<?> selfType) {
     super(actual, selfType);
   }
 

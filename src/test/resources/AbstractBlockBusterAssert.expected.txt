@@ -11,7 +11,7 @@ public abstract class AbstractBlockBusterAssert<S extends AbstractBlockBusterAss
    * Creates a new <code>{@link AbstractBlockBusterAssert}</code> to make assertions on actual BlockBuster.
    * @param actual the BlockBuster we want to make assertions on.
    */
-  protected AbstractBlockBusterAssert(A actual, Class<S> selfType) {
+  protected AbstractBlockBusterAssert(A actual, Class<?> selfType) {
     super(actual, selfType);
   }
 

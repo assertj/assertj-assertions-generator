@@ -27,4 +27,5 @@ public class Dollar$Assert extends AbstractDollar$Assert<Dollar$Assert, Dollar$>
   public static Dollar$Assert assertThat(Dollar$ actual) {
     return new Dollar$Assert(actual);
   }
+
 }

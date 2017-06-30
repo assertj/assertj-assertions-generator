@@ -27,4 +27,5 @@ public class ${nestedClass}Assert extends Abstract${nestedClass}Assert<${nestedC
   public static ${nestedClass}Assert assertThat(${nestedClass} actual) {
     return new ${nestedClass}Assert(actual);
   }
+
 }

@@ -12,7 +12,7 @@ public abstract class AbstractOptionalAssert<S extends AbstractOptionalAssert<S,
    * Creates a new <code>{@link AbstractOptionalAssert<T>}</code> to make assertions on actual Optional<T>.
    * @param actual the Optional<T> we want to make assertions on.
    */
-  protected AbstractOptionalAssert(A actual, Class<S> selfType) {
+  protected AbstractOptionalAssert(A actual, Class<?> selfType) {
     super(actual, selfType);
   }
 

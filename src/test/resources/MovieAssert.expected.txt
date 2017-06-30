@@ -27,4 +27,5 @@ public class MovieAssert extends AbstractMovieAssert<MovieAssert, Movie> {
   public static MovieAssert assertThat(Movie actual) {
     return new MovieAssert(actual);
   }
+
 }

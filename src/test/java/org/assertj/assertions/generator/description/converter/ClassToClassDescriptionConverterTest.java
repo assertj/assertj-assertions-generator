@@ -62,10 +62,12 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getGenericTypeDeclaration()).isEmpty();
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.nba");
     assertThat(classDescription.getFullyQualifiedClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.Player");
+    assertThat(classDescription.getFullyQualifiedClassNameWithoutGenerics()).isEqualTo(classDescription.getFullyQualifiedClassName());
     assertThat(classDescription.getGettersDescriptions()).hasSize(19);
     assertThat(classDescription.getAssertClassName()).isEqualTo("PlayerAssert");
     assertThat(classDescription.getAssertClassFilename()).isEqualTo("PlayerAssert.java");
     assertThat(classDescription.getFullyQualifiedAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.PlayerAssert");
+    assertThat(classDescription.getFullyQualifiedAssertClassNameWithoutGenerics()).isEqualTo(classDescription.getFullyQualifiedAssertClassName());
     assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractPlayerAssert");
     assertThat(classDescription.getAbstractAssertClassFilename()).isEqualTo("AbstractPlayerAssert.java");
     assertThat(classDescription.getFullyQualifiedParentAssertClassName()).isEqualTo("org.assertj.core.api.AbstractObjectAssert");
@@ -88,6 +90,8 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getAssertClassName()).isEqualTo("MovieAssert");
     assertThat(classDescription.getAssertClassFilename()).isEqualTo("MovieAssert.java");
     assertThat(classDescription.getFullyQualifiedAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.MovieAssert");
+    assertThat(classDescription.getFullyQualifiedAssertClassNameWithoutGenerics())
+        .isEqualTo(classDescription.getFullyQualifiedAssertClassName());
     assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractMovieAssert");
     assertThat(classDescription.getAbstractAssertClassFilename()).isEqualTo("AbstractMovieAssert.java");
     assertThat(classDescription.getFullyQualifiedParentAssertClassName())
@@ -262,6 +266,8 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getAssertClassFilename()).isEqualTo("MyGenericAssert.java");
     assertThat(classDescription.getFullyQualifiedAssertClassName())
         .isEqualTo("org.assertj.assertions.generator.data.generic.MyGenericAssert<T>");
+    assertThat(classDescription.getFullyQualifiedAssertClassNameWithoutGenerics())
+        .isEqualTo("org.assertj.assertions.generator.data.generic.MyGenericAssert");
     assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractMyGenericAssert<T>");
     assertThat(classDescription.getFullyQualifiedParentAssertClassName())
         .isEqualTo("org.assertj.assertions.generator.data.generic.AbstractMyGenericParentAssert<T>");
@@ -281,8 +287,14 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getGenericTypeDeclaration()).isEqualTo("<T,U,V,W>");
     assertThat(classDescription.getAssertClassName()).isEqualTo("MultipleGenericsAssert<T,U,V,W>");
     assertThat(classDescription.getAssertClassFilename()).isEqualTo("MultipleGenericsAssert.java");
+    assertThat(classDescription.getFullyQualifiedClassName())
+        .isEqualTo("org.assertj.assertions.generator.data.generic.MultipleGenerics<T,U,V,W>");
+    assertThat(classDescription.getFullyQualifiedClassNameWithoutGenerics())
+        .isEqualTo("org.assertj.assertions.generator.data.generic.MultipleGenerics");
     assertThat(classDescription.getFullyQualifiedAssertClassName())
         .isEqualTo("org.assertj.assertions.generator.data.generic.MultipleGenericsAssert<T,U,V,W>");
+    assertThat(classDescription.getFullyQualifiedAssertClassNameWithoutGenerics())
+        .isEqualTo("org.assertj.assertions.generator.data.generic.MultipleGenericsAssert");
     assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractMultipleGenericsAssert<T,U,V,W>");
     assertThat(classDescription.getFullyQualifiedParentAssertClassName())
         .isEqualTo("org.assertj.assertions.generator.data.generic.parent.AbstractMultipleGenericsParentAssert<T,U>");
@@ -306,8 +318,12 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getAssertClassFilename()).isEqualTo("OptionalAssert.java");
     assertThat(classDescription.getFullyQualifiedAssertClassName())
         .isEqualTo("com.google.common.base.OptionalAssert<T>");
+    assertThat(classDescription.getFullyQualifiedAssertClassNameWithoutGenerics())
+        .isEqualTo("com.google.common.base.OptionalAssert");
     assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractOptionalAssert<T>");
     assertThat(classDescription.getFullyQualifiedParentAssertClassName()).isEqualTo("org.assertj.core.api.AbstractObjectAssert");
+    assertThat(classDescription.getFullyQualifiedClassName()).isEqualTo("com.google.common.base.Optional<T>");
+    assertThat(classDescription.getFullyQualifiedClassNameWithoutGenerics()).isEqualTo("com.google.common.base.Optional");
   }
 
   @Test
@@ -319,6 +335,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     // Then
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("FellowshipOfTheRing");
     assertThat(classDescription.getFullyQualifiedClassName()).isEqualTo("org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing");
+    assertThat(classDescription.getFullyQualifiedClassNameWithoutGenerics()).isEqualTo(classDescription.getFullyQualifiedClassName());
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.lotr");
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
   }
@@ -338,6 +355,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     // Then
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Team");
     assertThat(classDescription.getFullyQualifiedClassName()).isEqualTo("org.assertj.assertions.generator.data.Team");
+    assertThat(classDescription.getFullyQualifiedClassNameWithoutGenerics()).isEqualTo(classDescription.getFullyQualifiedClassName());
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(classDescription.getGettersDescriptions()).extracting("name")
                                                          .containsExactly("division");

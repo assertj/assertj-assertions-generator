@@ -25,6 +25,7 @@ import static com.google.common.collect.Sets.union;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.apache.commons.lang3.StringUtils.removeAll;
 import static org.assertj.assertions.generator.util.ClassUtil.*;
+import static org.assertj.assertions.generator.util.ClassUtil.removeGenericFrom;
 
 /**
  *
@@ -57,6 +58,10 @@ public class ClassDescription implements Comparable<ClassDescription> {
 
   public String getFullyQualifiedClassName() {
     return getTypeDeclaration(type);
+  }
+
+  public String getFullyQualifiedClassNameWithoutGenerics() {
+    return removeGenericFrom(getFullyQualifiedClassName());
   }
 
   public String getClassNameWithOuterClass() {
@@ -144,6 +149,10 @@ public class ClassDescription implements Comparable<ClassDescription> {
 
   public String getFullyQualifiedAssertClassName() {
     return getPackageName() + "." + getAssertClassName();
+  }
+
+  public String getFullyQualifiedAssertClassNameWithoutGenerics() {
+    return removeGenericFrom(getFullyQualifiedAssertClassName());
   }
 
   public String getAbstractAssertClassName() {

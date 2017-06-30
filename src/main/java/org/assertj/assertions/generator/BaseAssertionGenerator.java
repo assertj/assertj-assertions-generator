@@ -14,7 +14,6 @@ package org.assertj.assertions.generator;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.String.format;
-import static java.util.Collections.EMPTY_SET;
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.assertj.assertions.generator.Template.Type.ABSTRACT_ASSERT_CLASS;
 import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
@@ -109,6 +108,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
    */
   private static final Pattern CLASS_NAME_PATTERN = Pattern
       .compile("(?m)^public class[\\s]+(?<CLASSNAME>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)\\b");
+  public static final Set<TypeToken<?>> EMPTY_HIERARCHY = new HashSet<>();
 
   /**
    * Creates a new </code>{@link BaseAssertionGenerator}</code> with default templates directory.
@@ -236,7 +236,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private String fillConcreteAssertClassTemplate(String template, ClassDescription classDescription) {
-    return fillAssertClassTemplate(template, classDescription, EMPTY_SET, true);
+    return fillAssertClassTemplate(template, classDescription, EMPTY_HIERARCHY, true);
   }
 
   @Override
@@ -384,13 +384,13 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CUSTOM_ASSERTION_CLASS,
                                                  classDescription.getFullyQualifiedAssertClassName());
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CUSTOM_ASSERTION_CLASS_WITHOUT_GENERIC, 
-                                                 removeGenericFrom(classDescription.getFullyQualifiedAssertClassName()));
+                                                 classDescription.getFullyQualifiedAssertClassNameWithoutGenerics());
       // resolve class (ex: Player)
       // in case of inner classes like Movie.PublicCategory use class name with outer class i.e. Movie.PublicCategory.
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CLASS_TO_ASSERT,
                                                  classDescription.getFullyQualifiedClassName());
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CLASS_TO_ASSERT_WITHOUT_GENERIC,
-                                                 removeGenericFrom(classDescription.getFullyQualifiedClassName()));
+                                                 classDescription.getFullyQualifiedClassNameWithoutGenerics());
 
       // in case we deal with generic type, we must add the generic type declaration
       // ex: public static <T> OptionalAssert<T> assertThat(Optional<T> actual) {
@@ -414,7 +414,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   /**
    * Returns the target directory path where the assertions file for given classDescription will be created.
    *
-   * @param packageName
+   * @param packageName package name 
    * @return the target directory path corresponding to the given package.
    */
   private String getDirectoryPathCorrespondingToPackage(final String packageName) {
@@ -621,7 +621,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
    * The assertion content that is common to field and property (getter), the specific content part is handled
    * afterwards.
    *
-   * @param fieldOrProperty
+   * @param fieldOrProperty field or property
    * @return the base assertion content
    */
   private String baseAssertionContentFor(DataDescription fieldOrProperty, ClassDescription classDescription) {

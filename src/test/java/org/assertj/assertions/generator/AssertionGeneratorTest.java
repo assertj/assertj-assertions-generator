@@ -47,6 +47,7 @@ import static java.lang.reflect.Modifier.isPublic;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Arrays.asList;
 import static java.util.Collections.EMPTY_SET;
+import static org.apache.commons.lang3.StringUtils.remove;
 import static org.apache.commons.lang3.StringUtils.replace;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -314,19 +315,14 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     File[] optionalFiles = assertionGenerator.generateHierarchicalCustomAssertionFor(optionalClassDescription, EMPTY_SET);
     generationPathHandler.assertGeneratedAssertClass(Optional.class, "OptionalAssert.expected.txt", false);
     generationPathHandler.assertAbstractGeneratedAssertClass(Optional.class, "AbstractOptionalAssert.expected.txt");
-    
-    generationPathHandler.compileGeneratedFiles(newArrayList(optionalFiles));
 
+    generationPathHandler.compileGeneratedFiles(newArrayList(optionalFiles));
   }
 
   private String expectedContentFromTemplate(NestedClass nestedClass, String fileTemplate) throws IOException {
     String template = contentOf(generationPathHandler.getResourcesDir().resolve(fileTemplate).toFile(), defaultCharset());
-    String content = replace(template,
-                             "${nestedClass}Assert",
-                             StringUtils.remove(nestedClass.classNameWithOuterClass, '.') + "Assert");
-    content = replace(content,
-                      "${nestedClass}",
-                      nestedClass.classNameWithOuterClass);
+    String content = replace(template, "${nestedClass}Assert", remove(nestedClass.classNameWithOuterClass, '.') + "Assert");
+    content = replace(content, "${nestedClass}", nestedClass.classNameWithOuterClass);
     return content;
   }
 

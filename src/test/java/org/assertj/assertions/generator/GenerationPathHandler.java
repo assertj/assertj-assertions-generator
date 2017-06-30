@@ -170,28 +170,19 @@ public class GenerationPathHandler extends TemporaryFolder {
     // Add all URLClassloaders in the hierarchy till the system classloader.
     List<URLClassLoader> classloaders = new ArrayList<>();
     while (true) {
-      if (currentClassloader instanceof URLClassLoader) {
-        // We only know how to extract classpaths from URLClassloaders.
-        classloaders.add((URLClassLoader) currentClassloader);
-      } else {
-        throw new IllegalArgumentException("Classpath for compilation could not be extracted "
-                                           + "since given classloader is not an instance of URLClassloader");
-      }
-      if (currentClassloader == systemClassLoader) {
-        break;
-      }
-      currentClassloader = currentClassloader.getParent();
+      // We only know how to extract classpaths from URLClassloaders.
+      if (currentClassloader instanceof URLClassLoader) classloaders.add((URLClassLoader) currentClassloader);
+      else throw new IllegalArgumentException("Classpath for compilation could not be extracted as classloader is not a URLClassloader");
+      
+      if (currentClassloader == systemClassLoader) break;
+      else currentClassloader = currentClassloader.getParent();
     }
 
     Set<String> classpaths = new LinkedHashSet<>();
     for (URLClassLoader classLoader : classloaders) {
       for (URL url : classLoader.getURLs()) {
-        if (url.getProtocol().equals("file")) {
-          classpaths.add(url.getPath());
-        } else {
-          throw new IllegalArgumentException("Given classloader consists of classpaths which are "
-                                             + "unsupported for compilation.");
-        }
+        if (url.getProtocol().equals("file")) classpaths.add(url.getPath());
+        else throw new IllegalArgumentException("Given classloader consists of classpaths which are unsupported for compilation.");
       }
     }
 

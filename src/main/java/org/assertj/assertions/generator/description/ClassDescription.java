@@ -22,8 +22,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static com.google.common.collect.Sets.union;
-import static org.apache.commons.lang3.StringUtils.capitalize;
-import static org.apache.commons.lang3.StringUtils.removeAll;
+import static org.apache.commons.lang3.StringUtils.*;
 import static org.assertj.assertions.generator.util.ClassUtil.*;
 import static org.assertj.assertions.generator.util.ClassUtil.removeGenericFrom;
 
@@ -39,6 +38,8 @@ public class ClassDescription implements Comparable<ClassDescription> {
   private static final String ABSTRACT_ASSERT_CLASS_PREFIX = "Abstract";
 
   private static final String ASSERT_CLASS_SUFFIX = "Assert";
+  public static final String LAST_BOUND_REGEX = " extends (.*)>";
+  public static final String NON_LAST_BOUND_REGEX = LAST_BOUND_REGEX + ",";
 
   private Set<GetterDescription> gettersDescriptions;
   private Set<FieldDescription> fieldsDescriptions;
@@ -62,6 +63,14 @@ public class ClassDescription implements Comparable<ClassDescription> {
 
   public String getFullyQualifiedClassNameWithoutGenerics() {
     return removeGenericFrom(getFullyQualifiedClassName());
+  }
+
+  public String getClassNameWithoutBoundedGenerics() {
+    return removeBoundsFrom(getClassNameWithOuterClass()) + ">";
+  }
+
+  public String getClassNameWithoutGenerics() {
+    return removeGenericFrom(getClassNameWithOuterClass());
   }
 
   public String getClassNameWithOuterClass() {
@@ -173,12 +182,6 @@ public class ClassDescription implements Comparable<ClassDescription> {
     return extractGenericFrom(getClassNameWithOuterClass());
   }
 
-  public String listGenericTypes() {
-    String genericTypeDeclaration = getGenericTypeDeclaration();
-    return genericTypeDeclaration.replace("<", ", ")
-                                 .replace(">", "");
-  }
-
   @Override
   public String toString() {
     return "ClassDescription [valueType=" + type + "]";
@@ -222,4 +225,18 @@ public class ClassDescription implements Comparable<ClassDescription> {
   public boolean isGeneric() {
     return ClassUtil.isGeneric(type);
   }
+
+  public String listBoundedGenericTypes() {
+    String genericTypeDeclaration = getGenericTypeDeclaration();
+    String replace = genericTypeDeclaration.replaceFirst("<", ", ");
+    return removeEnd(replace, ">");
+  }
+
+  public String listGenericTypesWithoutBounds() {
+    String genericTypeDeclaration = getGenericTypeDeclaration();
+    genericTypeDeclaration = genericTypeDeclaration.replaceFirst("<", ", ");
+    genericTypeDeclaration = removeEnd(genericTypeDeclaration, ">");
+    return removeBoundsFrom(genericTypeDeclaration);
+  }
+
 }

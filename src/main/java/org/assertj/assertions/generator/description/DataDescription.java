@@ -131,6 +131,9 @@ public abstract class DataDescription {
 
   public String getTypeName() {
     String typeName = getTypeDeclaration(valueType);
+    if (isIterableType()) {
+      typeName = valueType.toString();
+    }
     return removeOwningTypePackageNameIn(typeName);
   }
 
@@ -194,9 +197,8 @@ public abstract class DataDescription {
     } else if (valueType.isSubtypeOf(Iterable.class)) {
       TypeToken<?> componentType = valueType.resolveType(Iterable.class.getTypeParameters()[0]);
       elementTypeName = getTypeDeclaration(componentType);
-      // remove any generic type boundaries
-      elementTypeName = removeAll(elementTypeName, "\\? extends").trim();
     }
+    elementTypeName = removeGenericFrom(elementTypeName);
     return removeOwningTypePackageNameIn(elementTypeName);
   }
 

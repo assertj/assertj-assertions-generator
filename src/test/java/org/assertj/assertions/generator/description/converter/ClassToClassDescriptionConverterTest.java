@@ -20,6 +20,7 @@ import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.Team;
 import org.assertj.assertions.generator.data.TreeEnum;
 import org.assertj.assertions.generator.data.art.ArtWork;
+import org.assertj.assertions.generator.data.generic.BoundCodeableConceptDt;
 import org.assertj.assertions.generator.data.generic.MultipleGenerics;
 import org.assertj.assertions.generator.data.generic.MyGeneric;
 import org.assertj.assertions.generator.data.generic.MyGenericParent;
@@ -67,7 +68,8 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getAssertClassName()).isEqualTo("PlayerAssert");
     assertThat(classDescription.getAssertClassFilename()).isEqualTo("PlayerAssert.java");
     assertThat(classDescription.getFullyQualifiedAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.PlayerAssert");
-    assertThat(classDescription.getFullyQualifiedAssertClassNameWithoutGenerics()).isEqualTo(classDescription.getFullyQualifiedAssertClassName());
+    assertThat(classDescription.getFullyQualifiedAssertClassNameWithoutGenerics())
+        .isEqualTo(classDescription.getFullyQualifiedAssertClassName());
     assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractPlayerAssert");
     assertThat(classDescription.getAbstractAssertClassFilename()).isEqualTo("AbstractPlayerAssert.java");
     assertThat(classDescription.getFullyQualifiedParentAssertClassName()).isEqualTo("org.assertj.core.api.AbstractObjectAssert");
@@ -96,6 +98,37 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getAbstractAssertClassFilename()).isEqualTo("AbstractMovieAssert.java");
     assertThat(classDescription.getFullyQualifiedParentAssertClassName())
         .isEqualTo("org.assertj.assertions.generator.data.art.AbstractArtWorkAssert");
+  }
+
+  @Test
+  public void should_build_BoundCodeableConceptDt_description() throws Exception {
+    // Given
+    Class<?> clazz = BoundCodeableConceptDt.class;
+    // When
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    // Then
+    assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.generic");
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("BoundCodeableConceptDt<T extends Enum<?>>");
+    assertThat(classDescription.getClassNameWithoutBoundedGenerics()).isEqualTo("BoundCodeableConceptDt<T>");
+    assertThat(classDescription.getSuperType()).isEqualTo(TypeToken.of(Object.class));
+    assertThat(classDescription.getGenericTypeDeclaration()).isEqualTo("<T extends Enum<?>>");
+    assertThat(classDescription.listGenericTypesWithoutBounds()).isEqualTo(", T");
+    assertThat(classDescription.listBoundedGenericTypes()).isEqualTo(", T extends Enum<?>");
+
+    GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
+    assertThat(getterDescription.getElementTypeName()).isEqualTo("T");
+    assertThat(getterDescription.getTypeName()).isEqualTo("java.util.Set<T>");
+
+    assertThat(classDescription.getAssertClassName()).isEqualTo("BoundCodeableConceptDtAssert<T extends Enum<?>>");
+    assertThat(classDescription.getAssertClassFilename()).isEqualTo("BoundCodeableConceptDtAssert.java");
+    assertThat(classDescription.getFullyQualifiedAssertClassName())
+        .isEqualTo("org.assertj.assertions.generator.data.generic.BoundCodeableConceptDtAssert<T extends Enum<?>>");
+    assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractBoundCodeableConceptDtAssert");
+    assertThat(classDescription.getAbstractAssertClassFilename()).isEqualTo("AbstractBoundCodeableConceptDtAssert.java");
+    assertThat(classDescription.getFullyQualifiedParentAssertClassName()).isEqualTo("org.assertj.core.api.AbstractObjectAssert");
+
+    assertThat(classDescription.getGettersDescriptions()).hasSize(2);
+    assertThat(classDescription.getFieldsDescriptions()).isEmpty();
   }
 
   @Theory

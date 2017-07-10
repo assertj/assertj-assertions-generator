@@ -56,10 +56,13 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String PROPERTY_TYPE = "${propertyType}";
   private static final String PROPERTY_SIMPLE_TYPE = "${propertySimpleType}";
   private static final String PROPERTY_ASSERT_TYPE = "${propertyAssertType}";
-  private static final String CLASS_TO_ASSERT_WITHOUT_GENERIC = "${class_to_assert_without_generic}";
   private static final String CLASS_TO_ASSERT = "${class_to_assert}";
+  private static final String CLASS_TO_ASSERT_WITHOUT_GENERIC = "${class_to_assert_without_generic}";
+  private static final String CLASS_TO_ASSERT_WITHOUT_BOUNDED_GENERIC = "${class_to_assert_without_bounded_generics}";
   private static final String CUSTOM_ASSERTION_CLASS = "${custom_assertion_class}";
+  private static final String CUSTOM_ASSERTION_CLASS_WITHOUT_BOUNDED_GENERICS = "${custom_assertion_class_without_bounded_generics}";
   private static final String CUSTOM_ASSERTION_GENERIC_TYPES = "${custom_assertion_generic_types}";
+  private static final String CUSTOM_ASSERTION_BOUNDED_GENERIC_TYPES = "${custom_assertion_bounded_generic_types}";
   private static final String CUSTOM_ASSERTION_CLASS_WITHOUT_GENERIC = "${custom_assertion_class_without_generic}";
   private static final String CLASS_GENERIC_TYPE_DECLARATION = "${class_generic_type_declaration}";
   private static final String ABSTRACT_SUPER_ASSERTION_CLASS = "${super_assertion_class}";
@@ -206,18 +209,23 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     classesToImport.add(parentAssertClassName);
 
     final String customAssertionClass = concrete ? classDescription.getAssertClassName() : classDescription.getAbstractAssertClassName();
-    final String selfType = concrete ? customAssertionClass : "S";
+    final String customAssertionClassWithoutBoundedGenerics = removeBoundsFrom(customAssertionClass) + ">";
+    final String selfType = concrete ? customAssertionClassWithoutBoundedGenerics : "S";
     final String myself = concrete ? "this" : "myself";
 
     template = replace(template, PACKAGE, classDescription.getPackageName());
-    template = replace(template, CUSTOM_ASSERTION_CLASS_WITHOUT_GENERIC, removeGenericFrom(customAssertionClass));
-    template = replace(template, CUSTOM_ASSERTION_GENERIC_TYPES, classDescription.listGenericTypes());
     template = replace(template, CUSTOM_ASSERTION_CLASS, customAssertionClass);
+    template = replace(template, CUSTOM_ASSERTION_CLASS_WITHOUT_BOUNDED_GENERICS, customAssertionClassWithoutBoundedGenerics);
+    template = replace(template, CUSTOM_ASSERTION_CLASS_WITHOUT_GENERIC, removeGenericFrom(customAssertionClass));
+    template = replace(template, CUSTOM_ASSERTION_GENERIC_TYPES, classDescription.listGenericTypesWithoutBounds());
+    template = replace(template, CUSTOM_ASSERTION_BOUNDED_GENERIC_TYPES, classDescription.listBoundedGenericTypes());
     template = replaceClassGenericTypeDeclaration(template, classDescription);
     // use a simple parent class name as we have already imported it
     // className could be a nested class like "OuterClass.NestedClass", in that case assert class will be OuterClassNestedClass
     template = replace(template, ABSTRACT_SUPER_ASSERTION_CLASS, getTypeNameWithoutDots(parentAssertClassName));
     template = replace(template, CLASS_TO_ASSERT, classDescription.getClassNameWithOuterClass());
+    template = replace(template, CLASS_TO_ASSERT_WITHOUT_BOUNDED_GENERIC, classDescription.getClassNameWithoutBoundedGenerics());
+    template = replace(template, CLASS_TO_ASSERT_WITHOUT_GENERIC, classDescription.getClassNameWithoutGenerics());
     template = replace(template, SELF_TYPE, selfType);
     template = replace(template, MYSELF, myself);
     template = replace(template, IMPORTS, listNeededImports(classesToImport, classDescription.getPackageName()));

@@ -16,6 +16,7 @@ import com.google.common.base.Optional;
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.data.*;
 import org.assertj.assertions.generator.data.art.ArtWork;
+import org.assertj.assertions.generator.data.generic.BoundCodeableConceptDt;
 import org.assertj.assertions.generator.data.generic.MultipleGenerics;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.PlayerAgent;
@@ -249,6 +250,12 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_generate_assertion_for_guava_optional_class() throws IOException {
     verifyFlatAssertionGenerationFor(Optional.class);
     verifyHierarchicalAssertionGenerationFor(Optional.class);
+  }
+
+  @Test
+  public void should_generate_assertion_for_BoundCodeableConceptDt() throws IOException {
+    verifyFlatAssertionGenerationFor(BoundCodeableConceptDt.class);
+    verifyHierarchicalAssertionGenerationFor(BoundCodeableConceptDt.class);
   }
 
   private String expectedContentFromTemplate(NestedClass nestedClass, String fileTemplate) throws IOException {

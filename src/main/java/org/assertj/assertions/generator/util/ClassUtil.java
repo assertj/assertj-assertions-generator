@@ -19,6 +19,7 @@ import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.assertions.generator.description.ClassDescription;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +54,7 @@ public class ClassUtil {
   };
   public static final Package JAVA_LANG_PACKAGE = Object.class.getPackage();
   private static final String CAPITAL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  public static final String JAVA_LANG_REGEX = Pattern.quote("java.lang.");
 
   /**
    * Call {@link #collectClasses(ClassLoader, String...)} with <code>Thread.currentThread().getContextClassLoader()
@@ -532,7 +534,8 @@ public class ClassUtil {
   }
 
   public static String getTypeDeclaration(TypeToken<?> type) {
-    return getTypeDeclaration(type, false);
+    String typeDeclaration = getTypeDeclaration(type, false);
+    return removeAll(typeDeclaration, JAVA_LANG_REGEX);
   }
 
   // TODO is it useful ? if field has List<T> type should we generate containsAll(List<? extends T> list)
@@ -596,14 +599,15 @@ public class ClassUtil {
     for (TypeVariable typeParameterVariable : type.getRawType().getTypeParameters()) {
       if (!first) typeDeclaration.append(",");
       first = false;
-      TypeToken<?> paramType = type.resolveType(typeParameterVariable);
-      typeDeclaration.append(getParamTypeDeclaration(asParameter, paramType));
+      typeDeclaration.append(getParamTypeDeclaration(asParameter, typeParameterVariable, type));
     }
 
     return typeDeclaration.append(">").toString();
   }
 
-  private static String getParamTypeDeclaration(boolean asParameter, TypeToken<?> paramType) {
+  private static String getParamTypeDeclaration(boolean asParameter, TypeVariable typeParameterVariable, TypeToken<?> owningType) {
+
+    TypeToken<?> paramType = owningType.resolveType(typeParameterVariable);
     String typeString = removeAll(paramType.toString(), "capture#\\d+-of\\s+");
     typeString = typeString.replace("(\\?\\s+extends\\s+){2,}", "? extends ");
     typeString = removeAll(typeString, " class");
@@ -616,12 +620,24 @@ public class ClassUtil {
       return "?";
     }
 
+    // TODO refactor
+    Type[] upperBounds = typeParameterVariable.getBounds();
+    String boundsDeclaration = "";
+    if (!upperBounds[0].equals(Object.class)) {
+      boundsDeclaration = " extends ";
+      for (Type bound : upperBounds) {
+        boundsDeclaration += bound;
+      }
+      return typeString + boundsDeclaration;
+    }
+
     // We handle parameters differently so that it's accepted more "flexibility"
     String typeDeclaration = asParameter ? "? extends " : "";
 
     // now we recursively add the type parameter, we set `asParameter` to false
     // because odds are it will become wrong to keep adding the "extends" boundaries
-    return typeDeclaration + getTypeDeclaration(paramType);
+    String declaration = getTypeDeclaration(paramType);
+    return typeDeclaration + declaration + boundsDeclaration;
   }
 
   /**
@@ -745,5 +761,11 @@ public class ClassUtil {
 
   public static String packageNameRegex(String packageName) {
     return Pattern.quote(packageName + ".") + "(?=[A-Z])";
+  }
+
+  public static String removeBoundsFrom(String genericTypeDeclaration) {
+    String withoutBounds = removeAll(genericTypeDeclaration, ClassDescription.NON_LAST_BOUND_REGEX);
+    withoutBounds = removeAll(withoutBounds, ClassDescription.LAST_BOUND_REGEX);
+    return withoutBounds ;
   }
 }

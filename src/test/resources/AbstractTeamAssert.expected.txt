@@ -15,7 +15,7 @@ public abstract class AbstractTeamAssert<S extends AbstractTeamAssert<S, A>, A e
    * Creates a new <code>{@link AbstractTeamAssert}</code> to make assertions on actual Team.
    * @param actual the Team we want to make assertions on.
    */
-  protected AbstractTeamAssert(A actual, Class<?> selfType) {
+  protected AbstractTeamAssert(A actual, Class<S> selfType) {
     super(actual, selfType);
   }
 

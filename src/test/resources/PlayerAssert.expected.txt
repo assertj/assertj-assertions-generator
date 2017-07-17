@@ -27,5 +27,4 @@ public class PlayerAssert extends AbstractPlayerAssert<PlayerAssert, Player> {
   public static PlayerAssert assertThat(Player actual) {
     return new PlayerAssert(actual);
   }
-
 }

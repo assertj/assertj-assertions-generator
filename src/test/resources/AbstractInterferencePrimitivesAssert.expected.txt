@@ -13,7 +13,7 @@ public abstract class AbstractInterferencePrimitivesAssert<S extends AbstractInt
    * Creates a new <code>{@link AbstractInterferencePrimitivesAssert}</code> to make assertions on actual InterferencePrimitives.
    * @param actual the InterferencePrimitives we want to make assertions on.
    */
-  protected AbstractInterferencePrimitivesAssert(A actual, Class<?> selfType) {
+  protected AbstractInterferencePrimitivesAssert(A actual, Class<S> selfType) {
     super(actual, selfType);
   }
 

@@ -12,17 +12,15 @@
  */
 package org.assertj.assertions.generator.description;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.google.common.reflect.TypeToken;
+import org.assertj.assertions.generator.data.Name;
+import org.assertj.assertions.generator.data.nba.Player;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 
-import com.google.common.reflect.TypeToken;
-import org.assertj.assertions.generator.data.Name;
-import org.assertj.assertions.generator.data.generic.ManyBoundsGeneric;
-import org.assertj.assertions.generator.data.nba.Player;
-import org.assertj.assertions.generator.data.nba.team.Team;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FieldDescriptionTest {
 
@@ -68,17 +66,6 @@ public class FieldDescriptionTest {
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("bad"), PLAYER_TYPE);
     assertThat(fieldDescription.getNegativePredicate()).as("negative").isEqualTo("isNotBad");
     assertThat(fieldDescription.getPredicate()).as("positive").isEqualTo("isBad");
-  }
-
-  @Test
-  public void should_describe_generic_field_correctly() throws Exception {
-    fieldDescription = new FieldDescription(Player.class.getDeclaredField("previousTeams"), PLAYER_TYPE);
-    assertThat(fieldDescription.getTypeName()).isEqualTo("java.util.List<? extends org.assertj.assertions.generator.data.nba.team.Team>");
-    assertThat(fieldDescription.getElementTypeName()).isEqualTo("org.assertj.assertions.generator.data.nba.team.Team");
-
-    fieldDescription = new FieldDescription(ManyBoundsGeneric.class.getField("genericArray"), TypeToken.of(ManyBoundsGeneric.class));
-    assertThat(fieldDescription.getTypeName()).isEqualTo("java.util.Map<T,MyGeneric<T>>[]");
-    assertThat(fieldDescription.getElementTypeName()).isEqualTo("java.util.Map<T,MyGeneric<T>>");
   }
 
   @Test

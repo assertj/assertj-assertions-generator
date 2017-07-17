@@ -13,7 +13,7 @@ public abstract class AbstractDollar$Assert<S extends AbstractDollar$Assert<S, A
    * Creates a new <code>{@link AbstractDollar$Assert}</code> to make assertions on actual Dollar$.
    * @param actual the Dollar$ we want to make assertions on.
    */
-  protected AbstractDollar$Assert(A actual, Class<?> selfType) {
+  protected AbstractDollar$Assert(A actual, Class<S> selfType) {
     super(actual, selfType);
   }
 

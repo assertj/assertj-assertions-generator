@@ -448,7 +448,7 @@ public class KeywordsAssert extends AbstractObjectAssert<KeywordsAssert, Keyword
    * @return this assertion object.
    * @throws AssertionError - if the actual Keywords's const is not equal to the given one.
    */
-  public KeywordsAssert hasConst(Class<?> expectedConst) {
+  public KeywordsAssert hasConst(Class expectedConst) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
@@ -456,7 +456,7 @@ public class KeywordsAssert extends AbstractObjectAssert<KeywordsAssert, Keyword
     String assertjErrorMessage = "\nExpecting const of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
 
     // null safe check
-    Class<?> actualConst = actual.getConst();
+    Class actualConst = actual.getConst();
     if (!Objects.areEqual(actualConst, expectedConst)) {
       failWithMessage(assertjErrorMessage, actual, expectedConst, actualConst);
     }

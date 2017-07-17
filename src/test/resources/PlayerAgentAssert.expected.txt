@@ -27,5 +27,4 @@ public class PlayerAgentAssert extends AbstractPlayerAgentAssert<PlayerAgentAsse
   public static PlayerAgentAssert assertThat(PlayerAgent actual) {
     return new PlayerAgentAssert(actual);
   }
-
 }

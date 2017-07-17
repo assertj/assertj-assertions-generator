@@ -27,5 +27,4 @@ public class FieldPropertyClashAssert extends AbstractFieldPropertyClashAssert<F
   public static FieldPropertyClashAssert assertThat(FieldPropertyClash actual) {
     return new FieldPropertyClashAssert(actual);
   }
-
 }

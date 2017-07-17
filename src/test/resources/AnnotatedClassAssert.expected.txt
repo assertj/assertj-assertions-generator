@@ -27,5 +27,4 @@ public class AnnotatedClassAssert extends AbstractAnnotatedClassAssert<Annotated
   public static AnnotatedClassAssert assertThat(AnnotatedClass actual) {
     return new AnnotatedClassAssert(actual);
   }
-
 }

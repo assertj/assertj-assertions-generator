@@ -12,7 +12,6 @@
  */
 package org.assertj.assertions.generator.description.converter;
 
-import com.google.common.base.Optional;
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.BeanWithExceptionsTest;
 import org.assertj.assertions.generator.NestedClassesTest;
@@ -20,10 +19,6 @@ import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.Team;
 import org.assertj.assertions.generator.data.TreeEnum;
 import org.assertj.assertions.generator.data.art.ArtWork;
-import org.assertj.assertions.generator.data.generic.MultipleGenerics;
-import org.assertj.assertions.generator.data.generic.MyGeneric;
-import org.assertj.assertions.generator.data.generic.MyGenericParent;
-import org.assertj.assertions.generator.data.generic.parent.MultipleGenericsParent;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.PlayerAgent;
@@ -59,7 +54,6 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     ClassDescription classDescription = converter.convertToClassDescription(clazz);
     // Then
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Player");
-    assertThat(classDescription.getGenericTypeDeclaration()).isEmpty();
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.nba");
     assertThat(classDescription.getFullyQualifiedClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.Player");
     assertThat(classDescription.getFullyQualifiedClassNameWithoutGenerics()).isEqualTo(classDescription.getFullyQualifiedClassName());
@@ -67,7 +61,6 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getAssertClassName()).isEqualTo("PlayerAssert");
     assertThat(classDescription.getAssertClassFilename()).isEqualTo("PlayerAssert.java");
     assertThat(classDescription.getFullyQualifiedAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.PlayerAssert");
-    assertThat(classDescription.getFullyQualifiedAssertClassNameWithoutGenerics()).isEqualTo(classDescription.getFullyQualifiedAssertClassName());
     assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractPlayerAssert");
     assertThat(classDescription.getAbstractAssertClassFilename()).isEqualTo("AbstractPlayerAssert.java");
     assertThat(classDescription.getFullyQualifiedParentAssertClassName()).isEqualTo("org.assertj.core.api.AbstractObjectAssert");
@@ -90,8 +83,6 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getAssertClassName()).isEqualTo("MovieAssert");
     assertThat(classDescription.getAssertClassFilename()).isEqualTo("MovieAssert.java");
     assertThat(classDescription.getFullyQualifiedAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.MovieAssert");
-    assertThat(classDescription.getFullyQualifiedAssertClassNameWithoutGenerics())
-        .isEqualTo(classDescription.getFullyQualifiedAssertClassName());
     assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractMovieAssert");
     assertThat(classDescription.getAbstractAssertClassFilename()).isEqualTo("AbstractMovieAssert.java");
     assertThat(classDescription.getFullyQualifiedParentAssertClassName())
@@ -252,80 +243,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
         .as("getterDesc must have correct type (not fully qualified because in same package)")
         .isEqualTo("Player");
   }
-
-  @Test
-  public void should_build_class_description_for_generic_type() throws Exception {
-    // Given a type with generic parameter
-    Class<?> clazz = MyGeneric.class;
-    // When
-    ClassDescription classDescription = converter.convertToClassDescription(clazz);
-    // Then
-    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("MyGeneric<T>");
-    assertThat(classDescription.getGenericTypeDeclaration()).isEqualTo("<T>");
-    assertThat(classDescription.getAssertClassName()).isEqualTo("MyGenericAssert<T>");
-    assertThat(classDescription.getAssertClassFilename()).isEqualTo("MyGenericAssert.java");
-    assertThat(classDescription.getFullyQualifiedAssertClassName())
-        .isEqualTo("org.assertj.assertions.generator.data.generic.MyGenericAssert<T>");
-    assertThat(classDescription.getFullyQualifiedAssertClassNameWithoutGenerics())
-        .isEqualTo("org.assertj.assertions.generator.data.generic.MyGenericAssert");
-    assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractMyGenericAssert<T>");
-    assertThat(classDescription.getFullyQualifiedParentAssertClassName())
-        .isEqualTo("org.assertj.assertions.generator.data.generic.AbstractMyGenericParentAssert<T>");
-    assertThat(classDescription.getGettersDescriptions()).hasSize(2);
-    assertThat(classDescription.getFieldsDescriptions()).hasSize(2);
-    assertThat(classDescription.getSuperType()).isEqualTo(TypeToken.of(MyGeneric.class).getSupertype(MyGenericParent.class))
-                                               .hasToString("org.assertj.assertions.generator.data.generic.MyGenericParent<T>");
-  }
-
-  @Test
-  public void should_build_class_description_for_type_with_multiple_generic_parameters() throws Exception {
-    // Given a type with several generic parameters
-    Class<?> clazz = MultipleGenerics.class;
-    // When
-    ClassDescription classDescription = converter.convertToClassDescription(clazz);
-    // Then
-    assertThat(classDescription.getGenericTypeDeclaration()).isEqualTo("<T,U,V,W>");
-    assertThat(classDescription.getAssertClassName()).isEqualTo("MultipleGenericsAssert<T,U,V,W>");
-    assertThat(classDescription.getAssertClassFilename()).isEqualTo("MultipleGenericsAssert.java");
-    assertThat(classDescription.getFullyQualifiedClassName())
-        .isEqualTo("org.assertj.assertions.generator.data.generic.MultipleGenerics<T,U,V,W>");
-    assertThat(classDescription.getFullyQualifiedClassNameWithoutGenerics())
-        .isEqualTo("org.assertj.assertions.generator.data.generic.MultipleGenerics");
-    assertThat(classDescription.getFullyQualifiedAssertClassName())
-        .isEqualTo("org.assertj.assertions.generator.data.generic.MultipleGenericsAssert<T,U,V,W>");
-    assertThat(classDescription.getFullyQualifiedAssertClassNameWithoutGenerics())
-        .isEqualTo("org.assertj.assertions.generator.data.generic.MultipleGenericsAssert");
-    assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractMultipleGenericsAssert<T,U,V,W>");
-    assertThat(classDescription.getFullyQualifiedParentAssertClassName())
-        .isEqualTo("org.assertj.assertions.generator.data.generic.parent.AbstractMultipleGenericsParentAssert<T,U>");
-    assertThat(classDescription.getGettersDescriptions()).hasSize(3);
-    assertThat(classDescription.getFieldsDescriptions()).hasSize(3);
-    assertThat(classDescription.getSuperType()).isEqualTo(TypeToken.of(MultipleGenerics.class).getSupertype(MultipleGenericsParent.class))
-                                               .hasToString(
-                                                   "org.assertj.assertions.generator.data.generic.parent.MultipleGenericsParent<T, U>");
-  }
-
-  @Test
-  public void should_build_class_description_for_guava_optional() throws Exception {
-    // Given a type with generic parameter
-    Class<?> clazz = Optional.class;
-    // When
-    ClassDescription classDescription = converter.convertToClassDescription(clazz);
-    // Then
-    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Optional<T>");
-    assertThat(classDescription.getGenericTypeDeclaration()).isEqualTo("<T>");
-    assertThat(classDescription.getAssertClassName()).isEqualTo("OptionalAssert<T>");
-    assertThat(classDescription.getAssertClassFilename()).isEqualTo("OptionalAssert.java");
-    assertThat(classDescription.getFullyQualifiedAssertClassName())
-        .isEqualTo("com.google.common.base.OptionalAssert<T>");
-    assertThat(classDescription.getFullyQualifiedAssertClassNameWithoutGenerics())
-        .isEqualTo("com.google.common.base.OptionalAssert");
-    assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractOptionalAssert<T>");
-    assertThat(classDescription.getFullyQualifiedParentAssertClassName()).isEqualTo("org.assertj.core.api.AbstractObjectAssert");
-    assertThat(classDescription.getFullyQualifiedClassName()).isEqualTo("com.google.common.base.Optional<T>");
-    assertThat(classDescription.getFullyQualifiedClassNameWithoutGenerics()).isEqualTo("com.google.common.base.Optional");
-  }
-
+  
   @Test
   public void should_build_fellowshipOfTheRing_class_description() throws Exception {
     // Given

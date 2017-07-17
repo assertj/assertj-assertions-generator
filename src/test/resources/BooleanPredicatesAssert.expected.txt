@@ -27,5 +27,4 @@ public class BooleanPredicatesAssert extends AbstractBooleanPredicatesAssert<Boo
   public static BooleanPredicatesAssert assertThat(BooleanPredicates actual) {
     return new BooleanPredicatesAssert(actual);
   }
-
 }

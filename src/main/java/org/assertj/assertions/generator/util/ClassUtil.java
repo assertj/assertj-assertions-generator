@@ -531,26 +531,15 @@ public class ClassUtil {
     return "";
   }
 
-  public static String getTypeDeclaration(TypeToken<?> type) {
-    return getTypeDeclaration(type, false);
-  }
-
-  // TODO is it useful ? if field has List<T> type should we generate containsAll(List<? extends T> list)
-  public static String getParameterTypeDeclaration(TypeToken<?> type) {
-    return getTypeDeclaration(type, true);
-  }
-
   /**
-   * Generates a "type declaration" that could be used in Java code based on the {@code type} and if it is a parameter,
-   * it will try to be as "flexible" as possible.
+   * Generates a "type declaration" that could be used in Java code based on the {@code type}.
    *
    * @param type Type to get declaration for
-   * @param asParameter True if the type is being used as a parameter
    * @return String representation of the type
    */
-  private static String getTypeDeclaration(TypeToken<?> type, final boolean asParameter) {
+  public static String getTypeDeclaration(TypeToken<?> type) {
 
-    if (type.isArray()) return getTypeDeclaration(type.getComponentType(), asParameter) + "[]";
+    if (type.isArray()) return getTypeDeclaration(type.getComponentType()) + "[]";
     if (type.isPrimitive()) return type.getRawType().toString();
 
     Class<?> rawClass = type.getRawType();
@@ -559,7 +548,7 @@ public class ClassUtil {
     if (rawClass.isMemberClass()) {
       // inner class
       TypeToken<?> outerType = type.resolveType(rawClass.getEnclosingClass());
-      typeDeclaration.append(getTypeDeclaration(outerType, asParameter))
+      typeDeclaration.append(getTypeDeclaration(outerType))
                      .append(".")
                      .append(rawClass.getSimpleName());
     } else if (type.getType() instanceof TypeVariable) {
@@ -580,48 +569,7 @@ public class ClassUtil {
       typeDeclaration.append(rawClass.getSimpleName());
     }
 
-    if (isGeneric(type)) typeDeclaration.append(getGenericTypeDeclaration(type, asParameter));
-
     return typeDeclaration.toString();
-  }
-
-  public static boolean isGeneric(TypeToken<?> type) {
-    return type.getRawType().getTypeParameters().length > 0;
-  }
-
-  private static String getGenericTypeDeclaration(TypeToken<?> type, boolean asParameter) {
-    StringBuilder typeDeclaration = new StringBuilder("<");
-
-    boolean first = true;
-    for (TypeVariable typeParameterVariable : type.getRawType().getTypeParameters()) {
-      if (!first) typeDeclaration.append(",");
-      first = false;
-      TypeToken<?> paramType = type.resolveType(typeParameterVariable);
-      typeDeclaration.append(getParamTypeDeclaration(asParameter, paramType));
-    }
-
-    return typeDeclaration.append(">").toString();
-  }
-
-  private static String getParamTypeDeclaration(boolean asParameter, TypeToken<?> paramType) {
-    String typeString = removeAll(paramType.toString(), "capture#\\d+-of\\s+");
-    typeString = typeString.replace("(\\?\\s+extends\\s+){2,}", "? extends ");
-    typeString = removeAll(typeString, " class");
-
-    boolean isWildCard = typeString.contains("?");
-    // Some specializations need to be done to make sure that the arguments are property pulled out and written
-    Class<?> rawParam = paramType.getRawType();
-    if (isWildCard && rawParam.equals(Object.class)) {
-      // it's a wild card and without boundary other than Object => we just use the wild card
-      return "?";
-    }
-
-    // We handle parameters differently so that it's accepted more "flexibility"
-    String typeDeclaration = asParameter ? "? extends " : "";
-
-    // now we recursively add the type parameter, we set `asParameter` to false
-    // because odds are it will become wrong to keep adding the "extends" boundaries
-    return typeDeclaration + getTypeDeclaration(paramType);
   }
 
   /**
@@ -728,15 +676,6 @@ public class ClassUtil {
   public static boolean isBoolean(TypeToken<?> type) {
     TypeToken<?> unwrapped = type.unwrap();
     return unwrapped.isSubtypeOf(boolean.class);
-  }
-
-  public static String removeGenericFrom(String className) {
-    return substringBefore(className, "<") + substringAfterLast(className, ">");
-  }
-
-  public static String extractGenericFrom(String className) {
-    String genericTypes = substringBeforeLast(substringAfter(className, "<"), ">");
-    return genericTypes.isEmpty() ? "" : "<" + genericTypes + ">";
   }
 
   public static String safePackageName(TypeToken<?> typeToken) {

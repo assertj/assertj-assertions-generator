@@ -27,5 +27,4 @@ public class BlockBusterAssert extends AbstractBlockBusterAssert<BlockBusterAsse
   public static BlockBusterAssert assertThat(BlockBuster actual) {
     return new BlockBusterAssert(actual);
   }
-
 }

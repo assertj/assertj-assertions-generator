@@ -27,5 +27,4 @@ public class InterferencePrimitivesAssert extends AbstractInterferencePrimitives
   public static InterferencePrimitivesAssert assertThat(InterferencePrimitives actual) {
     return new InterferencePrimitivesAssert(actual);
   }
-
 }

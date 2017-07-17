@@ -27,5 +27,4 @@ public class MultipleGenericsAssert<T,U,V,W> extends AbstractMultipleGenericsAss
   public static <T,U,V,W> MultipleGenericsAssert<T,U,V,W> assertThat(MultipleGenerics<T,U,V,W> actual) {
     return new MultipleGenericsAssert<T,U,V,W>(actual);
   }
-
 }

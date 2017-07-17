@@ -373,68 +373,7 @@ public class ClassUtilTest implements NestedClassesTest {
         .isFalse();
 
   }
-
-  @Test
-  public void create_generic_type_declaration() throws Exception {
-    TypeToken<Foo<Integer>> fooInteger = new TypeToken<Foo<Integer>>(getClass()) {
-    };
-    String typeDeclaration = getTypeDeclaration(fooInteger);
-    assertThat(typeDeclaration).isEqualTo("org.assertj.assertions.generator.util.ClassUtilTest.Foo<Integer>");
-    org.assertj.assertions.generator.util.ClassUtilTest.Foo<org.assertj.assertions.generator.util.ClassUtilTest.Foo<Integer>> s;
-
-    // nested!
-    TypeToken<Foo<Foo<Integer>>> fooFooInteger = new TypeToken<Foo<Foo<Integer>>>(getClass()) {
-    };
-    typeDeclaration = getTypeDeclaration(fooFooInteger);
-    assertThat(typeDeclaration).isEqualTo("org.assertj.assertions.generator.util.ClassUtilTest.Foo<org.assertj.assertions.generator.util.ClassUtilTest.Foo<Integer>>");
-
-    // check getting the field's type
-    Field listOfTField = Foo.class.getDeclaredField("listOfT");
-    typeDeclaration = getTypeDeclaration(fooFooInteger.resolveType(listOfTField.getGenericType()));
-    assertThat(typeDeclaration).isEqualTo("java.util.List<org.assertj.assertions.generator.util.ClassUtilTest.Foo<Integer>>");
-
-    typeDeclaration = getParameterTypeDeclaration(fooFooInteger.resolveType(listOfTField.getGenericType()));
-    assertThat(typeDeclaration).isEqualTo("java.util.List<? extends org.assertj.assertions.generator.util.ClassUtilTest.Foo<Integer>>");
-
-    // List of non-T type
-    Field listOfFooStringField = Foo.class.getDeclaredField("listOfFooString");
-    typeDeclaration = getTypeDeclaration(fooInteger.resolveType(listOfFooStringField.getGenericType()));
-    assertThat(typeDeclaration).isEqualTo("java.util.List<org.assertj.assertions.generator.util.ClassUtilTest.Foo<String>>");
-
-    typeDeclaration = getParameterTypeDeclaration(fooInteger.resolveType(listOfFooStringField.getGenericType()));
-    assertThat(typeDeclaration).isEqualTo("java.util.List<? extends org.assertj.assertions.generator.util.ClassUtilTest.Foo<String>>");
-
-    // List of Foo<Integer>[]
-    Field listOfFooIntArr = Foo.class.getDeclaredField("listOfFooIntArr");
-    typeDeclaration = getTypeDeclaration(fooInteger.resolveType(listOfFooIntArr.getGenericType()));
-    assertThat(typeDeclaration).isEqualTo("java.util.List<org.assertj.assertions.generator.util.ClassUtilTest.Foo<Integer>[]>");
-
-    // List of Foo<int[][]>[]
-    Field listOfFooIntArrArrArr = Foo.class.getDeclaredField("listOfFooIntArrArrArr");
-    typeDeclaration = getTypeDeclaration(fooInteger.resolveType(listOfFooIntArrArrArr.getGenericType()));
-    assertThat(typeDeclaration).isEqualTo("java.util.List<org.assertj.assertions.generator.util.ClassUtilTest.Foo<int[][]>[]>");
-  }
-
-  @Test
-  public void create_wildcard_version() throws Exception {
-    TypeToken<Foo<Integer>> fooInteger = new TypeToken<Foo<Integer>>(getClass()) {
-    };
-    Field clazz = Foo.class.getDeclaredField("clazz");
-
-    String typeDeclaration = getTypeDeclaration(fooInteger.resolveType(clazz.getGenericType()));
-    assertThat(typeDeclaration).isEqualTo("Class<?>");
-
-    typeDeclaration = getParameterTypeDeclaration(fooInteger.resolveType(clazz.getGenericType()));
-    assertThat(typeDeclaration).isEqualTo("Class<?>");
-
-    Field clazzFoo = Foo.class.getDeclaredField("clazzFoo");
-    typeDeclaration = getParameterTypeDeclaration(fooInteger.resolveType(clazzFoo.getGenericType()));
-    assertThat(typeDeclaration).isEqualTo("Class<? extends org.assertj.assertions.generator.util.ClassUtilTest.Foo<?>>");
-
-    typeDeclaration = getTypeDeclaration(fooInteger.resolveType(clazzFoo.getGenericType()));
-    assertThat(typeDeclaration).isEqualTo("Class<org.assertj.assertions.generator.util.ClassUtilTest.Foo<?>>");
-  }
-
+  
   @SuppressWarnings("unused")
   static class Foo<T> {
     List<T> listOfT;

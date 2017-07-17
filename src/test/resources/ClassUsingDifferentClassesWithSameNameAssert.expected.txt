@@ -27,5 +27,4 @@ public class ClassUsingDifferentClassesWithSameNameAssert extends AbstractClassU
   public static ClassUsingDifferentClassesWithSameNameAssert assertThat(ClassUsingDifferentClassesWithSameName actual) {
     return new ClassUsingDifferentClassesWithSameNameAssert(actual);
   }
-
 }

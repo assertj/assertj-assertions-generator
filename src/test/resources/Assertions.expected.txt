@@ -8,14 +8,14 @@ package com.google.common.base;
 public class Assertions {
 
   /**
-   * Creates a new instance of <code>{@link com.google.common.base.OptionalAssert<T>}</code>.
+   * Creates a new instance of <code>{@link com.google.common.base.OptionalAssert}</code>.
    *
    * @param actual the actual value.
    * @return the created assertion object.
    */
   @org.assertj.core.util.CheckReturnValue
-  public static <T> com.google.common.base.OptionalAssert<T> assertThat(com.google.common.base.Optional<T> actual) {
-    return new com.google.common.base.OptionalAssert<T>(actual);
+  public static com.google.common.base.OptionalAssert assertThat(com.google.common.base.Optional actual) {
+    return new com.google.common.base.OptionalAssert(actual);
   }
 
   /**

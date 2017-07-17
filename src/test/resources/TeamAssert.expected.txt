@@ -27,5 +27,4 @@ public class TeamAssert extends AbstractTeamAssert<TeamAssert, Team> {
   public static TeamAssert assertThat(Team actual) {
     return new TeamAssert(actual);
   }
-
 }

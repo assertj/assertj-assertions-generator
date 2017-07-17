@@ -14,7 +14,7 @@ public abstract class AbstractMultipleGenericsAssert<S extends AbstractMultipleG
    * Creates a new <code>{@link AbstractMultipleGenericsAssert<T,U,V,W>}</code> to make assertions on actual MultipleGenerics<T,U,V,W>.
    * @param actual the MultipleGenerics<T,U,V,W> we want to make assertions on.
    */
-  protected AbstractMultipleGenericsAssert(A actual, Class<?> selfType) {
+  protected AbstractMultipleGenericsAssert(A actual, Class<S> selfType) {
     super(actual, selfType);
   }
 

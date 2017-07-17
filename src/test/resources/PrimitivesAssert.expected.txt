@@ -27,5 +27,4 @@ public class PrimitivesAssert extends AbstractPrimitivesAssert<PrimitivesAssert,
   public static PrimitivesAssert assertThat(Primitives actual) {
     return new PrimitivesAssert(actual);
   }
-
 }

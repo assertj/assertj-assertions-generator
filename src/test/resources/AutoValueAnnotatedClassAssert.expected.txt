@@ -27,5 +27,4 @@ public class AutoValueAnnotatedClassAssert extends AbstractAutoValueAnnotatedCla
   public static AutoValueAnnotatedClassAssert assertThat(AutoValueAnnotatedClass actual) {
     return new AutoValueAnnotatedClassAssert(actual);
   }
-
 }

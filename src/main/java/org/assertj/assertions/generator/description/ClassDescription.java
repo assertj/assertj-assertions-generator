@@ -38,8 +38,9 @@ public class ClassDescription implements Comparable<ClassDescription> {
   private static final String ABSTRACT_ASSERT_CLASS_PREFIX = "Abstract";
 
   private static final String ASSERT_CLASS_SUFFIX = "Assert";
-  public static final String LAST_BOUND_REGEX = " extends (.*)>";
-  public static final String NON_LAST_BOUND_REGEX = LAST_BOUND_REGEX + ",";
+  public static final String NON_GENERIC_BOUND_REGEX = " extends (.*?)";
+  public static final String LAST_GENERIC_BOUND_REGEX = " extends (.*?)>";
+  public static final String NON_LAST_GENERIC_BOUND_REGEX = LAST_GENERIC_BOUND_REGEX + ",";
 
   private Set<GetterDescription> gettersDescriptions;
   private Set<FieldDescription> fieldsDescriptions;
@@ -66,7 +67,19 @@ public class ClassDescription implements Comparable<ClassDescription> {
   }
 
   public String getClassNameWithoutBoundedGenerics() {
-    return removeBoundsFrom(getClassNameWithOuterClass()) + ">";
+    return removeBoundsFrom(getClassNameWithOuterClass());
+  }
+
+  public String getAssertClassNameWithoutBoundedGenerics() {
+    return removeBoundsFrom(getAssertClassName());
+  }
+
+  public String getAssertClassNameWithoutGenerics() {
+    return removeGenericFrom(getAssertClassName());
+  }
+
+  public String getAbstractAssertClassNameWithoutGenerics() {
+    return removeGenericFrom(getAbstractAssertClassName());
   }
 
   public String getClassNameWithoutGenerics() {
@@ -168,6 +181,10 @@ public class ClassDescription implements Comparable<ClassDescription> {
     return abstractAssertClassNameOf(type);
   }
 
+  public String getAbstractAssertClassNameWithoutBoundedGenerics() {
+    return removeBoundsFrom(getAbstractAssertClassName());
+  }
+
   public String getAbstractAssertClassFilename() {
     String abstractAssertClassName = abstractAssertClassNameOf(type);
     return removeGenericFrom(abstractAssertClassName) + ".java";
@@ -238,5 +255,4 @@ public class ClassDescription implements Comparable<ClassDescription> {
     genericTypeDeclaration = removeEnd(genericTypeDeclaration, ">");
     return removeBoundsFrom(genericTypeDeclaration);
   }
-
 }

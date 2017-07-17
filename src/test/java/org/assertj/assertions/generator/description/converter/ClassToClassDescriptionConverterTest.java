@@ -66,11 +66,15 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getFullyQualifiedClassNameWithoutGenerics()).isEqualTo(classDescription.getFullyQualifiedClassName());
     assertThat(classDescription.getGettersDescriptions()).hasSize(19);
     assertThat(classDescription.getAssertClassName()).isEqualTo("PlayerAssert");
+    assertThat(classDescription.getAssertClassNameWithoutBoundedGenerics()).isEqualTo(classDescription.getAssertClassName());
+    assertThat(classDescription.getAssertClassNameWithoutGenerics()).isEqualTo(classDescription.getAssertClassName());
     assertThat(classDescription.getAssertClassFilename()).isEqualTo("PlayerAssert.java");
     assertThat(classDescription.getFullyQualifiedAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.PlayerAssert");
     assertThat(classDescription.getFullyQualifiedAssertClassNameWithoutGenerics())
         .isEqualTo(classDescription.getFullyQualifiedAssertClassName());
     assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractPlayerAssert");
+    assertThat(classDescription.getAbstractAssertClassNameWithoutBoundedGenerics()).isEqualTo("AbstractPlayerAssert");
+    assertThat(classDescription.getAbstractAssertClassNameWithoutGenerics()).isEqualTo("AbstractPlayerAssert");
     assertThat(classDescription.getAbstractAssertClassFilename()).isEqualTo("AbstractPlayerAssert.java");
     assertThat(classDescription.getFullyQualifiedParentAssertClassName()).isEqualTo("org.assertj.core.api.AbstractObjectAssert");
   }
@@ -110,25 +114,30 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.generic");
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("BoundCodeableConceptDt<T extends Enum<?>>");
     assertThat(classDescription.getClassNameWithoutBoundedGenerics()).isEqualTo("BoundCodeableConceptDt<T>");
-    assertThat(classDescription.getSuperType()).isEqualTo(TypeToken.of(Object.class));
+    assertThat(classDescription.getClassNameWithoutGenerics()).isEqualTo("BoundCodeableConceptDt");
     assertThat(classDescription.getGenericTypeDeclaration()).isEqualTo("<T extends Enum<?>>");
     assertThat(classDescription.listGenericTypesWithoutBounds()).isEqualTo(", T");
     assertThat(classDescription.listBoundedGenericTypes()).isEqualTo(", T extends Enum<?>");
+    assertThat(classDescription.getSuperType()).isEqualTo(TypeToken.of(Object.class));
 
+    assertThat(classDescription.getAssertClassName()).isEqualTo("BoundCodeableConceptDtAssert<T extends Enum<?>>");
+    assertThat(classDescription.getFullyQualifiedAssertClassName())
+        .isEqualTo("org.assertj.assertions.generator.data.generic.BoundCodeableConceptDtAssert<T extends Enum<?>>");
+    assertThat(classDescription.getAssertClassNameWithoutBoundedGenerics()).isEqualTo("BoundCodeableConceptDtAssert<T>");
+    assertThat(classDescription.getAssertClassNameWithoutGenerics()).isEqualTo("BoundCodeableConceptDtAssert");
+
+    assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractBoundCodeableConceptDtAssert<T extends Enum<?>>");
+    assertThat(classDescription.getFullyQualifiedParentAssertClassName()).isEqualTo("org.assertj.core.api.AbstractObjectAssert");
+
+    assertThat(classDescription.getAssertClassFilename()).isEqualTo("BoundCodeableConceptDtAssert.java");
+    assertThat(classDescription.getAbstractAssertClassFilename()).isEqualTo("AbstractBoundCodeableConceptDtAssert.java");
+
+    assertThat(classDescription.getGettersDescriptions()).hasSize(1);
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
     assertThat(getterDescription.getElementTypeName()).isEqualTo("T");
     assertThat(getterDescription.getTypeName()).isEqualTo("java.util.Set<T>");
 
-    assertThat(classDescription.getAssertClassName()).isEqualTo("BoundCodeableConceptDtAssert<T extends Enum<?>>");
-    assertThat(classDescription.getAssertClassFilename()).isEqualTo("BoundCodeableConceptDtAssert.java");
-    assertThat(classDescription.getFullyQualifiedAssertClassName())
-        .isEqualTo("org.assertj.assertions.generator.data.generic.BoundCodeableConceptDtAssert<T extends Enum<?>>");
-    assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractBoundCodeableConceptDtAssert");
-    assertThat(classDescription.getAbstractAssertClassFilename()).isEqualTo("AbstractBoundCodeableConceptDtAssert.java");
-    assertThat(classDescription.getFullyQualifiedParentAssertClassName()).isEqualTo("org.assertj.core.api.AbstractObjectAssert");
-
-    assertThat(classDescription.getGettersDescriptions()).hasSize(2);
-    assertThat(classDescription.getFieldsDescriptions()).isEmpty();
+    assertThat(classDescription.getFieldsDescriptions()).hasSize(1);
   }
 
   @Theory
@@ -294,6 +303,8 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     ClassDescription classDescription = converter.convertToClassDescription(clazz);
     // Then
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("MyGeneric<T>");
+    assertThat(classDescription.getClassNameWithoutBoundedGenerics()).isEqualTo("MyGeneric<T>");
+    assertThat(classDescription.getClassNameWithoutGenerics()).isEqualTo("MyGeneric");
     assertThat(classDescription.getGenericTypeDeclaration()).isEqualTo("<T>");
     assertThat(classDescription.getAssertClassName()).isEqualTo("MyGenericAssert<T>");
     assertThat(classDescription.getAssertClassFilename()).isEqualTo("MyGenericAssert.java");
@@ -330,9 +341,12 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
         .isEqualTo("org.assertj.assertions.generator.data.generic.MultipleGenericsAssert");
     assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractMultipleGenericsAssert<T,U,V,W>");
     assertThat(classDescription.getFullyQualifiedParentAssertClassName())
-        .isEqualTo("org.assertj.assertions.generator.data.generic.parent.AbstractMultipleGenericsParentAssert<T,U>");
+        .isEqualTo("org.assertj.assertions.generator.data.generic.parent.AbstractMultipleGenericsParentAssert<T, U>");
     assertThat(classDescription.getGettersDescriptions()).hasSize(3);
-    assertThat(classDescription.getFieldsDescriptions()).hasSize(3);
+    assertThat(classDescription.getFieldsDescriptions()).hasSize(3)
+                                                        .filteredOn("name", "movies")
+                                                        .extracting("elementTypeName")
+                                                        .containsExactly("org.assertj.assertions.generator.data.Movie");
     assertThat(classDescription.getSuperType()).isEqualTo(TypeToken.of(MultipleGenerics.class).getSupertype(MultipleGenericsParent.class))
                                                .hasToString(
                                                    "org.assertj.assertions.generator.data.generic.parent.MultipleGenericsParent<T, U>");

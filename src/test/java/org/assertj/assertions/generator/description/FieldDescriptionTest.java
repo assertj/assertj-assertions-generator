@@ -77,8 +77,8 @@ public class FieldDescriptionTest {
     assertThat(fieldDescription.getElementTypeName()).isEqualTo("org.assertj.assertions.generator.data.nba.team.Team");
 
     fieldDescription = new FieldDescription(ManyBoundsGeneric.class.getField("genericArray"), TypeToken.of(ManyBoundsGeneric.class));
-    assertThat(fieldDescription.getTypeName()).isEqualTo("java.util.Map<T,MyGeneric<T>>[]");
-    assertThat(fieldDescription.getElementTypeName()).isEqualTo("java.util.Map<T,MyGeneric<T>>");
+    assertThat(fieldDescription.getTypeName()).isEqualTo("java.util.Map<T, MyGeneric<T>>[]");
+    assertThat(fieldDescription.getElementTypeName()).isEqualTo("java.util.Map<T, MyGeneric<T>>");
   }
 
   @Test

@@ -540,7 +540,8 @@ public class ClassUtil {
 
   // TODO is it useful ? if field has List<T> type should we generate containsAll(List<? extends T> list)
   public static String getParameterTypeDeclaration(TypeToken<?> type) {
-    return getTypeDeclaration(type, true);
+    String typeDeclaration = getTypeDeclaration(type, true);
+    return removeAll(typeDeclaration, JAVA_LANG_REGEX);
   }
 
   /**
@@ -556,17 +557,29 @@ public class ClassUtil {
     if (type.isArray()) return getTypeDeclaration(type.getComponentType(), asParameter) + "[]";
     if (type.isPrimitive()) return type.getRawType().toString();
 
-    Class<?> rawClass = type.getRawType();
     StringBuilder typeDeclaration = new StringBuilder("");
+    Class<?> rawClass = type.getRawType();
     // Now we have some types that could be generic, so we have to do more to serialize it to the declaration
-    if (rawClass.isMemberClass()) {
+    if (isParameterizedType(type)) {
+      // declaration seems to be built correctly ... 
+      String declaration = type.getType().toString();
+      // ... unless for inner class, in that case we need to remove the <outer class>$
+      // ex: org.assertj.assertions.generator.util.ClassUtilTest.org.assertj.assertions.generator.util.ClassUtilTest$Foo<java.lang.Integer>
+      if (rawClass.isMemberClass()) {
+        // inner class
+        TypeToken<?> outerType = type.resolveType(rawClass.getEnclosingClass());
+        String outerClassDeclaration = getTypeDeclaration(outerType, asParameter);
+        return remove(declaration, outerClassDeclaration + "$");
+      }
+      return declaration;
+    } else if (rawClass.isMemberClass()) {
       // inner class
       TypeToken<?> outerType = type.resolveType(rawClass.getEnclosingClass());
       typeDeclaration.append(getTypeDeclaration(outerType, asParameter))
                      .append(".")
                      .append(rawClass.getSimpleName());
-    } else if (type.getType() instanceof TypeVariable) {
-      // used to get generic type parameter real name (ex T instead of having Object)
+    } else if (isTypeVariable(type)) {
+      // resolve the generic type parameter real name (ex T instead of having Object)
       // TODO: should we do a recursive type inference ?
       @SuppressWarnings("unchecked")
       TypeVariable<GenericDeclaration> typeVariable = (TypeVariable<GenericDeclaration>) type.getType();
@@ -574,13 +587,11 @@ public class ClassUtil {
       name = removeAll(name, "capture#\\d+-of\\s+");
       name = removeAll(name, " class");
       typeDeclaration.append(name);
-    } else if (!isJavaLangType(type)) {
-      // it's a normal class but not in java.lang => add the package name
+    } else {
+      // it's a normal class, add the package name (we will remove all java.lang. afterwards)
       typeDeclaration.append(type.getRawType().getPackage().getName())
                      .append(".")
                      .append(rawClass.getSimpleName());
-    } else {
-      typeDeclaration.append(rawClass.getSimpleName());
     }
 
     if (isGeneric(type)) typeDeclaration.append(getGenericTypeDeclaration(type, asParameter));
@@ -588,12 +599,35 @@ public class ClassUtil {
     return typeDeclaration.toString();
   }
 
+  private static boolean isTypeVariable(TypeToken<?> type) {
+    return type.getType() instanceof TypeVariable;
+  }
+
+  private static boolean isParameterizedType(TypeToken<?> type) {
+    return type.getType() instanceof ParameterizedType;
+  }
+
   public static boolean isGeneric(TypeToken<?> type) {
     return type.getRawType().getTypeParameters().length > 0;
   }
 
-  private static String getGenericTypeDeclaration(TypeToken<?> type, boolean asParameter) {
+  public static String getGenericTypeDeclaration(TypeToken<?> type, boolean asParameter) {
     StringBuilder typeDeclaration = new StringBuilder("<");
+
+    if (isParameterizedType(type)) {
+      // built correctly ... 
+      String declaration = type.getType().toString();
+      // unless for inner class, in that case we need to remove the <outer class>$
+      // ex: org.assertj.assertions.generator.util.ClassUtilTest.org.assertj.assertions.generator.util.ClassUtilTest$Foo<java.lang.Integer>
+      Class<?> rawClass = type.getRawType();
+      if (rawClass.isMemberClass()) {
+        // inner class
+        TypeToken<?> outerType = type.resolveType(rawClass.getEnclosingClass());
+        String outerClassDeclaration = getTypeDeclaration(outerType, asParameter);
+        return remove(declaration, outerClassDeclaration + "$");
+      }
+      return declaration;
+    }
 
     boolean first = true;
     for (TypeVariable typeParameterVariable : type.getRawType().getTypeParameters()) {
@@ -608,10 +642,14 @@ public class ClassUtil {
   private static String getParamTypeDeclaration(boolean asParameter, TypeVariable typeParameterVariable, TypeToken<?> owningType) {
 
     TypeToken<?> paramType = owningType.resolveType(typeParameterVariable);
+
+    // paramType can be like: capture#1-of ? extends class org.assertj.assertions.generator.data.Movie
+    // => remove the capture part 
     String typeString = removeAll(paramType.toString(), "capture#\\d+-of\\s+");
     typeString = typeString.replace("(\\?\\s+extends\\s+){2,}", "? extends ");
     typeString = removeAll(typeString, " class");
 
+    // should likely be inside the upper bound loop
     boolean isWildCard = typeString.contains("?");
     // Some specializations need to be done to make sure that the arguments are property pulled out and written
     Class<?> rawParam = paramType.getRawType();
@@ -764,8 +802,8 @@ public class ClassUtil {
   }
 
   public static String removeBoundsFrom(String genericTypeDeclaration) {
-    String withoutBounds = removeAll(genericTypeDeclaration, ClassDescription.NON_LAST_BOUND_REGEX);
-    withoutBounds = removeAll(withoutBounds, ClassDescription.LAST_BOUND_REGEX);
-    return withoutBounds ;
+    String withoutBounds = removeAll(genericTypeDeclaration, ClassDescription.NON_LAST_GENERIC_BOUND_REGEX);
+    withoutBounds = removeAll(withoutBounds, ClassDescription.LAST_GENERIC_BOUND_REGEX);
+    return withoutBounds;
   }
 }

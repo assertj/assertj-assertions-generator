@@ -19,7 +19,7 @@ public class MultipleGenericsAssert<T,U,V,W> extends AbstractMultipleGenericsAss
 
   /**
    * An entry point for MultipleGenericsAssert<T,U,V,W> to follow AssertJ standard <code>assertThat()</code> statements.<br>
-   * With a static import, one can write directly: <code>assertThat(myMultipleGenerics<T,U,V,W>)</code> and get specific assertion with code completion.
+   * With a static import, one can write directly: <code>assertThat(myMultipleGenerics)</code> and get specific assertion with code completion.
    * @param actual the MultipleGenerics<T,U,V,W> we want to make assertions on.
    * @return a new <code>{@link MultipleGenericsAssert<T,U,V,W>}</code>
    */

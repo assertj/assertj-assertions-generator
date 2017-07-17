@@ -24,6 +24,7 @@ import java.lang.reflect.Member;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import static org.apache.commons.lang3.StringUtils.removeAll;
 import static org.apache.commons.lang3.StringUtils.removeStart;
@@ -197,8 +198,9 @@ public abstract class DataDescription {
     } else if (valueType.isSubtypeOf(Iterable.class)) {
       TypeToken<?> componentType = valueType.resolveType(Iterable.class.getTypeParameters()[0]);
       elementTypeName = getTypeDeclaration(componentType);
+//      elementTypeName = removeBoundsFrom(elementTypeName);
+      elementTypeName = removeAll(elementTypeName, Pattern.quote("? extends "));
     }
-    elementTypeName = removeGenericFrom(elementTypeName);
     return removeOwningTypePackageNameIn(elementTypeName);
   }
 

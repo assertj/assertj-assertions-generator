@@ -14,6 +14,7 @@ package org.assertj.assertions.generator.description;
 
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.data.Movie;
+import org.assertj.assertions.generator.data.generic.BoundCodeableConceptDt;
 import org.assertj.assertions.generator.data.generic.ManyBoundsGeneric;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.junit.BeforeClass;
@@ -42,6 +43,16 @@ public class GetterDescriptionTest {
     assertThat(getterDescription.getName()).isEqualTo("points");
     assertThat(getterDescription.getTypeName()).isEqualTo("java.util.List<int[]>");
     assertThat(getterDescription.getElementTypeName()).isEqualTo("int[]");
+  }
+
+  @Test
+  public void should_create_valid_typename_from_generic_class() throws Exception {
+    Class<BoundCodeableConceptDt> boundCodeableConceptDtClass = BoundCodeableConceptDt.class;
+    Method getValueSet = boundCodeableConceptDtClass.getMethod("getValueSet");
+    getterDescription = new GetterDescription("valueSet", TypeToken.of(boundCodeableConceptDtClass), getValueSet);
+    assertThat(getterDescription.getName()).isEqualTo("valueSet");
+    assertThat(getterDescription.getTypeName()).isEqualTo("java.util.Set<T>");
+    assertThat(getterDescription.getElementTypeName()).isEqualTo("T");
   }
 
   @Test
@@ -143,7 +154,7 @@ public class GetterDescriptionTest {
                                               TypeToken.of(ManyBoundsGeneric.class),
                                               method);
     assertThat(getterDescription.getName()).isEqualTo("value");
-    assertThat(getterDescription.getTypeName()).isEqualTo("java.util.Map<T,V>");
+    assertThat(getterDescription.getTypeName()).isEqualTo("java.util.Map<T, V>");
     assertThat(getterDescription.getElementTypeName()).isNull();
   }
 

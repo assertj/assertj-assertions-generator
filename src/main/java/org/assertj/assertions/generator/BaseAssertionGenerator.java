@@ -209,14 +209,19 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     classesToImport.add(parentAssertClassName);
 
     final String customAssertionClass = concrete ? classDescription.getAssertClassName() : classDescription.getAbstractAssertClassName();
-    final String customAssertionClassWithoutBoundedGenerics = removeBoundsFrom(customAssertionClass) + ">";
+    final String customAssertionClassWithoutBoundedGenerics = concrete ?
+        classDescription.getAssertClassNameWithoutBoundedGenerics() :
+        classDescription.getAbstractAssertClassNameWithoutBoundedGenerics();
+    final String customAssertionClassWithoutGenerics = concrete ?
+        classDescription.getAssertClassNameWithoutGenerics() :
+        classDescription.getAbstractAssertClassNameWithoutGenerics();
     final String selfType = concrete ? customAssertionClassWithoutBoundedGenerics : "S";
     final String myself = concrete ? "this" : "myself";
 
     template = replace(template, PACKAGE, classDescription.getPackageName());
     template = replace(template, CUSTOM_ASSERTION_CLASS, customAssertionClass);
     template = replace(template, CUSTOM_ASSERTION_CLASS_WITHOUT_BOUNDED_GENERICS, customAssertionClassWithoutBoundedGenerics);
-    template = replace(template, CUSTOM_ASSERTION_CLASS_WITHOUT_GENERIC, removeGenericFrom(customAssertionClass));
+    template = replace(template, CUSTOM_ASSERTION_CLASS_WITHOUT_GENERIC, customAssertionClassWithoutGenerics);
     template = replace(template, CUSTOM_ASSERTION_GENERIC_TYPES, classDescription.listGenericTypesWithoutBounds());
     template = replace(template, CUSTOM_ASSERTION_BOUNDED_GENERIC_TYPES, classDescription.listBoundedGenericTypes());
     template = replaceClassGenericTypeDeclaration(template, classDescription);
@@ -391,7 +396,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       // in case of inner classes like Movie.PublicCategory, class assert will be MoviePublicCategoryAssert
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CUSTOM_ASSERTION_CLASS,
                                                  classDescription.getFullyQualifiedAssertClassName());
-      assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CUSTOM_ASSERTION_CLASS_WITHOUT_GENERIC, 
+      assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CUSTOM_ASSERTION_CLASS_WITHOUT_GENERIC,
                                                  classDescription.getFullyQualifiedAssertClassNameWithoutGenerics());
       // resolve class (ex: Player)
       // in case of inner classes like Movie.PublicCategory use class name with outer class i.e. Movie.PublicCategory.

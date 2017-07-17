@@ -27,6 +27,7 @@ import org.assertj.assertions.generator.data.Primitives;
 import org.assertj.assertions.generator.data.Team;
 import org.assertj.assertions.generator.data.TreeEnum;
 import org.assertj.assertions.generator.data.art.ArtWork;
+import org.assertj.assertions.generator.data.generic.MultipleGenerics;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
 import org.assertj.assertions.generator.data.lotr.Race;
 import org.assertj.assertions.generator.data.lotr.Ring;
@@ -380,7 +381,8 @@ public class ClassUtilTest implements NestedClassesTest {
     };
     String typeDeclaration = getTypeDeclaration(fooInteger);
     assertThat(typeDeclaration).isEqualTo("org.assertj.assertions.generator.util.ClassUtilTest.Foo<Integer>");
-    org.assertj.assertions.generator.util.ClassUtilTest.Foo<org.assertj.assertions.generator.util.ClassUtilTest.Foo<Integer>> s;
+    org.assertj.assertions.generator.util.ClassUtilTest.Foo<Integer> s;
+    // org.assertj.assertions.generator.util.ClassUtilTest.org.assertj.assertions.generator.util.ClassUtilTest$Foo<java.lang.Integer> ss;
 
     // nested!
     TypeToken<Foo<Foo<Integer>>> fooFooInteger = new TypeToken<Foo<Foo<Integer>>>(getClass()) {
@@ -429,12 +431,22 @@ public class ClassUtilTest implements NestedClassesTest {
 
     Field clazzFoo = Foo.class.getDeclaredField("clazzFoo");
     typeDeclaration = getParameterTypeDeclaration(fooInteger.resolveType(clazzFoo.getGenericType()));
-    assertThat(typeDeclaration).isEqualTo("Class<? extends org.assertj.assertions.generator.util.ClassUtilTest.Foo<?>>");
+    assertThat(typeDeclaration).isEqualTo("Class<org.assertj.assertions.generator.util.ClassUtilTest.org.assertj.assertions.generator.util.ClassUtilTest$Foo<?>>");
 
     typeDeclaration = getTypeDeclaration(fooInteger.resolveType(clazzFoo.getGenericType()));
-    assertThat(typeDeclaration).isEqualTo("Class<org.assertj.assertions.generator.util.ClassUtilTest.Foo<?>>");
+    assertThat(typeDeclaration).isEqualTo("Class<org.assertj.assertions.generator.util.ClassUtilTest.org.assertj.assertions.generator.util.ClassUtilTest$Foo<?>>");
   }
+  
+  @Test
+  public void get_return_type() throws Exception {
+    TypeToken<MultipleGenerics> multipleGenericsTypeToken = TypeToken.of(MultipleGenerics.class);
+    Field movies = MultipleGenerics.class.getDeclaredField("movies");
 
+    TypeToken<?> paramType = multipleGenericsTypeToken.resolveType(movies.getGenericType());
+    String paramTypeDeclaration = getParameterTypeDeclaration(paramType);
+    assertThat(paramTypeDeclaration).isEqualTo("Iterable<? extends org.assertj.assertions.generator.data.Movie>");
+  }
+  
   @SuppressWarnings("unused")
   static class Foo<T> {
     List<T> listOfT;

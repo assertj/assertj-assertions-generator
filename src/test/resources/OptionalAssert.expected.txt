@@ -19,7 +19,7 @@ public class OptionalAssert<T> extends AbstractOptionalAssert<OptionalAssert<T>,
 
   /**
    * An entry point for OptionalAssert<T> to follow AssertJ standard <code>assertThat()</code> statements.<br>
-   * With a static import, one can write directly: <code>assertThat(myOptional<T>)</code> and get specific assertion with code completion.
+   * With a static import, one can write directly: <code>assertThat(myOptional)</code> and get specific assertion with code completion.
    * @param actual the Optional<T> we want to make assertions on.
    * @return a new <code>{@link OptionalAssert<T>}</code>
    */

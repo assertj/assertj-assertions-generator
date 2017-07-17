@@ -28,6 +28,9 @@ public class MultipleGenerics<T, U, V, W> extends MultipleGenericsParent<T, U> {
   }
 
   public Iterable<? extends Movie> movies = new ArrayList<>();
+//  public <X  extends Movie> Iterable<X> getX() {
+//    return null;
+//  }
 
   public MyGeneric<W> getMyGeneric() {
     return null;

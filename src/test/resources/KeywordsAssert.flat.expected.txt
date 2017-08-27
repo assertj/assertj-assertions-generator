@@ -699,11 +699,11 @@ public class KeywordsAssert extends AbstractObjectAssert<KeywordsAssert, Keyword
    * <p>
    * If difference is equal to the offset value, assertion is considered successful.
    * @param expectedDouble the value to compare the actual Keywords's double to.
-   * @param offset the given offset.
+   * @param assertjOffset the given offset.
    * @return this assertion object.
    * @throws AssertionError - if the actual Keywords's double is not close enough to the given value.
    */
-  public KeywordsAssert hasDoubleCloseTo(double expectedDouble, double offset) {
+  public KeywordsAssert hasDoubleCloseTo(double expectedDouble, double assertjOffset) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
@@ -711,10 +711,10 @@ public class KeywordsAssert extends AbstractObjectAssert<KeywordsAssert, Keyword
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting double:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
-                                               actualDouble, expectedDouble, offset, Math.abs(expectedDouble - actualDouble));
+                                               actualDouble, expectedDouble, assertjOffset, Math.abs(expectedDouble - actualDouble));
 
     // check
-    Assertions.assertThat(actualDouble).overridingErrorMessage(assertjErrorMessage).isCloseTo(expectedDouble, Assertions.within(offset));
+    Assertions.assertThat(actualDouble).overridingErrorMessage(assertjErrorMessage).isCloseTo(expectedDouble, Assertions.within(assertjOffset));
 
     // return the current assertion for method chaining
     return this;
@@ -886,11 +886,11 @@ public class KeywordsAssert extends AbstractObjectAssert<KeywordsAssert, Keyword
    * <p>
    * If difference is equal to the offset value, assertion is considered successful.
    * @param expectedFloat the value to compare the actual Keywords's float to.
-   * @param offset the given offset.
+   * @param assertjOffset the given offset.
    * @return this assertion object.
    * @throws AssertionError - if the actual Keywords's float is not close enough to the given value.
    */
-  public KeywordsAssert hasFloatCloseTo(float expectedFloat, float offset) {
+  public KeywordsAssert hasFloatCloseTo(float expectedFloat, float assertjOffset) {
     // check that actual Keywords we want to make assertions on is not null.
     isNotNull();
 
@@ -898,10 +898,10 @@ public class KeywordsAssert extends AbstractObjectAssert<KeywordsAssert, Keyword
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting float:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
-                                               actualFloat, expectedFloat, offset, Math.abs(expectedFloat - actualFloat));
+                                               actualFloat, expectedFloat, assertjOffset, Math.abs(expectedFloat - actualFloat));
 
     // check
-    Assertions.assertThat(actualFloat).overridingErrorMessage(assertjErrorMessage).isCloseTo(expectedFloat, Assertions.within(offset));
+    Assertions.assertThat(actualFloat).overridingErrorMessage(assertjErrorMessage).isCloseTo(expectedFloat, Assertions.within(assertjOffset));
 
     // return the current assertion for method chaining
     return this;

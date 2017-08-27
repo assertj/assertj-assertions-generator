@@ -517,11 +517,11 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
    * <p>
    * If difference is equal to the offset value, assertion is considered successful.
    * @param victoryRatio the value to compare the actual Team's victoryRatio to.
-   * @param offset the given offset.
+   * @param assertjOffset the given offset.
    * @return this assertion object.
    * @throws AssertionError - if the actual Team's victoryRatio is not close enough to the given value.
    */
-  public TeamAssert hasVictoryRatioCloseTo(double victoryRatio, double offset) {
+  public TeamAssert hasVictoryRatioCloseTo(double victoryRatio, double assertjOffset) {
     // check that actual Team we want to make assertions on is not null.
     isNotNull();
 
@@ -529,10 +529,10 @@ public class TeamAssert extends AbstractObjectAssert<TeamAssert, Team> {
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting victoryRatio:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
-                                               actualVictoryRatio, victoryRatio, offset, Math.abs(victoryRatio - actualVictoryRatio));
+                                               actualVictoryRatio, victoryRatio, assertjOffset, Math.abs(victoryRatio - actualVictoryRatio));
 
     // check
-    Assertions.assertThat(actualVictoryRatio).overridingErrorMessage(assertjErrorMessage).isCloseTo(victoryRatio, Assertions.within(offset));
+    Assertions.assertThat(actualVictoryRatio).overridingErrorMessage(assertjErrorMessage).isCloseTo(victoryRatio, Assertions.within(assertjOffset));
 
     // return the current assertion for method chaining
     return this;

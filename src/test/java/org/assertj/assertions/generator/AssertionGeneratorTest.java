@@ -244,6 +244,11 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     verifyHierarchicalAssertionGenerationFor(Optional.class);
   }
 
+  @Test
+  public void should_generate_assertion_without_conflict_with_parameters() throws IOException {
+    verifyFlatAssertionGenerationFor(ParameterClashWithVariables.class);
+  }
+
   private String expectedContentFromTemplate(NestedClass nestedClass, String fileTemplate) throws IOException {
     String template = contentOf(generationPathHandler.getResourcesDir().resolve(fileTemplate).toFile(), defaultCharset());
     String content = replace(template, "${nestedClass}Assert", remove(nestedClass.classNameWithOuterClass, '.') + "Assert");

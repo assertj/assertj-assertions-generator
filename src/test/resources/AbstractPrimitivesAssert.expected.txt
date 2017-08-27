@@ -210,11 +210,11 @@ public abstract class AbstractPrimitivesAssert<S extends AbstractPrimitivesAsser
    * <p>
    * If difference is equal to the offset value, assertion is considered successful.
    * @param expectedDouble the value to compare the actual Primitives's double to.
-   * @param offset the given offset.
+   * @param assertjOffset the given offset.
    * @return this assertion object.
    * @throws AssertionError - if the actual Primitives's double is not close enough to the given value.
    */
-  public S hasDoubleCloseTo(double expectedDouble, double offset) {
+  public S hasDoubleCloseTo(double expectedDouble, double assertjOffset) {
     // check that actual Primitives we want to make assertions on is not null.
     isNotNull();
 
@@ -222,10 +222,10 @@ public abstract class AbstractPrimitivesAssert<S extends AbstractPrimitivesAsser
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting double:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
-                                               actualDouble, expectedDouble, offset, Math.abs(expectedDouble - actualDouble));
+                                               actualDouble, expectedDouble, assertjOffset, Math.abs(expectedDouble - actualDouble));
 
     // check
-    Assertions.assertThat(actualDouble).overridingErrorMessage(assertjErrorMessage).isCloseTo(expectedDouble, Assertions.within(offset));
+    Assertions.assertThat(actualDouble).overridingErrorMessage(assertjErrorMessage).isCloseTo(expectedDouble, Assertions.within(assertjOffset));
 
     // return the current assertion for method chaining
     return myself;
@@ -259,11 +259,11 @@ public abstract class AbstractPrimitivesAssert<S extends AbstractPrimitivesAsser
    * <p>
    * If difference is equal to the offset value, assertion is considered successful.
    * @param doubleWrapper the value to compare the actual Primitives's doubleWrapper to.
-   * @param offset the given offset.
+   * @param assertjOffset the given offset.
    * @return this assertion object.
    * @throws AssertionError - if the actual Primitives's doubleWrapper is not close enough to the given value.
    */
-  public S hasDoubleWrapperCloseTo(Double doubleWrapper, Double offset) {
+  public S hasDoubleWrapperCloseTo(Double doubleWrapper, Double assertjOffset) {
     // check that actual Primitives we want to make assertions on is not null.
     isNotNull();
 
@@ -271,10 +271,10 @@ public abstract class AbstractPrimitivesAssert<S extends AbstractPrimitivesAsser
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting doubleWrapper:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
-                                               actualDoubleWrapper, doubleWrapper, offset, Math.abs(doubleWrapper - actualDoubleWrapper));
+                                               actualDoubleWrapper, doubleWrapper, assertjOffset, Math.abs(doubleWrapper - actualDoubleWrapper));
 
     // check
-    Assertions.assertThat(actualDoubleWrapper).overridingErrorMessage(assertjErrorMessage).isCloseTo(doubleWrapper, Assertions.within(offset));
+    Assertions.assertThat(actualDoubleWrapper).overridingErrorMessage(assertjErrorMessage).isCloseTo(doubleWrapper, Assertions.within(assertjOffset));
 
     // return the current assertion for method chaining
     return myself;
@@ -344,11 +344,11 @@ public abstract class AbstractPrimitivesAssert<S extends AbstractPrimitivesAsser
    * <p>
    * If difference is equal to the offset value, assertion is considered successful.
    * @param expectedFloat the value to compare the actual Primitives's float to.
-   * @param offset the given offset.
+   * @param assertjOffset the given offset.
    * @return this assertion object.
    * @throws AssertionError - if the actual Primitives's float is not close enough to the given value.
    */
-  public S hasFloatCloseTo(float expectedFloat, float offset) {
+  public S hasFloatCloseTo(float expectedFloat, float assertjOffset) {
     // check that actual Primitives we want to make assertions on is not null.
     isNotNull();
 
@@ -356,10 +356,10 @@ public abstract class AbstractPrimitivesAssert<S extends AbstractPrimitivesAsser
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting float:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
-                                               actualFloat, expectedFloat, offset, Math.abs(expectedFloat - actualFloat));
+                                               actualFloat, expectedFloat, assertjOffset, Math.abs(expectedFloat - actualFloat));
 
     // check
-    Assertions.assertThat(actualFloat).overridingErrorMessage(assertjErrorMessage).isCloseTo(expectedFloat, Assertions.within(offset));
+    Assertions.assertThat(actualFloat).overridingErrorMessage(assertjErrorMessage).isCloseTo(expectedFloat, Assertions.within(assertjOffset));
 
     // return the current assertion for method chaining
     return myself;
@@ -393,11 +393,11 @@ public abstract class AbstractPrimitivesAssert<S extends AbstractPrimitivesAsser
    * <p>
    * If difference is equal to the offset value, assertion is considered successful.
    * @param floatWrapper the value to compare the actual Primitives's floatWrapper to.
-   * @param offset the given offset.
+   * @param assertjOffset the given offset.
    * @return this assertion object.
    * @throws AssertionError - if the actual Primitives's floatWrapper is not close enough to the given value.
    */
-  public S hasFloatWrapperCloseTo(Float floatWrapper, Float offset) {
+  public S hasFloatWrapperCloseTo(Float floatWrapper, Float assertjOffset) {
     // check that actual Primitives we want to make assertions on is not null.
     isNotNull();
 
@@ -405,10 +405,10 @@ public abstract class AbstractPrimitivesAssert<S extends AbstractPrimitivesAsser
 
     // overrides the default error message with a more explicit one
     String assertjErrorMessage = String.format("\nExpecting floatWrapper:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
-                                               actualFloatWrapper, floatWrapper, offset, Math.abs(floatWrapper - actualFloatWrapper));
+                                               actualFloatWrapper, floatWrapper, assertjOffset, Math.abs(floatWrapper - actualFloatWrapper));
 
     // check
-    Assertions.assertThat(actualFloatWrapper).overridingErrorMessage(assertjErrorMessage).isCloseTo(floatWrapper, Assertions.within(offset));
+    Assertions.assertThat(actualFloatWrapper).overridingErrorMessage(assertjErrorMessage).isCloseTo(floatWrapper, Assertions.within(assertjOffset));
 
     // return the current assertion for method chaining
     return myself;

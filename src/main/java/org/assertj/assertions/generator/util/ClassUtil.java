@@ -200,10 +200,15 @@ public class ClassUtil {
 
   private static boolean isClassCandidateToAssertionsGeneration(TypeToken<?> typeToken) {
     if (typeToken == null) return false;
+    if (isPackageInfo(typeToken)) return false;
     Class<?> raw = typeToken.getRawType();
     return isPublic(raw.getModifiers())
            && !raw.isAnonymousClass()
            && !raw.isLocalClass();
+  }
+
+  private static boolean isPackageInfo(TypeToken<?> typeToken) {
+    return typeToken.getRawType().getName().contains("package-info");
   }
 
   private static boolean isClass(String fileName) {

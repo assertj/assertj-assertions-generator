@@ -183,6 +183,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
       assertThat(clazz.isAnonymousClass()).as("check that <" + clazz.getSimpleName() + "> is not anonymous").isFalse();
       assertThat(clazz.isLocalClass()).as("check that " + clazz.getSimpleName() + " is not local").isFalse();
       assertThat(isPublic(clazz.getModifiers())).as("check that " + clazz.getSimpleName() + " is public").isTrue();
+      assertThat(clazz.getName()).as("check that " + clazz.getSimpleName() + " is not package-info").doesNotContain("package-info");
       logger.info("Generating assertions for {}", clazz.getName());
       final ClassDescription classDescription = converter.convertToClassDescription(clazz);
       File customAssertionFile = assertionGenerator.generateCustomAssertionFor(classDescription);
@@ -196,6 +197,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     Set<TypeToken<?>> types = collectClasses(customClassLoader, "org.assertj.assertions.generator.data");
     for (TypeToken<?> type : types) {
       Class<?> clazz = type.getRawType();
+      assertThat(clazz.getName()).as("check that " + clazz.getSimpleName() + " is not package-info").doesNotContain("package-info");
       assertThat(clazz.isAnonymousClass()).as("check that " + clazz.getSimpleName() + " is not anonymous").isFalse();
       assertThat(clazz.isLocalClass()).as("check that " + clazz.getSimpleName() + " is not local").isFalse();
       assertThat(isPublic(clazz.getModifiers())).as("check that " + clazz.getSimpleName() + " is public").isTrue();

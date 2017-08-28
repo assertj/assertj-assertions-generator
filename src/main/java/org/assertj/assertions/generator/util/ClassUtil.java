@@ -78,7 +78,7 @@ public class ClassUtil {
     Set<TypeToken<?>> classes = newLinkedHashSet();
     for (String classOrPackageName : classOrPackageNames) {
       TypeToken<?> clazz = tryToLoadClass(classOrPackageName, classLoader);
-      if (clazz != null) {
+      if (isClassCandidateToAssertionsGeneration(clazz)) {
         classes.add(clazz);
       } else {
         // should be a package

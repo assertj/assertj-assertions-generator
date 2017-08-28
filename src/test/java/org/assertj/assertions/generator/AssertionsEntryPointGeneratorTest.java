@@ -36,7 +36,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
+import static java.lang.reflect.Modifier.isPublic;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.*;
+import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.contentOf;
 
@@ -70,7 +72,7 @@ public class AssertionsEntryPointGeneratorTest {
 
   @Test
   public void should_generate_correctly_standard_assertions_entry_point_class_for_classes_with_same_name()
-      throws Exception {
+                                                                                                           throws Exception {
     // GIVEN : classes we want to have entry point assertions for
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Team.class,
                                                                        org.assertj.assertions.generator.data.Team.class);
@@ -241,7 +243,7 @@ public class AssertionsEntryPointGeneratorTest {
 
   @Test
   public void should_return_empty_assertion_entry_point_class_content_if_no_classes_description_are_given()
-      throws Exception {
+                                                                                                            throws Exception {
     // GIVEN no ClassDescription
     Set<ClassDescription> emptySet = newLinkedHashSet();
     // THEN generated entry points content are empty
@@ -269,11 +271,44 @@ public class AssertionsEntryPointGeneratorTest {
     }
   }
 
+  @Test
+  public void should_not_generate_assertion_entry_point_for_non_public_class_in_package() throws Exception {
+    // GIVEN package including a package private class
+    Set<ClassDescription> classDescriptions = getClassDescriptionsOf(collectClasses("org.assertj.assertions.generator.data"));
+    // WHEN
+    String assertionsEntryPointContent = generator.generateAssertionsEntryPointClassContentFor(classDescriptions,
+                                                                                               STANDARD,
+                                                                                               "org.assertj.assertions.generator.data");
+    // THEN
+    assertThat(assertionsEntryPointContent).doesNotContain("PackagePrivate");
+  }
+
+  @Test
+  public void should_not_generate_assertion_entry_point_for_non_public_class() throws Exception {
+    // GIVEN package including a package private class
+    Set<ClassDescription> classDescriptions = getClassDescriptionsOf(collectClasses("org.assertj.assertions.generator.data.inner.PackagePrivate"));
+    // WHEN
+    String assertionsEntryPointContent = generator.generateAssertionsEntryPointClassContentFor(classDescriptions,
+                                                                                               STANDARD,
+                                                                                               "org.assertj.assertions.generator.data");
+    // THEN
+    assertThat(assertionsEntryPointContent).doesNotContain("PackagePrivate");
+  }
+
   private Set<ClassDescription> getClassDescriptionsOf(Class<?>... classes) {
     Set<ClassDescription> classDescriptionSet = new LinkedHashSet<>(classes.length);
     ClassToClassDescriptionConverter converter = new ClassToClassDescriptionConverter();
     for (Class<?> clazz : classes) {
       classDescriptionSet.add(converter.convertToClassDescription(TypeToken.of(clazz)));
+    }
+    return classDescriptionSet;
+  }
+
+  private Set<ClassDescription> getClassDescriptionsOf(Set<TypeToken<?>> typeTokens) {
+    Set<ClassDescription> classDescriptionSet = new LinkedHashSet<>(typeTokens.size());
+    ClassToClassDescriptionConverter converter = new ClassToClassDescriptionConverter();
+    for (TypeToken<?> typeToken : typeTokens) {
+      classDescriptionSet.add(converter.convertToClassDescription(typeToken));
     }
     return classDescriptionSet;
   }

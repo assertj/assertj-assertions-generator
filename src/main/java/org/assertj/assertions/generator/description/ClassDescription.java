@@ -198,4 +198,7 @@ public class ClassDescription implements Comparable<ClassDescription> {
     return ABSTRACT_ASSERT_CLASS_PREFIX + assertClassNameOf(type);
   }
 
+  public boolean implementsComparable() {
+    return type.isSubtypeOf(Comparable.class);
+  }
 }

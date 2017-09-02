@@ -87,6 +87,12 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   @Test
+  public void should_generate_assertion_for_comparable_class() throws Exception {
+    verifyFlatAssertionGenerationFor(Name.class);
+    verifyHierarchicalAssertionGenerationFor(Name.class);
+  }
+
+  @Test
   public void should_generate_assertion_for_class_with_properties_that_clash_with_fields() throws Exception {
     verifyFlatAssertionGenerationFor(FieldPropertyClash.class);
     verifyHierarchicalAssertionGenerationFor(FieldPropertyClash.class);

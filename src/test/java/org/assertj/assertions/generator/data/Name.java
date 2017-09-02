@@ -16,7 +16,7 @@ package org.assertj.assertions.generator.data;
 /**
  * @author Yvonne Wang
  */
-public class Name {
+public class Name implements Comparable<Name> {
 
   private String first;
   private String last;
@@ -50,5 +50,10 @@ public class Name {
 
   @Override public String toString() {
     return String.format("%s[first='%s', last='%s']", getClass().getSimpleName(), first, last);
+  }
+
+  @Override
+  public int compareTo(Name o) {
+    return last.compareTo(o.last);
   }
 }

@@ -16,6 +16,7 @@ import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.BeanWithExceptionsTest;
 import org.assertj.assertions.generator.NestedClassesTest;
 import org.assertj.assertions.generator.data.Movie;
+import org.assertj.assertions.generator.data.Name;
 import org.assertj.assertions.generator.data.Team;
 import org.assertj.assertions.generator.data.TreeEnum;
 import org.assertj.assertions.generator.data.art.ArtWork;
@@ -85,8 +86,19 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getFullyQualifiedAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.MovieAssert");
     assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractMovieAssert");
     assertThat(classDescription.getAbstractAssertClassFilename()).isEqualTo("AbstractMovieAssert.java");
-    assertThat(classDescription.getFullyQualifiedParentAssertClassName())
-        .isEqualTo("org.assertj.assertions.generator.data.art.AbstractArtWorkAssert");
+    assertThat(classDescription.getFullyQualifiedParentAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.art.AbstractArtWorkAssert");
+    assertThat(classDescription.implementsComparable()).as("implementsComparable ? ").isFalse();
+  }
+
+  @Test
+  public void should_build_comparable_class_description() throws Exception {
+    // Given
+    Class<?> clazz = Name.class;
+    // When
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    // Then
+    assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Name");
+    assertThat(classDescription.implementsComparable()).as("implementsComparable ? ").isTrue();
   }
 
   @Theory
@@ -143,14 +155,14 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     // Then
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
     assertThat(getterDescription.isIterableType())
-        .as("getterDescription must be iterable")
-        .isTrue();
+                                                  .as("getterDescription must be iterable")
+                                                  .isTrue();
     assertThat(getterDescription.getElementTypeName())
-        .as("getterDesc must have correct element type")
-        .isEqualTo("int[]");
+                                                      .as("getterDesc must have correct element type")
+                                                      .isEqualTo("int[]");
     assertThat(getterDescription.isArrayType())
-        .as("getterDescription must not be an array")
-        .isFalse();
+                                               .as("getterDescription must not be an array")
+                                               .isFalse();
   }
 
   static class WithPrimitiveArrayArrayCollection {
@@ -191,8 +203,8 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
     assertThat(getterDescription.isIterableType()).as("getterDescription must be iterable").isTrue();
     assertThat(getterDescription.getElementTypeName())
-        .as("getterDescription must get the internal component type without package")
-        .isEqualTo(TreeEnum.class.getSimpleName());
+                                                      .as("getterDescription must get the internal component type without package")
+                                                      .isEqualTo(TreeEnum.class.getSimpleName());
     assertThat(getterDescription.isArrayType()).as("getterDescription must be an array").isFalse();
   }
 
@@ -215,12 +227,11 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
     assertThat(getterDescription.isIterableType())
-        .as("getterDescription must be iterable")
-        .isTrue();
+                                                  .as("getterDescription must be iterable")
+                                                  .isTrue();
     assertThat(getterDescription.getElementTypeName())
-        .as("getterDesc element type must return correct array type")
-        .isEqualTo(getTypeDeclaration(new TypeToken<Player[]>() {
-        }));
+                                                      .as("getterDesc element type must return correct array type")
+                                                      .isEqualTo(getTypeDeclaration(new TypeToken<Player[]>() {}));
     assertThat(getterDescription.isArrayType()).as("getterDescription is not an array").isFalse();
   }
 
@@ -235,15 +246,15 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
     assertThat(getterDescription.isIterableType())
-        .as("getterDescription is not iterable").isFalse();
+                                                  .as("getterDescription is not iterable").isFalse();
     assertThat(getterDescription.getName())
-        .as("getterDesc must have correct name")
-        .isEqualTo("managedPlayer");
+                                           .as("getterDesc must have correct name")
+                                           .isEqualTo("managedPlayer");
     assertThat(getterDescription.getTypeName())
-        .as("getterDesc must have correct type (not fully qualified because in same package)")
-        .isEqualTo("Player");
+                                               .as("getterDesc must have correct type (not fully qualified because in same package)")
+                                               .isEqualTo("Player");
   }
-  
+
   @Test
   public void should_build_fellowshipOfTheRing_class_description() throws Exception {
     // Given

@@ -59,6 +59,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Player");
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.nba");
     assertThat(classDescription.getFullyQualifiedClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.Player");
+    assertThat(classDescription.getFullyQualifiedOuterClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.Player");
     assertThat(classDescription.getFullyQualifiedClassNameWithoutGenerics()).isEqualTo(classDescription.getFullyQualifiedClassName());
     assertThat(classDescription.getGettersDescriptions()).hasSize(19);
     assertThat(classDescription.getAssertClassName()).isEqualTo("PlayerAssert");
@@ -123,6 +124,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     ClassDescription classDescription = converter.convertToClassDescription(clazz);
     // Then
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo(nestedClass.classNameWithOuterClass);
+    assertThat(classDescription.getFullyQualifiedOuterClassName()).isEqualTo(nestedClass.fullyQualifiedOuterClassName);
     assertThat(classDescription.getAssertClassName()).isEqualTo(nestedClass.assertClassName);
     assertThat(classDescription.getAssertClassFilename()).isEqualTo(nestedClass.assertClassFilename);
     assertThat(classDescription.getAbstractAssertClassName()).isEqualTo(nestedClass.abstractAssertClassName);

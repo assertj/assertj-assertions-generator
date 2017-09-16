@@ -13,6 +13,7 @@
 package org.assertj.assertions.generator.description;
 
 import com.google.common.reflect.TypeToken;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -21,8 +22,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static com.google.common.collect.Sets.union;
-import static org.apache.commons.lang3.StringUtils.capitalize;
-import static org.apache.commons.lang3.StringUtils.removeAll;
+import static org.apache.commons.lang3.StringUtils.*;
 import static org.assertj.assertions.generator.util.ClassUtil.*;
 
 /**
@@ -56,6 +56,14 @@ public class ClassDescription implements Comparable<ClassDescription> {
 
   public String getFullyQualifiedClassName() {
     return getTypeDeclaration(type);
+  }
+
+  public String getFullyQualifiedOuterClassName() {
+    // get the class part only (including all nested/inner ones): Outer.Inner.ReallyInner  
+    String outerClassNameWithInner = remove(getFullyQualifiedClassName(), getPackageName() + ".");
+    // get the outer class part only : Outer  
+    String outerClassNameOnly = substringBefore(outerClassNameWithInner, ".");
+    return getPackageName() + "." + outerClassNameOnly;
   }
 
   public String getFullyQualifiedClassNameWithoutGenerics() {

@@ -94,8 +94,7 @@ public class GenerationPathHandler extends TemporaryFolder {
   }
 
   public Path packagePathFor(Class<?> clazz) {
-    return getRoot().toPath()
-                    .resolve(clazz.getPackage().getName().replace('.', File.separatorChar));
+    return pathFromRoot(clazz.getPackage().getName().replace('.', File.separatorChar));
   }
 
   public File fileGeneratedFor(Class<?> clazz) {
@@ -103,9 +102,23 @@ public class GenerationPathHandler extends TemporaryFolder {
     return packagePathFor(clazz).resolve(generatedFileName).toFile();
   }
 
+  public File fileGeneratedFor(Class<?> clazz, String generatedAssertionPackage) {
+    String generatedFileName = CLASS_DESCRIPTION_CONVERTER.convertToClassDescription(clazz).getAssertClassFilename();
+    return pathFromRoot(generatedAssertionPackage).resolve(generatedFileName).toFile();
+  }
+
   public File abstractFileGeneratedFor(Class<?> clazz) {
     String generatedFileName = CLASS_DESCRIPTION_CONVERTER.convertToClassDescription(clazz).getAbstractAssertClassFilename();
     return packagePathFor(clazz).resolve(generatedFileName).toFile();
+  }
+
+  public File abstractFileGeneratedFor(Class<?> clazz, String generatedAssertionPackage) {
+    String generatedFileName = CLASS_DESCRIPTION_CONVERTER.convertToClassDescription(clazz).getAbstractAssertClassFilename();
+    return pathFromRoot(generatedAssertionPackage).resolve(generatedFileName).toFile();
+  }
+
+  private Path pathFromRoot(String generatedAssertionPackage) {
+    return getRoot().toPath().resolve(generatedAssertionPackage.replace('.', File.separatorChar));
   }
 
   public void compileGeneratedFiles(Iterable<? extends File> files) {
@@ -144,6 +157,19 @@ public class GenerationPathHandler extends TemporaryFolder {
     compileGeneratedFiles(files);
   }
 
+  public void compileGeneratedFilesFor(String generatedAssertionPackage, Class<?>... classes) {
+    List<File> files = new ArrayList<>(classes.length);
+    for (Class<?> clazz : classes) {
+      files.add(fileGeneratedFor(clazz, generatedAssertionPackage));
+      // Handle abstract files, too!
+      File abstractFile = abstractFileGeneratedFor(clazz, generatedAssertionPackage);
+      if (abstractFile.exists()) {
+        files.add(abstractFile);
+      }
+    }
+    compileGeneratedFiles(files);
+  }
+
   public void assertGeneratedAssertClass(Class<?> clazz, String expectedAssertFile, final boolean compileGenerated) throws IOException {
     File expectedFile = resourcesDir.resolve(expectedAssertFile).toAbsolutePath().toFile();
     File actualFile = fileGeneratedFor(clazz);
@@ -153,9 +179,24 @@ public class GenerationPathHandler extends TemporaryFolder {
     assertThat(actualFile).hasSameContentAs(expectedFile);
   }
 
+  public void assertGeneratedAssertClass(Class<?> clazz, String expectedAssertFile, final boolean compileGenerated,
+                                         String generatedAssertionPackage) throws IOException {
+    File expectedFile = resourcesDir.resolve(expectedAssertFile).toAbsolutePath().toFile();
+    File actualFile = fileGeneratedFor(clazz, generatedAssertionPackage);
+    // compile it!
+    if (compileGenerated) compileGeneratedFilesFor(generatedAssertionPackage, clazz);
+
+    assertThat(actualFile).hasSameContentAs(expectedFile);
+  }
+
   public void assertAbstractGeneratedAssertClass(Class<?> clazz, String expectedAssertFile) {
-    File expectedFile = getResourcesDir().resolve(expectedAssertFile).toAbsolutePath().toFile();
+    File expectedFile = resourcesDir.resolve(expectedAssertFile).toAbsolutePath().toFile();
     assertThat(abstractFileGeneratedFor(clazz)).hasSameContentAs(expectedFile);
+  }
+
+  public void assertAbstractGeneratedAssertClass(Class<?> clazz, String expectedAssertFile, String generatedAssertionPackage) {
+    File expectedFile = resourcesDir.resolve(expectedAssertFile).toAbsolutePath().toFile();
+    assertThat(abstractFileGeneratedFor(clazz, generatedAssertionPackage)).hasSameContentAs(expectedFile);
   }
 
   /**
@@ -173,7 +214,7 @@ public class GenerationPathHandler extends TemporaryFolder {
       // We only know how to extract classpaths from URLClassloaders.
       if (currentClassloader instanceof URLClassLoader) classloaders.add((URLClassLoader) currentClassloader);
       else throw new IllegalArgumentException("Classpath for compilation could not be extracted as classloader is not a URLClassloader");
-      
+
       if (currentClassloader == systemClassLoader) break;
       else currentClassloader = currentClassloader.getParent();
     }

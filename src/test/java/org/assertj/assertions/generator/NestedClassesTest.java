@@ -23,6 +23,7 @@ public interface NestedClassesTest {
   NestedClass SNC = new NestedClass(OuterClass.StaticNestedPerson.class,
                                     "OuterClass.StaticNestedPerson",
                                     "OuterClassStaticNestedPersonAssert",
+                                    "org.assertj.assertions.generator.data.OuterClass",
                                     "OuterClassStaticNestedPersonAssert.java",
                                     "AbstractOuterClassStaticNestedPersonAssert",
                                     "AbstractOuterClassStaticNestedPersonAssert.java");
@@ -30,6 +31,7 @@ public interface NestedClassesTest {
   NestedClass SNC_SNC = new NestedClass(OuterClass.StaticNestedPerson.SNP_StaticNestedPerson.class,
                                         "OuterClass.StaticNestedPerson.SNP_StaticNestedPerson",
                                         "OuterClassStaticNestedPersonSNP_StaticNestedPersonAssert",
+                                        "org.assertj.assertions.generator.data.OuterClass",
                                         "OuterClassStaticNestedPersonSNP_StaticNestedPersonAssert.java",
                                         "AbstractOuterClassStaticNestedPersonSNP_StaticNestedPersonAssert",
                                         "AbstractOuterClassStaticNestedPersonSNP_StaticNestedPersonAssert.java");
@@ -37,6 +39,7 @@ public interface NestedClassesTest {
   NestedClass SNC_IC = new NestedClass(OuterClass.StaticNestedPerson.SNP_InnerPerson.class,
                                        "OuterClass.StaticNestedPerson.SNP_InnerPerson",
                                        "OuterClassStaticNestedPersonSNP_InnerPersonAssert",
+                                       "org.assertj.assertions.generator.data.OuterClass",
                                        "OuterClassStaticNestedPersonSNP_InnerPersonAssert.java",
                                        "AbstractOuterClassStaticNestedPersonSNP_InnerPersonAssert",
                                        "AbstractOuterClassStaticNestedPersonSNP_InnerPersonAssert.java");
@@ -44,6 +47,7 @@ public interface NestedClassesTest {
   NestedClass IC = new NestedClass(OuterClass.InnerPerson.class,
                                    "OuterClass.InnerPerson",
                                    "OuterClassInnerPersonAssert",
+                                   "org.assertj.assertions.generator.data.OuterClass",
                                    "OuterClassInnerPersonAssert.java",
                                    "AbstractOuterClassInnerPersonAssert",
                                    "AbstractOuterClassInnerPersonAssert.java");
@@ -51,6 +55,7 @@ public interface NestedClassesTest {
   NestedClass IC_IC = new NestedClass(OuterClass.InnerPerson.IP_InnerPerson.class,
                                       "OuterClass.InnerPerson.IP_InnerPerson",
                                       "OuterClassInnerPersonIP_InnerPersonAssert",
+                                      "org.assertj.assertions.generator.data.OuterClass",
                                       "OuterClassInnerPersonIP_InnerPersonAssert.java",
                                       "AbstractOuterClassInnerPersonIP_InnerPersonAssert",
                                       "AbstractOuterClassInnerPersonIP_InnerPersonAssert.java");
@@ -62,11 +67,13 @@ public interface NestedClassesTest {
     public final String abstractAssertClassName;
     public final String abstractAssertClassFilename;
     public final String classNameWithOuterClass;
+    public final String fullyQualifiedOuterClassName;
 
-    public NestedClass(Class<?> nestedClass, String classNameWithOuterClass, String assertClassName, String assertClassFilename,
+    public NestedClass(Class<?> nestedClass, String classNameWithOuterClass, String assertClassName, String fullyQualifiedOuterClassName, String assertClassFilename,
                        String abstractAssertClassName, String abstractAssertClassFilename) {
       this.nestedClass = nestedClass;
       this.assertClassName = assertClassName;
+      this.fullyQualifiedOuterClassName = fullyQualifiedOuterClassName;
       this.classNameWithOuterClass = classNameWithOuterClass;
       this.assertClassFilename = assertClassFilename;
       this.abstractAssertClassName = abstractAssertClassName;

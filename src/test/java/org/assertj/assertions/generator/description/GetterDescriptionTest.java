@@ -14,6 +14,7 @@ package org.assertj.assertions.generator.description;
 
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.data.Movie;
+import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,6 +42,23 @@ public class GetterDescriptionTest {
     assertThat(getterDescription.getName()).isEqualTo("points");
     assertThat(getterDescription.getTypeName()).isEqualTo("java.util.List");
     assertThat(getterDescription.getElementTypeName()).isEqualTo("int[]");
+    assertThat(getterDescription.getFullyQualifiedTypeName()).isEqualTo("java.util.List");
+  }
+
+  @Test
+  public void should_create_valid_typename_from_class_for_user_defined_type_in_same_package() throws Exception {
+    getterDescription = new GetterDescription("race", TypeToken.of(TolkienCharacter.class), TolkienCharacter.class.getMethod("getRace"));
+    assertThat(getterDescription.getName()).isEqualTo("race");
+    assertThat(getterDescription.getTypeName()).isEqualTo("Race");
+    assertThat(getterDescription.getFullyQualifiedTypeName()).isEqualTo("org.assertj.assertions.generator.data.lotr.Race");
+  }
+
+  @Test
+  public void should_create_valid_typename_from_class_for_user_defined_type_in_different_package() throws Exception {
+    getterDescription = new GetterDescription("name", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("getName"));
+    assertThat(getterDescription.getName()).isEqualTo("name");
+    assertThat(getterDescription.getTypeName()).isEqualTo("org.assertj.assertions.generator.data.Name");
+    assertThat(getterDescription.getFullyQualifiedTypeName()).isEqualTo("org.assertj.assertions.generator.data.Name");
   }
 
   @Test

@@ -131,9 +131,19 @@ public abstract class DataDescription {
     return valueType;
   }
 
+  /**
+   * Return the simple type name unless it is in a different package from the owning type in that the fully qualified name.
+   * <p/>
+   * To always get the fully qualified name use {@link #getFullyQualifiedTypeName()}.
+   * @return the type name of the {@link #valueType}
+   */
   public String getTypeName() {
-    String typeName = getTypeDeclaration(valueType);
+    String typeName = getFullyQualifiedTypeName();
     return removeOwningTypePackageNameIn(typeName);
+  }
+
+  public String getFullyQualifiedTypeName() {
+    return getTypeDeclaration(valueType);
   }
 
   public boolean isIterableType() {

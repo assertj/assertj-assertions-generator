@@ -14,7 +14,9 @@ package org.assertj.assertions.generator.description;
 
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.data.Name;
+import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.data.nba.Player;
+import org.assertj.assertions.generator.data.nba.team.Coach;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -33,8 +35,17 @@ public class FieldDescriptionTest {
     assertThat(fieldDescription.getName()).isEqualTo("name");
     assertThat(fieldDescription.getTypeName()).isEqualTo(Name.class.getName());
     assertThat(fieldDescription.getElementTypeName()).isNull();
+    assertThat(fieldDescription.getFullyQualifiedTypeName()).isEqualTo("org.assertj.assertions.generator.data.Name");
   }
 
+  @Test
+  public void should_create_valid_typename_from_class_for_user_defined_type_in_same_package() throws Exception {
+    fieldDescription = new FieldDescription(Coach.class.getDeclaredField("team"), TypeToken.of(Coach.class));
+    assertThat(fieldDescription.getName()).isEqualTo("team");
+    assertThat(fieldDescription.getTypeName()).isEqualTo("Team");
+    assertThat(fieldDescription.getFullyQualifiedTypeName()).isEqualTo("org.assertj.assertions.generator.data.nba.team.Team");
+  }
+  
   @Test
   public void should_show_information_in_toString() throws Exception {
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("name"), PLAYER_TYPE);

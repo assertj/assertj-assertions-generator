@@ -74,6 +74,16 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   @Test
+  public void should_generate_assertions_in_given_package() throws Exception {
+    String generatedAssertionPackage = "my.assertions";
+    assertionGenerator.setGeneratedAssertionsPackage(generatedAssertionPackage);
+    verifyFlatAssertionGenerationFor(Player.class, generatedAssertionPackage);
+    verifyHierarchicalAssertionGenerationFor(Player.class, generatedAssertionPackage);
+    verifyFlatAssertionGenerationFor(PlayerAgent.class, generatedAssertionPackage);
+    verifyHierarchicalAssertionGenerationFor(PlayerAgent.class, generatedAssertionPackage);
+  }
+
+  @Test
   public void should_generate_assertion_for_interface() throws Exception {
     verifyFlatAssertionGenerationFor(PlayerAgent.class);
     verifyHierarchicalAssertionGenerationFor(PlayerAgent.class);
@@ -150,8 +160,23 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   public void should_generate_assertion_for_nested_class(NestedClass nestedClass) throws Exception {
     Class<?> clazz = nestedClass.nestedClass;
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(clazz));
+    generationPathHandler.compileGeneratedFilesFor(clazz);
     assertThat(generationPathHandler.fileGeneratedFor(clazz)).hasContent(expectedContentFromTemplate(nestedClass,
                                                                                                      "NestedClassAssert.template.expected.txt"));
+  }
+
+  @Theory
+  public void should_generate_assertion_for_nested_class_in_given_package(NestedClass nestedClass) throws Exception {
+    // GIVEN
+    String generatedAssertionPackage = "my.assertions";
+    assertionGenerator.setGeneratedAssertionsPackage(generatedAssertionPackage);
+    Class<?> clazz = nestedClass.nestedClass;
+    // WHEN
+    assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(clazz));
+    // THEN
+    generationPathHandler.compileGeneratedFilesFor(generatedAssertionPackage, clazz);
+    assertThat(generationPathHandler.fileGeneratedFor(clazz, generatedAssertionPackage))
+        .hasContent(expectedContentFromTemplate(nestedClass, "NestedClassAssert.template.generated.in.custom.package.expected.txt"));
   }
 
   @Theory
@@ -274,11 +299,11 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     String content = replace(template, "${nestedClass}Assert",
                              remove(nestedClass.classNameWithOuterClass, '.') + "Assert");
     content = replace(content, "${nestedClass}", nestedClass.classNameWithOuterClass);
+    content = replace(content, "${fullyQualifiedOuterClassName}", nestedClass.fullyQualifiedOuterClassName);
     return content;
   }
 
-  @SuppressWarnings("WeakerAccess")
-  class MyClassLoader extends ClassLoader {
+  @SuppressWarnings("WeakerAccess") class MyClassLoader extends ClassLoader {
     public MyClassLoader(ClassLoader parent) {
       super(parent);
     }
@@ -290,6 +315,14 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     assertionGenerator.generateCustomAssertionFor(classDescription);
     String expectedAssertFile = clazz.getSimpleName() + "Assert.flat.expected.txt";
     generationPathHandler.assertGeneratedAssertClass(clazz, expectedAssertFile, true);
+  }
+
+  private void verifyFlatAssertionGenerationFor(Class<?> clazz, String generatedAssertionPackage) throws IOException {
+    String expectedAssertFile = clazz.getSimpleName() + "Assert.generated.in.custom.package.flat.expected.txt";
+    logger.info("Generating flat assertions for {} in package {}", clazz, generatedAssertionPackage);
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    assertionGenerator.generateCustomAssertionFor(classDescription);
+    generationPathHandler.assertGeneratedAssertClass(clazz, expectedAssertFile, true, generatedAssertionPackage);
   }
 
   private void verifyHierarchicalAssertionGenerationFor(Class<?> clazz) throws IOException {
@@ -305,14 +338,32 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 
     for (Class<?> clazz : classes) {
       ClassDescription classDescription = converter.convertToClassDescription(clazz);
-      generatedAssertFiles.addAll(asList(assertionGenerator.generateHierarchicalCustomAssertionFor(classDescription,
-                                                                                                   typeHierarchy)));
+      generatedAssertFiles.addAll(asList(assertionGenerator.generateHierarchicalCustomAssertionFor(classDescription, typeHierarchy)));
 
       String expectedConcreteAssertFile = clazz.getSimpleName() + "Assert.expected.txt";
       generationPathHandler.assertGeneratedAssertClass(clazz, expectedConcreteAssertFile, false);
 
       String expectedAbstractAssertFile = "Abstract" + clazz.getSimpleName() + "Assert.expected.txt";
       generationPathHandler.assertAbstractGeneratedAssertClass(clazz, expectedAbstractAssertFile);
+    }
+    generationPathHandler.compileGeneratedFiles(generatedAssertFiles);
+  }
+
+  private void verifyHierarchicalAssertionGenerationFor(Class<?> aClass, String generatedAssertionPackage) throws IOException {
+
+    List<File> generatedAssertFiles = newArrayList();
+    Set<Class<?>> classes = toClasses(aClass, EMPTY_HIERARCHY);
+    logger.info("Generating hierarchical assertions for {} in package {}", aClass, generatedAssertionPackage);
+
+    for (Class<?> clazz : classes) {
+      ClassDescription classDescription = converter.convertToClassDescription(clazz);
+      generatedAssertFiles.addAll(asList(assertionGenerator.generateHierarchicalCustomAssertionFor(classDescription, EMPTY_HIERARCHY)));
+
+      String expectedConcreteAssertFile = clazz.getSimpleName() + "Assert.generated.in.custom.package.expected.txt";
+      generationPathHandler.assertGeneratedAssertClass(clazz, expectedConcreteAssertFile, false, generatedAssertionPackage);
+
+      String expectedAbstractAssertFile = "Abstract" + clazz.getSimpleName() + "Assert.generated.in.custom.package.expected.txt";
+      generationPathHandler.assertAbstractGeneratedAssertClass(clazz, expectedAbstractAssertFile, generatedAssertionPackage);
     }
     generationPathHandler.compileGeneratedFiles(generatedAssertFiles);
   }
@@ -333,7 +384,7 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
 
   private static Set<TypeToken<?>> setOfTypeTokens(Class<?>... classes) {
     Set<TypeToken<?>> types = new HashSet<>();
-    for (Class<?> clazz:         classes) {
+    for (Class<?> clazz : classes) {
       types.add(TypeToken.of(clazz));
     }
     return types;

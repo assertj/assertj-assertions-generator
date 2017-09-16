@@ -36,7 +36,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
-import static java.lang.reflect.Modifier.isPublic;
 import static org.assertj.assertions.generator.AssertionsEntryPointType.*;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.core.api.Assertions.assertThat;

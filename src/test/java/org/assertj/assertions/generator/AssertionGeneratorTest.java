@@ -13,6 +13,7 @@
 package org.assertj.assertions.generator;
 
 import com.google.common.base.Optional;
+import com.google.common.net.InetAddresses;
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.data.*;
 import org.assertj.assertions.generator.data.art.ArtWork;
@@ -46,8 +47,7 @@ import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.remove;
 import static org.apache.commons.lang3.StringUtils.replace;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.contentOf;
+import static org.assertj.core.api.Assertions.*;
 
 @RunWith(Theories.class)
 public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExceptionsTest {
@@ -291,6 +291,28 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   @Test
   public void should_generate_assertion_without_conflict_with_parameters() throws IOException {
     verifyFlatAssertionGenerationFor(ParameterClashWithVariables.class);
+  }
+
+  @Test
+  public void should_evaluate_package_as_valid() {
+    String[] validPackages = { "a", "a.b.c", "my.assertions" };
+    for (int i = 0; i < validPackages.length; i++) {
+      assertionGenerator.setGeneratedAssertionsPackage(validPackages[i]);
+    }
+  }
+
+  @Test
+  public void should_evaluate_package_as_invalid() {
+    String[] invalidPackages = { "", "   ", " com.my.assertions", "com.my.assertions " };
+    for (int i = 0; i < invalidPackages.length; i++) {
+      try {
+        assertionGenerator.setGeneratedAssertionsPackage(invalidPackages[i]);
+      } catch (IllegalArgumentException e) {
+        assertThat(e).hasMessageStartingWith("The given package");
+        continue;
+      }
+      fail("Expecting '%s' to be evaluated as invalid", invalidPackages[i]);
+    }
   }
 
   private String expectedContentFromTemplate(NestedClass nestedClass, String fileTemplate) throws IOException {

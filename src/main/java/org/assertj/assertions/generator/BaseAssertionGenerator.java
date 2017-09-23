@@ -29,6 +29,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.common.reflect.TypeToken;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.assertj.assertions.generator.Template.Type;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.DataDescription;
@@ -197,7 +199,13 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   public void setGeneratedAssertionsPackage(String generatedAssertionsPackage) {
+    checkGivenPackageIsValid(generatedAssertionsPackage);
     this.generatedAssertionsPackage = generatedAssertionsPackage;
+  }
+
+  private void checkGivenPackageIsValid(String generatedAssertionsPackage) {
+    Validate.isTrue(isNotBlank(generatedAssertionsPackage), "The given package '%s' must not be blank", generatedAssertionsPackage);
+    Validate.isTrue(!containsWhitespace(generatedAssertionsPackage), "The given package '%s' must not contain blank character", generatedAssertionsPackage);
   }
 
   @Override

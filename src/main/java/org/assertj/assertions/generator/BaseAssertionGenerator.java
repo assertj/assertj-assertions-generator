@@ -463,7 +463,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     SortedSet<ClassDescription> sortedClassDescriptionSet = new TreeSet<>(classDescriptionSet);
     // generate for each classDescription the entry point method, e.g. assertThat(MyClass) or then(MyClass)
     StringBuilder allAssertThatsContentBuilder = new StringBuilder();
-    final char lineSeparator = '\n';
+    final String lineSeparator = System.lineSeparator();
     for (ClassDescription classDescription : sortedClassDescriptionSet) {
       String assertionEntryPointMethodContent = assertionEntryPointMethodTemplate.getContent();
       // resolve class assert (ex: PlayerAssert)

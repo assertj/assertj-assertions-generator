@@ -16,6 +16,7 @@ package org.assertj.assertions.generator.data;
  * This is a class with properties that clash with public fields.
  */
 public class FieldPropertyClash {
+  public String actual;
   public String string;
   public String getString() {
 	return "";

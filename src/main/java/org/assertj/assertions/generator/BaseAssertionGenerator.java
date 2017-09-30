@@ -29,7 +29,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.common.reflect.TypeToken;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.assertj.assertions.generator.Template.Type;
 import org.assertj.assertions.generator.description.ClassDescription;
@@ -205,7 +204,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
   private void checkGivenPackageIsValid(String generatedAssertionsPackage) {
     Validate.isTrue(isNotBlank(generatedAssertionsPackage), "The given package '%s' must not be blank", generatedAssertionsPackage);
-    Validate.isTrue(!containsWhitespace(generatedAssertionsPackage), "The given package '%s' must not contain blank character", generatedAssertionsPackage);
+    Validate.isTrue(!containsWhitespace(generatedAssertionsPackage), "The given package '%s' must not contain blank character",
+                    generatedAssertionsPackage);
   }
 
   @Override
@@ -601,7 +601,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     assertionContent = replace(assertionContent, PROPERTY_TYPE, getTypeName(field));
     assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, fieldName);
     // It should not be possible to have a field that is a keyword - compiler won't allow it.
-    assertionContent = replace(assertionContent, PROPERTY_WITH_SAFE, fieldName);
+    assertionContent = replace(assertionContent, PROPERTY_WITH_SAFE, unclashName(fieldName));
     return assertionContent;
   }
 
@@ -643,8 +643,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     return assertionContent;
   }
 
-  static private String getSafeProperty(String unsafe) {
-    return JAVA_KEYWORDS.contains(unsafe) ? "expected" + capitalize(unsafe) : unsafe;
+  static private String unclashName(String unsafe) {
+    return JAVA_KEYWORDS.contains(unsafe) || "actual".equals(unsafe) ? "expected" + capitalize(unsafe) : unsafe;
   }
 
   private String assertionContentForProperty(GetterDescription getter, ClassDescription classDescription) {
@@ -676,7 +676,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
                                getter.getAssertTypeName(determinePackageName(classDescription)));
     assertionContent = replace(assertionContent, PROPERTY_TYPE, getTypeName(getter));
     assertionContent = replace(assertionContent, PROPERTY_WITH_LOWERCASE_FIRST_CHAR, propertyName);
-    assertionContent = replace(assertionContent, PROPERTY_WITH_SAFE, getSafeProperty(propertyName));
+    assertionContent = replace(assertionContent, PROPERTY_WITH_SAFE, unclashName(propertyName));
     return assertionContent;
   }
 

@@ -195,4 +195,27 @@ public class FieldPropertyClashAssert extends AbstractObjectAssert<FieldProperty
     return this;
   }
 
+  /**
+   * Verifies that the actual FieldPropertyClash's actual is equal to the given one.
+   * @param expectedActual the given actual to compare the actual FieldPropertyClash's actual to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash's actual is not equal to the given one.
+   */
+  public FieldPropertyClashAssert hasActual(String expectedActual) {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting actual of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+    // null safe check
+    String actualActual = actual.actual;
+    if (!Objects.areEqual(actualActual, expectedActual)) {
+      failWithMessage(assertjErrorMessage, actual, expectedActual, actualActual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
 }

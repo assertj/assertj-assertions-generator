@@ -89,7 +89,8 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getFullyQualifiedAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.MovieAssert");
     assertThat(classDescription.getAbstractAssertClassName()).isEqualTo("AbstractMovieAssert");
     assertThat(classDescription.getAbstractAssertClassFilename()).isEqualTo("AbstractMovieAssert.java");
-    assertThat(classDescription.getFullyQualifiedParentAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.art.AbstractArtWorkAssert");
+    assertThat(classDescription.getFullyQualifiedParentAssertClassName())
+        .isEqualTo("org.assertj.assertions.generator.data.art.AbstractArtWorkAssert");
     assertThat(classDescription.implementsComparable()).as("implementsComparable ? ").isFalse();
   }
 
@@ -109,8 +110,8 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     ClassDescription classDescription = converter.convertToClassDescription(WithPrivateFields.class);
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("WithPrivateFields");
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
-		assertThat(classDescription.getFieldsDescriptions()).hasSize(8);
-		assertThat(classDescription.getGettersDescriptions()).hasSize(2);
+    assertThat(classDescription.getFieldsDescriptions()).hasSize(8);
+    assertThat(classDescription.getGettersDescriptions()).hasSize(2);
     assertThat(classDescription.getDeclaredGettersDescriptions()).hasSize(1);
     assertThat(classDescription.getDeclaredFieldsDescriptions()).hasSize(5);
     assertThat(classDescription.getSuperType()).isEqualTo(TypeToken.of(WithPrivateFieldsParent.class));
@@ -171,14 +172,14 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     // Then
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
     assertThat(getterDescription.isIterableType())
-                                                  .as("getterDescription must be iterable")
-                                                  .isTrue();
+        .as("getterDescription must be iterable")
+        .isTrue();
     assertThat(getterDescription.getElementTypeName())
-                                                      .as("getterDesc must have correct element type")
-                                                      .isEqualTo("int[]");
+        .as("getterDesc must have correct element type")
+        .isEqualTo("int[]");
     assertThat(getterDescription.isArrayType())
-                                               .as("getterDescription must not be an array")
-                                               .isFalse();
+        .as("getterDescription must not be an array")
+        .isFalse();
   }
 
   static class WithPrimitiveArrayArrayCollection {
@@ -219,8 +220,8 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
     assertThat(getterDescription.isIterableType()).as("getterDescription must be iterable").isTrue();
     assertThat(getterDescription.getElementTypeName())
-                                                      .as("getterDescription must get the internal component type without package")
-                                                      .isEqualTo(TreeEnum.class.getSimpleName());
+        .as("getterDescription must get the internal component type without package")
+        .isEqualTo(TreeEnum.class.getSimpleName());
     assertThat(getterDescription.isArrayType()).as("getterDescription must be an array").isFalse();
   }
 
@@ -243,11 +244,12 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
     assertThat(getterDescription.isIterableType())
-                                                  .as("getterDescription must be iterable")
-                                                  .isTrue();
+        .as("getterDescription must be iterable")
+        .isTrue();
     assertThat(getterDescription.getElementTypeName())
-                                                      .as("getterDesc element type must return correct array type")
-                                                      .isEqualTo(getTypeDeclaration(new TypeToken<Player[]>() {}));
+        .as("getterDesc element type must return correct array type")
+        .isEqualTo(getTypeDeclaration(new TypeToken<Player[]>() {
+        }));
     assertThat(getterDescription.isArrayType()).as("getterDescription is not an array").isFalse();
   }
 
@@ -261,13 +263,10 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
     assertThat(classDescription.getSuperType()).isNull();
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
-    assertThat(getterDescription.isIterableType())
-                                                  .as("getterDescription is not iterable").isFalse();
-    assertThat(getterDescription.getName())
-                                           .as("getterDesc must have correct name")
+    assertThat(getterDescription.isIterableType()).as("getterDescription is not iterable").isFalse();
+    assertThat(getterDescription.getName()).as("getterDesc must have correct name")
                                            .isEqualTo("managedPlayer");
-    assertThat(getterDescription.getTypeName())
-                                               .as("getterDesc must have correct type (not fully qualified because in same package)")
+    assertThat(getterDescription.getTypeName()).as("getterDesc must have correct type (not fully qualified because in same package)")
                                                .isEqualTo("Player");
   }
 
@@ -312,7 +311,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
                                                                       "players",
                                                                       "points",
                                                                       "victoryRatio",
-                                                                      "division", 
+                                                                      "division",
                                                                       "privateField");
   }
 

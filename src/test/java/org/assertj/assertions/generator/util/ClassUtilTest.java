@@ -17,16 +17,7 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.AssertionGeneratorTest;
 import org.assertj.assertions.generator.NestedClassesTest;
-import org.assertj.assertions.generator.data.BeanWithOneException;
-import org.assertj.assertions.generator.data.BeanWithTwoExceptions;
-import org.assertj.assertions.generator.data.Dollar$;
-import org.assertj.assertions.generator.data.Movie;
-import org.assertj.assertions.generator.data.Name;
-import org.assertj.assertions.generator.data.OuterClass;
-import org.assertj.assertions.generator.data.Primitives;
-import org.assertj.assertions.generator.data.Team;
-import org.assertj.assertions.generator.data.TreeEnum;
-import org.assertj.assertions.generator.data.WithPrivateFields;
+import org.assertj.assertions.generator.data.*;
 import org.assertj.assertions.generator.data.art.ArtWork;
 import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
 import org.assertj.assertions.generator.data.lotr.Race;
@@ -34,6 +25,8 @@ import org.assertj.assertions.generator.data.lotr.Ring;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.PlayerAgent;
+import org.assertj.assertions.generator.description.FieldDescription;
+import org.assertj.assertions.generator.description.FieldDescriptionTest;
 import org.assertj.assertions.generator.description.GetterDescriptionTest;
 import org.assertj.assertions.generator.description.Visibility;
 import org.assertj.core.api.BooleanAssert;
@@ -130,6 +123,7 @@ public class ClassUtilTest implements NestedClassesTest {
   public void should_return_property_of_getter_method() throws Exception {
     assertThat(propertyNameOf(Player.class.getMethod("getTeam", NO_PARAMS))).isEqualTo("team");
     assertThat(propertyNameOf(Player.class.getMethod("isRookie", NO_PARAMS))).isEqualTo("rookie");
+    assertThat(propertyNameOf(EnemyReport.class.getMethod("getTarget"))).isEqualTo("target");
   }
 
   @Test

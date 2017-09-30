@@ -13,15 +13,18 @@
 package org.assertj.assertions.generator.description;
 
 import com.google.common.reflect.TypeToken;
+import org.assertj.assertions.generator.data.EnemyReport;
 import org.assertj.assertions.generator.data.Name;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.team.Coach;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class FieldDescriptionTest {
@@ -149,6 +152,14 @@ public class FieldDescriptionTest {
     assertThat(classDesc.hasGetterForField(fieldDescription))
         .as("Correctly identifies there is a getter")
         .isTrue();
+  }
+
+  @Test
+  public void should_return_property_of_field() throws Exception {
+    assertThat(propertyNameOf(FieldPropertyNames.class.getDeclaredField("isBoolean"))).isEqualTo("boolean");
+    assertThat(propertyNameOf(EnemyReport.class.getDeclaredField("realTarget"))).isEqualTo("realTarget");
+    assertThat(propertyNameOf(EnemyReport.class.getDeclaredField("privateTarget"))).isEqualTo("privateTarget");
+    assertThat(propertyNameOf(EnemyReport.class.getDeclaredField("isTarget"))).isEqualTo("target");
   }
 
   @Test

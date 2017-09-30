@@ -161,8 +161,8 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
     Class<?> clazz = nestedClass.nestedClass;
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(clazz));
     generationPathHandler.compileGeneratedFilesFor(clazz);
-    assertThat(generationPathHandler.fileGeneratedFor(clazz)).hasContent(expectedContentFromTemplate(nestedClass,
-                                                                                                     "NestedClassAssert.template.expected.txt"));
+    assertThat(generationPathHandler.fileGeneratedFor(clazz))
+        .hasContent(expectedContentFromTemplate(nestedClass, "NestedClassAssert.template.expected.txt"));
   }
 
   @Theory

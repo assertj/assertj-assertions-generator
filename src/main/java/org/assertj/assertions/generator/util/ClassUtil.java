@@ -115,7 +115,7 @@ public class ClassUtil {
   }
 
   private static Set<TypeToken<?>> getPackageClassesFromClasspathJars(String packageName, ClassLoader classLoader)
-                                                                                                                   throws IOException {
+      throws IOException {
     ImmutableSet<ClassInfo> classesInfo = ClassPath.from(classLoader).getTopLevelClassesRecursive(packageName);
     Set<TypeToken<?>> classesInPackage = new HashSet<>();
     for (ClassInfo classInfo : classesInfo) {
@@ -164,7 +164,7 @@ public class ClassUtil {
    * @throws UnsupportedEncodingException thrown by {@link URLDecoder#decode(String, String)}
    */
   private static Set<TypeToken<?>> getClassesInDirectory(File directory, String packageName, ClassLoader classLoader)
-                                                                                                                      throws UnsupportedEncodingException {
+      throws UnsupportedEncodingException {
     Set<TypeToken<?>> classes = new LinkedHashSet<>();
 
     // Capture all the .class files in this directory
@@ -236,29 +236,38 @@ public class ClassUtil {
    * <p/>
    *
    * <pre>
-   * getName -> name
+   * getName() -> name
    * </pre>
    * <p/>
    *
    * <pre>
-   * isMostValuablePlayer -> mostValuablePlayer
+   * isMostValuablePlayer() -> mostValuablePlayer
    * </pre>
    *
-   * @param member getter method to deduce property from.
+   * @param method getter method to deduce property from.
    * @return the property name of given getter method
    */
-  public static String propertyNameOf(Member member) {
-    String memberName = member.getName();
-    String predicatePrefix = getPredicatePrefix(memberName);
-    String prefixToRemove = predicatePrefix != null ? predicatePrefix : GET_PREFIX;
+  public static String propertyNameOf(Method method) {
+    String methodName = method.getName();
+    return isPredicate(method) ? booleanPropertyOf(methodName) : getterProperty(methodName);
+  }
 
-    int pos = memberName.indexOf(prefixToRemove);
-    if (pos != StringUtils.INDEX_NOT_FOUND) {
-      String propertyWithCapitalLetter = memberName.substring(pos + prefixToRemove.length());
-      return uncapitalize(propertyWithCapitalLetter);
-    } else {
-      return memberName;
-    }
+  /**
+   * Returns the property name of given field, examples :
+   * <p/>
+   *
+   * <pre>
+   * name -> name
+   * isMostValuablePlayer -> mostValuablePlayer
+   * </pre>
+   * <p/>
+   *
+   * @param field field to deduce property from.
+   * @return the property name of given field
+   */
+  public static String propertyNameOf(Field field) {
+    String fieldName = field.getName();
+    return isBoolean(field.getType()) ? booleanPropertyOf(fieldName) : fieldName;
   }
 
   public static boolean inheritsCollectionOrIsIterable(Class<?> returnType) {
@@ -273,8 +282,12 @@ public class ClassUtil {
 
   public static boolean isPredicate(Method method) {
     return isValidPredicateName(method.getName())
-           && (Boolean.TYPE.equals(method.getReturnType()) || Boolean.class.equals(method.getReturnType()))
+           && isBoolean(method.getReturnType())
            && method.getParameterTypes().length == 0;
+  }
+
+  private static boolean isBoolean(Class<?> type) {
+    return Boolean.TYPE.equals(type) || Boolean.class.equals(type);
   }
 
   private static boolean isAnnotated(Method method, Set<Class<?>> includeAnnotations, boolean isClassAnnotated) {
@@ -685,7 +698,6 @@ public class ClassUtil {
       // primitive valueType => no package
       typeSimpleNameWithOuterClass = typeName;
     }
-
     return remove(typeSimpleNameWithOuterClass, ".");
   }
 
@@ -714,4 +726,22 @@ public class ClassUtil {
     if (Modifier.isPrivate(fieldModifiers)) return Visibility.PRIVATE;
     return Visibility.PACKAGE;
   }
+
+  private static String booleanPropertyOf(String memberName) {
+    String prefixToRemove = getPredicatePrefix(memberName);
+    if (prefixToRemove != null && memberName.startsWith(prefixToRemove)) {
+      String propertyWithCapitalLetter = removeStart(memberName, prefixToRemove);
+      return uncapitalize(propertyWithCapitalLetter);
+    }
+    return memberName;
+  }
+
+  private static String getterProperty(String memberName) {
+    if (memberName.startsWith(GET_PREFIX)) {
+      String propertyWithCapitalLetter = removeStart(memberName, GET_PREFIX);
+      return uncapitalize(propertyWithCapitalLetter);
+    }
+    return memberName;
+  }
+
 }

@@ -1,5 +1,8 @@
 # AssertJ - Assertions Generator
 
+[![Build Status](https://travis-ci.org/joel-costigliola/assertj-assertions-generator.svg?branch=master)](https://travis-ci.org/joel-costigliola/assertj-assertions-generator) 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.assertj/assertj-assertions-generator-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.assertj/assertj-assertions-generator-maven-plugin)
+
 ## Overview 
 
 The Assertions Generator can create specific assertions for your classes. It comes with :

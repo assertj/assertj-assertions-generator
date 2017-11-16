@@ -116,10 +116,11 @@ public class ClassUtil {
 
   private static Set<TypeToken<?>> getPackageClassesFromClasspathJars(String packageName, ClassLoader classLoader)
       throws IOException {
-    ImmutableSet<ClassInfo> classesInfo = ClassPath.from(classLoader).getTopLevelClassesRecursive(packageName);
     Set<TypeToken<?>> classesInPackage = new HashSet<>();
-    for (ClassInfo classInfo : classesInfo) {
-      classesInPackage.add(TypeToken.of(classInfo.load()));
+    for (ClassInfo classInfo : ClassPath.from(classLoader).getTopLevelClassesRecursive(packageName)) {
+      if (classInfo.getPackageName().startsWith(packageName)) {
+        classesInPackage.add(TypeToken.of(classInfo.load()));
+      }
     }
 
     Set<TypeToken<?>> filteredClassesInPackage = new HashSet<>();

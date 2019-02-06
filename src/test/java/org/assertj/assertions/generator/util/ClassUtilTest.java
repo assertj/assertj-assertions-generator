@@ -25,8 +25,6 @@ import org.assertj.assertions.generator.data.lotr.Ring;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.PlayerAgent;
-import org.assertj.assertions.generator.description.FieldDescription;
-import org.assertj.assertions.generator.description.FieldDescriptionTest;
 import org.assertj.assertions.generator.description.GetterDescriptionTest;
 import org.assertj.assertions.generator.description.Visibility;
 import org.assertj.core.api.BooleanAssert;
@@ -100,6 +98,17 @@ public class ClassUtilTest implements NestedClassesTest {
                                     BeanWithTwoExceptions.class);
 
     // Java 8? :(
+    assertThat(classesInPackage).containsAll(Lists.transform(classes, TYPE_TOKEN_TRANSFORM));
+  }
+
+  @Test
+  public void should_get_private_classes_when_included() {
+    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    Set<TypeToken<?>> classesInPackage = collectClasses(classLoader,
+            true, "org.assertj.assertions.generator.data",
+            "org.assertj.assertions.generator.util.PackagePrivate");
+    List<Class<?>> classes = asList(Player.class, ArtWork.class, Name.class, Movie.class, PackagePrivate.class, Ring.class, Race.class);
+
     assertThat(classesInPackage).containsAll(Lists.transform(classes, TYPE_TOKEN_TRANSFORM));
   }
 

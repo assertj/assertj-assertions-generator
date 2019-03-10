@@ -12,7 +12,6 @@
  */
 package org.assertj.assertions.generator.util;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.ClassPath;
@@ -134,13 +133,10 @@ public class ClassUtil {
 
   private static Set<TypeToken<?>> getPackageClassesFromClasspathJars(String packageName, ClassLoader classLoader)
       throws IOException {
-    Preconditions.checkNotNull(packageName);
+    ImmutableSet<ClassInfo> classesInfo = ClassPath.from(classLoader).getTopLevelClassesRecursive(packageName);
     Set<TypeToken<?>> classesInPackage = new HashSet<>();
-    String packagePrefix = packageName + '.';
-    for (ClassInfo classInfo : ClassPath.from(classLoader).getAllClasses()) {
-      if (classInfo.getPackageName().startsWith(packagePrefix)) {
-        classesInPackage.add(TypeToken.of(classInfo.load()));
-      }
+    for (ClassInfo classInfo : classesInfo) {
+      classesInPackage.add(TypeToken.of(classInfo.load()));
     }
 
     Set<TypeToken<?>> filteredClassesInPackage = new HashSet<>();

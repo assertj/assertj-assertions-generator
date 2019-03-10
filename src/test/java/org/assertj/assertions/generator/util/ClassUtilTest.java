@@ -12,26 +12,27 @@
  */
 package org.assertj.assertions.generator.util;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-import com.google.common.reflect.TypeToken;
-import org.assertj.assertions.generator.AssertionGeneratorTest;
-import org.assertj.assertions.generator.NestedClassesTest;
-import org.assertj.assertions.generator.data.*;
-import org.assertj.assertions.generator.data.art.ArtWork;
-import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
-import org.assertj.assertions.generator.data.lotr.Race;
-import org.assertj.assertions.generator.data.lotr.Ring;
-import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
-import org.assertj.assertions.generator.data.nba.Player;
-import org.assertj.assertions.generator.data.nba.PlayerAgent;
-import org.assertj.assertions.generator.description.GetterDescriptionTest;
-import org.assertj.assertions.generator.description.Visibility;
-import org.assertj.core.api.BooleanAssert;
-import org.junit.Test;
-import org.junit.experimental.theories.Theories;
-import org.junit.experimental.theories.Theory;
-import org.junit.runner.RunWith;
+import static java.util.Arrays.asList;
+import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
+import static org.assertj.assertions.generator.util.ClassUtil.declaredGetterMethodsOf;
+import static org.assertj.assertions.generator.util.ClassUtil.getAllFieldsInHierarchy;
+import static org.assertj.assertions.generator.util.ClassUtil.getAssertType;
+import static org.assertj.assertions.generator.util.ClassUtil.getClassesRelatedTo;
+import static org.assertj.assertions.generator.util.ClassUtil.getNegativePredicateFor;
+import static org.assertj.assertions.generator.util.ClassUtil.getPredicatePrefix;
+import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
+import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
+import static org.assertj.assertions.generator.util.ClassUtil.inheritsCollectionOrIsIterable;
+import static org.assertj.assertions.generator.util.ClassUtil.isBoolean;
+import static org.assertj.assertions.generator.util.ClassUtil.isInnerPackageOf;
+import static org.assertj.assertions.generator.util.ClassUtil.isJavaLangType;
+import static org.assertj.assertions.generator.util.ClassUtil.isPredicate;
+import static org.assertj.assertions.generator.util.ClassUtil.isStandardGetter;
+import static org.assertj.assertions.generator.util.ClassUtil.isValidGetterName;
+import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
+import static org.assertj.assertions.generator.util.ClassUtil.resolveTypeNameInPackage;
+import static org.assertj.assertions.generator.util.ClassUtil.visibilityOf;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -42,9 +43,39 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
-import static org.assertj.assertions.generator.util.ClassUtil.*;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.assertj.assertions.generator.AssertionGeneratorTest;
+import org.assertj.assertions.generator.NestedClassesTest;
+import org.assertj.assertions.generator.data.BeanWithOneException;
+import org.assertj.assertions.generator.data.BeanWithTwoExceptions;
+import org.assertj.assertions.generator.data.Dollar$;
+import org.assertj.assertions.generator.data.EnemyReport;
+import org.assertj.assertions.generator.data.Movie;
+import org.assertj.assertions.generator.data.Name;
+import org.assertj.assertions.generator.data.OuterClass;
+import org.assertj.assertions.generator.data.Primitives;
+import org.assertj.assertions.generator.data.Team;
+import org.assertj.assertions.generator.data.TreeEnum;
+import org.assertj.assertions.generator.data.WithPrivateFields;
+import org.assertj.assertions.generator.data.art.ArtWork;
+import org.assertj.assertions.generator.data.inner.Data;
+import org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing;
+import org.assertj.assertions.generator.data.lotr.Race;
+import org.assertj.assertions.generator.data.lotr.Ring;
+import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
+import org.assertj.assertions.generator.data.nba.Player;
+import org.assertj.assertions.generator.data.nba.PlayerAgent;
+import org.assertj.assertions.generator.description.GetterDescriptionTest;
+import org.assertj.assertions.generator.description.Visibility;
+import org.assertj.core.api.BooleanAssert;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.experimental.theories.Theories;
+import org.junit.experimental.theories.Theory;
+import org.junit.runner.RunWith;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.google.common.reflect.TypeToken;
 
 @RunWith(Theories.class)
 public class ClassUtilTest implements NestedClassesTest {
@@ -105,9 +136,20 @@ public class ClassUtilTest implements NestedClassesTest {
   public void should_get_private_classes_when_included() {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     Set<TypeToken<?>> classesInPackage = collectClasses(classLoader,
-            true, "org.assertj.assertions.generator.data",
-            "org.assertj.assertions.generator.util.PackagePrivate");
-    List<Class<?>> classes = asList(Player.class, ArtWork.class, Name.class, Movie.class, PackagePrivate.class, Ring.class, Race.class);
+                                                        true, "org.assertj.assertions.generator.data",
+                                                        "org.assertj.assertions.generator.util.PackagePrivate");
+    List<Class<?>> classes = asList(Player.class, ArtWork.class, Name.class, Movie.class, PackagePrivate.class, Ring.class,
+                                    Race.class);
+
+    assertThat(classesInPackage).containsAll(Lists.transform(classes, TYPE_TOKEN_TRANSFORM));
+  }
+
+  @Test
+  @Ignore // getting nested class is not yet supported. issue #120
+  public void should_get_nested_classes() {
+    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    Set<TypeToken<?>> classesInPackage = collectClasses(classLoader, false, "org.assertj.assertions.generator.data.inner.Data");
+    List<Class<?>> classes = asList(Data.class, Data.NestedClass.class);
 
     assertThat(classesInPackage).containsAll(Lists.transform(classes, TYPE_TOKEN_TRANSFORM));
   }
@@ -171,10 +213,10 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Test
   public void should_return_negative_predicate() {
-    for (String[] pair : new String[][]{
-        {"isADog", "isNotADog"},
-        {"canRun", "cannotRun"},
-        {"hasAHandle", "doesNotHaveAHandle"},
+    for (String[] pair : new String[][] {
+        { "isADog", "isNotADog" },
+        { "canRun", "cannotRun" },
+        { "hasAHandle", "doesNotHaveAHandle" },
     }) {
       assertThat(getNegativePredicateFor(pair[0])).as(pair[0]).isEqualTo(pair[1]);
       assertThat(getNegativePredicateFor(pair[1])).as(pair[1]).isEqualTo(pair[0]);
@@ -183,8 +225,8 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Test
   public void should_return_true_if_string_follows_getter_name_pattern() throws Exception {
-    for (String name : new String[]{"isRookie", "getTeam", "wasTeam", "canRun", "shouldWin",
-        "hasTrophy", "doesNotHaveFun", "cannotWin", "shouldNotPlay"}) {
+    for (String name : new String[] { "isRookie", "getTeam", "wasTeam", "canRun", "shouldWin",
+        "hasTrophy", "doesNotHaveFun", "cannotWin", "shouldNotPlay" }) {
       assertThat(isValidGetterName(name)).as(name).isTrue();
     }
   }
@@ -203,29 +245,29 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Test
   public void should_return_false_if_string_does_not_follow_getter_name_pattern() throws Exception {
-    for (String name : new String[]{"isrookie", "getteam", "GetTeam", "get", "is", "wascool", "hastRophy",
-        "shouldnotWin"}) {
+    for (String name : new String[] { "isrookie", "getteam", "GetTeam", "get", "is", "wascool", "hastRophy",
+        "shouldnotWin" }) {
       assertThat(isValidGetterName(name)).as(name).isFalse();
     }
   }
 
   @Test
   public void should_return_getters_methods_only() throws Exception {
-    Set<Method> playerGetterMethods = getterMethodsOf(PLAYER_TYPE, Collections.<Class<?>>emptySet());
+    Set<Method> playerGetterMethods = getterMethodsOf(PLAYER_TYPE, Collections.<Class<?>> emptySet());
     assertThat(playerGetterMethods).contains(Player.class.getMethod("getTeam", NO_PARAMS))
                                    .doesNotContain(Player.class.getMethod("isInTeam", String.class));
   }
 
   @Test
   public void should_also_return_inherited_getters_methods() throws Exception {
-    Set<Method> playerGetterMethods = getterMethodsOf(TypeToken.of(Movie.class), Collections.<Class<?>>emptySet());
+    Set<Method> playerGetterMethods = getterMethodsOf(TypeToken.of(Movie.class), Collections.<Class<?>> emptySet());
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS),
                                              ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }
 
   @Test
   public void should_not_return_inherited_getters_methods() throws Exception {
-    Set<Method> playerGetterMethods = declaredGetterMethodsOf(TypeToken.of(Movie.class), Collections.<Class<?>>emptySet());
+    Set<Method> playerGetterMethods = declaredGetterMethodsOf(TypeToken.of(Movie.class), Collections.<Class<?>> emptySet());
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS))
                                    .doesNotContain(ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }
@@ -295,28 +337,30 @@ public class ClassUtilTest implements NestedClassesTest {
   @Test
   public void resolve_type_name_in_package() throws Exception {
     assertThat(resolveTypeNameInPackage(String.class, String.class.getPackage().getName()))
-        .as("java lang type has simple name with package")
-        .isEqualTo(String.class.getSimpleName());
+                                                                                           .as("java lang type has simple name with package")
+                                                                                           .isEqualTo(String.class.getSimpleName());
     assertThat(resolveTypeNameInPackage(String.class, null))
-        .as("java lang type has simple name without package")
-        .isEqualTo(String.class.getSimpleName());
+                                                            .as("java lang type has simple name without package")
+                                                            .isEqualTo(String.class.getSimpleName());
 
     assertThat(resolveTypeNameInPackage(ClassUtilTest.class, null))
-        .as("normal type has FQN without package")
-        .isEqualTo(ClassUtilTest.class.getName());
+                                                                   .as("normal type has FQN without package")
+                                                                   .isEqualTo(ClassUtilTest.class.getName());
     assertThat(resolveTypeNameInPackage(ClassUtilTest.class, ClassUtilTest.class.getPackage().getName()))
-        .as("normal type does not has FQN with package")
-        .isEqualTo(ClassUtilTest.class.getSimpleName());
+                                                                                                         .as("normal type does not has FQN with package")
+                                                                                                         .isEqualTo(ClassUtilTest.class.getSimpleName());
     assertThat(resolveTypeNameInPackage(ClassUtilTest.class, String.class.getPackage().getName()))
-        .as("normal type does not have FQN with other package")
-        .isEqualTo(ClassUtilTest.class.getName());
+                                                                                                  .as("normal type does not have FQN with other package")
+                                                                                                  .isEqualTo(ClassUtilTest.class.getName());
 
     assertThat(resolveTypeNameInPackage(Inner.class, null))
-        .as("inner type has FQN without package")
-        .isEqualTo(Inner.class.getName());
+                                                           .as("inner type has FQN without package")
+                                                           .isEqualTo(Inner.class.getName());
     assertThat(resolveTypeNameInPackage(Inner.class, Inner.class.getPackage().getName()))
-        .as("inner type does not have FQN with package")
-        .isEqualTo(String.format("%s$%s", ClassUtilTest.class.getSimpleName(), Inner.class.getSimpleName()));
+                                                                                         .as("inner type does not have FQN with package")
+                                                                                         .isEqualTo(String.format("%s$%s",
+                                                                                                                  ClassUtilTest.class.getSimpleName(),
+                                                                                                                  Inner.class.getSimpleName()));
   }
 
   @Test
@@ -334,28 +378,27 @@ public class ClassUtilTest implements NestedClassesTest {
     TypeToken<ClassUtilTest> thisType = TypeToken.of(ClassUtilTest.class);
 
     assertThat(getAssertType(thisType, thisType.getRawType().getPackage().getName()))
-        .as("resolves non-built-in type correctly")
-        .isEqualTo("ClassUtilTestAssert");
+                                                                                     .as("resolves non-built-in type correctly")
+                                                                                     .isEqualTo("ClassUtilTestAssert");
 
     TypeToken<Boolean> primitive = TypeToken.of(boolean.class);
     assertThat(getAssertType(primitive, thisType.getRawType().getPackage().getName()))
-        .as("resolves primitive correctly")
-        .isEqualTo(BooleanAssert.class.getName());
+                                                                                      .as("resolves primitive correctly")
+                                                                                      .isEqualTo(BooleanAssert.class.getName());
 
     TypeToken<Boolean> wrapper = TypeToken.of(Boolean.class);
     assertThat(getAssertType(wrapper, thisType.getRawType().getPackage().getName()))
-        .as("resolves primitive wrapper correctly")
-        .isEqualTo(BooleanAssert.class.getName());
+                                                                                    .as("resolves primitive wrapper correctly")
+                                                                                    .isEqualTo(BooleanAssert.class.getName());
 
     assertThat(getAssertType(wrapper, BooleanAssert.class.getPackage().getName()))
-        .as("resolves package correctly for built-in package")
-        .isEqualTo(BooleanAssert.class.getSimpleName());
+                                                                                  .as("resolves package correctly for built-in package")
+                                                                                  .isEqualTo(BooleanAssert.class.getSimpleName());
   }
 
   @Test
   public void properly_check_if_types_are_boolean() throws Exception {
-    TypeToken<Boolean> wrapper = new TypeToken<Boolean>(getClass()) {
-    };
+    TypeToken<Boolean> wrapper = new TypeToken<Boolean>(getClass()) {};
     TypeToken<Boolean> primitive = TypeToken.of(boolean.class);
     TypeToken<ClassUtilTest> neither = TypeToken.of(ClassUtilTest.class);
 
@@ -368,16 +411,16 @@ public class ClassUtilTest implements NestedClassesTest {
   public void should_check_that_nested_packages_work() throws Exception {
 
     assertThat(isInnerPackageOf(ClassUtilTest.class.getPackage(), AssertionGeneratorTest.class.getPackage()))
-        .as("from 'super' package")
-        .isTrue();
+                                                                                                             .as("from 'super' package")
+                                                                                                             .isTrue();
 
     assertThat(isInnerPackageOf(ClassUtilTest.class.getPackage(), ClassUtilTest.class.getPackage()))
-        .as("same package")
-        .isTrue();
+                                                                                                    .as("same package")
+                                                                                                    .isTrue();
 
     assertThat(isInnerPackageOf(ClassUtilTest.class.getPackage(), GetterDescriptionTest.class.getPackage()))
-        .as("sibling package")
-        .isFalse();
+                                                                                                            .as("sibling package")
+                                                                                                            .isFalse();
 
   }
 
@@ -392,7 +435,8 @@ public class ClassUtilTest implements NestedClassesTest {
   public void should_determine_fields_visibility() throws Exception {
     List<Field> fields = ClassUtil.declaredFieldsOf(TypeToken.of(WithPrivateFields.class));
     List<Visibility> fieldsVisibility = new ArrayList<>();
-    for (Field field : fields) fieldsVisibility.add(visibilityOf(field));
+    for (Field field : fields)
+      fieldsVisibility.add(visibilityOf(field));
     assertThat(fieldsVisibility).containsOnly(Visibility.PUBLIC,
                                               Visibility.PACKAGE,
                                               Visibility.PRIVATE,

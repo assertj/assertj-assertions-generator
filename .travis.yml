@@ -17,5 +17,4 @@ jdk:
    - oraclejdk8
 
 script:
-  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then mvn clean package; fi'
-  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.login=651ffb3dd32bdbb12acfc60dcb4a48a768609830; fi'
+  - 'mvn clean package'

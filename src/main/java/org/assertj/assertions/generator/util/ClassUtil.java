@@ -78,10 +78,27 @@ public class ClassUtil {
    * @throws RuntimeException if any error occurs
    */
   public static Set<TypeToken<?>> collectClasses(ClassLoader classLoader, String... classOrPackageNames) {
+    return collectClasses(classLoader, false, classOrPackageNames);
+  }
+
+  /**
+   * Collects all the classes from given classes names or classes belonging to given a package name
+   * (recursively), with control on private classes including.
+   * <p/>
+   * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the returned classes.
+   *
+   * @param classLoader {@link ClassLoader} used to load classes defines in classOrPackageNames
+   * @param includePrivateClasses {@link ClassLoader} used to include private classes when true
+   * @param classOrPackageNames classes names or packages names we want to collect classes from (recursively for
+   *          packages)
+   * @return the set of {@link Class}es found
+   * @throws RuntimeException if any error occurs
+   */
+  public static Set<TypeToken<?>> collectClasses(ClassLoader classLoader, boolean includePrivateClasses, String... classOrPackageNames) {
     Set<TypeToken<?>> classes = newLinkedHashSet();
     for (String classOrPackageName : classOrPackageNames) {
       TypeToken<?> clazz = tryToLoadClass(classOrPackageName, classLoader);
-      if (isClassCandidateToAssertionsGeneration(clazz)) {
+      if (isClassCandidateToAssertionsGeneration(clazz, includePrivateClasses)) {
         classes.add(clazz);
       } else {
         // should be a package
@@ -124,7 +141,7 @@ public class ClassUtil {
 
     Set<TypeToken<?>> filteredClassesInPackage = new HashSet<>();
     for (TypeToken<?> classFromJar : classesInPackage) {
-      if (isClassCandidateToAssertionsGeneration(classFromJar)) {
+      if (isClassCandidateToAssertionsGeneration(classFromJar, false)) {
         filteredClassesInPackage.add(classFromJar);
       }
     }
@@ -180,7 +197,7 @@ public class ClassUtil {
           String className = packageName + '.' + StringUtils.remove(currentFileName, CLASS_SUFFIX);
           TypeToken<?> loadedClass = loadClass(className, classLoader);
           // we are only interested in public classes that are neither anonymous nor local
-          if (isClassCandidateToAssertionsGeneration(loadedClass)) {
+          if (isClassCandidateToAssertionsGeneration(loadedClass, false)) {
             classes.add(loadedClass);
           }
         } catch (Throwable e) {
@@ -202,11 +219,11 @@ public class ClassUtil {
     return classes;
   }
 
-  private static boolean isClassCandidateToAssertionsGeneration(TypeToken<?> typeToken) {
+  private static boolean isClassCandidateToAssertionsGeneration(TypeToken<?> typeToken, boolean includePrivate) {
     if (typeToken == null) return false;
     if (isPackageInfo(typeToken)) return false;
     Class<?> raw = typeToken.getRawType();
-    return isPublic(raw.getModifiers())
+    return (includePrivate || isPublic(raw.getModifiers()))
            && !raw.isAnonymousClass()
            && !raw.isLocalClass();
   }

@@ -13,7 +13,6 @@
 package org.assertj.assertions.generator.description;
 
 import com.google.common.reflect.TypeToken;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -22,6 +21,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static com.google.common.collect.Sets.union;
+import static org.apache.commons.lang3.RegExUtils.removeAll;
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.assertj.assertions.generator.util.ClassUtil.*;
 

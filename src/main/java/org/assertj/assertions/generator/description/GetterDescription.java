@@ -15,7 +15,6 @@ package org.assertj.assertions.generator.description;
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 import com.google.common.reflect.TypeToken;
-import org.assertj.assertions.generator.util.ClassUtil;
 
 import java.lang.reflect.Method;
 

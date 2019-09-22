@@ -38,6 +38,7 @@ import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.RegExUtils.removeAll;
 import static org.apache.commons.lang3.StringUtils.*;
 
 /**
@@ -48,12 +49,7 @@ public class ClassUtil {
 
   public static final String GET_PREFIX = "get";
   private static final String CLASS_SUFFIX = ".class";
-  private static final Comparator<Method> GETTER_COMPARATOR = new Comparator<Method>() {
-    @Override
-    public int compare(Method m1, Method m2) {
-      return m1.getName().compareTo(m2.getName());
-    }
-  };
+  private static final Comparator<Method> GETTER_COMPARATOR = Comparator.comparing(Method::getName);
   public static final Package JAVA_LANG_PACKAGE = Object.class.getPackage();
   private static final String CAPITAL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -334,12 +330,9 @@ public class ClassUtil {
 
   static public final Map<String, String> PREDICATE_PREFIXES;
 
-  static private final Comparator<String> LONGEST_TO_SHORTEST = new Comparator<String>() {
-    @Override
-    public int compare(String o1, String o2) {
-      final int lengthComp = o2.length() - o1.length();
-      return lengthComp == 0 ? o1.compareTo(o2) : lengthComp;
-    }
+  static private final Comparator<String> LONGEST_TO_SHORTEST = (o1, o2) -> {
+    final int lengthComp = o2.length() - o1.length();
+    return lengthComp == 0 ? o1.compareTo(o2) : lengthComp;
   };
 
   static {

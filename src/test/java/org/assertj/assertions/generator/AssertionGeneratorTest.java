@@ -13,7 +13,6 @@
 package org.assertj.assertions.generator;
 
 import com.google.common.base.Optional;
-import com.google.common.net.InetAddresses;
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.data.*;
 import org.assertj.assertions.generator.data.art.ArtWork;

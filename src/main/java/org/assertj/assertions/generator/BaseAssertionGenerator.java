@@ -85,12 +85,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String THROWS_JAVADOC = "${throws_javadoc}";
   private static final String LINE_SEPARATOR = "\n";
 
-  private static final Comparator<String> ORDER_BY_INCREASING_LENGTH = new Comparator<String>() {
-    @Override
-    public int compare(final String o1, final String o2) {
-      return o1.length() - o2.length();
-    }
-  };
+  private static final Comparator<String> ORDER_BY_INCREASING_LENGTH = Comparator.comparingInt(String::length);
 
   private static final Set<String> JAVA_KEYWORDS = newHashSet("abstract",
                                                               "assert",

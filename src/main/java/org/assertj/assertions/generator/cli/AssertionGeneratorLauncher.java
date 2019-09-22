@@ -37,7 +37,7 @@ public class AssertionGeneratorLauncher {
     Options options = new Options();
     options.addOption("H", "hierarchical", false, "Generate a hierarchy of assertions that follows the hierarchy of classes to assert");
     options.addOption("h", "help", false, "Print this help message");
-    CommandLineParser parser = new BasicParser();
+    CommandLineParser parser = new DefaultParser();
     
     try {
       CommandLine line = parser.parse(options, args);

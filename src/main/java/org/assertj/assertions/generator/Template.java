@@ -22,8 +22,6 @@
  */
 package org.assertj.assertions.generator;
 
-import org.apache.commons.lang3.CharEncoding;
-
 import com.google.common.io.CharStreams;
 
 import java.io.File;
@@ -32,6 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import static com.google.common.io.Closeables.closeQuietly;
 import static java.lang.Thread.currentThread;
@@ -87,7 +86,7 @@ public class Template {
   public Template(Type type, URL url) {
     this.type = type;
     try {
-      File urlFile = new File(URLDecoder.decode(url.getFile(), CharEncoding.UTF_8));
+      File urlFile = new File(URLDecoder.decode(url.getFile(), StandardCharsets.UTF_8.name()));
       if (!urlFile.isFile()) {
         throw new RuntimeException("Failed to read template from an URL which is not a file, URL was :" + url);
       }

@@ -16,8 +16,8 @@ import com.google.common.base.CaseFormat;
 
 public class StringUtil {
 
-  public static String camelCaseToWords(String camleCaseString) {
-    return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, camleCaseString).replace('_', ' ');
+  public static String camelCaseToWords(String camelCaseString) {
+    return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, camelCaseString).replace('_', ' ');
   }
 
 }

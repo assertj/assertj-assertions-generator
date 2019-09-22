@@ -3,9 +3,6 @@ language: java
 sudo: false
 
 addons:
-  apt:
-    packages:
-      - oracle-java8-installer
   sonarcloud:
     organization: "default"
     token:
@@ -15,6 +12,8 @@ addons:
 
 jdk:
    - oraclejdk8
+
+dist: trusty
 
 script:
   - 'mvn clean package'

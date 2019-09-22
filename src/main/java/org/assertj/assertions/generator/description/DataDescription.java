@@ -17,15 +17,13 @@ import com.google.common.collect.Ordering;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Primitives;
 import com.google.common.reflect.TypeToken;
-import org.apache.commons.lang3.StringUtils;
-import org.assertj.assertions.generator.util.ClassUtil;
 
 import java.lang.reflect.Member;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.apache.commons.lang3.StringUtils.removeAll;
+import static org.apache.commons.lang3.RegExUtils.removeAll;
 import static org.apache.commons.lang3.StringUtils.removeStart;
 import static org.assertj.assertions.generator.util.ClassUtil.*;
 import static org.assertj.assertions.generator.util.StringUtil.camelCaseToWords;

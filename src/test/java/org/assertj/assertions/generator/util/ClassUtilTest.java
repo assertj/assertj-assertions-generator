@@ -94,13 +94,7 @@ public class ClassUtilTest implements NestedClassesTest {
     collectClasses((ClassLoader) null, "org.assertj.assertions.generator.data");
   }
 
-  // Could easily be a method reference in Java 8 for TypeToken::of
-  private static final Function<Class<?>, TypeToken<?>> TYPE_TOKEN_TRANSFORM = new Function<Class<?>, TypeToken<?>>() {
-    @Override
-    public TypeToken<?> apply(final Class<?> input) {
-      return TypeToken.of(input);
-    }
-  };
+  private static final Function<Class<?>, TypeToken<?>> TYPE_TOKEN_TRANSFORM = TypeToken::of;
 
   @Test
   public void should_get_classes_in_package_and_subpackages() {

@@ -361,6 +361,159 @@ public class PlayerAssert extends AbstractObjectAssert<PlayerAssert, Player> {
   }
 
   /**
+   * Verifies that the actual Player's previousNames contains the given java.lang.CharSequence elements.
+   * @param previousNames the given elements that should be contained in actual Player's previousNames.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousNames does not contain all given java.lang.CharSequence elements.
+   */
+  public PlayerAssert hasPreviousNames(java.lang.CharSequence... previousNames) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given java.lang.CharSequence varargs is not null.
+    if (previousNames == null) failWithMessage("Expecting previousNames parameter not to be null.");
+
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContains(info, actual.getPreviousNames(), previousNames);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's previousNames contains the given java.lang.CharSequence elements in Collection.
+   * @param previousNames the given elements that should be contained in actual Player's previousNames.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousNames does not contain all given java.lang.CharSequence elements.
+   */
+  public PlayerAssert hasPreviousNames(java.util.Collection<? extends java.lang.CharSequence> previousNames) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given java.lang.CharSequence collection is not null.
+    if (previousNames == null) {
+      failWithMessage("Expecting previousNames parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContains(info, actual.getPreviousNames(), previousNames.toArray());
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's previousNames contains <b>only</b> the given java.lang.CharSequence elements and nothing else in whatever order.
+   * @param previousNames the given elements that should be contained in actual Player's previousNames.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousNames does not contain all given java.lang.CharSequence elements.
+   */
+  public PlayerAssert hasOnlyPreviousNames(java.lang.CharSequence... previousNames) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given java.lang.CharSequence varargs is not null.
+    if (previousNames == null) failWithMessage("Expecting previousNames parameter not to be null.");
+
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.getPreviousNames(), previousNames);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's previousNames contains <b>only</b> the given java.lang.CharSequence elements in Collection and nothing else in whatever order.
+   * @param previousNames the given elements that should be contained in actual Player's previousNames.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousNames does not contain all given java.lang.CharSequence elements.
+   */
+  public PlayerAssert hasOnlyPreviousNames(java.util.Collection<? extends java.lang.CharSequence> previousNames) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given java.lang.CharSequence collection is not null.
+    if (previousNames == null) {
+      failWithMessage("Expecting previousNames parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+
+    // check with standard error message, to set another message call: info.overridingErrorMessage("my error message");
+    Iterables.instance().assertContainsOnly(info, actual.getPreviousNames(), previousNames.toArray());
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's previousNames does not contain the given java.lang.CharSequence elements.
+   *
+   * @param previousNames the given elements that should not be in actual Player's previousNames.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousNames contains any given java.lang.CharSequence elements.
+   */
+  public PlayerAssert doesNotHavePreviousNames(java.lang.CharSequence... previousNames) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given java.lang.CharSequence varargs is not null.
+    if (previousNames == null) failWithMessage("Expecting previousNames parameter not to be null.");
+
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.getPreviousNames(), previousNames);
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's previousNames does not contain the given java.lang.CharSequence elements in Collection.
+   *
+   * @param previousNames the given elements that should not be in actual Player's previousNames.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousNames contains any given java.lang.CharSequence elements.
+   */
+  public PlayerAssert doesNotHavePreviousNames(java.util.Collection<? extends java.lang.CharSequence> previousNames) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // check that given java.lang.CharSequence collection is not null.
+    if (previousNames == null) {
+      failWithMessage("Expecting previousNames parameter not to be null.");
+      return this; // to fool Eclipse "Null pointer access" warning on toArray.
+    }
+
+    // check with standard error message (use overridingErrorMessage before contains to set your own message).
+    Iterables.instance().assertDoesNotContain(info, actual.getPreviousNames(), previousNames.toArray());
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player has no previousNames.
+   * @return this assertion object.
+   * @throws AssertionError if the actual Player's previousNames is not empty.
+   */
+  public PlayerAssert hasNoPreviousNames() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // we override the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting :\n  <%s>\nnot to have previousNames but had :\n  <%s>";
+
+    // check
+    if (actual.getPreviousNames().iterator().hasNext()) {
+      failWithMessage(assertjErrorMessage, actual, actual.getPreviousNames());
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+
+  /**
    * Verifies that the actual Player's previousTeamNames contains the given String elements.
    * @param previousTeamNames the given elements that should be contained in actual Player's previousTeamNames.
    * @return this assertion object.

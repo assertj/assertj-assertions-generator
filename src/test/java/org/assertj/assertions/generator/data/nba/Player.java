@@ -44,6 +44,7 @@ public class Player {
   private List<int[]> points = new ArrayList<>();
   private String[] previousTeamNames = {};
   public List<? extends Team> previousTeams = new ArrayList<>();
+  private List<? extends CharSequence> previousNames = new ArrayList<>();
 
   private boolean bad;
 
@@ -196,6 +197,10 @@ public class Player {
 
   public float getSize() {
     return size;
+  }
+
+  public List<? extends CharSequence> getPreviousNames() {
+    return previousNames;
   }
 
   @Override

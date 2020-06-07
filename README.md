@@ -7,7 +7,8 @@
 
 The Assertions Generator can create specific assertions for your classes. It comes with :
 * a CLI tool (this project) 
-* a [**maven plugin**](https://github.com/joel-costigliola/assertj-assertions-generator-maven-plugin).
+* a [**maven plugin**](https://github.com/assertj/assertj-assertions-generator-maven-plugin).
+* a [**gradle plugin**](https://github.com/assertj/assertj-generator-gradle-plugin).
 
 Let's say you have a `Player` class with `name` and `team` properties. The generator will create a `PlayerAssert` assertions class with `hasName` and `hasTeam` assertions. This allows you to write :
 

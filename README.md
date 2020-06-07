@@ -1,6 +1,6 @@
 # AssertJ - Assertions Generator
 
-[![Build Status](https://travis-ci.org/joel-costigliola/assertj-assertions-generator.svg?branch=master)](https://travis-ci.org/joel-costigliola/assertj-assertions-generator) 
+![CI](https://github.com/assertj/assertj-assertions-generator/workflows/CI/badge.svg)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.assertj/assertj-assertions-generator-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.assertj/assertj-assertions-generator-maven-plugin)
 
 ## Overview 

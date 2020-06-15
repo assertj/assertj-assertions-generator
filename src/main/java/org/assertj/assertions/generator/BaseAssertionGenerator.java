@@ -14,27 +14,42 @@ package org.assertj.assertions.generator;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.String.format;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.capitalize;
+import static org.apache.commons.lang3.StringUtils.containsWhitespace;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.remove;
+import static org.apache.commons.lang3.StringUtils.replace;
 import static org.assertj.assertions.generator.Template.Type.ABSTRACT_ASSERT_CLASS;
 import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
 import static org.assertj.assertions.generator.Template.Type.HIERARCHICAL_ASSERT_CLASS;
-import static org.assertj.assertions.generator.util.ClassUtil.*;
+import static org.assertj.assertions.generator.util.ClassUtil.getTypeDeclaration;
+import static org.assertj.assertions.generator.util.ClassUtil.getTypeNameWithoutDots;
+import static org.assertj.assertions.generator.util.ClassUtil.isJavaLangType;
+import static org.assertj.assertions.generator.util.ClassUtil.packageOf;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.reflect.TypeToken;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.assertj.assertions.generator.Template.Type;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.DataDescription;
 import org.assertj.assertions.generator.description.FieldDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
+
+import com.google.common.reflect.TypeToken;
 
 @SuppressWarnings("WeakerAccess")
 public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEntryPointGenerator {
@@ -283,7 +298,21 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     // in case of nested class, we must only import the outer class !
     classesToImport.add(classDescription.getFullyQualifiedOuterClassName());
     if (template.contains("Assertions.")) classesToImport.add("org.assertj.core.api.Assertions");
-    if (template.contains("Objects.")) classesToImport.add("org.assertj.core.util.Objects");
+    if (template.contains("Objects.")) {
+        int totalObjects = StringUtils.countMatches( template, "Objects." );
+        int areEqualObjects = StringUtils.countMatches( template, "Objects.deepEquals" );
+        int areEqualArraysObjects = StringUtils.countMatches( template, "Objects.deepEqualsArrays" );
+       
+        int totalDeprecated = areEqualObjects + areEqualArraysObjects;
+        
+        if( totalDeprecated > 0 ) {
+            classesToImport.add("java.util.Objects");
+        }
+        
+        if ( totalObjects > totalDeprecated ) {
+            classesToImport.add( "org.assertj.core.util.Objects" );
+        }
+    }
     if (template.contains("Iterables.")) classesToImport.add("org.assertj.core.internal.Iterables");
 
     // Add assertion supertype to imports if needed (for abstract assertions hierarchy)

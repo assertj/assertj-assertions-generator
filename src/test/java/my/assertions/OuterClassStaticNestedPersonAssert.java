@@ -12,9 +12,9 @@
  */
 package my.assertions;
 
+import java.util.Objects;
 import org.assertj.assertions.generator.data.OuterClass;
 import org.assertj.core.api.AbstractObjectAssert;
-import org.assertj.core.util.Objects;
 
 /**
  * this class was generated but kep in source control to see what was needed in term of import when dealing with nested classes 
@@ -59,7 +59,7 @@ public class OuterClassStaticNestedPersonAssert
 
     // null safe check
     String actualName = actual.getName();
-    if (!Objects.areEqual(actualName, name)) {
+    if (!Objects.deepEquals(actualName, name)) {
       failWithMessage(assertjErrorMessage, actual, name, actualName);
     }
 

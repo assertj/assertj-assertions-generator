@@ -33,7 +33,7 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <!-- Could be updated to 22.0, however requires Java 1.8 -->
-      <version>20.0</version>
+      <version>23.0</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>

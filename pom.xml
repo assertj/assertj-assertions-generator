@@ -82,6 +82,22 @@
         </configuration>
       </plugin>
       <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <configuration>
+              <!-- needed to fix javadoc on java 11+ https://github.com/joel-costigliola/assertj-core/issues/1403 -->
+              <source>8</source>
+          </configuration>
+          <executions>
+              <execution>
+                  <id>attach-javadocs</id>
+                  <goals>
+                      <goal>jar</goal>
+                  </goals>
+              </execution>
+          </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.3.0</version>

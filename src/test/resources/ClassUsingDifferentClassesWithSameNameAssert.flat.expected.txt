@@ -52,6 +52,50 @@ public class ClassUsingDifferentClassesWithSameNameAssert extends AbstractObject
   }
 
   /**
+   * Verifies that the actual ClassUsingDifferentClassesWithSameName's nbaTeam is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ClassUsingDifferentClassesWithSameName's nbaTeam is not <code>null</code>.
+   */
+  public ClassUsingDifferentClassesWithSameNameAssert hasNullNbaTeam() {
+    // check that actual ClassUsingDifferentClassesWithSameName we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting nbaTeam of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    org.assertj.assertions.generator.data.nba.team.Team actualNbaTeam = actual.getNbaTeam();
+    if (actualNbaTeam != null) {
+      failWithMessage(assertjErrorMessage, actual, actualNbaTeam);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual ClassUsingDifferentClassesWithSameName's nbaTeam is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ClassUsingDifferentClassesWithSameName's nbaTeam is <code>null</code>.
+   */
+  public ClassUsingDifferentClassesWithSameNameAssert hasNotNullNbaTeam() {
+    // check that actual ClassUsingDifferentClassesWithSameName we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting nbaTeam of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    org.assertj.assertions.generator.data.nba.team.Team actualNbaTeam = actual.getNbaTeam();
+    if (actualNbaTeam == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual ClassUsingDifferentClassesWithSameName's team is equal to the given one.
    * @param team the given team to compare the actual ClassUsingDifferentClassesWithSameName's team to.
    * @return this assertion object.
@@ -68,6 +112,50 @@ public class ClassUsingDifferentClassesWithSameNameAssert extends AbstractObject
     org.assertj.assertions.generator.data.Team actualTeam = actual.getTeam();
     if (!Objects.areEqual(actualTeam, team)) {
       failWithMessage(assertjErrorMessage, actual, team, actualTeam);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual ClassUsingDifferentClassesWithSameName's team is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ClassUsingDifferentClassesWithSameName's team is not <code>null</code>.
+   */
+  public ClassUsingDifferentClassesWithSameNameAssert hasNullTeam() {
+    // check that actual ClassUsingDifferentClassesWithSameName we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting team of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    org.assertj.assertions.generator.data.Team actualTeam = actual.getTeam();
+    if (actualTeam != null) {
+      failWithMessage(assertjErrorMessage, actual, actualTeam);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual ClassUsingDifferentClassesWithSameName's team is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ClassUsingDifferentClassesWithSameName's team is <code>null</code>.
+   */
+  public ClassUsingDifferentClassesWithSameNameAssert hasNotNullTeam() {
+    // check that actual ClassUsingDifferentClassesWithSameName we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting team of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    org.assertj.assertions.generator.data.Team actualTeam = actual.getTeam();
+    if (actualTeam == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining

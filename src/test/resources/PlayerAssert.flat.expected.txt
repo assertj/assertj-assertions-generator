@@ -149,6 +149,50 @@ public class PlayerAssert extends AbstractObjectAssert<PlayerAssert, Player> {
   }
 
   /**
+   * Verifies that the actual Player's name is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's name is not <code>null</code>.
+   */
+  public PlayerAssert hasNullName() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting name of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    org.assertj.assertions.generator.data.Name actualName = actual.getName();
+    if (actualName != null) {
+      failWithMessage(assertjErrorMessage, actual, actualName);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's name is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's name is <code>null</code>.
+   */
+  public PlayerAssert hasNotNullName() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting name of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    org.assertj.assertions.generator.data.Name actualName = actual.getName();
+    if (actualName == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Player should not play.
    * @return this assertion object.
    * @throws AssertionError - if the actual Player should play.
@@ -336,6 +380,49 @@ public class PlayerAssert extends AbstractObjectAssert<PlayerAssert, Player> {
     return this;
   }
 
+  /**
+   * Verifies that the actual Player's points is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's points is not <code>null</code>.
+   */
+  public PlayerAssert hasNullPoints() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting points of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    java.util.List actualPoints = actual.getPoints();
+    if (actualPoints != null) {
+      failWithMessage(assertjErrorMessage, actual, actualPoints);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's points is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's points is <code>null</code>.
+   */
+  public PlayerAssert hasNotNullPoints() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting points of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    java.util.List actualPoints = actual.getPoints();
+    if (actualPoints == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
 
   /**
    * Verifies that the actual Player's pointsPerGame is equal to the given one.
@@ -443,6 +530,49 @@ public class PlayerAssert extends AbstractObjectAssert<PlayerAssert, Player> {
     return this;
   }
 
+  /**
+   * Verifies that the actual Player's previousTeamNames is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's previousTeamNames is not <code>null</code>.
+   */
+  public PlayerAssert hasNullPreviousTeamNames() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting previousTeamNames of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String[] actualPreviousTeamNames = actual.getPreviousTeamNames();
+    if (actualPreviousTeamNames != null) {
+      failWithMessage(assertjErrorMessage, actual, actualPreviousTeamNames);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's previousTeamNames is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's previousTeamNames is <code>null</code>.
+   */
+  public PlayerAssert hasNotNullPreviousTeamNames() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting previousTeamNames of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String[] actualPreviousTeamNames = actual.getPreviousTeamNames();
+    if (actualPreviousTeamNames == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
 
   /**
    * Verifies that the actual Player's reboundsPerGame is equal to the given one.
@@ -612,6 +742,50 @@ public class PlayerAssert extends AbstractObjectAssert<PlayerAssert, Player> {
   }
 
   /**
+   * Verifies that the actual Player's team is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's team is not <code>null</code>.
+   */
+  public PlayerAssert hasNullTeam() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting team of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualTeam = actual.getTeam();
+    if (actualTeam != null) {
+      failWithMessage(assertjErrorMessage, actual, actualTeam);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's team is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's team is <code>null</code>.
+   */
+  public PlayerAssert hasNotNullTeam() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting team of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualTeam = actual.getTeam();
+    if (actualTeam == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Player's teamMates contains the given Player elements.
    * @param teamMates the given elements that should be contained in actual Player's teamMates.
    * @return this assertion object.
@@ -763,6 +937,49 @@ public class PlayerAssert extends AbstractObjectAssert<PlayerAssert, Player> {
     return this;
   }
 
+  /**
+   * Verifies that the actual Player's teamMates is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's teamMates is not <code>null</code>.
+   */
+  public PlayerAssert hasNullTeamMates() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting teamMates of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    java.util.List actualTeamMates = actual.getTeamMates();
+    if (actualTeamMates != null) {
+      failWithMessage(assertjErrorMessage, actual, actualTeamMates);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's teamMates is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's teamMates is <code>null</code>.
+   */
+  public PlayerAssert hasNotNullTeamMates() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting teamMates of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    java.util.List actualTeamMates = actual.getTeamMates();
+    if (actualTeamMates == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
 
   /**
    * Verifies that the actual Player has trophy.
@@ -1060,5 +1277,48 @@ public class PlayerAssert extends AbstractObjectAssert<PlayerAssert, Player> {
     return this;
   }
 
+  /**
+   * Verifies that the actual Player's previousTeams is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's previousTeams is not <code>null</code>.
+   */
+  public PlayerAssert hasNullPreviousTeams() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting previousTeams of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    java.util.List actualPreviousTeams = actual.previousTeams;
+    if (actualPreviousTeams != null) {
+      failWithMessage(assertjErrorMessage, actual, actualPreviousTeams);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's previousTeams is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's previousTeams is <code>null</code>.
+   */
+  public PlayerAssert hasNotNullPreviousTeams() {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting previousTeams of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    java.util.List actualPreviousTeams = actual.previousTeams;
+    if (actualPreviousTeams == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
 
 }

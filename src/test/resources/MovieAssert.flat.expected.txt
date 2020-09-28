@@ -53,6 +53,50 @@ public class MovieAssert extends AbstractObjectAssert<MovieAssert, Movie> {
   }
 
   /**
+   * Verifies that the actual Movie's publicCategory is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie's publicCategory is not <code>null</code>.
+   */
+  public MovieAssert hasNullPublicCategory() {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting publicCategory of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Movie.PublicCategory actualPublicCategory = actual.getPublicCategory();
+    if (actualPublicCategory != null) {
+      failWithMessage(assertjErrorMessage, actual, actualPublicCategory);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Movie's publicCategory is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie's publicCategory is <code>null</code>.
+   */
+  public MovieAssert hasNotNullPublicCategory() {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting publicCategory of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Movie.PublicCategory actualPublicCategory = actual.getPublicCategory();
+    if (actualPublicCategory == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Movie's releaseDate is equal to the given one.
    * @param releaseDate the given releaseDate to compare the actual Movie's releaseDate to.
    * @return this assertion object.
@@ -69,6 +113,50 @@ public class MovieAssert extends AbstractObjectAssert<MovieAssert, Movie> {
     java.util.Date actualReleaseDate = actual.getReleaseDate();
     if (!Objects.areEqual(actualReleaseDate, releaseDate)) {
       failWithMessage(assertjErrorMessage, actual, releaseDate, actualReleaseDate);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Movie's releaseDate is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie's releaseDate is not <code>null</code>.
+   */
+  public MovieAssert hasNullReleaseDate() {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting releaseDate of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    java.util.Date actualReleaseDate = actual.getReleaseDate();
+    if (actualReleaseDate != null) {
+      failWithMessage(assertjErrorMessage, actual, actualReleaseDate);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Movie's releaseDate is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie's releaseDate is <code>null</code>.
+   */
+  public MovieAssert hasNotNullReleaseDate() {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting releaseDate of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    java.util.Date actualReleaseDate = actual.getReleaseDate();
+    if (actualReleaseDate == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -99,6 +187,50 @@ public class MovieAssert extends AbstractObjectAssert<MovieAssert, Movie> {
   }
 
   /**
+   * Verifies that the actual Movie's title is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie's title is not <code>null</code>.
+   */
+  public MovieAssert hasNullTitle() {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting title of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualTitle = actual.getTitle();
+    if (actualTitle != null) {
+      failWithMessage(assertjErrorMessage, actual, actualTitle);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Movie's title is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie's title is <code>null</code>.
+   */
+  public MovieAssert hasNotNullTitle() {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting title of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualTitle = actual.getTitle();
+    if (actualTitle == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Movie's creator is equal to the given one.
    * @param creator the given creator to compare the actual Movie's creator to.
    * @return this assertion object.
@@ -122,6 +254,50 @@ public class MovieAssert extends AbstractObjectAssert<MovieAssert, Movie> {
   }
 
   /**
+   * Verifies that the actual Movie's creator is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie's creator is not <code>null</code>.
+   */
+  public MovieAssert hasNullCreator() {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting creator of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualCreator = actual.creator;
+    if (actualCreator != null) {
+      failWithMessage(assertjErrorMessage, actual, actualCreator);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Movie's creator is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie's creator is <code>null</code>.
+   */
+  public MovieAssert hasNotNullCreator() {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting creator of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualCreator = actual.creator;
+    if (actualCreator == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Movie's producer is equal to the given one.
    * @param producer the given producer to compare the actual Movie's producer to.
    * @return this assertion object.
@@ -138,6 +314,50 @@ public class MovieAssert extends AbstractObjectAssert<MovieAssert, Movie> {
     String actualProducer = actual.producer;
     if (!Objects.areEqual(actualProducer, producer)) {
       failWithMessage(assertjErrorMessage, actual, producer, actualProducer);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Movie's producer is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie's producer is not <code>null</code>.
+   */
+  public MovieAssert hasNullProducer() {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting producer of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualProducer = actual.producer;
+    if (actualProducer != null) {
+      failWithMessage(assertjErrorMessage, actual, actualProducer);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Movie's producer is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Movie's producer is <code>null</code>.
+   */
+  public MovieAssert hasNotNullProducer() {
+    // check that actual Movie we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting producer of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualProducer = actual.producer;
+    if (actualProducer == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining

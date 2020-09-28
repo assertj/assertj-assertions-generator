@@ -117,6 +117,51 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
     return this;
   }
 
+  /**
+   * Verifies that the actual BeanWithOneException's arrayPropertyThrowsException is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual BeanWithOneException's arrayPropertyThrowsException is not <code>null</code>.
+   * @throws java.io.IOException if actual.getArrayPropertyThrowsException() throws one.
+   */
+  public BeanWithOneExceptionAssert hasNullArrayPropertyThrowsException() throws java.io.IOException {
+    // check that actual BeanWithOneException we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting arrayPropertyThrowsException of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String[] actualArrayPropertyThrowsException = actual.getArrayPropertyThrowsException();
+    if (actualArrayPropertyThrowsException != null) {
+      failWithMessage(assertjErrorMessage, actual, actualArrayPropertyThrowsException);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual BeanWithOneException's arrayPropertyThrowsException is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual BeanWithOneException's arrayPropertyThrowsException is <code>null</code>.
+   * @throws java.io.IOException if actual.getArrayPropertyThrowsException() throws one.
+   */
+  public BeanWithOneExceptionAssert hasNotNullArrayPropertyThrowsException() throws java.io.IOException {
+    // check that actual BeanWithOneException we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting arrayPropertyThrowsException of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String[] actualArrayPropertyThrowsException = actual.getArrayPropertyThrowsException();
+    if (actualArrayPropertyThrowsException == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
 
   /**
    * Verifies that the actual BeanWithOneException is boolean property throws exception.
@@ -315,6 +360,51 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
     return this;
   }
 
+  /**
+   * Verifies that the actual BeanWithOneException's iterablePropertyThrowsException is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual BeanWithOneException's iterablePropertyThrowsException is not <code>null</code>.
+   * @throws java.io.IOException if actual.getIterablePropertyThrowsException() throws one.
+   */
+  public BeanWithOneExceptionAssert hasNullIterablePropertyThrowsException() throws java.io.IOException {
+    // check that actual BeanWithOneException we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting iterablePropertyThrowsException of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    java.util.List actualIterablePropertyThrowsException = actual.getIterablePropertyThrowsException();
+    if (actualIterablePropertyThrowsException != null) {
+      failWithMessage(assertjErrorMessage, actual, actualIterablePropertyThrowsException);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual BeanWithOneException's iterablePropertyThrowsException is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual BeanWithOneException's iterablePropertyThrowsException is <code>null</code>.
+   * @throws java.io.IOException if actual.getIterablePropertyThrowsException() throws one.
+   */
+  public BeanWithOneExceptionAssert hasNotNullIterablePropertyThrowsException() throws java.io.IOException {
+    // check that actual BeanWithOneException we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting iterablePropertyThrowsException of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    java.util.List actualIterablePropertyThrowsException = actual.getIterablePropertyThrowsException();
+    if (actualIterablePropertyThrowsException == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
 
   /**
    * Verifies that the actual BeanWithOneException's stringPropertyThrowsException is equal to the given one.
@@ -334,6 +424,52 @@ public class BeanWithOneExceptionAssert extends AbstractObjectAssert<BeanWithOne
     String actualStringPropertyThrowsException = actual.getStringPropertyThrowsException();
     if (!Objects.areEqual(actualStringPropertyThrowsException, stringPropertyThrowsException)) {
       failWithMessage(assertjErrorMessage, actual, stringPropertyThrowsException, actualStringPropertyThrowsException);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual BeanWithOneException's stringPropertyThrowsException is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual BeanWithOneException's stringPropertyThrowsException is not <code>null</code>.
+   * @throws java.io.IOException if actual.getStringPropertyThrowsException() throws one.
+   */
+  public BeanWithOneExceptionAssert hasNullStringPropertyThrowsException() throws java.io.IOException {
+    // check that actual BeanWithOneException we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting stringPropertyThrowsException of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualStringPropertyThrowsException = actual.getStringPropertyThrowsException();
+    if (actualStringPropertyThrowsException != null) {
+      failWithMessage(assertjErrorMessage, actual, actualStringPropertyThrowsException);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual BeanWithOneException's stringPropertyThrowsException is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual BeanWithOneException's stringPropertyThrowsException is <code>null</code>.
+   * @throws java.io.IOException if actual.getStringPropertyThrowsException() throws one.
+   */
+  public BeanWithOneExceptionAssert hasNotNullStringPropertyThrowsException() throws java.io.IOException {
+    // check that actual BeanWithOneException we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting stringPropertyThrowsException of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualStringPropertyThrowsException = actual.getStringPropertyThrowsException();
+    if (actualStringPropertyThrowsException == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining

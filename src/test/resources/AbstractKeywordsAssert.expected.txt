@@ -44,6 +44,52 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's abstract is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's abstract is not <code>null</code>.
+   * @throws java.io.IOException if actual.getAbstract() throws one.
+   */
+  public S hasNullAbstract() throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting abstract of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualAbstract = actual.getAbstract();
+    if (actualAbstract != null) {
+      failWithMessage(assertjErrorMessage, actual, actualAbstract);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's abstract is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's abstract is <code>null</code>.
+   * @throws java.io.IOException if actual.getAbstract() throws one.
+   */
+  public S hasNotNullAbstract() throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting abstract of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualAbstract = actual.getAbstract();
+    if (actualAbstract == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's assert is equal to the given one.
    * @param expectedAssert the given assert to compare the actual Keywords's assert to.
    * @return this assertion object.
@@ -67,6 +113,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's assert is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's assert is not <code>null</code>.
+   */
+  public S hasNullAssert() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting assert of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualAssert = actual.getAssert();
+    if (actualAssert != null) {
+      failWithMessage(assertjErrorMessage, actual, actualAssert);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's assert is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's assert is <code>null</code>.
+   */
+  public S hasNotNullAssert() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting assert of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualAssert = actual.getAssert();
+    if (actualAssert == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's boolean is equal to the given one.
    * @param expectedBoolean the given boolean to compare the actual Keywords's boolean to.
    * @return this assertion object.
@@ -83,6 +173,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Boolean actualBoolean = actual.getBoolean();
     if (!Objects.areEqual(actualBoolean, expectedBoolean)) {
       failWithMessage(assertjErrorMessage, actual, expectedBoolean, actualBoolean);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's boolean is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's boolean is not <code>null</code>.
+   */
+  public S hasNullBoolean() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting boolean of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Boolean actualBoolean = actual.getBoolean();
+    if (actualBoolean != null) {
+      failWithMessage(assertjErrorMessage, actual, actualBoolean);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's boolean is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's boolean is <code>null</code>.
+   */
+  public S hasNotNullBoolean() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting boolean of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Boolean actualBoolean = actual.getBoolean();
+    if (actualBoolean == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -241,6 +375,49 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     return myself;
   }
 
+  /**
+   * Verifies that the actual Keywords's break is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's break is not <code>null</code>.
+   */
+  public S hasNullBreak() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting break of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    java.util.List actualBreak = actual.getBreak();
+    if (actualBreak != null) {
+      failWithMessage(assertjErrorMessage, actual, actualBreak);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's break is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's break is <code>null</code>.
+   */
+  public S hasNotNullBreak() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting break of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    java.util.List actualBreak = actual.getBreak();
+    if (actualBreak == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
 
   /**
    * Verifies that the actual Keywords's byte is equal to the given one.
@@ -259,6 +436,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Byte actualByte = actual.getByte();
     if (!Objects.areEqual(actualByte, expectedByte)) {
       failWithMessage(assertjErrorMessage, actual, expectedByte, actualByte);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's byte is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's byte is not <code>null</code>.
+   */
+  public S hasNullByte() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting byte of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Byte actualByte = actual.getByte();
+    if (actualByte != null) {
+      failWithMessage(assertjErrorMessage, actual, actualByte);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's byte is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's byte is <code>null</code>.
+   */
+  public S hasNotNullByte() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting byte of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Byte actualByte = actual.getByte();
+    if (actualByte == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -348,6 +569,49 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     return myself;
   }
 
+  /**
+   * Verifies that the actual Keywords's case is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's case is not <code>null</code>.
+   */
+  public S hasNullCase() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting case of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object[] actualCase = actual.getCase();
+    if (actualCase != null) {
+      failWithMessage(assertjErrorMessage, actual, actualCase);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's case is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's case is <code>null</code>.
+   */
+  public S hasNotNullCase() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting case of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object[] actualCase = actual.getCase();
+    if (actualCase == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
 
   /**
    * Verifies that the actual Keywords's catch is equal to the given one.
@@ -366,6 +630,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualCatch = actual.getCatch();
     if (!Objects.areEqual(actualCatch, expectedCatch)) {
       failWithMessage(assertjErrorMessage, actual, expectedCatch, actualCatch);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's catch is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's catch is not <code>null</code>.
+   */
+  public S hasNullCatch() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting catch of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualCatch = actual.getCatch();
+    if (actualCatch != null) {
+      failWithMessage(assertjErrorMessage, actual, actualCatch);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's catch is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's catch is <code>null</code>.
+   */
+  public S hasNotNullCatch() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting catch of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualCatch = actual.getCatch();
+    if (actualCatch == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -455,6 +763,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's const is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's const is not <code>null</code>.
+   */
+  public S hasNullConst() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting const of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Class actualConst = actual.getConst();
+    if (actualConst != null) {
+      failWithMessage(assertjErrorMessage, actual, actualConst);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's const is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's const is <code>null</code>.
+   */
+  public S hasNotNullConst() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting const of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Class actualConst = actual.getConst();
+    if (actualConst == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's continue is equal to the given one.
    * @param expectedContinue the given continue to compare the actual Keywords's continue to.
    * @return this assertion object.
@@ -471,6 +823,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     String actualContinue = actual.getContinue();
     if (!Objects.areEqual(actualContinue, expectedContinue)) {
       failWithMessage(assertjErrorMessage, actual, expectedContinue, actualContinue);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's continue is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's continue is not <code>null</code>.
+   */
+  public S hasNullContinue() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting continue of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualContinue = actual.getContinue();
+    if (actualContinue != null) {
+      failWithMessage(assertjErrorMessage, actual, actualContinue);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's continue is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's continue is <code>null</code>.
+   */
+  public S hasNotNullContinue() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting continue of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualContinue = actual.getContinue();
+    if (actualContinue == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -636,6 +1032,51 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     return myself;
   }
 
+  /**
+   * Verifies that the actual Keywords's default is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's default is not <code>null</code>.
+   * @throws java.io.IOException if actual.getDefault() throws one.
+   */
+  public S hasNullDefault() throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting default of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    java.util.List actualDefault = actual.getDefault();
+    if (actualDefault != null) {
+      failWithMessage(assertjErrorMessage, actual, actualDefault);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's default is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's default is <code>null</code>.
+   * @throws java.io.IOException if actual.getDefault() throws one.
+   */
+  public S hasNotNullDefault() throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting default of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    java.util.List actualDefault = actual.getDefault();
+    if (actualDefault == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
 
   /**
    * Verifies that the actual Keywords's do is equal to the given one.
@@ -654,6 +1095,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualDo = actual.getDo();
     if (!Objects.areEqual(actualDo, expectedDo)) {
       failWithMessage(assertjErrorMessage, actual, expectedDo, actualDo);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's do is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's do is not <code>null</code>.
+   */
+  public S hasNullDo() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting do of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualDo = actual.getDo();
+    if (actualDo != null) {
+      failWithMessage(assertjErrorMessage, actual, actualDo);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's do is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's do is <code>null</code>.
+   */
+  public S hasNotNullDo() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting do of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualDo = actual.getDo();
+    if (actualDo == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -733,6 +1218,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's else is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's else is not <code>null</code>.
+   */
+  public S hasNullElse() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting else of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualElse = actual.getElse();
+    if (actualElse != null) {
+      failWithMessage(assertjErrorMessage, actual, actualElse);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's else is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's else is <code>null</code>.
+   */
+  public S hasNotNullElse() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting else of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualElse = actual.getElse();
+    if (actualElse == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's enum is equal to the given one.
    * @param expectedEnum the given enum to compare the actual Keywords's enum to.
    * @return this assertion object.
@@ -749,6 +1278,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualEnum = actual.getEnum();
     if (!Objects.areEqual(actualEnum, expectedEnum)) {
       failWithMessage(assertjErrorMessage, actual, expectedEnum, actualEnum);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's enum is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's enum is not <code>null</code>.
+   */
+  public S hasNullEnum() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting enum of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualEnum = actual.getEnum();
+    if (actualEnum != null) {
+      failWithMessage(assertjErrorMessage, actual, actualEnum);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's enum is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's enum is <code>null</code>.
+   */
+  public S hasNotNullEnum() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting enum of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualEnum = actual.getEnum();
+    if (actualEnum == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -779,6 +1352,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's extends is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's extends is not <code>null</code>.
+   */
+  public S hasNullExtends() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting extends of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualExtends = actual.getExtends();
+    if (actualExtends != null) {
+      failWithMessage(assertjErrorMessage, actual, actualExtends);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's extends is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's extends is <code>null</code>.
+   */
+  public S hasNotNullExtends() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting extends of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualExtends = actual.getExtends();
+    if (actualExtends == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's false is equal to the given one.
    * @param expectedFalse the given false to compare the actual Keywords's false to.
    * @return this assertion object.
@@ -795,6 +1412,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualFalse = actual.getFalse();
     if (!Objects.areEqual(actualFalse, expectedFalse)) {
       failWithMessage(assertjErrorMessage, actual, expectedFalse, actualFalse);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's false is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's false is not <code>null</code>.
+   */
+  public S hasNullFalse() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting false of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualFalse = actual.getFalse();
+    if (actualFalse != null) {
+      failWithMessage(assertjErrorMessage, actual, actualFalse);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's false is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's false is <code>null</code>.
+   */
+  public S hasNotNullFalse() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting false of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualFalse = actual.getFalse();
+    if (actualFalse == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -825,6 +1486,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's final is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's final is not <code>null</code>.
+   */
+  public S hasNullFinal() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting final of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualFinal = actual.getFinal();
+    if (actualFinal != null) {
+      failWithMessage(assertjErrorMessage, actual, actualFinal);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's final is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's final is <code>null</code>.
+   */
+  public S hasNotNullFinal() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting final of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualFinal = actual.getFinal();
+    if (actualFinal == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's finally is equal to the given one.
    * @param expectedFinally the given finally to compare the actual Keywords's finally to.
    * @return this assertion object.
@@ -841,6 +1546,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualFinally = actual.getFinally();
     if (!Objects.areEqual(actualFinally, expectedFinally)) {
       failWithMessage(assertjErrorMessage, actual, expectedFinally, actualFinally);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's finally is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's finally is not <code>null</code>.
+   */
+  public S hasNullFinally() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting finally of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualFinally = actual.getFinally();
+    if (actualFinally != null) {
+      failWithMessage(assertjErrorMessage, actual, actualFinally);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's finally is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's finally is <code>null</code>.
+   */
+  public S hasNotNullFinally() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting finally of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualFinally = actual.getFinally();
+    if (actualFinally == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -921,6 +1670,52 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's for is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's for is not <code>null</code>.
+   * @throws java.io.IOException if actual.getFor() throws one.
+   */
+  public S hasNullFor() throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting for of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualFor = actual.getFor();
+    if (actualFor != null) {
+      failWithMessage(assertjErrorMessage, actual, actualFor);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's for is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's for is <code>null</code>.
+   * @throws java.io.IOException if actual.getFor() throws one.
+   */
+  public S hasNotNullFor() throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting for of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualFor = actual.getFor();
+    if (actualFor == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's goto is equal to the given one.
    * @param expectedGoto the given goto to compare the actual Keywords's goto to.
    * @return this assertion object.
@@ -937,6 +1732,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualGoto = actual.getGoto();
     if (!Objects.areEqual(actualGoto, expectedGoto)) {
       failWithMessage(assertjErrorMessage, actual, expectedGoto, actualGoto);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's goto is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's goto is not <code>null</code>.
+   */
+  public S hasNullGoto() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting goto of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualGoto = actual.getGoto();
+    if (actualGoto != null) {
+      failWithMessage(assertjErrorMessage, actual, actualGoto);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's goto is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's goto is <code>null</code>.
+   */
+  public S hasNotNullGoto() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting goto of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualGoto = actual.getGoto();
+    if (actualGoto == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -967,6 +1806,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's if is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's if is not <code>null</code>.
+   */
+  public S hasNullIf() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting if of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualIf = actual.getIf();
+    if (actualIf != null) {
+      failWithMessage(assertjErrorMessage, actual, actualIf);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's if is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's if is <code>null</code>.
+   */
+  public S hasNotNullIf() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting if of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualIf = actual.getIf();
+    if (actualIf == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's implements is equal to the given one.
    * @param expectedImplements the given implements to compare the actual Keywords's implements to.
    * @return this assertion object.
@@ -983,6 +1866,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualImplements = actual.getImplements();
     if (!Objects.areEqual(actualImplements, expectedImplements)) {
       failWithMessage(assertjErrorMessage, actual, expectedImplements, actualImplements);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's implements is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's implements is not <code>null</code>.
+   */
+  public S hasNullImplements() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting implements of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualImplements = actual.getImplements();
+    if (actualImplements != null) {
+      failWithMessage(assertjErrorMessage, actual, actualImplements);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's implements is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's implements is <code>null</code>.
+   */
+  public S hasNotNullImplements() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting implements of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualImplements = actual.getImplements();
+    if (actualImplements == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -1013,6 +1940,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's import is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's import is not <code>null</code>.
+   */
+  public S hasNullImport() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting import of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualImport = actual.getImport();
+    if (actualImport != null) {
+      failWithMessage(assertjErrorMessage, actual, actualImport);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's import is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's import is <code>null</code>.
+   */
+  public S hasNotNullImport() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting import of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualImport = actual.getImport();
+    if (actualImport == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's instanceof is equal to the given one.
    * @param expectedInstanceof the given instanceof to compare the actual Keywords's instanceof to.
    * @return this assertion object.
@@ -1029,6 +2000,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualInstanceof = actual.getInstanceof();
     if (!Objects.areEqual(actualInstanceof, expectedInstanceof)) {
       failWithMessage(assertjErrorMessage, actual, expectedInstanceof, actualInstanceof);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's instanceof is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's instanceof is not <code>null</code>.
+   */
+  public S hasNullInstanceof() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting instanceof of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualInstanceof = actual.getInstanceof();
+    if (actualInstanceof != null) {
+      failWithMessage(assertjErrorMessage, actual, actualInstanceof);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's instanceof is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's instanceof is <code>null</code>.
+   */
+  public S hasNotNullInstanceof() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting instanceof of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualInstanceof = actual.getInstanceof();
+    if (actualInstanceof == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -1083,6 +2098,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's interface is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's interface is not <code>null</code>.
+   */
+  public S hasNullInterface() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting interface of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualInterface = actual.getInterface();
+    if (actualInterface != null) {
+      failWithMessage(assertjErrorMessage, actual, actualInterface);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's interface is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's interface is <code>null</code>.
+   */
+  public S hasNotNullInterface() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting interface of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualInterface = actual.getInterface();
+    if (actualInterface == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's long is equal to the given one.
    * @param expectedLong the given long to compare the actual Keywords's long to.
    * @return this assertion object.
@@ -1129,6 +2188,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's native is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's native is not <code>null</code>.
+   */
+  public S hasNullNative() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting native of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualNative = actual.getNative();
+    if (actualNative != null) {
+      failWithMessage(assertjErrorMessage, actual, actualNative);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's native is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's native is <code>null</code>.
+   */
+  public S hasNotNullNative() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting native of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualNative = actual.getNative();
+    if (actualNative == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's new is equal to the given one.
    * @param expectedNew the given new to compare the actual Keywords's new to.
    * @return this assertion object.
@@ -1145,6 +2248,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualNew = actual.getNew();
     if (!Objects.areEqual(actualNew, expectedNew)) {
       failWithMessage(assertjErrorMessage, actual, expectedNew, actualNew);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's new is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's new is not <code>null</code>.
+   */
+  public S hasNullNew() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting new of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualNew = actual.getNew();
+    if (actualNew != null) {
+      failWithMessage(assertjErrorMessage, actual, actualNew);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's new is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's new is <code>null</code>.
+   */
+  public S hasNotNullNew() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting new of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualNew = actual.getNew();
+    if (actualNew == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -1175,6 +2322,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's null is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's null is not <code>null</code>.
+   */
+  public S hasNullNull() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting null of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualNull = actual.getNull();
+    if (actualNull != null) {
+      failWithMessage(assertjErrorMessage, actual, actualNull);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's null is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's null is <code>null</code>.
+   */
+  public S hasNotNullNull() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting null of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualNull = actual.getNull();
+    if (actualNull == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's package is equal to the given one.
    * @param expectedPackage the given package to compare the actual Keywords's package to.
    * @return this assertion object.
@@ -1191,6 +2382,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualPackage = actual.getPackage();
     if (!Objects.areEqual(actualPackage, expectedPackage)) {
       failWithMessage(assertjErrorMessage, actual, expectedPackage, actualPackage);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's package is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's package is not <code>null</code>.
+   */
+  public S hasNullPackage() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting package of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualPackage = actual.getPackage();
+    if (actualPackage != null) {
+      failWithMessage(assertjErrorMessage, actual, actualPackage);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's package is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's package is <code>null</code>.
+   */
+  public S hasNotNullPackage() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting package of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualPackage = actual.getPackage();
+    if (actualPackage == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -1221,6 +2456,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's private is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's private is not <code>null</code>.
+   */
+  public S hasNullPrivate() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting private of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualPrivate = actual.getPrivate();
+    if (actualPrivate != null) {
+      failWithMessage(assertjErrorMessage, actual, actualPrivate);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's private is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's private is <code>null</code>.
+   */
+  public S hasNotNullPrivate() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting private of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualPrivate = actual.getPrivate();
+    if (actualPrivate == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's protected is equal to the given one.
    * @param expectedProtected the given protected to compare the actual Keywords's protected to.
    * @return this assertion object.
@@ -1237,6 +2516,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualProtected = actual.getProtected();
     if (!Objects.areEqual(actualProtected, expectedProtected)) {
       failWithMessage(assertjErrorMessage, actual, expectedProtected, actualProtected);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's protected is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's protected is not <code>null</code>.
+   */
+  public S hasNullProtected() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting protected of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualProtected = actual.getProtected();
+    if (actualProtected != null) {
+      failWithMessage(assertjErrorMessage, actual, actualProtected);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's protected is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's protected is <code>null</code>.
+   */
+  public S hasNotNullProtected() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting protected of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualProtected = actual.getProtected();
+    if (actualProtected == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -1267,6 +2590,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's public is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's public is not <code>null</code>.
+   */
+  public S hasNullPublic() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting public of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualPublic = actual.getPublic();
+    if (actualPublic != null) {
+      failWithMessage(assertjErrorMessage, actual, actualPublic);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's public is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's public is <code>null</code>.
+   */
+  public S hasNotNullPublic() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting public of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualPublic = actual.getPublic();
+    if (actualPublic == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's return is equal to the given one.
    * @param expectedReturn the given return to compare the actual Keywords's return to.
    * @return this assertion object.
@@ -1283,6 +2650,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualReturn = actual.getReturn();
     if (!Objects.areEqual(actualReturn, expectedReturn)) {
       failWithMessage(assertjErrorMessage, actual, expectedReturn, actualReturn);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's return is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's return is not <code>null</code>.
+   */
+  public S hasNullReturn() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting return of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualReturn = actual.getReturn();
+    if (actualReturn != null) {
+      failWithMessage(assertjErrorMessage, actual, actualReturn);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's return is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's return is <code>null</code>.
+   */
+  public S hasNotNullReturn() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting return of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualReturn = actual.getReturn();
+    if (actualReturn == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -1336,6 +2747,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's static is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's static is not <code>null</code>.
+   */
+  public S hasNullStatic() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting static of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualStatic = actual.getStatic();
+    if (actualStatic != null) {
+      failWithMessage(assertjErrorMessage, actual, actualStatic);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's static is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's static is <code>null</code>.
+   */
+  public S hasNotNullStatic() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting static of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualStatic = actual.getStatic();
+    if (actualStatic == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's strictfp is equal to the given one.
    * @param expectedStrictfp the given strictfp to compare the actual Keywords's strictfp to.
    * @return this assertion object.
@@ -1359,6 +2814,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's strictfp is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's strictfp is not <code>null</code>.
+   */
+  public S hasNullStrictfp() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting strictfp of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualStrictfp = actual.getStrictfp();
+    if (actualStrictfp != null) {
+      failWithMessage(assertjErrorMessage, actual, actualStrictfp);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's strictfp is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's strictfp is <code>null</code>.
+   */
+  public S hasNotNullStrictfp() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting strictfp of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualStrictfp = actual.getStrictfp();
+    if (actualStrictfp == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's super is equal to the given one.
    * @param expectedSuper the given super to compare the actual Keywords's super to.
    * @return this assertion object.
@@ -1375,6 +2874,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualSuper = actual.getSuper();
     if (!Objects.areEqual(actualSuper, expectedSuper)) {
       failWithMessage(assertjErrorMessage, actual, expectedSuper, actualSuper);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's super is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's super is not <code>null</code>.
+   */
+  public S hasNullSuper() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting super of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualSuper = actual.getSuper();
+    if (actualSuper != null) {
+      failWithMessage(assertjErrorMessage, actual, actualSuper);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's super is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's super is <code>null</code>.
+   */
+  public S hasNotNullSuper() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting super of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualSuper = actual.getSuper();
+    if (actualSuper == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -1468,6 +3011,51 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     return myself;
   }
 
+  /**
+   * Verifies that the actual Keywords's switch is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's switch is not <code>null</code>.
+   * @throws java.io.IOException if actual.getSwitch() throws one.
+   */
+  public S hasNullSwitch() throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting switch of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String[] actualSwitch = actual.getSwitch();
+    if (actualSwitch != null) {
+      failWithMessage(assertjErrorMessage, actual, actualSwitch);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's switch is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's switch is <code>null</code>.
+   * @throws java.io.IOException if actual.getSwitch() throws one.
+   */
+  public S hasNotNullSwitch() throws java.io.IOException {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting switch of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String[] actualSwitch = actual.getSwitch();
+    if (actualSwitch == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
 
   /**
    * Verifies that the actual Keywords's synchronized is equal to the given one.
@@ -1486,6 +3074,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualSynchronized = actual.getSynchronized();
     if (!Objects.areEqual(actualSynchronized, expectedSynchronized)) {
       failWithMessage(assertjErrorMessage, actual, expectedSynchronized, actualSynchronized);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's synchronized is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's synchronized is not <code>null</code>.
+   */
+  public S hasNullSynchronized() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting synchronized of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualSynchronized = actual.getSynchronized();
+    if (actualSynchronized != null) {
+      failWithMessage(assertjErrorMessage, actual, actualSynchronized);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's synchronized is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's synchronized is <code>null</code>.
+   */
+  public S hasNotNullSynchronized() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting synchronized of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualSynchronized = actual.getSynchronized();
+    if (actualSynchronized == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -1516,6 +3148,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's this is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's this is not <code>null</code>.
+   */
+  public S hasNullThis() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting this of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualThis = actual.getThis();
+    if (actualThis != null) {
+      failWithMessage(assertjErrorMessage, actual, actualThis);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's this is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's this is <code>null</code>.
+   */
+  public S hasNotNullThis() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting this of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualThis = actual.getThis();
+    if (actualThis == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's throw is equal to the given one.
    * @param expectedThrow the given throw to compare the actual Keywords's throw to.
    * @return this assertion object.
@@ -1532,6 +3208,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualThrow = actual.getThrow();
     if (!Objects.areEqual(actualThrow, expectedThrow)) {
       failWithMessage(assertjErrorMessage, actual, expectedThrow, actualThrow);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's throw is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's throw is not <code>null</code>.
+   */
+  public S hasNullThrow() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting throw of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualThrow = actual.getThrow();
+    if (actualThrow != null) {
+      failWithMessage(assertjErrorMessage, actual, actualThrow);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's throw is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's throw is <code>null</code>.
+   */
+  public S hasNotNullThrow() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting throw of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualThrow = actual.getThrow();
+    if (actualThrow == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -1562,6 +3282,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's throws is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's throws is not <code>null</code>.
+   */
+  public S hasNullThrows() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting throws of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualThrows = actual.getThrows();
+    if (actualThrows != null) {
+      failWithMessage(assertjErrorMessage, actual, actualThrows);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's throws is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's throws is <code>null</code>.
+   */
+  public S hasNotNullThrows() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting throws of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualThrows = actual.getThrows();
+    if (actualThrows == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's transient is equal to the given one.
    * @param expectedTransient the given transient to compare the actual Keywords's transient to.
    * @return this assertion object.
@@ -1578,6 +3342,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualTransient = actual.getTransient();
     if (!Objects.areEqual(actualTransient, expectedTransient)) {
       failWithMessage(assertjErrorMessage, actual, expectedTransient, actualTransient);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's transient is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's transient is not <code>null</code>.
+   */
+  public S hasNullTransient() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting transient of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualTransient = actual.getTransient();
+    if (actualTransient != null) {
+      failWithMessage(assertjErrorMessage, actual, actualTransient);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's transient is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's transient is <code>null</code>.
+   */
+  public S hasNotNullTransient() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting transient of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualTransient = actual.getTransient();
+    if (actualTransient == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -1608,6 +3416,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's true is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's true is not <code>null</code>.
+   */
+  public S hasNullTrue() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting true of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualTrue = actual.getTrue();
+    if (actualTrue != null) {
+      failWithMessage(assertjErrorMessage, actual, actualTrue);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's true is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's true is <code>null</code>.
+   */
+  public S hasNotNullTrue() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting true of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualTrue = actual.getTrue();
+    if (actualTrue == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's try is equal to the given one.
    * @param expectedTry the given try to compare the actual Keywords's try to.
    * @return this assertion object.
@@ -1624,6 +3476,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualTry = actual.getTry();
     if (!Objects.areEqual(actualTry, expectedTry)) {
       failWithMessage(assertjErrorMessage, actual, expectedTry, actualTry);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's try is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's try is not <code>null</code>.
+   */
+  public S hasNullTry() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting try of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualTry = actual.getTry();
+    if (actualTry != null) {
+      failWithMessage(assertjErrorMessage, actual, actualTry);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's try is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's try is <code>null</code>.
+   */
+  public S hasNotNullTry() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting try of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualTry = actual.getTry();
+    if (actualTry == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -1654,6 +3550,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's void is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's void is not <code>null</code>.
+   */
+  public S hasNullVoid() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting void of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Void actualVoid = actual.getVoid();
+    if (actualVoid != null) {
+      failWithMessage(assertjErrorMessage, actual, actualVoid);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's void is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's void is <code>null</code>.
+   */
+  public S hasNotNullVoid() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting void of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Void actualVoid = actual.getVoid();
+    if (actualVoid == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's volatile is equal to the given one.
    * @param expectedVolatile the given volatile to compare the actual Keywords's volatile to.
    * @return this assertion object.
@@ -1677,6 +3617,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
   }
 
   /**
+   * Verifies that the actual Keywords's volatile is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's volatile is not <code>null</code>.
+   */
+  public S hasNullVolatile() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting volatile of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualVolatile = actual.getVolatile();
+    if (actualVolatile != null) {
+      failWithMessage(assertjErrorMessage, actual, actualVolatile);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's volatile is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's volatile is <code>null</code>.
+   */
+  public S hasNotNullVolatile() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting volatile of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualVolatile = actual.getVolatile();
+    if (actualVolatile == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Keywords's while is equal to the given one.
    * @param expectedWhile the given while to compare the actual Keywords's while to.
    * @return this assertion object.
@@ -1693,6 +3677,50 @@ public abstract class AbstractKeywordsAssert<S extends AbstractKeywordsAssert<S,
     Object actualWhile = actual.getWhile();
     if (!Objects.areEqual(actualWhile, expectedWhile)) {
       failWithMessage(assertjErrorMessage, actual, expectedWhile, actualWhile);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's while is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's while is not <code>null</code>.
+   */
+  public S hasNullWhile() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting while of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualWhile = actual.getWhile();
+    if (actualWhile != null) {
+      failWithMessage(assertjErrorMessage, actual, actualWhile);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Keywords's while is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Keywords's while is <code>null</code>.
+   */
+  public S hasNotNullWhile() {
+    // check that actual Keywords we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting while of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualWhile = actual.getWhile();
+    if (actualWhile == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining

@@ -41,6 +41,50 @@ public abstract class AbstractArtWorkAssert<S extends AbstractArtWorkAssert<S, A
   }
 
   /**
+   * Verifies that the actual ArtWork's title is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ArtWork's title is not <code>null</code>.
+   */
+  public S hasNullTitle() {
+    // check that actual ArtWork we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting title of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualTitle = actual.getTitle();
+    if (actualTitle != null) {
+      failWithMessage(assertjErrorMessage, actual, actualTitle);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual ArtWork's title is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ArtWork's title is <code>null</code>.
+   */
+  public S hasNotNullTitle() {
+    // check that actual ArtWork we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting title of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualTitle = actual.getTitle();
+    if (actualTitle == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual ArtWork's creator is equal to the given one.
    * @param creator the given creator to compare the actual ArtWork's creator to.
    * @return this assertion object.
@@ -57,6 +101,50 @@ public abstract class AbstractArtWorkAssert<S extends AbstractArtWorkAssert<S, A
     String actualCreator = actual.creator;
     if (!Objects.areEqual(actualCreator, creator)) {
       failWithMessage(assertjErrorMessage, actual, creator, actualCreator);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual ArtWork's creator is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ArtWork's creator is not <code>null</code>.
+   */
+  public S hasNullCreator() {
+    // check that actual ArtWork we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting creator of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualCreator = actual.creator;
+    if (actualCreator != null) {
+      failWithMessage(assertjErrorMessage, actual, actualCreator);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual ArtWork's creator is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ArtWork's creator is <code>null</code>.
+   */
+  public S hasNotNullCreator() {
+    // check that actual ArtWork we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting creator of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualCreator = actual.creator;
+    if (actualCreator == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining

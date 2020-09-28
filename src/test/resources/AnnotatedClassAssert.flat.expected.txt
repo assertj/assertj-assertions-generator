@@ -52,6 +52,50 @@ public class AnnotatedClassAssert extends AbstractObjectAssert<AnnotatedClassAss
   }
 
   /**
+   * Verifies that the actual AnnotatedClass's anotherProperty is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual AnnotatedClass's anotherProperty is not <code>null</code>.
+   */
+  public AnnotatedClassAssert hasNullAnotherProperty() {
+    // check that actual AnnotatedClass we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting anotherProperty of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Object actualAnotherProperty = actual.anotherProperty();
+    if (actualAnotherProperty != null) {
+      failWithMessage(assertjErrorMessage, actual, actualAnotherProperty);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual AnnotatedClass's anotherProperty is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual AnnotatedClass's anotherProperty is <code>null</code>.
+   */
+  public AnnotatedClassAssert hasNotNullAnotherProperty() {
+    // check that actual AnnotatedClass we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting anotherProperty of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Object actualAnotherProperty = actual.anotherProperty();
+    if (actualAnotherProperty == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual AnnotatedClass's stuff is equal to the given one.
    * @param stuff the given stuff to compare the actual AnnotatedClass's stuff to.
    * @return this assertion object.

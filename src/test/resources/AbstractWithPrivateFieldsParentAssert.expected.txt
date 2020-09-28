@@ -41,6 +41,50 @@ public abstract class AbstractWithPrivateFieldsParentAssert<S extends AbstractWi
   }
 
   /**
+   * Verifies that the actual WithPrivateFieldsParent's city is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual WithPrivateFieldsParent's city is not <code>null</code>.
+   */
+  public S hasNullCity() {
+    // check that actual WithPrivateFieldsParent we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting city of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualCity = actual.getCity();
+    if (actualCity != null) {
+      failWithMessage(assertjErrorMessage, actual, actualCity);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual WithPrivateFieldsParent's city is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual WithPrivateFieldsParent's city is <code>null</code>.
+   */
+  public S hasNotNullCity() {
+    // check that actual WithPrivateFieldsParent we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting city of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualCity = actual.getCity();
+    if (actualCity == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual WithPrivateFieldsParent's country is equal to the given one.
    * @param country the given country to compare the actual WithPrivateFieldsParent's country to.
    * @return this assertion object.
@@ -57,6 +101,50 @@ public abstract class AbstractWithPrivateFieldsParentAssert<S extends AbstractWi
     String actualCountry = org.assertj.core.util.introspection.FieldSupport.EXTRACTION.fieldValue("country", String.class, actual);
     if (!Objects.areEqual(actualCountry, country)) {
       failWithMessage(assertjErrorMessage, actual, country, actualCountry);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual WithPrivateFieldsParent's country is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual WithPrivateFieldsParent's country is not <code>null</code>.
+   */
+  public S hasNullCountry() {
+    // check that actual WithPrivateFieldsParent we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting country of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualCountry = org.assertj.core.util.introspection.FieldSupport.EXTRACTION.fieldValue("country", String.class, actual);
+    if (actualCountry != null) {
+      failWithMessage(assertjErrorMessage, actual, actualCountry);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual WithPrivateFieldsParent's country is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual WithPrivateFieldsParent's country is <code>null</code>.
+   */
+  public S hasNotNullCountry() {
+    // check that actual WithPrivateFieldsParent we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting country of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualCountry = org.assertj.core.util.introspection.FieldSupport.EXTRACTION.fieldValue("country", String.class, actual);
+    if (actualCountry == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining

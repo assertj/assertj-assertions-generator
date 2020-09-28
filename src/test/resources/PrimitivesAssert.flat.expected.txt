@@ -148,6 +148,50 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
   }
 
   /**
+   * Verifies that the actual Primitives's byteWrapper is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives's byteWrapper is not <code>null</code>.
+   */
+  public PrimitivesAssert hasNullByteWrapper() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting byteWrapper of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Byte actualByteWrapper = actual.getByteWrapper();
+    if (actualByteWrapper != null) {
+      failWithMessage(assertjErrorMessage, actual, actualByteWrapper);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives's byteWrapper is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives's byteWrapper is <code>null</code>.
+   */
+  public PrimitivesAssert hasNotNullByteWrapper() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting byteWrapper of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Byte actualByteWrapper = actual.getByteWrapper();
+    if (actualByteWrapper == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Primitives's char is equal to the given one.
    * @param expectedChar the given char to compare the actual Primitives's char to.
    * @return this assertion object.
@@ -187,6 +231,50 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
     Character actualCharacter = actual.getCharacter();
     if (!Objects.areEqual(actualCharacter, character)) {
       failWithMessage(assertjErrorMessage, actual, character, actualCharacter);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives's character is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives's character is not <code>null</code>.
+   */
+  public PrimitivesAssert hasNullCharacter() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting character of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Character actualCharacter = actual.getCharacter();
+    if (actualCharacter != null) {
+      failWithMessage(assertjErrorMessage, actual, actualCharacter);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives's character is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives's character is <code>null</code>.
+   */
+  public PrimitivesAssert hasNotNullCharacter() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting character of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Character actualCharacter = actual.getCharacter();
+    if (actualCharacter == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -286,6 +374,50 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
 
     // check
     Assertions.assertThat(actualDoubleWrapper).overridingErrorMessage(assertjErrorMessage).isCloseTo(doubleWrapper, Assertions.within(assertjOffset));
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives's doubleWrapper is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives's doubleWrapper is not <code>null</code>.
+   */
+  public PrimitivesAssert hasNullDoubleWrapper() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting doubleWrapper of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Double actualDoubleWrapper = actual.getDoubleWrapper();
+    if (actualDoubleWrapper != null) {
+      failWithMessage(assertjErrorMessage, actual, actualDoubleWrapper);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives's doubleWrapper is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives's doubleWrapper is <code>null</code>.
+   */
+  public PrimitivesAssert hasNotNullDoubleWrapper() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting doubleWrapper of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Double actualDoubleWrapper = actual.getDoubleWrapper();
+    if (actualDoubleWrapper == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
 
     // return the current assertion for method chaining
     return this;
@@ -426,6 +558,50 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
   }
 
   /**
+   * Verifies that the actual Primitives's floatWrapper is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives's floatWrapper is not <code>null</code>.
+   */
+  public PrimitivesAssert hasNullFloatWrapper() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting floatWrapper of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Float actualFloatWrapper = actual.getFloatWrapper();
+    if (actualFloatWrapper != null) {
+      failWithMessage(assertjErrorMessage, actual, actualFloatWrapper);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives's floatWrapper is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives's floatWrapper is <code>null</code>.
+   */
+  public PrimitivesAssert hasNotNullFloatWrapper() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting floatWrapper of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Float actualFloatWrapper = actual.getFloatWrapper();
+    if (actualFloatWrapper == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Primitives's int is equal to the given one.
    * @param expectedInt the given int to compare the actual Primitives's int to.
    * @return this assertion object.
@@ -465,6 +641,50 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
     Integer actualInteger = actual.getInteger();
     if (!Objects.areEqual(actualInteger, integer)) {
       failWithMessage(assertjErrorMessage, actual, integer, actualInteger);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives's integer is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives's integer is not <code>null</code>.
+   */
+  public PrimitivesAssert hasNullInteger() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting integer of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Integer actualInteger = actual.getInteger();
+    if (actualInteger != null) {
+      failWithMessage(assertjErrorMessage, actual, actualInteger);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives's integer is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives's integer is <code>null</code>.
+   */
+  public PrimitivesAssert hasNotNullInteger() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting integer of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Integer actualInteger = actual.getInteger();
+    if (actualInteger == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -518,6 +738,50 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
   }
 
   /**
+   * Verifies that the actual Primitives's longWrapper is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives's longWrapper is not <code>null</code>.
+   */
+  public PrimitivesAssert hasNullLongWrapper() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting longWrapper of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Long actualLongWrapper = actual.getLongWrapper();
+    if (actualLongWrapper != null) {
+      failWithMessage(assertjErrorMessage, actual, actualLongWrapper);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives's longWrapper is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives's longWrapper is <code>null</code>.
+   */
+  public PrimitivesAssert hasNotNullLongWrapper() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting longWrapper of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Long actualLongWrapper = actual.getLongWrapper();
+    if (actualLongWrapper == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Primitives's short is equal to the given one.
    * @param expectedShort the given short to compare the actual Primitives's short to.
    * @return this assertion object.
@@ -557,6 +821,50 @@ public class PrimitivesAssert extends AbstractObjectAssert<PrimitivesAssert, Pri
     Short actualShortWrapper = actual.getShortWrapper();
     if (!Objects.areEqual(actualShortWrapper, shortWrapper)) {
       failWithMessage(assertjErrorMessage, actual, shortWrapper, actualShortWrapper);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives's shortWrapper is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives's shortWrapper is not <code>null</code>.
+   */
+  public PrimitivesAssert hasNullShortWrapper() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting shortWrapper of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Short actualShortWrapper = actual.getShortWrapper();
+    if (actualShortWrapper != null) {
+      failWithMessage(assertjErrorMessage, actual, actualShortWrapper);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Primitives's shortWrapper is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Primitives's shortWrapper is <code>null</code>.
+   */
+  public PrimitivesAssert hasNotNullShortWrapper() {
+    // check that actual Primitives we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting shortWrapper of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Short actualShortWrapper = actual.getShortWrapper();
+    if (actualShortWrapper == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining

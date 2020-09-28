@@ -79,6 +79,50 @@ public class ParameterClashWithVariablesAssert extends AbstractObjectAssert<Para
   }
 
   /**
+   * Verifies that the actual ParameterClashWithVariables's bloodPressure is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ParameterClashWithVariables's bloodPressure is not <code>null</code>.
+   */
+  public ParameterClashWithVariablesAssert hasNullBloodPressure() {
+    // check that actual ParameterClashWithVariables we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting bloodPressure of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Double actualBloodPressure = actual.bloodPressure;
+    if (actualBloodPressure != null) {
+      failWithMessage(assertjErrorMessage, actual, actualBloodPressure);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual ParameterClashWithVariables's bloodPressure is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ParameterClashWithVariables's bloodPressure is <code>null</code>.
+   */
+  public ParameterClashWithVariablesAssert hasNotNullBloodPressure() {
+    // check that actual ParameterClashWithVariables we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting bloodPressure of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Double actualBloodPressure = actual.bloodPressure;
+    if (actualBloodPressure == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual ParameterClashWithVariables's bmi is equal to the given one.
    * @param bmi the given bmi to compare the actual ParameterClashWithVariables's bmi to.
    * @return this assertion object.
@@ -122,6 +166,50 @@ public class ParameterClashWithVariablesAssert extends AbstractObjectAssert<Para
 
     // check
     Assertions.assertThat(actualBmi).overridingErrorMessage(assertjErrorMessage).isCloseTo(bmi, Assertions.within(assertjOffset));
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual ParameterClashWithVariables's bmi is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ParameterClashWithVariables's bmi is not <code>null</code>.
+   */
+  public ParameterClashWithVariablesAssert hasNullBmi() {
+    // check that actual ParameterClashWithVariables we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting bmi of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Float actualBmi = actual.bmi;
+    if (actualBmi != null) {
+      failWithMessage(assertjErrorMessage, actual, actualBmi);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual ParameterClashWithVariables's bmi is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ParameterClashWithVariables's bmi is <code>null</code>.
+   */
+  public ParameterClashWithVariablesAssert hasNotNullBmi() {
+    // check that actual ParameterClashWithVariables we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting bmi of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Float actualBmi = actual.bmi;
+    if (actualBmi == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
 
     // return the current assertion for method chaining
     return this;
@@ -193,6 +281,50 @@ public class ParameterClashWithVariablesAssert extends AbstractObjectAssert<Para
     String actualOffset = actual.offset;
     if (!Objects.areEqual(actualOffset, offset)) {
       failWithMessage(assertjErrorMessage, actual, offset, actualOffset);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual ParameterClashWithVariables's offset is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ParameterClashWithVariables's offset is not <code>null</code>.
+   */
+  public ParameterClashWithVariablesAssert hasNullOffset() {
+    // check that actual ParameterClashWithVariables we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting offset of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualOffset = actual.offset;
+    if (actualOffset != null) {
+      failWithMessage(assertjErrorMessage, actual, actualOffset);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual ParameterClashWithVariables's offset is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ParameterClashWithVariables's offset is <code>null</code>.
+   */
+  public ParameterClashWithVariablesAssert hasNotNullOffset() {
+    // check that actual ParameterClashWithVariables we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting offset of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualOffset = actual.offset;
+    if (actualOffset == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining

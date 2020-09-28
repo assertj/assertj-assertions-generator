@@ -43,6 +43,50 @@ public abstract class AbstractTeamAssert<S extends AbstractTeamAssert<S, A>, A e
   }
 
   /**
+   * Verifies that the actual Team's division is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Team's division is not <code>null</code>.
+   */
+  public S hasNullDivision() {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting division of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualDivision = actual.getDivision();
+    if (actualDivision != null) {
+      failWithMessage(assertjErrorMessage, actual, actualDivision);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Team's division is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Team's division is <code>null</code>.
+   */
+  public S hasNotNullDivision() {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting division of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualDivision = actual.getDivision();
+    if (actualDivision == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Team's name is equal to the given one.
    * @param name the given name to compare the actual Team's name to.
    * @return this assertion object.
@@ -59,6 +103,50 @@ public abstract class AbstractTeamAssert<S extends AbstractTeamAssert<S, A>, A e
     String actualName = actual.name;
     if (!Objects.areEqual(actualName, name)) {
       failWithMessage(assertjErrorMessage, actual, name, actualName);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Team's name is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Team's name is not <code>null</code>.
+   */
+  public S hasNullName() {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting name of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualName = actual.name;
+    if (actualName != null) {
+      failWithMessage(assertjErrorMessage, actual, actualName);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Team's name is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Team's name is <code>null</code>.
+   */
+  public S hasNotNullName() {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting name of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualName = actual.name;
+    if (actualName == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining
@@ -148,6 +236,49 @@ public abstract class AbstractTeamAssert<S extends AbstractTeamAssert<S, A>, A e
     return myself;
   }
 
+  /**
+   * Verifies that the actual Team's oldNames is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Team's oldNames is not <code>null</code>.
+   */
+  public S hasNullOldNames() {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting oldNames of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String[] actualOldNames = actual.oldNames;
+    if (actualOldNames != null) {
+      failWithMessage(assertjErrorMessage, actual, actualOldNames);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Team's oldNames is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Team's oldNames is <code>null</code>.
+   */
+  public S hasNotNullOldNames() {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting oldNames of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String[] actualOldNames = actual.oldNames;
+    if (actualOldNames == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
 
   /**
    * Verifies that the actual Team's players contains the given org.assertj.assertions.generator.data.nba.Player elements.
@@ -301,6 +432,49 @@ public abstract class AbstractTeamAssert<S extends AbstractTeamAssert<S, A>, A e
     return myself;
   }
 
+  /**
+   * Verifies that the actual Team's players is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Team's players is not <code>null</code>.
+   */
+  public S hasNullPlayers() {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting players of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    java.util.List actualPlayers = actual.players;
+    if (actualPlayers != null) {
+      failWithMessage(assertjErrorMessage, actual, actualPlayers);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Team's players is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Team's players is <code>null</code>.
+   */
+  public S hasNotNullPlayers() {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting players of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    java.util.List actualPlayers = actual.players;
+    if (actualPlayers == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
 
   /**
    * Verifies that the actual Team's points contains the given int[] elements.
@@ -454,6 +628,49 @@ public abstract class AbstractTeamAssert<S extends AbstractTeamAssert<S, A>, A e
     return myself;
   }
 
+  /**
+   * Verifies that the actual Team's points is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Team's points is not <code>null</code>.
+   */
+  public S hasNullPoints() {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting points of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    java.util.List actualPoints = actual.points;
+    if (actualPoints != null) {
+      failWithMessage(assertjErrorMessage, actual, actualPoints);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Team's points is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Team's points is <code>null</code>.
+   */
+  public S hasNotNullPoints() {
+    // check that actual Team we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting points of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    java.util.List actualPoints = actual.points;
+    if (actualPoints == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
 
   /**
    * Verifies that the actual Team's rank is equal to the given one.

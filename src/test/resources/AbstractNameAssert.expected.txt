@@ -41,6 +41,50 @@ public abstract class AbstractNameAssert<S extends AbstractNameAssert<S, A>, A e
   }
 
   /**
+   * Verifies that the actual Name's first is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Name's first is not <code>null</code>.
+   */
+  public S hasNullFirst() {
+    // check that actual Name we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting first of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualFirst = actual.getFirst();
+    if (actualFirst != null) {
+      failWithMessage(assertjErrorMessage, actual, actualFirst);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Name's first is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Name's first is <code>null</code>.
+   */
+  public S hasNotNullFirst() {
+    // check that actual Name we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting first of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualFirst = actual.getFirst();
+    if (actualFirst == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual Name's last is equal to the given one.
    * @param last the given last to compare the actual Name's last to.
    * @return this assertion object.
@@ -57,6 +101,50 @@ public abstract class AbstractNameAssert<S extends AbstractNameAssert<S, A>, A e
     String actualLast = actual.getLast();
     if (!Objects.areEqual(actualLast, last)) {
       failWithMessage(assertjErrorMessage, actual, last, actualLast);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Name's last is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Name's last is not <code>null</code>.
+   */
+  public S hasNullLast() {
+    // check that actual Name we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting last of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualLast = actual.getLast();
+    if (actualLast != null) {
+      failWithMessage(assertjErrorMessage, actual, actualLast);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual Name's last is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Name's last is <code>null</code>.
+   */
+  public S hasNotNullLast() {
+    // check that actual Name we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting last of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualLast = actual.getLast();
+    if (actualLast == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining

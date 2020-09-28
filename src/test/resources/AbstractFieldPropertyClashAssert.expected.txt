@@ -149,6 +149,50 @@ public abstract class AbstractFieldPropertyClashAssert<S extends AbstractFieldPr
   }
 
   /**
+   * Verifies that the actual FieldPropertyClash's string is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash's string is not <code>null</code>.
+   */
+  public S hasNullString() {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting string of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualString = actual.getString();
+    if (actualString != null) {
+      failWithMessage(assertjErrorMessage, actual, actualString);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual FieldPropertyClash's string is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash's string is <code>null</code>.
+   */
+  public S hasNotNullString() {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting string of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualString = actual.getString();
+    if (actualString == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual FieldPropertyClash will be upside down.
    * @return this assertion object.
    * @throws AssertionError - if the actual FieldPropertyClash will not be upside down.
@@ -201,6 +245,50 @@ public abstract class AbstractFieldPropertyClashAssert<S extends AbstractFieldPr
     String actualActual = actual.actual;
     if (!Objects.areEqual(actualActual, expectedActual)) {
       failWithMessage(assertjErrorMessage, actual, expectedActual, actualActual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual FieldPropertyClash's actual is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash's actual is not <code>null</code>.
+   */
+  public S hasNullActual() {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting actual of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualActual = actual.actual;
+    if (actualActual != null) {
+      failWithMessage(assertjErrorMessage, actual, actualActual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual FieldPropertyClash's actual is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual FieldPropertyClash's actual is <code>null</code>.
+   */
+  public S hasNotNullActual() {
+    // check that actual FieldPropertyClash we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting actual of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualActual = actual.actual;
+    if (actualActual == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining

@@ -40,6 +40,50 @@ public abstract class AbstractWithPrivateFieldsAssert<S extends AbstractWithPriv
   }
 
   /**
+   * Verifies that the actual WithPrivateFields's address is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual WithPrivateFields's address is not <code>null</code>.
+   */
+  public S hasNullAddress() {
+    // check that actual WithPrivateFields we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting address of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualAddress = actual.getAddress();
+    if (actualAddress != null) {
+      failWithMessage(assertjErrorMessage, actual, actualAddress);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual WithPrivateFields's address is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual WithPrivateFields's address is <code>null</code>.
+   */
+  public S hasNotNullAddress() {
+    // check that actual WithPrivateFields we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting address of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualAddress = actual.getAddress();
+    if (actualAddress == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual WithPrivateFields's age is equal to the given one.
    * @param age the given age to compare the actual WithPrivateFields's age to.
    * @return this assertion object.
@@ -122,6 +166,50 @@ public abstract class AbstractWithPrivateFieldsAssert<S extends AbstractWithPriv
   }
 
   /**
+   * Verifies that the actual WithPrivateFields's name is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual WithPrivateFields's name is not <code>null</code>.
+   */
+  public S hasNullName() {
+    // check that actual WithPrivateFields we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting name of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualName = org.assertj.core.util.introspection.FieldSupport.EXTRACTION.fieldValue("name", String.class, actual);
+    if (actualName != null) {
+      failWithMessage(assertjErrorMessage, actual, actualName);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual WithPrivateFields's name is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual WithPrivateFields's name is <code>null</code>.
+   */
+  public S hasNotNullName() {
+    // check that actual WithPrivateFields we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting name of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualName = org.assertj.core.util.introspection.FieldSupport.EXTRACTION.fieldValue("name", String.class, actual);
+    if (actualName == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
    * Verifies that the actual WithPrivateFields's nickname is equal to the given one.
    * @param nickname the given nickname to compare the actual WithPrivateFields's nickname to.
    * @return this assertion object.
@@ -138,6 +226,50 @@ public abstract class AbstractWithPrivateFieldsAssert<S extends AbstractWithPriv
     String actualNickname = org.assertj.core.util.introspection.FieldSupport.EXTRACTION.fieldValue("nickname", String.class, actual);
     if (!Objects.areEqual(actualNickname, nickname)) {
       failWithMessage(assertjErrorMessage, actual, nickname, actualNickname);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual WithPrivateFields's nickname is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual WithPrivateFields's nickname is not <code>null</code>.
+   */
+  public S hasNullNickname() {
+    // check that actual WithPrivateFields we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting nickname of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualNickname = org.assertj.core.util.introspection.FieldSupport.EXTRACTION.fieldValue("nickname", String.class, actual);
+    if (actualNickname != null) {
+      failWithMessage(assertjErrorMessage, actual, actualNickname);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
+  /**
+   * Verifies that the actual WithPrivateFields's nickname is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual WithPrivateFields's nickname is <code>null</code>.
+   */
+  public S hasNotNullNickname() {
+    // check that actual WithPrivateFields we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting nickname of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualNickname = org.assertj.core.util.introspection.FieldSupport.EXTRACTION.fieldValue("nickname", String.class, actual);
+    if (actualNickname == null) {
+      failWithMessage(assertjErrorMessage, actual);
     }
 
     // return the current assertion for method chaining

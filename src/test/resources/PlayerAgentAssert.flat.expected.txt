@@ -51,4 +51,48 @@ public class PlayerAgentAssert extends AbstractObjectAssert<PlayerAgentAssert, P
     return this;
   }
 
+  /**
+   * Verifies that the actual PlayerAgent's managedPlayer is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual PlayerAgent's managedPlayer is not <code>null</code>.
+   */
+  public PlayerAgentAssert hasNullManagedPlayer() {
+    // check that actual PlayerAgent we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting managedPlayer of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    Player actualManagedPlayer = actual.getManagedPlayer();
+    if (actualManagedPlayer != null) {
+      failWithMessage(assertjErrorMessage, actual, actualManagedPlayer);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual PlayerAgent's managedPlayer is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual PlayerAgent's managedPlayer is <code>null</code>.
+   */
+  public PlayerAgentAssert hasNotNullManagedPlayer() {
+    // check that actual PlayerAgent we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting managedPlayer of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    Player actualManagedPlayer = actual.getManagedPlayer();
+    if (actualManagedPlayer == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -8,7 +8,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  */
 package org.assertj.assertions.generator;
 
@@ -171,7 +171,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private String generatedAssertionsPackage = null;
 
   /**
-   * Creates a new </code>{@link BaseAssertionGenerator}</code> with default templates directory.
+   * Creates a new <code>{@link BaseAssertionGenerator}</code> with default templates directory.
    *
    * @throws IOException if some template file could not be found or read
    */
@@ -180,7 +180,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   /**
-   * Creates a new </code>{@link BaseAssertionGenerator}</code> with the templates from the given directory.
+   * Creates a new <code>{@link BaseAssertionGenerator}</code> with the templates from the given directory.
    *
    * @param templatesDirectory path where to find templates
    * @throws IOException if some template file could not be found or read

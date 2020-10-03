@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -8,7 +8,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  */
 /*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
@@ -48,7 +48,7 @@ import static java.lang.Thread.currentThread;
  *   isNotNull();
  * 
  *   // we overrides the default error message with a more explicit one
- *   String assertjErrorMessage = format("Expected ${class_to_assert}'s ${property} to be <%s> but was <%s>", ${property}, actual.get${Property}());
+ *   String assertjErrorMessage = format("Expected ${class_to_assert}'s ${property} to be &lt;%s&gt; but was &lt;%s&gt;", ${property}, actual.get${Property}());
  *   
  *   // check
  *   if (!actual.get${Property}().equals(${property})) { throw new AssertionError(assertjErrorMessage); }
@@ -67,8 +67,9 @@ public class Template {
   private final Type type;
 
   /**
-   * Creates a new </code>{@link Template}</code> from the given content.
+   * Creates a new <code>{@link Template}</code> from the given content.
    * 
+   * @param type the type
    * @param templateContent the template content
    */
   public Template(Type type, String templateContent) {
@@ -77,8 +78,9 @@ public class Template {
   }
 
   /**
-   * Creates a new </code>{@link Template}</code> from the content of the given {@link URL}.
-   * 
+   * Creates a new <code>{@link Template}</code> from the content of the given {@link URL}.
+   *
+   * @param type the type
    * @param url the {@link URL} to read to set the content of the {@link Template}
    * @throws RuntimeException if we fail to read the {@link URL} content
    */
@@ -97,8 +99,9 @@ public class Template {
   }
 
   /**
-   * Creates a new </code>{@link Template}</code> from the content of the given {@link File} searched in the classpath.
-   * 
+   * Creates a new <code>{@link Template}</code> from the content of the given {@link File} searched in the classpath.
+   *
+   * @param type the type
    * @param file the {@link File} to read to set the content of the {@link Template}
    * @throws RuntimeException if we fail to read the {@link File} content
    */

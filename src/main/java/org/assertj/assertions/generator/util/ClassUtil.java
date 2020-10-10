@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -8,7 +8,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  */
 package org.assertj.assertions.generator.util;
 
@@ -60,6 +60,8 @@ public class ClassUtil {
   /**
    * Call {@link #collectClasses(ClassLoader, String...)} with <code>Thread.currentThread().getContextClassLoader()
    * </code>
+   *
+   * @return the set of {@link TypeToken}s found
    */
   public static Set<TypeToken<?>> collectClasses(String... classOrPackageNames) {
     return collectClasses(Thread.currentThread().getContextClassLoader(), classOrPackageNames);
@@ -68,7 +70,7 @@ public class ClassUtil {
   /**
    * Collects all the <b>public</b> classes from given classes names or classes belonging to given a package name
    * (recursively).
-   * <p/>
+   *
    * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the returned classes.
    *
    * @param classLoader {@link ClassLoader} used to load classes defines in classOrPackageNames
@@ -84,7 +86,7 @@ public class ClassUtil {
   /**
    * Collects all the classes from given classes names or classes belonging to given a package name
    * (recursively), with control on private classes including.
-   * <p/>
+   *
    * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the returned classes.
    *
    * @param classLoader {@link ClassLoader} used to load classes defines in classOrPackageNames
@@ -171,7 +173,7 @@ public class ClassUtil {
 
   /**
    * Get <b>public</b> classes in given directory (recursively).
-   * <p/>
+   *
    * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the resulting set.
    *
    * @param directory directory where to look for classes
@@ -250,15 +252,15 @@ public class ClassUtil {
 
   /**
    * Returns the property name of given getter method, examples :
-   * <p/>
+   *
    *
    * <pre>
-   * getName() -> name
+   * getName() -&gt; name
    * </pre>
-   * <p/>
+   *
    *
    * <pre>
-   * isMostValuablePlayer() -> mostValuablePlayer
+   * isMostValuablePlayer() -&gt; mostValuablePlayer
    * </pre>
    *
    * @param method getter method to deduce property from.
@@ -271,13 +273,11 @@ public class ClassUtil {
 
   /**
    * Returns the property name of given field, examples :
-   * <p/>
    *
    * <pre>
-   * name -> name
-   * isMostValuablePlayer -> mostValuablePlayer
+   * name -&gt; name
+   * isMostValuablePlayer -&gt; mostValuablePlayer
    * </pre>
-   * <p/>
    *
    * @param field field to deduce property from.
    * @return the property name of given field
@@ -557,6 +557,7 @@ public class ClassUtil {
 
   /**
    * Checks if the type passed is a member of {@code java.lang} or is a "built-in" type (e.g. primitive or array).
+   * @param type type token
    * @return true if part of java language
    */
   public static boolean isJavaLangType(TypeToken<?> type) {
@@ -567,6 +568,7 @@ public class ClassUtil {
    * Checks if the type passed is a member of {@code java.lang} or is a "built-in" type (e.g. primitive or array).
    * @return true if part of java language
    *
+   * @param type type
    * @see #isJavaLangType(TypeToken)
    */
   public static boolean isJavaLangType(Type type) {

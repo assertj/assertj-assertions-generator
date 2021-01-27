@@ -51,7 +51,6 @@ import org.assertj.assertions.generator.description.GetterDescription;
 
 import com.google.common.reflect.TypeToken;
 
-@SuppressWarnings("WeakerAccess")
 public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEntryPointGenerator {
 
   static final String TEMPLATES_DIR = "templates" + File.separator;
@@ -165,7 +164,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
    * @see Character#isJavaIdentifierPart
    */
   private static final Pattern CLASS_NAME_PATTERN = Pattern
-      .compile("(?m)^public class[\\s]+(?<CLASSNAME>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)\\b");
+                                                           .compile("(?m)^public class[\\s]+(?<CLASSNAME>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)\\b");
 
   private static final Set<TypeToken<?>> EMPTY_HIERARCHY = new HashSet<>();
 
@@ -213,7 +212,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   private void checkGivenPackageIsValid(String generatedAssertionsPackage) {
-    Validate.isTrue(isNotBlank(generatedAssertionsPackage), "The given package '%s' must not be blank", generatedAssertionsPackage);
+    Validate.isTrue(isNotBlank(generatedAssertionsPackage), "The given package '%s' must not be blank",
+                    generatedAssertionsPackage);
     Validate.isTrue(!containsWhitespace(generatedAssertionsPackage), "The given package '%s' must not contain blank character",
                     generatedAssertionsPackage);
   }
@@ -233,7 +233,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   }
 
   @Override
-  public File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription, Set<TypeToken<?>> allClasses) throws IOException {
+  public File[] generateHierarchicalCustomAssertionFor(ClassDescription classDescription,
+                                                       Set<TypeToken<?>> allClasses) throws IOException {
     // Assertion content
     String[] assertionFileContent = generateHierarchicalCustomAssertionContentFor(classDescription, allClasses);
     // Create the assertion file in targetBaseDirectory + either the given package or in the class to assert package
@@ -267,7 +268,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
     // return a String array with the actual generated content of the assertion class hierarchy
     String[] assertionClassesContent = new String[2];
-    assertionClassesContent[0] = fillAbstractAssertClassTemplate(abstractAssertClassContentBuilder.toString(), classDescription, classes);
+    assertionClassesContent[0] = fillAbstractAssertClassTemplate(abstractAssertClassContentBuilder.toString(), classDescription,
+                                                                 classes);
     assertionClassesContent[1] = fillConcreteAssertClassTemplate(concreteAssertClassContent, classDescription);
     return assertionClassesContent;
   }
@@ -294,19 +296,19 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     classesToImport.add(classDescription.getFullyQualifiedOuterClassName());
     if (template.contains("Assertions.")) classesToImport.add("org.assertj.core.api.Assertions");
     if (template.contains("Objects.")) {
-        int totalObjects = StringUtils.countMatches( template, "Objects." );
-        int areEqualObjects = StringUtils.countMatches( template, "Objects.deepEquals" );
-        int areEqualArraysObjects = StringUtils.countMatches( template, "Objects.deepEqualsArrays" );
-       
-        int totalDeprecated = areEqualObjects + areEqualArraysObjects;
-        
-        if( totalDeprecated > 0 ) {
-            classesToImport.add("java.util.Objects");
-        }
-        
-        if ( totalObjects > totalDeprecated ) {
-            classesToImport.add( "org.assertj.core.util.Objects" );
-        }
+      int totalObjects = StringUtils.countMatches(template, "Objects.");
+      int areEqualObjects = StringUtils.countMatches(template, "Objects.deepEquals");
+      int areEqualArraysObjects = StringUtils.countMatches(template, "Objects.deepEqualsArrays");
+
+      int totalDeprecated = areEqualObjects + areEqualArraysObjects;
+
+      if (totalDeprecated > 0) {
+        classesToImport.add("java.util.Objects");
+      }
+
+      if (totalObjects > totalDeprecated) {
+        classesToImport.add("org.assertj.core.util.Objects");
+      }
     }
     if (template.contains("Iterables.")) classesToImport.add("org.assertj.core.internal.Iterables");
 
@@ -319,7 +321,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       classesToImport.add(parentAssertClassName);
     }
 
-    final String customAssertionClass = concrete ? classDescription.getAssertClassName() : classDescription.getAbstractAssertClassName();
+    final String customAssertionClass = concrete ? classDescription.getAssertClassName()
+        : classDescription.getAbstractAssertClassName();
     final String selfType = concrete ? customAssertionClass : ABSTRACT_ASSERT_SELF_TYPE;
     final String myself = concrete ? "this" : "myself";
 
@@ -474,7 +477,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private File createAssertionsFileFor(final Set<ClassDescription> classDescriptionSet, final String fileContent,
                                        final String fileName, final String assertionsClassPackage) throws IOException {
     String classPackage = isEmpty(assertionsClassPackage)
-        ? determineBestEntryPointsAssertionsClassPackage(classDescriptionSet) : assertionsClassPackage;
+        ? determineBestEntryPointsAssertionsClassPackage(classDescriptionSet)
+        : assertionsClassPackage;
     String assertionsDirectory = getDirectoryPathCorrespondingToPackage(classPackage);
     // build any needed directories
     buildDirectory(assertionsDirectory);
@@ -521,7 +525,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   /**
    * Returns the target directory path where the assertions file for given classDescription will be created.
    *
-   * @param packageName package name 
+   * @param packageName package name
    * @return the target directory path corresponding to the given package.
    */
   private String getDirectoryPathCorrespondingToPackage(final String packageName) {
@@ -631,11 +635,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
   private String getTypeName(DataDescription fieldOrGetter) {
     if (generatedAssertionsPackage != null) {
-      // if the user has chosen to generate assertions in a given package we assume that 
+      // if the user has chosen to generate assertions in a given package we assume that
       return fieldOrGetter.getFullyQualifiedTypeName();
     }
-    // returns a simple class name if the field or getter type is in the same package as its owning type which is the package where the 
-    // Assert class is generated. 
+    // returns a simple class name if the field or getter type is in the same package as its owning type which is the package
+    // where the
+    // Assert class is generated.
     return fieldOrGetter.getTypeName();
   }
 

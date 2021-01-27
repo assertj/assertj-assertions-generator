@@ -12,10 +12,9 @@
  */
 package org.assertj.assertions.generator.description.converter;
 
-import com.google.common.collect.Sets;
-
-import java.util.Collections;
 import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 /**
  * Defines which annotations to use to annotate getters method or class to generate assertions for.

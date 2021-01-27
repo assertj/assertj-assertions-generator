@@ -12,26 +12,6 @@
  */
 package org.assertj.assertions.generator.util;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.ClassPath;
-import com.google.common.reflect.ClassPath.ClassInfo;
-import com.google.common.reflect.TypeToken;
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.assertj.assertions.generator.description.Visibility;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newLinkedHashSet;
@@ -39,12 +19,56 @@ import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.RegExUtils.removeAll;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.indexOfAny;
+import static org.apache.commons.lang3.StringUtils.remove;
+import static org.apache.commons.lang3.StringUtils.removeStart;
+import static org.apache.commons.lang3.StringUtils.uncapitalize;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.GenericDeclaration;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.assertj.assertions.generator.description.Visibility;
+
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.ClassPath;
+import com.google.common.reflect.ClassPath.ClassInfo;
+import com.google.common.reflect.TypeToken;
 
 /**
  * Some utilities methods related to classes and packages.
  */
-@SuppressWarnings("WeakerAccess")
 public class ClassUtil {
 
   public static final String GET_PREFIX = "get";
@@ -56,7 +80,7 @@ public class ClassUtil {
   /**
    * Call {@link #collectClasses(ClassLoader, String...)} with <code>Thread.currentThread().getContextClassLoader()
    * </code>
-   *
+   * @param classOrPackageNames classes or packages to collect.
    * @return the set of {@link TypeToken}s found
    */
   public static Set<TypeToken<?>> collectClasses(String... classOrPackageNames) {
@@ -92,7 +116,8 @@ public class ClassUtil {
    * @return the set of {@link Class}es found
    * @throws RuntimeException if any error occurs
    */
-  public static Set<TypeToken<?>> collectClasses(ClassLoader classLoader, boolean includePrivateClasses, String... classOrPackageNames) {
+  public static Set<TypeToken<?>> collectClasses(ClassLoader classLoader, boolean includePrivateClasses,
+                                                 String... classOrPackageNames) {
     Set<TypeToken<?>> classes = newLinkedHashSet();
     for (String classOrPackageName : classOrPackageNames) {
       TypeToken<?> clazz = tryToLoadClass(classOrPackageName, classLoader);
@@ -130,7 +155,7 @@ public class ClassUtil {
   }
 
   private static Set<TypeToken<?>> getPackageClassesFromClasspathJars(String packageName, ClassLoader classLoader)
-      throws IOException {
+                                                                                                                   throws IOException {
     ImmutableSet<ClassInfo> classesInfo = ClassPath.from(classLoader).getTopLevelClassesRecursive(packageName);
     Set<TypeToken<?>> classesInPackage = new HashSet<>();
     for (ClassInfo classInfo : classesInfo) {
@@ -179,7 +204,7 @@ public class ClassUtil {
    * @throws UnsupportedEncodingException thrown by {@link URLDecoder#decode(String, String)}
    */
   private static Set<TypeToken<?>> getClassesInDirectory(File directory, String packageName, ClassLoader classLoader)
-      throws UnsupportedEncodingException {
+                                                                                                                      throws UnsupportedEncodingException {
     Set<TypeToken<?>> classes = new LinkedHashSet<>();
 
     // Capture all the .class files in this directory
@@ -691,9 +716,8 @@ public class ClassUtil {
   private static String resolveTypeNameInPackage(String type, String currentPackage) {
     if (!Strings.isNullOrEmpty(currentPackage) && type.startsWith(currentPackage)) {
       return type.substring(currentPackage.length() + 1, type.length());
-    } else {
-      return type;
     }
+    return type;
   }
 
   /**

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.format;
-import static org.assertj.core.util.Objects.areEqual;
+import static java.util.Objects.deepEquals;
 
 /**
  * @author Joel Costigliola
@@ -157,7 +157,7 @@ public class Player {
   }
 
   public boolean isInTeam(String team) {
-    return areEqual(this.team, team);
+    return deepEquals(this.team, team);
   }
 
   public List<int[]> getPoints() {
@@ -203,3 +203,4 @@ public class Player {
     return format("%s[%s %s, team=%s]", getClass().getSimpleName(), name.getFirst(), name.getLast(), team);
   }
 }
+

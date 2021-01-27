@@ -9,7 +9,7 @@
     isNotNull();
 
     // null safe check
-    if (Objects.areEqual(Boolean.FALSE, actual.${predicate}())) {
+    if (Objects.deepEquals(Boolean.FALSE, actual.${predicate}())) {
       failWithMessage("\nExpecting that actual ${class_to_assert} ${predicate_for_error_message_part1} but ${predicate_for_error_message_part2}.");
     }
 
@@ -27,7 +27,7 @@
     isNotNull();
 
     // null safe check
-    if (Objects.areEqual(Boolean.TRUE, actual.${predicate}())) {
+    if (Objects.deepEquals(Boolean.TRUE, actual.${predicate}())) {
       failWithMessage("\nExpecting that actual ${class_to_assert} ${negative_predicate_for_error_message_part1} but ${negative_predicate_for_error_message_part2}.");
     }
 

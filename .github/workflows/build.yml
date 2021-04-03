@@ -41,6 +41,4 @@ jobs:
         env:
           JAVA_VERSION: ${{ matrix.java_version }}
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: current
           env_vars: JAVA_VERSION

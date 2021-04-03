@@ -2,6 +2,7 @@
 
 ![CI](https://github.com/assertj/assertj-assertions-generator/workflows/CI/badge.svg)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.assertj/assertj-assertions-generator-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.assertj/assertj-assertions-generator-maven-plugin)
+[![codecov](https://codecov.io/gh/szatyinadam/assertj-assertions-generator/branch/main/graph/badge.svg?token=T0OTMN3AMY)](https://codecov.io/gh/szatyinadam/assertj-assertions-generator)
 
 ## Overview 
 

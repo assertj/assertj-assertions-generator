@@ -13,26 +13,34 @@ jobs:
 
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+    strategy:
+      fail-fast: true
+      matrix:
+        java_version: [ 8 ]
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
+      - name: Set up JDK ${{ matrix.java_version }}
         uses: actions/setup-java@v1
         with:
-          java-version: 1.8
+          java-version: ${{ matrix.java_version }}
+
       - name: Cache Maven Repository
         uses: actions/cache@v2
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven
-      - name: Test with Sonar
-        run: >
-          ./mvnw -V --no-transfer-progress -e clean verify javadoc:javadoc
-          org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar
-          -Dsonar.host.url=https://sonarcloud.io
-          -Dsonar.organization=assertj
-          -Dsonar.projectKey=assertj_assertj-assertions-generator
+
+      - name: Build with Maven
+        run: ./mvnw -V --no-transfer-progress -e clean verify javadoc:javadoc
+          
+
+      - name: Upload build code coverage
+        uses: codecov/codecov-action@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          JAVA_VERSION: ${{ matrix.java_version }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: current
+          env_vars: JAVA_VERSION

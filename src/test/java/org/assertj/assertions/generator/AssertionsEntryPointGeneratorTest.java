@@ -80,7 +80,7 @@ public class AssertionsEntryPointGeneratorTest {
                                                                                                STANDARD, "org");
     // THEN
     String expectedContent = readExpectedContentFromFile("AssertionsForClassesWithSameName.expected.txt");
-    assertThat(assertionsEntryPointContent).isEqualTo(expectedContent);
+    assertThat(assertionsEntryPointContent).isEqualToIgnoringNewLines(expectedContent);
   }
 
   @Test

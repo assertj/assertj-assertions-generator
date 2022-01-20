@@ -3,7 +3,7 @@ package ${package};
 /**
  * Entry point for BDD soft assertions of different data types.
  */
-@javax.annotation.Generated(value="assertj-assertions-generator")
+${generatedAnnotation}
 public class BDDSoftAssertions extends org.assertj.core.api.BDDSoftAssertions {
 ${all_assertions_entry_points}
 }

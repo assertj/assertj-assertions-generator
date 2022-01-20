@@ -213,7 +213,7 @@ public class GenerationPathHandler extends TemporaryFolder {
     while (true) {
       // We only know how to extract classpaths from URLClassloaders.
       if (currentClassloader instanceof URLClassLoader) classloaders.add((URLClassLoader) currentClassloader);
-//      else throw new IllegalArgumentException("Classpath for compilation could not be extracted as classloader is not a URLClassloader");
+      else throw new IllegalArgumentException("Classpath for compilation could not be extracted as classloader is not a URLClassloader");
 
       if (currentClassloader == systemClassLoader) break;
       else currentClassloader = currentClassloader.getParent();

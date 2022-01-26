@@ -20,6 +20,8 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.remove;
 import static org.apache.commons.lang3.StringUtils.replace;
+import static org.assertj.assertions.generator.GeneratedAnnotationSource.JAKARTA;
+import static org.assertj.assertions.generator.GeneratedAnnotationSource.JAVAX;
 import static org.assertj.assertions.generator.Template.Type.ABSTRACT_ASSERT_CLASS;
 import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
 import static org.assertj.assertions.generator.Template.Type.HIERARCHICAL_ASSERT_CLASS;
@@ -54,6 +56,7 @@ import com.google.common.reflect.TypeToken;
 public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEntryPointGenerator {
 
   static final String TEMPLATES_DIR = "templates" + File.separator;
+  private static final String GENERATED = "${generatedAnnotation}";
   private static final String IMPORT_LINE = "import %s;%s";
   private static final String PREDICATE = "${predicate}";
   private static final String PREDICATE_NEG = "${neg_predicate}";
@@ -178,6 +181,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private TemplateRegistry templateRegistry;// the pattern to search for
   private boolean generateAssertionsForAllFields = false;
   private String generatedAssertionsPackage = null;
+  private GeneratedAnnotationSource generatedAnnotationSource = JAVAX;
 
   /**
    * Creates a new <code>{@link BaseAssertionGenerator}</code> with default templates directory.
@@ -326,6 +330,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     final String selfType = concrete ? customAssertionClass : ABSTRACT_ASSERT_SELF_TYPE;
     final String myself = concrete ? "this" : "myself";
 
+    template = replace(template, GENERATED, determineGeneratedSignature());
     template = replace(template, PACKAGE, determinePackageName(classDescription));
     template = replace(template, CUSTOM_ASSERTION_CLASS, customAssertionClass);
     // use a simple parent class name as we have already imported it
@@ -343,6 +348,16 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     template = switchToComparableAssertIfPossible(template, classDescription);
 
     return template;
+  }
+
+  private String determineGeneratedSignature() {
+    if (generatedAnnotationSource == JAVAX) {
+      return "@javax.annotation.Generated(value=\"assertj-assertions-generator\")";
+    }
+    if (generatedAnnotationSource == JAKARTA) {
+      return "@jakarta.annotation.Generated(value=\"assertj-assertions-generator\")";
+    }
+    return "";
   }
 
   private String determinePackageName(ClassDescription classDescription) {
@@ -451,6 +466,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     String classPackage = isEmpty(entryPointClassPackage)
         ? determineBestEntryPointsAssertionsClassPackage(classDescriptionSet)
         : entryPointClassPackage;
+    entryPointAssertionsClassContent = replace(entryPointAssertionsClassContent, GENERATED, determineGeneratedSignature());
     entryPointAssertionsClassContent = replace(entryPointAssertionsClassContent, PACKAGE, classPackage);
 
     String allEntryPointsAssertionContent = generateAssertionEntryPointMethodsFor(classDescriptionSet,
@@ -826,5 +842,9 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   @Override
   public void register(Template template) {
     templateRegistry.register(template);
+  }
+
+  public void setGeneratedAnnotationSource(GeneratedAnnotationSource generatedAnnotationSource) {
+    this.generatedAnnotationSource = generatedAnnotationSource;
   }
 }

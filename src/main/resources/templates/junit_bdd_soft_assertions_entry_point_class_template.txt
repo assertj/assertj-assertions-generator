@@ -18,7 +18,7 @@ package ${package};
  *     }
  *  }</code></pre>
  */
-@javax.annotation.Generated(value="assertj-assertions-generator")
+${generatedAnnotation}
 public class JUnitBDDSoftAssertions extends org.assertj.core.api.JUnitBDDSoftAssertions {
 ${all_assertions_entry_points}
 }

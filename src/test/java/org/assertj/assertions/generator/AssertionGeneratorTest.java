@@ -67,9 +67,14 @@ public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExcept
   }
 
   @Test
-  public void should_generate_assertion_for_player_class() throws Exception {
-    verifyFlatAssertionGenerationFor(Player.class);
-    verifyHierarchicalAssertionGenerationFor(Player.class);
+  public void should_generate_assertion_for_player_class_using_jakarta_annotation() throws Exception {
+    try {
+      assertionGenerator.setGeneratedAnnotationSource( GeneratedAnnotationSource.JAKARTA );
+      verifyFlatAssertionGenerationFor(Player.class);
+      verifyHierarchicalAssertionGenerationFor(Player.class);
+    }finally {
+      assertionGenerator.setGeneratedAnnotationSource( GeneratedAnnotationSource.JAVAX );
+    }
   }
 
   @Test

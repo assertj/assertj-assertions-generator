@@ -473,11 +473,17 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       // resolve class (ex: Player)
       // in case of inner classes like Movie.PublicCategory use class name with outer class i.e. Movie.PublicCategory.
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CLASS_TO_ASSERT,
-                                                 classDescription.getFullyQualifiedClassName());
+              getAssertClassName(classDescription));
 
       allAssertThatsContentBuilder.append(lineSeparator).append(assertionEntryPointMethodContent);
     }
     return allAssertThatsContentBuilder.toString();
+  }
+
+  private String getAssertClassName(final ClassDescription classDescription) {
+    return generatedAssertionsPackage == null ?
+            classDescription.getFullyQualifiedAssertClassName() :
+            generatedAssertionsPackage + "." + classDescription.getAssertClassName();
   }
 
   private String determineBestEntryPointsAssertionsClassPackage(final Set<ClassDescription> classDescriptionSet) {
@@ -497,7 +503,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   /**
    * Returns the target directory path where the assertions file for given classDescription will be created.
    *
-   * @param packageName package name 
+   * @param packageName package name
    * @return the target directory path corresponding to the given package.
    */
   private String getDirectoryPathCorrespondingToPackage(final String packageName) {
@@ -607,11 +613,12 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
 
   private String getTypeName(DataDescription fieldOrGetter) {
     if (generatedAssertionsPackage != null) {
-      // if the user has chosen to generate assertions in a given package we assume that 
+      // if the user has chosen to generate assertions in a given package we assume that
       return fieldOrGetter.getFullyQualifiedTypeName();
     }
-    // returns a simple class name if the field or getter type is in the same package as its owning type which is the package where the 
-    // Assert class is generated. 
+    // returns a simple class name if the field or getter type is in the same package as its owning type which is the package
+    // where the
+    // Assert class is generated.
     return fieldOrGetter.getTypeName();
   }
 

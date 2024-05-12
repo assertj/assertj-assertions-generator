@@ -158,7 +158,7 @@ public class ClassUtil {
   }
 
   private static Set<TypeToken<?>> getPackageClassesFromClasspathJars(String packageName, ClassLoader classLoader)
-          throws IOException {
+                                                                                                                   throws IOException {
     ImmutableSet<ClassInfo> classesInfo = ClassPath.from(classLoader).getTopLevelClassesRecursive(packageName);
     Set<TypeToken<?>> classesInPackage = new HashSet<>();
     for (ClassInfo classInfo : classesInfo) {
@@ -191,7 +191,7 @@ public class ClassUtil {
       throw new RuntimeException(packageName + " does not appear to be a valid package (Unsupported encoding)", e);
     } catch (IOException ioException) {
       throw new RuntimeException("IOException was thrown when trying to get all classes for " + packageName,
-              ioException);
+                                 ioException);
     }
   }
 
@@ -207,7 +207,7 @@ public class ClassUtil {
    * @throws UnsupportedEncodingException thrown by {@link URLDecoder#decode(String, String)}
    */
   private static Set<TypeToken<?>> getClassesInDirectory(File directory, String packageName, ClassLoader classLoader)
-          throws UnsupportedEncodingException {
+                                                                                                                      throws UnsupportedEncodingException {
     Set<TypeToken<?>> classes = new LinkedHashSet<>();
 
     // Capture all the .class files in this directory
@@ -250,8 +250,8 @@ public class ClassUtil {
     if (isPackageInfo(typeToken)) return false;
     Class<?> raw = typeToken.getRawType();
     return (includePrivate || isPublic(raw.getModifiers()))
-            && !raw.isAnonymousClass()
-            && !raw.isLocalClass();
+           && !raw.isAnonymousClass()
+           && !raw.isLocalClass();
   }
 
   private static boolean isPackageInfo(TypeToken<?> typeToken) {
@@ -317,9 +317,9 @@ public class ClassUtil {
 
   public static boolean isGetter(Method method) {
     return !Void.TYPE.equals(method.getReturnType())
-            && method.getParameterTypes().length == 0
-            && !isForbiddenGetter(method)
-            && !isReturnGeneric(method);
+           && method.getParameterTypes().length == 0
+           && !isForbiddenGetter(method)
+           && !isReturnGeneric(method);
   }
 
   private static boolean isForbiddenGetter(Method method) {
@@ -361,8 +361,8 @@ public class ClassUtil {
 
   public static boolean isPredicate(Method method) {
     return isValidPredicateName(method.getName())
-            && isBoolean(method.getReturnType())
-            && method.getParameterTypes().length == 0;
+           && isBoolean(method.getReturnType())
+           && method.getParameterTypes().length == 0;
   }
 
   private static boolean isBoolean(Class<?> type) {
@@ -371,8 +371,8 @@ public class ClassUtil {
 
   private static boolean isAnnotated(Method method, Set<Class<?>> includeAnnotations, boolean isClassAnnotated) {
     if (!Void.TYPE.equals(method.getReturnType())
-            && method.getParameterTypes().length == 0
-            && !isStatic(method.getModifiers())) {
+        && method.getParameterTypes().length == 0
+        && !isStatic(method.getModifiers())) {
       Annotation[] methodAnnotations = method.getAnnotations();
       return isClassAnnotated || containsAny(methodAnnotations, includeAnnotations);
     }
@@ -403,15 +403,15 @@ public class ClassUtil {
 
   static {
     String[][] predicates = {
-            { "is", "isNot" },
-            { "was", "wasNot" },
-            { "can", "cannot" },
-            { "canBe", "cannotBe" },
-            { "should", "shouldNot" },
-            { "shouldBe", "shouldNotBe" },
-            { "has", "doesNotHave" },
-            { "willBe", "willNotBe" },
-            { "will", "willNot" },
+        { "is", "isNot" },
+        { "was", "wasNot" },
+        { "can", "cannot" },
+        { "canBe", "cannotBe" },
+        { "should", "shouldNot" },
+        { "shouldBe", "shouldNotBe" },
+        { "has", "doesNotHave" },
+        { "willBe", "willNotBe" },
+        { "will", "willNot" },
     };
     StringBuilder pattern = new StringBuilder("^(?:get");
     Map<String, String> map = new HashMap<>();
@@ -465,8 +465,8 @@ public class ClassUtil {
     Set<Method> getters = new TreeSet<>(GETTER_COMPARATOR);
     for (Method method : methods) {
       if (isPublic(method.getModifiers())
-              && isNotDefinedInObjectClass(method)
-              && isGetter(method, includeAnnotations, isClassAnnotated)) {
+          && isNotDefinedInObjectClass(method)
+          && isGetter(method, includeAnnotations, isClassAnnotated)) {
         getters.add(method);
       }
     }
@@ -475,8 +475,8 @@ public class ClassUtil {
 
   private static boolean isGetter(Method method, Set<Class<?>> includeAnnotations, boolean isClassAnnotated) {
     return isGetter(method)
-            || isPredicate(method)
-            || isAnnotated(method, includeAnnotations, isClassAnnotated);
+           || isPredicate(method)
+           || isAnnotated(method, includeAnnotations, isClassAnnotated);
   }
 
   public static List<Field> nonStaticFieldsOf(TypeToken<?> clazz) {
@@ -589,7 +589,7 @@ public class ClassUtil {
     } else if (type instanceof WildcardType) {
       final WildcardType wildcardType = (WildcardType) type;
       return wildcardType.getUpperBounds() != null ? getClass(wildcardType.getUpperBounds()[0])
-              : wildcardType.getLowerBounds() != null ? getClass(wildcardType.getLowerBounds()[0]) : null;
+          : wildcardType.getLowerBounds() != null ? getClass(wildcardType.getLowerBounds()[0]) : null;
     } else if (type instanceof TypeVariable) {
       final TypeVariable<?> typeVariable = (TypeVariable<?>) type;
       final Type[] bounds = typeVariable.getBounds();
@@ -606,7 +606,7 @@ public class ClassUtil {
    */
   public static boolean isInnerPackageOf(Package child, Package parent) {
     return child != null && parent != null
-            && child.getName().startsWith(parent.getName());
+           && child.getName().startsWith(parent.getName());
   }
 
   /**

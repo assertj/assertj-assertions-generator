@@ -125,6 +125,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
                                                               "protected",
                                                               "private",
                                                               "public",
+                                                              "record",
                                                               "return",
                                                               "short",
                                                               "static",
@@ -138,9 +139,11 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
                                                               "transient",
                                                               "true",
                                                               "try",
+                                                              "var",
                                                               "void",
                                                               "volatile",
-                                                              "while");
+                                                              "while",
+                                                              "yield");
 
   /**
    * This regexp shall match a java class's name inside an user template.

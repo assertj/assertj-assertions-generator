@@ -86,4 +86,27 @@ public abstract class AbstractAnnotatedClassAssert<S extends AbstractAnnotatedCl
     return myself;
   }
 
+  /**
+   * Verifies that the actual AnnotatedClass's thisIsNotAProperty is equal to the given one.
+   * @param thisIsNotAProperty the given thisIsNotAProperty to compare the actual AnnotatedClass's thisIsNotAProperty to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual AnnotatedClass's thisIsNotAProperty is not equal to the given one.
+   */
+  public S hasThisIsNotAProperty(boolean thisIsNotAProperty) {
+    // check that actual AnnotatedClass we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting thisIsNotAProperty of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+    // check
+    boolean actualThisIsNotAProperty = actual.thisIsNotAProperty();
+    if (actualThisIsNotAProperty != thisIsNotAProperty) {
+      failWithMessage(assertjErrorMessage, actual, thisIsNotAProperty, actualThisIsNotAProperty);
+    }
+
+    // return the current assertion for method chaining
+    return myself;
+  }
+
 }

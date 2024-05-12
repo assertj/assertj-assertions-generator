@@ -63,12 +63,13 @@ import static org.assertj.assertions.generator.util.ClassUtil.getNegativePredica
 import static org.assertj.assertions.generator.util.ClassUtil.getPredicatePrefix;
 import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
 import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
+import static org.assertj.assertions.generator.util.ClassUtil.getterProperty;
 import static org.assertj.assertions.generator.util.ClassUtil.inheritsCollectionOrIsIterable;
 import static org.assertj.assertions.generator.util.ClassUtil.isBoolean;
 import static org.assertj.assertions.generator.util.ClassUtil.isInnerPackageOf;
 import static org.assertj.assertions.generator.util.ClassUtil.isJavaLangType;
 import static org.assertj.assertions.generator.util.ClassUtil.isPredicate;
-import static org.assertj.assertions.generator.util.ClassUtil.isStandardGetter;
+import static org.assertj.assertions.generator.util.ClassUtil.isGetter;
 import static org.assertj.assertions.generator.util.ClassUtil.isValidGetterName;
 import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
 import static org.assertj.assertions.generator.util.ClassUtil.resolveTypeNameInPackage;
@@ -262,6 +263,13 @@ class ClassUtilTest implements NestedClassesTest {
     Set<Method> playerGetterMethods = declaredGetterMethodsOf(TypeToken.of(Movie.class), Collections.<Class<?>> emptySet());
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS))
                                    .doesNotContain(ArtWork.class.getMethod("getTitle", NO_PARAMS));
+  }
+
+  @Test
+  void should_return_property_name_from_getter_method_name() throws Exception {
+      assertThat(getterProperty("getName")).isEqualTo("name");
+      assertThat(getterProperty("name")).isEqualTo("name");
+      assertThat(getterProperty("get")).isEqualTo("get");
   }
 
   @ParameterizedTest

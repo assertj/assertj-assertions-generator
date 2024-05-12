@@ -772,10 +772,12 @@ public class ClassUtil {
     return memberName;
   }
 
-  private static String getterProperty(String memberName) {
+  public static String getterProperty(String memberName) {
     if (memberName.startsWith(GET_PREFIX)) {
       String propertyWithCapitalLetter = removeStart(memberName, GET_PREFIX);
-      return uncapitalize(propertyWithCapitalLetter);
+      if (!propertyWithCapitalLetter.isEmpty()) {
+        return uncapitalize(propertyWithCapitalLetter);
+      }
     }
     return memberName;
   }

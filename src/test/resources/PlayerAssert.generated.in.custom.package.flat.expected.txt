@@ -127,6 +127,52 @@ public class PlayerAssert extends AbstractObjectAssert<PlayerAssert, Player> {
   }
 
   /**
+   * Verifies that the actual Player's get is equal to the given one.
+   * @param get the given get to compare the actual Player's get to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's get is not equal to the given one.
+   */
+  public PlayerAssert hasGet(String get) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting get of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+    // null safe check
+    String actualGet = actual.get();
+    if (!Objects.deepEquals(actualGet, get)) {
+      failWithMessage(assertjErrorMessage, actual, get, actualGet);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Player's is is equal to the given one.
+   * @param is the given is to compare the actual Player's is to.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Player's is is not equal to the given one.
+   */
+  public PlayerAssert hasIs(String is) {
+    // check that actual Player we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting is of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
+
+    // null safe check
+    String actualIs = actual.is();
+    if (!Objects.deepEquals(actualIs, is)) {
+      failWithMessage(assertjErrorMessage, actual, is, actualIs);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
    * Verifies that the actual Player's name is equal to the given one.
    * @param name the given name to compare the actual Player's name to.
    * @return this assertion object.
@@ -140,7 +186,7 @@ public class PlayerAssert extends AbstractObjectAssert<PlayerAssert, Player> {
     String assertjErrorMessage = "\nExpecting name of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>";
 
     // null safe check
-    org.assertj.assertions.generator.data.Name actualName = actual.getName();
+    org.assertj.assertions.generator.data.Name actualName = actual.name();
     if (!Objects.deepEquals(actualName, name)) {
       failWithMessage(assertjErrorMessage, actual, name, actualName);
     }

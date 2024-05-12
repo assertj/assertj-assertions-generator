@@ -180,14 +180,15 @@ class ClassUtilTest implements NestedClassesTest {
 
   @Test
   void should_return_true_if_method_is_a_standard_getter() throws Exception {
-    assertThat(isStandardGetter(Player.class.getMethod("getTeam", NO_PARAMS))).isTrue();
+    assertThat(isGetter(Player.class.getMethod("getTeam", NO_PARAMS))).isTrue();
+    assertThat(isGetter(Player.class.getMethod("isRookie", NO_PARAMS))).isTrue();
+    assertThat(isGetter(Player.class.getMethod("name", NO_PARAMS))).isTrue();
   }
 
   @Test
   void should_return_false_if_method_is_not_a_standard_getter() throws Exception {
-    assertThat(isStandardGetter(Player.class.getMethod("isRookie", NO_PARAMS))).isFalse();
-    assertThat(isStandardGetter(Player.class.getMethod("getVoid", NO_PARAMS))).isFalse();
-    assertThat(isStandardGetter(Player.class.getMethod("getWithParam", String.class))).isFalse();
+    assertThat(isGetter(Player.class.getMethod("getVoid", NO_PARAMS))).isFalse();
+    assertThat(isGetter(Player.class.getMethod("getWithParam", String.class))).isFalse();
   }
 
   @Test

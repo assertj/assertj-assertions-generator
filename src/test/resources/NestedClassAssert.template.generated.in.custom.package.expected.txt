@@ -52,4 +52,48 @@ public class ${nestedClass}Assert extends AbstractObjectAssert<${nestedClass}Ass
     return this;
   }
 
+  /**
+   * Verifies that the actual ${nestedClass}'s name is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ${nestedClass}'s name is not <code>null</code>.
+   */
+  public ${nestedClass}Assert hasNullName() {
+    // check that actual ${nestedClass} we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting name of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualName = actual.getName();
+    if (actualName != null) {
+      failWithMessage(assertjErrorMessage, actual, actualName);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual ${nestedClass}'s name is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ${nestedClass}'s name is <code>null</code>.
+   */
+  public ${nestedClass}Assert hasNotNullName() {
+    // check that actual ${nestedClass} we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting name of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualName = actual.getName();
+    if (actualName == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
 }

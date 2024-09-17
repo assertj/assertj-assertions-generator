@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -8,29 +8,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  */
 package org.assertj.assertions.generator.util;
-
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.ClassPath;
-import com.google.common.reflect.ClassPath.ClassInfo;
-import com.google.common.reflect.TypeToken;
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.assertj.assertions.generator.description.Visibility;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
@@ -38,28 +18,70 @@ import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Arrays.asList;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.RegExUtils.removeAll;
+import static org.apache.commons.lang3.StringUtils.indexOfAny;
+import static org.apache.commons.lang3.StringUtils.remove;
+import static org.apache.commons.lang3.StringUtils.removeStart;
+import static org.apache.commons.lang3.StringUtils.uncapitalize;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.GenericDeclaration;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.assertj.assertions.generator.description.Visibility;
+
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.ClassPath;
+import com.google.common.reflect.ClassPath.ClassInfo;
+import com.google.common.reflect.TypeToken;
 
 /**
  * Some utilities methods related to classes and packages.
  */
-@SuppressWarnings("WeakerAccess")
 public class ClassUtil {
 
   public static final String GET_PREFIX = "get";
   private static final String CLASS_SUFFIX = ".class";
-  private static final Comparator<Method> GETTER_COMPARATOR = new Comparator<Method>() {
-    @Override
-    public int compare(Method m1, Method m2) {
-      return m1.getName().compareTo(m2.getName());
-    }
-  };
+  private static final Comparator<Method> GETTER_COMPARATOR = Comparator.comparing(Method::getName);
   public static final Package JAVA_LANG_PACKAGE = Object.class.getPackage();
   private static final String CAPITAL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   /**
    * Call {@link #collectClasses(ClassLoader, String...)} with <code>Thread.currentThread().getContextClassLoader()
    * </code>
+   * @param classOrPackageNames classes or packages to collect.
+   * @return the set of {@link TypeToken}s found
    */
   public static Set<TypeToken<?>> collectClasses(String... classOrPackageNames) {
     return collectClasses(Thread.currentThread().getContextClassLoader(), classOrPackageNames);
@@ -68,7 +90,7 @@ public class ClassUtil {
   /**
    * Collects all the <b>public</b> classes from given classes names or classes belonging to given a package name
    * (recursively).
-   * <p/>
+   *
    * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the returned classes.
    *
    * @param classLoader {@link ClassLoader} used to load classes defines in classOrPackageNames
@@ -84,7 +106,7 @@ public class ClassUtil {
   /**
    * Collects all the classes from given classes names or classes belonging to given a package name
    * (recursively), with control on private classes including.
-   * <p/>
+   *
    * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the returned classes.
    *
    * @param classLoader {@link ClassLoader} used to load classes defines in classOrPackageNames
@@ -94,7 +116,8 @@ public class ClassUtil {
    * @return the set of {@link Class}es found
    * @throws RuntimeException if any error occurs
    */
-  public static Set<TypeToken<?>> collectClasses(ClassLoader classLoader, boolean includePrivateClasses, String... classOrPackageNames) {
+  public static Set<TypeToken<?>> collectClasses(ClassLoader classLoader, boolean includePrivateClasses,
+                                                 String... classOrPackageNames) {
     Set<TypeToken<?>> classes = newLinkedHashSet();
     for (String classOrPackageName : classOrPackageNames) {
       TypeToken<?> clazz = tryToLoadClass(classOrPackageName, classLoader);
@@ -132,7 +155,7 @@ public class ClassUtil {
   }
 
   private static Set<TypeToken<?>> getPackageClassesFromClasspathJars(String packageName, ClassLoader classLoader)
-      throws IOException {
+                                                                                                                   throws IOException {
     ImmutableSet<ClassInfo> classesInfo = ClassPath.from(classLoader).getTopLevelClassesRecursive(packageName);
     Set<TypeToken<?>> classesInPackage = new HashSet<>();
     for (ClassInfo classInfo : classesInfo) {
@@ -171,7 +194,7 @@ public class ClassUtil {
 
   /**
    * Get <b>public</b> classes in given directory (recursively).
-   * <p/>
+   *
    * Note that <b>anonymous</b> and <b>local</b> classes are excluded from the resulting set.
    *
    * @param directory directory where to look for classes
@@ -181,7 +204,7 @@ public class ClassUtil {
    * @throws UnsupportedEncodingException thrown by {@link URLDecoder#decode(String, String)}
    */
   private static Set<TypeToken<?>> getClassesInDirectory(File directory, String packageName, ClassLoader classLoader)
-      throws UnsupportedEncodingException {
+                                                                                                                      throws UnsupportedEncodingException {
     Set<TypeToken<?>> classes = new LinkedHashSet<>();
 
     // Capture all the .class files in this directory
@@ -250,15 +273,15 @@ public class ClassUtil {
 
   /**
    * Returns the property name of given getter method, examples :
-   * <p/>
+   *
    *
    * <pre>
-   * getName() -> name
+   * getName() -&gt; name
    * </pre>
-   * <p/>
+   *
    *
    * <pre>
-   * isMostValuablePlayer() -> mostValuablePlayer
+   * isMostValuablePlayer() -&gt; mostValuablePlayer
    * </pre>
    *
    * @param method getter method to deduce property from.
@@ -271,13 +294,11 @@ public class ClassUtil {
 
   /**
    * Returns the property name of given field, examples :
-   * <p/>
    *
    * <pre>
-   * name -> name
-   * isMostValuablePlayer -> mostValuablePlayer
+   * name -&gt; name
+   * isMostValuablePlayer -&gt; mostValuablePlayer
    * </pre>
-   * <p/>
    *
    * @param field field to deduce property from.
    * @return the property name of given field
@@ -334,12 +355,9 @@ public class ClassUtil {
 
   static public final Map<String, String> PREDICATE_PREFIXES;
 
-  static private final Comparator<String> LONGEST_TO_SHORTEST = new Comparator<String>() {
-    @Override
-    public int compare(String o1, String o2) {
-      final int lengthComp = o2.length() - o1.length();
-      return lengthComp == 0 ? o1.compareTo(o2) : lengthComp;
-    }
+  static private final Comparator<String> LONGEST_TO_SHORTEST = (o1, o2) -> {
+    final int lengthComp = o2.length() - o1.length();
+    return lengthComp == 0 ? o1.compareTo(o2) : lengthComp;
   };
 
   static {
@@ -557,6 +575,7 @@ public class ClassUtil {
 
   /**
    * Checks if the type passed is a member of {@code java.lang} or is a "built-in" type (e.g. primitive or array).
+   * @param type type token
    * @return true if part of java language
    */
   public static boolean isJavaLangType(TypeToken<?> type) {
@@ -567,6 +586,7 @@ public class ClassUtil {
    * Checks if the type passed is a member of {@code java.lang} or is a "built-in" type (e.g. primitive or array).
    * @return true if part of java language
    *
+   * @param type type
    * @see #isJavaLangType(TypeToken)
    */
   public static boolean isJavaLangType(Type type) {
@@ -696,9 +716,8 @@ public class ClassUtil {
   private static String resolveTypeNameInPackage(String type, String currentPackage) {
     if (!Strings.isNullOrEmpty(currentPackage) && type.startsWith(currentPackage)) {
       return type.substring(currentPackage.length() + 1, type.length());
-    } else {
-      return type;
     }
+    return type;
   }
 
   /**

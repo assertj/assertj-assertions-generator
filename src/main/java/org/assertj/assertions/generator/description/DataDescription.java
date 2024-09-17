@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -8,7 +8,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  */
 package org.assertj.assertions.generator.description;
 
@@ -17,15 +17,13 @@ import com.google.common.collect.Ordering;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Primitives;
 import com.google.common.reflect.TypeToken;
-import org.apache.commons.lang3.StringUtils;
-import org.assertj.assertions.generator.util.ClassUtil;
 
 import java.lang.reflect.Member;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.apache.commons.lang3.StringUtils.removeAll;
+import static org.apache.commons.lang3.RegExUtils.removeAll;
 import static org.apache.commons.lang3.StringUtils.removeStart;
 import static org.assertj.assertions.generator.util.ClassUtil.*;
 import static org.assertj.assertions.generator.util.StringUtil.camelCaseToWords;
@@ -133,7 +131,7 @@ public abstract class DataDescription {
 
   /**
    * Return the simple type name unless it is in a different package from the owning type in that the fully qualified name.
-   * <p/>
+   *
    * To always get the fully qualified name use {@link #getFullyQualifiedTypeName()}.
    * @return the type name of the {@link #valueType}
    */

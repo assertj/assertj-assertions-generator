@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -8,7 +8,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  */
 package org.assertj.assertions.generator.util;
 
@@ -94,13 +94,7 @@ public class ClassUtilTest implements NestedClassesTest {
     collectClasses((ClassLoader) null, "org.assertj.assertions.generator.data");
   }
 
-  // Could easily be a method reference in Java 8 for TypeToken::of
-  private static final Function<Class<?>, TypeToken<?>> TYPE_TOKEN_TRANSFORM = new Function<Class<?>, TypeToken<?>>() {
-    @Override
-    public TypeToken<?> apply(final Class<?> input) {
-      return TypeToken.of(input);
-    }
-  };
+  private static final Function<Class<?>, TypeToken<?>> TYPE_TOKEN_TRANSFORM = TypeToken::of;
 
   @Test
   public void should_get_classes_in_package_and_subpackages() {

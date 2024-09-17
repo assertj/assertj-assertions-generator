@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -8,7 +8,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  */
 package org.assertj.assertions.generator;
 
@@ -56,7 +56,7 @@ public interface AssertionGenerator {
    * import org.assertj.core.api.AbstractObjectAssert;
    * import org.assertj.core.api.Assertions;
    *
-   * public class RaceAssert extends AbstractObjectAssert<RaceAssert, Race> {
+   * public class RaceAssert extends AbstractObjectAssert&lt;RaceAssert, Race&gt; {
    *
    *   public RaceAssert(Race actual) {
    *     super(actual, RaceAssert.class);
@@ -70,7 +70,7 @@ public interface AssertionGenerator {
    *     // check that actual Race we want to make assertions on is not null.
    *     isNotNull();
    *     // we overrides the default error message with a more explicit one
-   *     String assertjErrorMessage = format("Expected Race's name to be <%s> but was <%s>", name, actual.getName());
+   *     String assertjErrorMessage = format("Expected Race's name to be &lt;%s&gt; but was &lt;%s&gt;", name, actual.getName());
    *     // check
    *     if (!actual.getName().equals(name)) { throw new AssertionError(assertjErrorMessage); }
    *
@@ -164,7 +164,7 @@ public interface AssertionGenerator {
    * import org.assertj.core.api.AbstractObjectAssert;
    * import org.assertj.core.api.Assertions;
    *
-   * public class RaceAssert extends AbstractObjectAssert<RaceAssert, Race> {
+   * public class RaceAssert extends AbstractObjectAssert&lt;RaceAssert, Race&gt; {
    *
    *   public RaceAssert(Race actual) {
    *     super(actual, RaceAssert.class);
@@ -178,7 +178,7 @@ public interface AssertionGenerator {
    *     // check that actual Race we want to make assertions on is not null.
    *     isNotNull();
    *     // we overrides the default error message with a more explicit one
-   *     String assertjErrorMessage = format("Expected Race's name to be <%s> but was <%s>", name, actual.getName());
+   *     String assertjErrorMessage = format("Expected Race's name to be &lt;%s&gt; but was &lt;%s&gt;", name, actual.getName());
    *     // check
    *     if (!actual.getName().equals(name)) { throw new AssertionError(assertjErrorMessage); }
    *
@@ -202,6 +202,8 @@ public interface AssertionGenerator {
    * @return the custom assertion content.
    * @throws RuntimeException
    *             if something went wrong when creating the assertion content.
+   * @throws IOException I/O exception
+   *
    */
   String generateCustomAssertionContentFor(ClassDescription classDescription) throws IOException;
 
@@ -246,7 +248,7 @@ public interface AssertionGenerator {
     /**
      * Registers a template in the internal TemplateRegistry so that customers can override default templates.
      *
-     * @param template
+     * @param template template
      * @throws java.lang.NullPointerException if template is null
      * @throws java.lang.NullPointerException if template.getContent is null
      */

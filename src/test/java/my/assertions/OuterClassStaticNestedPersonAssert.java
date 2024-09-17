@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -8,13 +8,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  */
 package my.assertions;
 
+import java.util.Objects;
 import org.assertj.assertions.generator.data.OuterClass;
 import org.assertj.core.api.AbstractObjectAssert;
-import org.assertj.core.util.Objects;
 
 /**
  * this class was generated but kep in source control to see what was needed in term of import when dealing with nested classes 
@@ -59,7 +59,7 @@ public class OuterClassStaticNestedPersonAssert
 
     // null safe check
     String actualName = actual.getName();
-    if (!Objects.areEqual(actualName, name)) {
+    if (!Objects.deepEquals(actualName, name)) {
       failWithMessage(assertjErrorMessage, actual, name, actualName);
     }
 

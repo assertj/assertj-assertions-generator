@@ -1,13 +1,14 @@
 # AssertJ - Assertions Generator
 
-[![Build Status](https://travis-ci.org/joel-costigliola/assertj-assertions-generator.svg?branch=master)](https://travis-ci.org/joel-costigliola/assertj-assertions-generator) 
+![CI](https://github.com/assertj/assertj-assertions-generator/workflows/CI/badge.svg)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.assertj/assertj-assertions-generator-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.assertj/assertj-assertions-generator-maven-plugin)
 
 ## Overview 
 
 The Assertions Generator can create specific assertions for your classes. It comes with :
 * a CLI tool (this project) 
-* a [**maven plugin**](https://github.com/joel-costigliola/assertj-assertions-generator-maven-plugin).
+* a [**maven plugin**](https://github.com/assertj/assertj-assertions-generator-maven-plugin).
+* a [**gradle plugin**](https://github.com/assertj/assertj-generator-gradle-plugin).
 
 Let's say you have a `Player` class with `name` and `team` properties. The generator will create a `PlayerAssert` assertions class with `hasName` and `hasTeam` assertions. This allows you to write :
 

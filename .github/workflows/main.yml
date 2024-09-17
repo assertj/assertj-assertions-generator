@@ -1,0 +1,49 @@
+name: CI
+
+on: [push, pull_request]
+
+env:
+  MAVEN_ARGS: -B -V -ntp -e -Djansi.passthrough=true -Dstyle.color=always
+
+jobs:
+
+  test:
+
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+          cache: 'maven'
+      - name: Test
+        run: ./mvnw $MAVEN_ARGS verify
+
+  sonar:
+
+    name: Sonar code analysis
+    runs-on: ubuntu-latest
+    if: github.repository == 'assertj/assertj-assertions-generator' && github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+          cache: 'maven'
+      - name: Test with Sonar
+        run: >
+          ./mvnw -V --no-transfer-progress -e clean verify javadoc:javadoc
+          org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.organization=assertj
+          -Dsonar.projectKey=assertj_assertj-assertions-generator
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

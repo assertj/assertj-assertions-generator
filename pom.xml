@@ -1,70 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd ">
-
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.assertj</groupId>
     <artifactId>assertj-parent-pom</artifactId>
-    <version>2.1.6</version>
+    <version>2.2.14</version>
   </parent>
+
   <artifactId>assertj-assertions-generator</artifactId>
-  <version>2.2.0</version>
+  <version>2.2.2-SNAPSHOT</version>
+
   <name>AssertJ Assertions Generator</name>
 
   <scm>
     <developerConnection>scm:git:git@github.com:joel-costigliola/assertj-assertions-generator.git</developerConnection>
     <connection>scm:git:git@github.com:joel-costigliola/assertj-assertions-generator.git</connection>
     <url>git@github.com:joel-costigliola/assertj-assertions-generator</url>
-    <tag>assertj-assertions-generator-2.2.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>33.3.0-jre</version>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
+    <!-- Compile -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.5</version>
+      <version>3.11</version>
     </dependency>
     <dependency>
       <groupId>commons-cli</groupId>
       <artifactId>commons-cli</artifactId>
-      <version>1.2</version>
+      <version>1.9.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <!-- Could be updated to 22.0, however requires Java 1.8 -->
-      <version>20.0</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.0.13</version>
+      <version>1.3.14</version>
     </dependency>
-    <!-- test dependencies -->
+    <!-- Test -->
     <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>[2.1.0, 2.99.0]</version>
+      <groupId>com.google.testing.compile</groupId>
+      <artifactId>compile-testing</artifactId>
+      <version>0.21.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.8.0</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version><!--$NO-MVN-MAN-VER$-->
       <scope>test</scope>
     </dependency>
-
     <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.5</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/com.google.testing.compile/compile-testing -->
-    <dependency>
-      <groupId>com.google.testing.compile</groupId>
-      <artifactId>compile-testing</artifactId>
-      <version>0.11</version>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.26.3</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -74,17 +92,8 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
-          <encoding>${project.build.sourceEncoding}</encoding>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.4.1</version>
+        <version>3.7.1</version>
         <executions>
           <execution>
             <id>unix-assembly</id>
@@ -116,7 +125,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.5</version>
         <configuration>
           <archive>
             <manifest>
@@ -129,7 +137,7 @@
           </archive>
         </configuration>
       </plugin>
-       <!-- generate jacoco report -->
+      <!-- generate jacoco report -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -145,8 +153,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <argLine>${argLine}</argLine>
-          <!-- Needed because otherwise the classloader does not properly bring in the dependencies from
-               maven. Source: http://maven.apache.org/surefire/maven-surefire-plugin/examples/class-loading.html -->
+          <!-- Needed because otherwise the classloader does not properly bring in the dependencies from maven. Source: http://maven.apache.org/surefire/maven-surefire-plugin/examples/class-loading.html -->
           <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>
       </plugin>

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
@@ -8,12 +8,19 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  */
 package org.assertj.assertions.generator.description;
 
-import com.google.common.reflect.TypeToken;
-import org.apache.commons.lang3.StringUtils;
+import static com.google.common.collect.Sets.union;
+import static org.apache.commons.lang3.RegExUtils.removeAll;
+import static org.apache.commons.lang3.StringUtils.capitalize;
+import static org.apache.commons.lang3.StringUtils.remove;
+import static org.apache.commons.lang3.StringUtils.substringBefore;
+import static org.assertj.assertions.generator.util.ClassUtil.PREDICATE_PREFIXES;
+import static org.assertj.assertions.generator.util.ClassUtil.getTypeDeclaration;
+import static org.assertj.assertions.generator.util.ClassUtil.getTypeNameWithoutDots;
+import static org.assertj.assertions.generator.util.ClassUtil.packageNameRegex;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -21,9 +28,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static com.google.common.collect.Sets.union;
-import static org.apache.commons.lang3.StringUtils.*;
-import static org.assertj.assertions.generator.util.ClassUtil.*;
+import com.google.common.reflect.TypeToken;
 
 /**
  *
@@ -59,9 +64,9 @@ public class ClassDescription implements Comparable<ClassDescription> {
   }
 
   public String getFullyQualifiedOuterClassName() {
-    // get the class part only (including all nested/inner ones): Outer.Inner.ReallyInner  
+    // get the class part only (including all nested/inner ones): Outer.Inner.ReallyInner
     String outerClassNameWithInner = remove(getFullyQualifiedClassName(), getPackageName() + ".");
-    // get the outer class part only : Outer  
+    // get the outer class part only : Outer
     String outerClassNameOnly = substringBefore(outerClassNameWithInner, ".");
     return getPackageName() + "." + outerClassNameOnly;
   }
@@ -134,7 +139,7 @@ public class ClassDescription implements Comparable<ClassDescription> {
     return superType;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   public void setSuperType(Class<?> superType) {
     // TypeToken#getSupertype(..) checks to make sure it is a super type
     if (superType != null) {
@@ -157,7 +162,6 @@ public class ClassDescription implements Comparable<ClassDescription> {
     return getPackageName() + "." + getAssertClassName();
   }
 
-
   public String getAbstractAssertClassName() {
     return abstractAssertClassNameOf(type);
   }
@@ -169,7 +173,7 @@ public class ClassDescription implements Comparable<ClassDescription> {
 
   public String getFullyQualifiedParentAssertClassName() {
     if (superType.getRawType().equals(Object.class)) return "org.assertj.core.api.AbstractObjectAssert";
-    else return superType.getRawType().getPackage().getName() + "." + abstractAssertClassNameOf(superType);
+    return superType.getRawType().getPackage().getName() + "." + abstractAssertClassNameOf(superType);
   }
 
   @Override

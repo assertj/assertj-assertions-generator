@@ -22,12 +22,13 @@ import static org.assertj.assertions.generator.util.ClassUtil.getNegativePredica
 import static org.assertj.assertions.generator.util.ClassUtil.getPredicatePrefix;
 import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
 import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
+import static org.assertj.assertions.generator.util.ClassUtil.getterProperty;
 import static org.assertj.assertions.generator.util.ClassUtil.inheritsCollectionOrIsIterable;
 import static org.assertj.assertions.generator.util.ClassUtil.isBoolean;
 import static org.assertj.assertions.generator.util.ClassUtil.isInnerPackageOf;
 import static org.assertj.assertions.generator.util.ClassUtil.isJavaLangType;
 import static org.assertj.assertions.generator.util.ClassUtil.isPredicate;
-import static org.assertj.assertions.generator.util.ClassUtil.isStandardGetter;
+import static org.assertj.assertions.generator.util.ClassUtil.isGetter;
 import static org.assertj.assertions.generator.util.ClassUtil.isValidGetterName;
 import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
 import static org.assertj.assertions.generator.util.ClassUtil.resolveTypeNameInPackage;
@@ -181,14 +182,15 @@ public class ClassUtilTest implements NestedClassesTest {
 
   @Test
   public void should_return_true_if_method_is_a_standard_getter() throws Exception {
-    assertThat(isStandardGetter(Player.class.getMethod("getTeam", NO_PARAMS))).isTrue();
+    assertThat(isGetter(Player.class.getMethod("getTeam", NO_PARAMS))).isTrue();
+    assertThat(isGetter(Player.class.getMethod("isRookie", NO_PARAMS))).isTrue();
+    assertThat(isGetter(Player.class.getMethod("name", NO_PARAMS))).isTrue();
   }
 
   @Test
   public void should_return_false_if_method_is_not_a_standard_getter() throws Exception {
-    assertThat(isStandardGetter(Player.class.getMethod("isRookie", NO_PARAMS))).isFalse();
-    assertThat(isStandardGetter(Player.class.getMethod("getVoid", NO_PARAMS))).isFalse();
-    assertThat(isStandardGetter(Player.class.getMethod("getWithParam", String.class))).isFalse();
+    assertThat(isGetter(Player.class.getMethod("getVoid", NO_PARAMS))).isFalse();
+    assertThat(isGetter(Player.class.getMethod("getWithParam", String.class))).isFalse();
   }
 
   @Test
@@ -264,6 +266,13 @@ public class ClassUtilTest implements NestedClassesTest {
     Set<Method> playerGetterMethods = declaredGetterMethodsOf(TypeToken.of(Movie.class), Collections.<Class<?>> emptySet());
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS))
                                    .doesNotContain(ArtWork.class.getMethod("getTitle", NO_PARAMS));
+  }
+
+  @Test
+  public void should_return_property_name_from_getter_method_name() throws Exception {
+    assertThat(getterProperty("getName")).isEqualTo("name");
+    assertThat(getterProperty("name")).isEqualTo("name");
+    assertThat(getterProperty("get")).isEqualTo("get");
   }
 
   @Theory

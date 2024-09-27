@@ -55,7 +55,7 @@ public class GetterDescriptionTest {
 
   @Test
   public void should_create_valid_typename_from_class_for_user_defined_type_in_different_package() throws Exception {
-    getterDescription = new GetterDescription("name", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("getName"));
+    getterDescription = new GetterDescription("name", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("name"));
     assertThat(getterDescription.getName()).isEqualTo("name");
     assertThat(getterDescription.getTypeName()).isEqualTo("org.assertj.assertions.generator.data.Name");
     assertThat(getterDescription.getFullyQualifiedTypeName()).isEqualTo("org.assertj.assertions.generator.data.Name");

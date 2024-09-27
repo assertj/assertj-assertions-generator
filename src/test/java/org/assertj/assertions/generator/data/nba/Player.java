@@ -60,7 +60,7 @@ public class Player {
     this.isDisabled = isDisabled;
   }
 
-  public Name getName() {
+  public Name name() {
     return name;
   }
 

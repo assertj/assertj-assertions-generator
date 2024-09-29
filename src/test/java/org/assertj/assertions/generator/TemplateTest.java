@@ -12,6 +12,8 @@
  */
 package org.assertj.assertions.generator;
 
+import org.junit.jupiter.api.Test;
+
 import static org.assertj.assertions.generator.BaseAssertionGenerator.TEMPLATES_DIR;
 import static org.assertj.assertions.generator.DefaultTemplateRegistryProducer.DEFAULT_HAS_ASSERTION_TEMPLATE;
 import static org.assertj.assertions.generator.Template.Type.ASSERT_CLASS;
@@ -22,13 +24,10 @@ import static org.assertj.core.api.Assertions.fail;
 import java.io.File;
 import java.net.URL;
 
-import org.junit.Test;
+class TemplateTest {
 
-public class TemplateTest {
-
-  @SuppressWarnings("unused")
   @Test
-  public void should_throw_an_exception_when_url_is_a_directory() {
+  void should_throw_an_exception_when_url_is_a_directory() {
     URL templateURL = getClass().getClassLoader().getResource(TEMPLATES_DIR);
     try {
       new Template(ASSERT_CLASS, templateURL);
@@ -39,14 +38,14 @@ public class TemplateTest {
   }
 
   @Test
-  public void should_create_template_from_url() {
+  void should_create_template_from_url() {
     URL templateURL = getClass().getClassLoader().getResource(TEMPLATES_DIR + DEFAULT_HAS_ASSERTION_TEMPLATE);
     Template template = new Template(ASSERT_CLASS, templateURL);
     assertThat(template.getContent()).isNotEmpty();
   }
 
   @Test
-  public void should_create_template_from_file() {
+  void should_create_template_from_file() {
     File templateFile = new File(TEMPLATES_DIR, DEFAULT_HAS_ASSERTION_TEMPLATE);
     Template template = new Template(HAS, templateFile);
     assertThat(template.getContent()).isNotEmpty();

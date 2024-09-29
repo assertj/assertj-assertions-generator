@@ -14,12 +14,12 @@ package org.assertj.assertions.generator;
 
 // import static org.assertj.assertions.generator.data.PlayerAssert.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class PlayerAssertTest {
 
   @Test
-  public void test() {
+  void test() {
     // uncomment to test 
 //    Player tonyParker = new Player(new Name("Tony", "Parker"), "Spurs");
 //    tonyParker.setAssistsPerGame(9);

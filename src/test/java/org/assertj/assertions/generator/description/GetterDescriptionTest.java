@@ -16,8 +16,8 @@ import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.data.Movie;
 import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.data.nba.Player;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 
@@ -31,13 +31,13 @@ public class GetterDescriptionTest {
 
   private static Method PLAYER_GET_POINTS_METHOD;
 
-  @BeforeClass
-  public static void setupClass() throws Exception {
+  @BeforeAll
+  static void setupClass() throws Exception {
     PLAYER_GET_POINTS_METHOD = Player.class.getMethod("getPoints");
   }
 
   @Test
-  public void should_create_valid_typename_from_class() throws Exception {
+  void should_create_valid_typename_from_class() throws Exception {
     getterDescription = new GetterDescription("points", PLAYER_TYPE_DESCRIPTION, PLAYER_GET_POINTS_METHOD);
     assertThat(getterDescription.getName()).isEqualTo("points");
     assertThat(getterDescription.getTypeName()).isEqualTo("java.util.List");
@@ -46,7 +46,7 @@ public class GetterDescriptionTest {
   }
 
   @Test
-  public void should_create_valid_typename_from_class_for_user_defined_type_in_same_package() throws Exception {
+  void should_create_valid_typename_from_class_for_user_defined_type_in_same_package() throws Exception {
     getterDescription = new GetterDescription("race", TypeToken.of(TolkienCharacter.class), TolkienCharacter.class.getMethod("getRace"));
     assertThat(getterDescription.getName()).isEqualTo("race");
     assertThat(getterDescription.getTypeName()).isEqualTo("Race");
@@ -54,7 +54,7 @@ public class GetterDescriptionTest {
   }
 
   @Test
-  public void should_create_valid_typename_from_class_for_user_defined_type_in_different_package() throws Exception {
+  void should_create_valid_typename_from_class_for_user_defined_type_in_different_package() throws Exception {
     getterDescription = new GetterDescription("name", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("getName"));
     assertThat(getterDescription.getName()).isEqualTo("name");
     assertThat(getterDescription.getTypeName()).isEqualTo("org.assertj.assertions.generator.data.Name");
@@ -62,13 +62,13 @@ public class GetterDescriptionTest {
   }
 
   @Test
-  public void should_show_information_in_toString() throws Exception {
+  void should_show_information_in_toString() throws Exception {
     getterDescription = new GetterDescription("points", PLAYER_TYPE_DESCRIPTION, PLAYER_GET_POINTS_METHOD);
     assertThat(getterDescription.toString()).contains("points").contains("List<int[]>");
   }
 
   @Test
-  public void should_not_be_predicate() throws Exception {
+  void should_not_be_predicate() throws Exception {
     getterDescription = new GetterDescription("points", PLAYER_TYPE_DESCRIPTION, PLAYER_GET_POINTS_METHOD);
     assertThat(getterDescription.isPredicate()).as("points").isFalse();
     getterDescription = new GetterDescription("rookie", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("isRookie"));
@@ -76,7 +76,7 @@ public class GetterDescriptionTest {
   }
 
   @Test
-  public void should_generate_predicate_for_javadoc() throws Exception {
+  void should_generate_predicate_for_javadoc() throws Exception {
     getterDescription = new GetterDescription("rookie", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("isRookie"));
     assertThat(getterDescription.getPredicateForJavadoc()).isEqualTo("is rookie");
     assertThat(getterDescription.getNegativePredicateForJavadoc()).isEqualTo("is not rookie");
@@ -115,7 +115,7 @@ public class GetterDescriptionTest {
   }
 
   @Test
-  public void should_generate_predicate_for_error_message() throws Exception {
+  void should_generate_predicate_for_error_message() throws Exception {
     getterDescription = new GetterDescription("rookie", PLAYER_TYPE_DESCRIPTION, Player.class.getMethod("isRookie"));
     assertThat(getterDescription.getPredicateForErrorMessagePart1()).isEqualTo("is rookie");
     assertThat(getterDescription.getPredicateForErrorMessagePart2()).isEqualTo("is not");
@@ -154,7 +154,7 @@ public class GetterDescriptionTest {
   }
 
   @Test
-  public void should_describe_inner_class_getter_correctly() throws Exception {
+  void should_describe_inner_class_getter_correctly() throws Exception {
     Method getPublicCategory = Movie.class.getMethod("getPublicCategory");
     getterDescription = new GetterDescription("publicCategory", TypeToken.of(Movie.class), getPublicCategory);
     assertThat(getterDescription.getName()).isEqualTo("publicCategory");

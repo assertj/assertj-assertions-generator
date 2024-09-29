@@ -12,15 +12,15 @@
  */
 package org.assertj.assertions.generator.util;
 
+import org.junit.jupiter.api.Test;
+
 import static org.assertj.assertions.generator.util.StringUtil.camelCaseToWords;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
-
-public class StringUtilTest {
+class StringUtilTest {
 
   @Test
-  public void testCamelCaseToWords() throws Exception {
+  void testCamelCaseToWords() throws Exception {
     assertThat(camelCaseToWords("BestPlayer")).isEqualTo("best player");
     assertThat(camelCaseToWords("Run")).isEqualTo("run");
     assertThat(camelCaseToWords("RunFasterThanLight")).isEqualTo("run faster than light");

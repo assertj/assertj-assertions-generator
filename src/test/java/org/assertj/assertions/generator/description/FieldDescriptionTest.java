@@ -15,25 +15,25 @@ package org.assertj.assertions.generator.description;
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.data.EnemyReport;
 import org.assertj.assertions.generator.data.Name;
-import org.assertj.assertions.generator.data.lotr.TolkienCharacter;
 import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.team.Coach;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
 
 import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchException;
+import static org.assertj.core.api.BDDAssertions.then;
 
-public class FieldDescriptionTest {
+class FieldDescriptionTest {
 
   private static final TypeToken<Player> PLAYER_TYPE = TypeToken.of(Player.class);
   private FieldDescription fieldDescription;
 
   @Test
-  public void should_create_valid_typename_from_class() throws Exception {
+  void should_create_valid_typename_from_class() throws Exception {
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("name"), PLAYER_TYPE);
     assertThat(fieldDescription.getName()).isEqualTo("name");
     assertThat(fieldDescription.getTypeName()).isEqualTo(Name.class.getName());
@@ -42,7 +42,7 @@ public class FieldDescriptionTest {
   }
 
   @Test
-  public void should_create_valid_typename_from_class_for_user_defined_type_in_same_package() throws Exception {
+  void should_create_valid_typename_from_class_for_user_defined_type_in_same_package() throws Exception {
     fieldDescription = new FieldDescription(Coach.class.getDeclaredField("team"), TypeToken.of(Coach.class));
     assertThat(fieldDescription.getName()).isEqualTo("team");
     assertThat(fieldDescription.getTypeName()).isEqualTo("Team");
@@ -50,13 +50,13 @@ public class FieldDescriptionTest {
   }
   
   @Test
-  public void should_show_information_in_toString() throws Exception {
+  void should_show_information_in_toString() throws Exception {
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("name"), PLAYER_TYPE);
     assertThat(fieldDescription.toString()).contains("name", Player.class.getName(), Name.class.getName());
   }
 
   @Test
-  public void should_detect_real_number_correctly() throws Exception {
+  void should_detect_real_number_correctly() throws Exception {
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("sizeDouble"), PLAYER_TYPE);
     assertThat(fieldDescription.isRealNumberType()).as("double").isTrue();
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("sizeAsDoubleWrapper"), PLAYER_TYPE);
@@ -76,28 +76,28 @@ public class FieldDescriptionTest {
   }
 
   @Test
-  public void should_generate_default_predicate_correctly() throws Exception {
+  void should_generate_default_predicate_correctly() throws Exception {
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("bad"), PLAYER_TYPE);
     assertThat(fieldDescription.getNegativePredicate()).as("negative").isEqualTo("isNotBad");
     assertThat(fieldDescription.getPredicate()).as("positive").isEqualTo("isBad");
   }
 
   @Test
-  public void should_describe_array_field_correctly() throws Exception {
+  void should_describe_array_field_correctly() throws Exception {
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("previousTeamNames"), PLAYER_TYPE);
     assertThat(fieldDescription.getTypeName()).isEqualTo("String[]");
     assertThat(fieldDescription.getElementTypeName()).isEqualTo("String");
   }
 
   @Test
-  public void should_generate_readable_predicate_for_javadoc() throws Exception {
+  void should_generate_readable_predicate_for_javadoc() throws Exception {
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("bad"), PLAYER_TYPE);
     assertThat(fieldDescription.getPredicateForJavadoc()).isEqualTo("is bad");
     assertThat(fieldDescription.getNegativePredicateForJavadoc()).isEqualTo("is not bad");
   }
 
   @Test
-  public void should_generate_readable_predicate_for_error_message() throws Exception {
+  void should_generate_readable_predicate_for_error_message() throws Exception {
     fieldDescription = new FieldDescription(Player.class.getDeclaredField("bad"), PLAYER_TYPE);
     assertThat(fieldDescription.getPredicateForErrorMessagePart1()).isEqualTo("is bad");
     assertThat(fieldDescription.getPredicateForErrorMessagePart2()).isEqualTo("is not");
@@ -137,7 +137,7 @@ public class FieldDescriptionTest {
   }
 
   @Test
-  public void should_find_getter_method_for_predicate_field() throws Exception {
+  void should_find_getter_method_for_predicate_field() throws Exception {
 
     fieldDescription = new FieldDescription(FieldPropertyNames.class.getDeclaredField("isBoolean"), FIELD_PROP_TYPE);
 
@@ -155,7 +155,7 @@ public class FieldDescriptionTest {
   }
 
   @Test
-  public void should_return_property_of_field() throws Exception {
+  void should_return_property_of_field() throws Exception {
     assertThat(propertyNameOf(FieldPropertyNames.class.getDeclaredField("isBoolean"))).isEqualTo("boolean");
     assertThat(propertyNameOf(EnemyReport.class.getDeclaredField("realTarget"))).isEqualTo("realTarget");
     assertThat(propertyNameOf(EnemyReport.class.getDeclaredField("privateTarget"))).isEqualTo("privateTarget");
@@ -163,7 +163,7 @@ public class FieldDescriptionTest {
   }
 
   @Test
-  public void should_find_getter_method_for_field() throws Exception {
+  void should_find_getter_method_for_field() throws Exception {
 
     fieldDescription = new FieldDescription(FieldPropertyNames.class.getDeclaredField("stringProp"), FIELD_PROP_TYPE);
 
@@ -179,7 +179,7 @@ public class FieldDescriptionTest {
   }
 
   @Test
-  public void should_not_find_getter_method_for_mismatched_return_type() throws Exception {
+  void should_not_find_getter_method_for_mismatched_return_type() throws Exception {
 
     fieldDescription = new FieldDescription(FieldPropertyNames.class.getDeclaredField("badGetter"), FIELD_PROP_TYPE);
 
@@ -195,7 +195,7 @@ public class FieldDescriptionTest {
   }
 
   @Test
-  public void should_not_find_getter_method_for_missing_getter() throws Exception {
+  void should_not_find_getter_method_for_missing_getter() throws Exception {
 
     fieldDescription = new FieldDescription(FieldPropertyNames.class.getDeclaredField("onlyField"), FIELD_PROP_TYPE);
 
@@ -211,20 +211,24 @@ public class FieldDescriptionTest {
   //  @Test
   //  public void should_not_find_getter_method_for_non_existent_field()
 
-  @Test(expected = NullPointerException.class)
-  public void should_fail_find_with_npe_for_null_field_desc() throws Exception {
-
+  @Test
+  void should_fail_find_with_npe_for_null_field_desc() {
+    // GIVEN
     ClassDescription classDesc = new ClassDescription(FIELD_PROP_TYPE);
-
-    classDesc.hasGetterForField(null);
+    // WHEN
+    Exception exception = catchException(() -> classDesc.hasGetterForField(null));
+    // THEN
+    then(exception).isInstanceOf(NullPointerException.class);
   }
 
-  @Test(expected = NullPointerException.class)
-  public void should_fail_has_with_npe_for_null_field_desc() throws Exception {
-
+  @Test
+  void should_fail_has_with_npe_for_null_field_desc() {
+    // GIVEN
     ClassDescription classDesc = new ClassDescription(FIELD_PROP_TYPE);
-
-    classDesc.hasGetterForField(null);
+    // WHEN
+    Exception exception = catchException(() -> classDesc.hasGetterForField(null));
+    // THEN
+    then(exception).isInstanceOf(NullPointerException.class);
   }
 
 }

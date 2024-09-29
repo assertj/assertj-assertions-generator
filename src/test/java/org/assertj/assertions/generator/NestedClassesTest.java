@@ -18,9 +18,9 @@ import org.junit.experimental.theories.DataPoint;
 /**
  * This class contains a set of constants for nested classes.
  */
-public interface NestedClassesTest {
+public abstract class NestedClassesTest {
   @DataPoint
-  NestedClass SNC = new NestedClass(OuterClass.StaticNestedPerson.class,
+  public static NestedClass SNC = new NestedClass(OuterClass.StaticNestedPerson.class,
                                     "OuterClass.StaticNestedPerson",
                                     "OuterClassStaticNestedPersonAssert",
                                     "org.assertj.assertions.generator.data.OuterClass",
@@ -28,7 +28,7 @@ public interface NestedClassesTest {
                                     "AbstractOuterClassStaticNestedPersonAssert",
                                     "AbstractOuterClassStaticNestedPersonAssert.java");
   @DataPoint
-  NestedClass SNC_SNC = new NestedClass(OuterClass.StaticNestedPerson.SNP_StaticNestedPerson.class,
+  public static NestedClass SNC_SNC = new NestedClass(OuterClass.StaticNestedPerson.SNP_StaticNestedPerson.class,
                                         "OuterClass.StaticNestedPerson.SNP_StaticNestedPerson",
                                         "OuterClassStaticNestedPersonSNP_StaticNestedPersonAssert",
                                         "org.assertj.assertions.generator.data.OuterClass",
@@ -36,7 +36,7 @@ public interface NestedClassesTest {
                                         "AbstractOuterClassStaticNestedPersonSNP_StaticNestedPersonAssert",
                                         "AbstractOuterClassStaticNestedPersonSNP_StaticNestedPersonAssert.java");
   @DataPoint
-  NestedClass SNC_IC = new NestedClass(OuterClass.StaticNestedPerson.SNP_InnerPerson.class,
+  public static NestedClass SNC_IC = new NestedClass(OuterClass.StaticNestedPerson.SNP_InnerPerson.class,
                                        "OuterClass.StaticNestedPerson.SNP_InnerPerson",
                                        "OuterClassStaticNestedPersonSNP_InnerPersonAssert",
                                        "org.assertj.assertions.generator.data.OuterClass",
@@ -44,7 +44,7 @@ public interface NestedClassesTest {
                                        "AbstractOuterClassStaticNestedPersonSNP_InnerPersonAssert",
                                        "AbstractOuterClassStaticNestedPersonSNP_InnerPersonAssert.java");
   @DataPoint
-  NestedClass IC = new NestedClass(OuterClass.InnerPerson.class,
+  public static NestedClass IC = new NestedClass(OuterClass.InnerPerson.class,
                                    "OuterClass.InnerPerson",
                                    "OuterClassInnerPersonAssert",
                                    "org.assertj.assertions.generator.data.OuterClass",
@@ -52,7 +52,7 @@ public interface NestedClassesTest {
                                    "AbstractOuterClassInnerPersonAssert",
                                    "AbstractOuterClassInnerPersonAssert.java");
   @DataPoint
-  NestedClass IC_IC = new NestedClass(OuterClass.InnerPerson.IP_InnerPerson.class,
+  public static NestedClass IC_IC = new NestedClass(OuterClass.InnerPerson.IP_InnerPerson.class,
                                       "OuterClass.InnerPerson.IP_InnerPerson",
                                       "OuterClassInnerPersonIP_InnerPersonAssert",
                                       "org.assertj.assertions.generator.data.OuterClass",
@@ -60,7 +60,7 @@ public interface NestedClassesTest {
                                       "AbstractOuterClassInnerPersonIP_InnerPersonAssert",
                                       "AbstractOuterClassInnerPersonIP_InnerPersonAssert.java");
 
-  class NestedClass {
+  public static class NestedClass {
     public final Class<?> nestedClass;
     public final String assertClassName;
     public final String assertClassFilename;

@@ -41,7 +41,8 @@ import static org.assertj.assertions.generator.util.ClassUtil.getTypeDeclaration
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Theories.class)
-public class ClassToClassDescriptionConverterTest implements NestedClassesTest, BeanWithExceptionsTest {
+public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest {
+
   private static ClassToClassDescriptionConverter converter;
 
   @BeforeClass
@@ -50,7 +51,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Test
-  public void should_build_player_class_description() throws Exception {
+  public void should_build_player_class_description() {
     // Given
     Class<?> clazz = Player.class;
     // When
@@ -71,7 +72,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Test
-  public void should_build_movie_class_description() throws Exception {
+  public void should_build_movie_class_description() {
     // Given
     Class<?> clazz = Movie.class;
     // When
@@ -95,7 +96,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Test
-  public void should_build_comparable_class_description() throws Exception {
+  public void should_build_comparable_class_description() {
     // Given
     Class<?> clazz = Name.class;
     // When
@@ -106,7 +107,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Test
-  public void should_build_WithPrivateFields_class_description() throws Exception {
+  public void should_build_WithPrivateFields_class_description() {
     ClassDescription classDescription = converter.convertToClassDescription(WithPrivateFields.class);
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("WithPrivateFields");
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
@@ -118,7 +119,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Theory
-  public void should_build_nested_class_description(NestedClass nestedClass) throws Exception {
+  public void should_build_nested_class_description(NestedClass nestedClass) {
     // Given
     Class<?> clazz = nestedClass.nestedClass;
     // When
@@ -135,7 +136,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Theory
-  public void should_build_getter_with_exception_description(GetterWithException getter) throws Exception {
+  public void should_build_getter_with_exception_description(GetterWithException getter) {
     // Given
     TypeToken<?> type = getter.getBeanClass();
     Class<?> clazz = type.getRawType();
@@ -163,7 +164,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Test
-  public void should_build_class_description_for_iterable_of_primitive_type_array() throws Exception {
+  public void should_build_class_description_for_iterable_of_primitive_type_array() {
     // Given
     Class<?> clazz = WithPrimitiveArrayCollection.class;
     // When
@@ -192,14 +193,14 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void should_fail_to_build_class_description_for_local_class() throws Exception {
+  public void should_fail_to_build_class_description_for_local_class() {
     class Local {
     }
     converter.convertToClassDescription(Local.class);
   }
 
   @Test
-  public void should_build_class_description_for_array_of_primitive_type_array() throws Exception {
+  public void should_build_class_description_for_array_of_primitive_type_array() {
     // When
     ClassDescription classDescription = converter.convertToClassDescription(WithPrimitiveArrayArrayCollection.class);
     // Then
@@ -211,7 +212,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Test
-  public void should_build_class_description_for_enum_type() throws Exception {
+  public void should_build_class_description_for_enum_type() {
     // When
     ClassDescription classDescription = converter.convertToClassDescription(TreeEnum.class);
     // Then
@@ -235,7 +236,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Test
-  public void should_build_class_description_for_iterable_of_Object_type() throws Exception {
+  public void should_build_class_description_for_iterable_of_Object_type() {
     // Given
     Class<?> clazz = WithIterableObjectType.class;
     // When
@@ -254,7 +255,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Test
-  public void should_build_class_description_for_interface() throws Exception {
+  public void should_build_class_description_for_interface() {
     // Given an interface
     Class<?> clazz = PlayerAgent.class;
     // When
@@ -271,7 +272,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Test
-  public void should_build_fellowshipOfTheRing_class_description() throws Exception {
+  public void should_build_fellowshipOfTheRing_class_description() {
     // Given
     Class<?> clazz = FellowshipOfTheRing.class;
     // When
@@ -291,7 +292,7 @@ public class ClassToClassDescriptionConverterTest implements NestedClassesTest, 
   }
 
   @Test
-  public void should_build_class_description_for_class_with_public_fields() throws Exception {
+  public void should_build_class_description_for_class_with_public_fields() {
     // Given
     Class<?> clazz = Team.class;
     // When

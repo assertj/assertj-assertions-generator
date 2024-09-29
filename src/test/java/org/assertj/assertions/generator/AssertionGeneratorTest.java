@@ -49,7 +49,8 @@ import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.core.api.Assertions.*;
 
 @RunWith(Theories.class)
-public class AssertionGeneratorTest implements NestedClassesTest, BeanWithExceptionsTest {
+public class AssertionGeneratorTest extends BeanWithExceptionsTest {
+
   private static final String LINE_SEPARATOR = System.lineSeparator();
   private static final Logger logger = LoggerFactory.getLogger(AssertionGeneratorTest.class);
   private ClassToClassDescriptionConverter converter;

@@ -24,6 +24,8 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Needed to properly bring in the Maven dependencies, see http://maven.apache.org/surefire/maven-surefire-plugin/examples/class-loading.html) -->
+    <surefire.useSystemClassLoader>false</surefire.useSystemClassLoader>
   </properties>
 
   <dependencyManagement>
@@ -36,7 +38,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.11</version>
+        <version>4.13.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -137,7 +139,6 @@
           </archive>
         </configuration>
       </plugin>
-      <!-- generate jacoco report -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -146,15 +147,6 @@
             <exclude>**/AssertionGeneratorLauncher.*</exclude>
           </excludes>
           <outputDirectory>target/site/jacoco</outputDirectory>
-        </configuration>
-      </plugin>
-      <!-- to get jacoco report we need to set argLine in surefire, without this snippet the jacoco argLine is lost -->
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <argLine>${argLine}</argLine>
-          <!-- Needed because otherwise the classloader does not properly bring in the dependencies from maven. Source: http://maven.apache.org/surefire/maven-surefire-plugin/examples/class-loading.html -->
-          <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>
       </plugin>
     </plugins>

@@ -78,7 +78,7 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 
 @RunWith(Theories.class)
-public class ClassUtilTest implements NestedClassesTest {
+public class ClassUtilTest extends NestedClassesTest {
 
   private static final Class<?>[] NO_PARAMS = new Class[0];
 

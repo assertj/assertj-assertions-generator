@@ -21,6 +21,7 @@ import org.assertj.assertions.generator.data.nba.PlayerAgent;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.converter.AnnotationConfiguration;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,24 +48,27 @@ import static org.apache.commons.lang3.StringUtils.remove;
 import static org.apache.commons.lang3.StringUtils.replace;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Theories.class)
 public class AssertionGeneratorTest extends BeanWithExceptionsTest {
 
   private static final String LINE_SEPARATOR = System.lineSeparator();
+  private static final Set<TypeToken<?>> EMPTY_HIERARCHY = new HashSet<>();
   private static final Logger logger = LoggerFactory.getLogger(AssertionGeneratorTest.class);
+
   private ClassToClassDescriptionConverter converter;
   private BaseAssertionGenerator assertionGenerator;
 
   @Rule
-  public final GenerationPathHandler generationPathHandler = new GenerationPathHandler(AssertionGeneratorTest.class,
-                                                                                       Paths.get("src/test/resources"));
-  private static final Set<TypeToken<?>> EMPTY_HIERARCHY = new HashSet<>();
+  public final GenerationPathHandler generationPathHandler = new GenerationPathHandler(
+          Paths.get("src/test/resources"));
 
   @Before
   public void beforeEachTest() throws IOException {
     converter = new ClassToClassDescriptionConverter();
-    assertionGenerator = generationPathHandler.buildAssertionGenerator();
+    assertionGenerator = new BaseAssertionGenerator();
+    assertionGenerator.setDirectoryWhereAssertionFilesAreGenerated(generationPathHandler.getRoot());
   }
 
   @Test
@@ -336,7 +340,12 @@ public class AssertionGeneratorTest extends BeanWithExceptionsTest {
     ClassDescription classDescription = converter.convertToClassDescription(clazz);
     assertionGenerator.generateCustomAssertionFor(classDescription);
     String expectedAssertFile = clazz.getSimpleName() + "Assert.flat.expected.txt";
-    generationPathHandler.assertGeneratedAssertClass(clazz, expectedAssertFile, true);
+    File expectedFile = generationPathHandler.getResourcesDir().resolve(expectedAssertFile).toAbsolutePath().toFile();
+    File actualFile = generationPathHandler.fileGeneratedFor(clazz);
+    // compile it!
+    generationPathHandler.compileGeneratedFilesFor(clazz);
+
+    assertThat(actualFile).hasSameTextualContentAs(expectedFile);
   }
 
   private void verifyFlatAssertionGenerationFor(Class<?> clazz, String generatedAssertionPackage) throws IOException {
@@ -344,7 +353,12 @@ public class AssertionGeneratorTest extends BeanWithExceptionsTest {
     logger.info("Generating flat assertions for {} in package {}", clazz, generatedAssertionPackage);
     ClassDescription classDescription = converter.convertToClassDescription(clazz);
     assertionGenerator.generateCustomAssertionFor(classDescription);
-    generationPathHandler.assertGeneratedAssertClass(clazz, expectedAssertFile, true, generatedAssertionPackage);
+    File expectedFile = generationPathHandler.getResourcesDir().resolve(expectedAssertFile).toAbsolutePath().toFile();
+    File actualFile = generationPathHandler.fileGeneratedFor(clazz, generatedAssertionPackage);
+    // compile it!
+    generationPathHandler.compileGeneratedFilesFor(generatedAssertionPackage, clazz);
+
+    assertThat(actualFile).hasSameTextualContentAs(expectedFile);
   }
 
   private void verifyHierarchicalAssertionGenerationFor(Class<?> clazz) throws IOException {
@@ -363,10 +377,14 @@ public class AssertionGeneratorTest extends BeanWithExceptionsTest {
       generatedAssertFiles.addAll(asList(assertionGenerator.generateHierarchicalCustomAssertionFor(classDescription, typeHierarchy)));
 
       String expectedConcreteAssertFile = clazz.getSimpleName() + "Assert.expected.txt";
-      generationPathHandler.assertGeneratedAssertClass(clazz, expectedConcreteAssertFile, false);
+      File expectedFile1 = generationPathHandler.getResourcesDir().resolve(expectedConcreteAssertFile).toAbsolutePath().toFile();
+      File actualFile = generationPathHandler.fileGeneratedFor(clazz);
+
+      assertThat(actualFile).hasSameTextualContentAs(expectedFile1);
 
       String expectedAbstractAssertFile = "Abstract" + clazz.getSimpleName() + "Assert.expected.txt";
-      generationPathHandler.assertAbstractGeneratedAssertClass(clazz, expectedAbstractAssertFile);
+      File expectedFile = generationPathHandler.getResourcesDir().resolve(expectedAbstractAssertFile).toAbsolutePath().toFile();
+      assertThat(generationPathHandler.abstractFileGeneratedFor(clazz)).hasSameTextualContentAs(expectedFile);
     }
     generationPathHandler.compileGeneratedFiles(generatedAssertFiles);
   }
@@ -382,10 +400,14 @@ public class AssertionGeneratorTest extends BeanWithExceptionsTest {
       generatedAssertFiles.addAll(asList(assertionGenerator.generateHierarchicalCustomAssertionFor(classDescription, EMPTY_HIERARCHY)));
 
       String expectedConcreteAssertFile = clazz.getSimpleName() + "Assert.generated.in.custom.package.expected.txt";
-      generationPathHandler.assertGeneratedAssertClass(clazz, expectedConcreteAssertFile, false, generatedAssertionPackage);
+      File expectedFile1 = generationPathHandler.getResourcesDir().resolve(expectedConcreteAssertFile).toAbsolutePath().toFile();
+      File actualFile = generationPathHandler.fileGeneratedFor(clazz, generatedAssertionPackage);
+
+      assertThat(actualFile).hasSameTextualContentAs(expectedFile1);
 
       String expectedAbstractAssertFile = "Abstract" + clazz.getSimpleName() + "Assert.generated.in.custom.package.expected.txt";
-      generationPathHandler.assertAbstractGeneratedAssertClass(clazz, expectedAbstractAssertFile, generatedAssertionPackage);
+      File expectedFile = generationPathHandler.getResourcesDir().resolve(expectedAbstractAssertFile).toAbsolutePath().toFile();
+      assertThat(generationPathHandler.abstractFileGeneratedFor(clazz, generatedAssertionPackage)).hasSameTextualContentAs(expectedFile);
     }
     generationPathHandler.compileGeneratedFiles(generatedAssertFiles);
   }

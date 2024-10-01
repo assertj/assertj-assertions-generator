@@ -22,17 +22,21 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class AssertionGeneratorOverrideTemplateTest {
+
   private BaseAssertionGenerator assertionGenerator;
   private ClassToClassDescriptionConverter converter;
 
   @Rule
-  public final GenerationPathHandler genHandle = new GenerationPathHandler(AssertionGeneratorOverrideTemplateTest.class,
-      Paths.get("src/test/resources"));
+  public final GenerationPathHandler genHandle = new GenerationPathHandler(
+          Paths.get("src/test/resources"));
 
   @Before
   public void before() throws IOException {
-    assertionGenerator = genHandle.buildAssertionGenerator();
+    assertionGenerator = new BaseAssertionGenerator();
+    assertionGenerator.setDirectoryWhereAssertionFilesAreGenerated(genHandle.getRoot());
     converter = new ClassToClassDescriptionConverter();
   }
 
@@ -58,6 +62,12 @@ public class AssertionGeneratorOverrideTemplateTest {
                                                       "custom_has_assertion_template_for_whole_number.txt")));
 
     assertionGenerator.generateCustomAssertionFor(converter.convertToClassDescription(Car.class));
-    genHandle.assertGeneratedAssertClass(Car.class, "CarAssert.expected.txt", true);
+    File expectedFile = genHandle.getResourcesDir().resolve("CarAssert.expected.txt").toAbsolutePath().toFile();
+    File actualFile = genHandle.fileGeneratedFor(Car.class);
+    // compile it!
+    genHandle.compileGeneratedFilesFor(Car.class);
+
+    assertThat(actualFile).hasSameContentAs(expectedFile);
   }
+
 }

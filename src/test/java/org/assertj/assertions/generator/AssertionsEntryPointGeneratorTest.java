@@ -42,15 +42,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.contentOf;
 
 public class AssertionsEntryPointGeneratorTest {
+
   private BaseAssertionGenerator generator;
 
   @Rule
-  public final GenerationPathHandler genHandle = new GenerationPathHandler(AssertionsEntryPointGeneratorTest.class,
-                                                                           Paths.get("src/test/resources"));
+  public final GenerationPathHandler genHandle = new GenerationPathHandler(
+          Paths.get("src/test/resources"));
 
   @Before
   public void beforeEachTest() throws IOException {
-    generator = genHandle.buildAssertionGenerator();
+    generator = new BaseAssertionGenerator();
+    generator.setDirectoryWhereAssertionFilesAreGenerated(genHandle.getRoot());
   }
 
   @Test

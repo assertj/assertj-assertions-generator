@@ -24,7 +24,6 @@ import org.junit.runners.model.Statement;
 
 import javax.tools.JavaFileObject;
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -39,19 +38,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test {@link org.junit.Rule} used to generate temporary folders per test case so there is no concern of
- * tests interacting with each other. This utilizes the built-in {@link TemporaryFolder} to accomplish this and
- * contains generator specific methods.
+ * tests interacting with each other. This uses the built-in {@link TemporaryFolder} to accomplish this and
+ * contains generator-specific methods.
  */
 public class GenerationPathHandler extends TemporaryFolder {
 
-  public static final Path DEFAULT_GENERATION_ROOT = Paths.get("target/generated-test-output");
-
+  private static final Path DEFAULT_GENERATION_ROOT = Paths.get("target/generated-test-output");
   private static final ClassToClassDescriptionConverter CLASS_DESCRIPTION_CONVERTER = new ClassToClassDescriptionConverter();
 
   private final Compiler compiler;
-  private Path resourcesDir;
+  private final Path resourcesDir;
 
-  public GenerationPathHandler(final Class<?> owningClass, Path resourcesDir) {
+  GenerationPathHandler(Path resourcesDir) {
     super(DEFAULT_GENERATION_ROOT.toFile());
 
     //noinspection ResultOfMethodCallIgnored
@@ -64,7 +62,7 @@ public class GenerationPathHandler extends TemporaryFolder {
                        .withOptions("-classpath", currentClasspath);
   }
 
-  public Path getResourcesDir() {
+  Path getResourcesDir() {
     return resourcesDir;
   }
 
@@ -87,32 +85,26 @@ public class GenerationPathHandler extends TemporaryFolder {
     };
   }
 
-  public BaseAssertionGenerator buildAssertionGenerator() throws IOException {
-    BaseAssertionGenerator assertionGenerator = new BaseAssertionGenerator();
-    assertionGenerator.setDirectoryWhereAssertionFilesAreGenerated(getRoot());
-    return assertionGenerator;
-  }
-
-  public Path packagePathFor(Class<?> clazz) {
+  private Path packagePathFor(Class<?> clazz) {
     return pathFromRoot(clazz.getPackage().getName().replace('.', File.separatorChar));
   }
 
-  public File fileGeneratedFor(Class<?> clazz) {
+  File fileGeneratedFor(Class<?> clazz) {
     String generatedFileName = CLASS_DESCRIPTION_CONVERTER.convertToClassDescription(clazz).getAssertClassFilename();
     return packagePathFor(clazz).resolve(generatedFileName).toFile();
   }
 
-  public File fileGeneratedFor(Class<?> clazz, String generatedAssertionPackage) {
+  File fileGeneratedFor(Class<?> clazz, String generatedAssertionPackage) {
     String generatedFileName = CLASS_DESCRIPTION_CONVERTER.convertToClassDescription(clazz).getAssertClassFilename();
     return pathFromRoot(generatedAssertionPackage).resolve(generatedFileName).toFile();
   }
 
-  public File abstractFileGeneratedFor(Class<?> clazz) {
+  File abstractFileGeneratedFor(Class<?> clazz) {
     String generatedFileName = CLASS_DESCRIPTION_CONVERTER.convertToClassDescription(clazz).getAbstractAssertClassFilename();
     return packagePathFor(clazz).resolve(generatedFileName).toFile();
   }
 
-  public File abstractFileGeneratedFor(Class<?> clazz, String generatedAssertionPackage) {
+  File abstractFileGeneratedFor(Class<?> clazz, String generatedAssertionPackage) {
     String generatedFileName = CLASS_DESCRIPTION_CONVERTER.convertToClassDescription(clazz).getAbstractAssertClassFilename();
     return pathFromRoot(generatedAssertionPackage).resolve(generatedFileName).toFile();
   }
@@ -121,7 +113,7 @@ public class GenerationPathHandler extends TemporaryFolder {
     return getRoot().toPath().resolve(generatedAssertionPackage.replace('.', File.separatorChar));
   }
 
-  public void compileGeneratedFiles(Iterable<? extends File> files) {
+  void compileGeneratedFiles(Iterable<? extends File> files) {
     List<JavaFileObject> javaFileObjects = toJavaFileObjects(files);
     Compilation compilation = compiler.compile(javaFileObjects);
     try {
@@ -144,7 +136,7 @@ public class GenerationPathHandler extends TemporaryFolder {
     return javaFileObjects;
   }
 
-  public void compileGeneratedFilesFor(Class<?>... classes) {
+  void compileGeneratedFilesFor(Class<?>... classes) {
     List<File> files = new ArrayList<>(classes.length);
     for (Class<?> clazz : classes) {
       files.add(fileGeneratedFor(clazz));
@@ -157,7 +149,7 @@ public class GenerationPathHandler extends TemporaryFolder {
     compileGeneratedFiles(files);
   }
 
-  public void compileGeneratedFilesFor(String generatedAssertionPackage, Class<?>... classes) {
+  void compileGeneratedFilesFor(String generatedAssertionPackage, Class<?>... classes) {
     List<File> files = new ArrayList<>(classes.length);
     for (Class<?> clazz : classes) {
       files.add(fileGeneratedFor(clazz, generatedAssertionPackage));
@@ -168,35 +160,6 @@ public class GenerationPathHandler extends TemporaryFolder {
       }
     }
     compileGeneratedFiles(files);
-  }
-
-  public void assertGeneratedAssertClass(Class<?> clazz, String expectedAssertFile, final boolean compileGenerated) throws IOException {
-    File expectedFile = resourcesDir.resolve(expectedAssertFile).toAbsolutePath().toFile();
-    File actualFile = fileGeneratedFor(clazz);
-    // compile it!
-    if (compileGenerated) compileGeneratedFilesFor(clazz);
-
-    assertThat(actualFile).hasSameContentAs(expectedFile);
-  }
-
-  public void assertGeneratedAssertClass(Class<?> clazz, String expectedAssertFile, final boolean compileGenerated,
-                                         String generatedAssertionPackage) throws IOException {
-    File expectedFile = resourcesDir.resolve(expectedAssertFile).toAbsolutePath().toFile();
-    File actualFile = fileGeneratedFor(clazz, generatedAssertionPackage);
-    // compile it!
-    if (compileGenerated) compileGeneratedFilesFor(generatedAssertionPackage, clazz);
-
-    assertThat(actualFile).hasSameContentAs(expectedFile);
-  }
-
-  public void assertAbstractGeneratedAssertClass(Class<?> clazz, String expectedAssertFile) {
-    File expectedFile = resourcesDir.resolve(expectedAssertFile).toAbsolutePath().toFile();
-    assertThat(abstractFileGeneratedFor(clazz)).hasSameContentAs(expectedFile);
-  }
-
-  public void assertAbstractGeneratedAssertClass(Class<?> clazz, String expectedAssertFile, String generatedAssertionPackage) {
-    File expectedFile = resourcesDir.resolve(expectedAssertFile).toAbsolutePath().toFile();
-    assertThat(abstractFileGeneratedFor(clazz, generatedAssertionPackage)).hasSameContentAs(expectedFile);
   }
 
   /**
@@ -229,4 +192,5 @@ public class GenerationPathHandler extends TemporaryFolder {
 
     return Joiner.on(File.pathSeparatorChar).join(classpaths);
   }
+
 }

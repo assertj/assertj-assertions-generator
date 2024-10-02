@@ -18,9 +18,6 @@ import com.google.testing.compile.CompilationSubject;
 import com.google.testing.compile.Compiler;
 import com.google.testing.compile.JavaFileObjects;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
 
 import javax.tools.JavaFileObject;
 import java.io.File;
@@ -28,61 +25,28 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
+public class GenerationHandler {
 
-/**
- * Test {@link org.junit.Rule} used to generate temporary folders per test case so there is no concern of
- * tests interacting with each other. This uses the built-in {@link TemporaryFolder} to accomplish this and
- * contains generator-specific methods.
- */
-public class GenerationPathHandler extends TemporaryFolder {
+  private static final ClassToClassDescriptionConverter CONVERTER = new ClassToClassDescriptionConverter();
 
-  private static final Path DEFAULT_GENERATION_ROOT = Paths.get("target/generated-test-output");
-  private static final ClassToClassDescriptionConverter CLASS_DESCRIPTION_CONVERTER = new ClassToClassDescriptionConverter();
-
-  private final Compiler compiler;
+  private final Path root;
   private final Path resourcesDir;
+  private final Compiler compiler;
 
-  GenerationPathHandler(Path resourcesDir) {
-    super(DEFAULT_GENERATION_ROOT.toFile());
-
-    //noinspection ResultOfMethodCallIgnored
-    DEFAULT_GENERATION_ROOT.toFile().mkdirs();
-
+  GenerationHandler(Path root, Path resourcesDir) {
+    this.root = root;
     this.resourcesDir = resourcesDir;
-
-    final String currentClasspath = getClasspathFromClassloader(ClassLoader.getSystemClassLoader());
-    compiler = Compiler.javac()
-                       .withOptions("-classpath", currentClasspath);
+    this.compiler = Compiler.javac()
+                            .withOptions("-classpath", getClasspath(ClassLoader.getSystemClassLoader()));
   }
 
   Path getResourcesDir() {
     return resourcesDir;
-  }
-
-  @Override
-  public Statement apply(final Statement statement, final Description description) {
-
-    return new Statement() {
-      @Override
-      public void evaluate() throws Throwable {
-        before();
-
-        try {
-          statement.evaluate();
-          after();
-        } catch (Exception e) {
-          System.err.println("Failed working with folder: " + getRoot());
-          throw new AssertionError(e);
-        }
-      }
-    };
   }
 
   private Path packagePathFor(Class<?> clazz) {
@@ -90,27 +54,27 @@ public class GenerationPathHandler extends TemporaryFolder {
   }
 
   File fileGeneratedFor(Class<?> clazz) {
-    String generatedFileName = CLASS_DESCRIPTION_CONVERTER.convertToClassDescription(clazz).getAssertClassFilename();
+    String generatedFileName = CONVERTER.convertToClassDescription(clazz).getAssertClassFilename();
     return packagePathFor(clazz).resolve(generatedFileName).toFile();
   }
 
   File fileGeneratedFor(Class<?> clazz, String generatedAssertionPackage) {
-    String generatedFileName = CLASS_DESCRIPTION_CONVERTER.convertToClassDescription(clazz).getAssertClassFilename();
+    String generatedFileName = CONVERTER.convertToClassDescription(clazz).getAssertClassFilename();
     return pathFromRoot(generatedAssertionPackage).resolve(generatedFileName).toFile();
   }
 
   File abstractFileGeneratedFor(Class<?> clazz) {
-    String generatedFileName = CLASS_DESCRIPTION_CONVERTER.convertToClassDescription(clazz).getAbstractAssertClassFilename();
+    String generatedFileName = CONVERTER.convertToClassDescription(clazz).getAbstractAssertClassFilename();
     return packagePathFor(clazz).resolve(generatedFileName).toFile();
   }
 
   File abstractFileGeneratedFor(Class<?> clazz, String generatedAssertionPackage) {
-    String generatedFileName = CLASS_DESCRIPTION_CONVERTER.convertToClassDescription(clazz).getAbstractAssertClassFilename();
+    String generatedFileName = CONVERTER.convertToClassDescription(clazz).getAbstractAssertClassFilename();
     return pathFromRoot(generatedAssertionPackage).resolve(generatedFileName).toFile();
   }
 
   private Path pathFromRoot(String generatedAssertionPackage) {
-    return getRoot().toPath().resolve(generatedAssertionPackage.replace('.', File.separatorChar));
+    return root.resolve(generatedAssertionPackage.replace('.', File.separatorChar));
   }
 
   void compileGeneratedFiles(Iterable<? extends File> files) {
@@ -166,9 +130,9 @@ public class GenerationPathHandler extends TemporaryFolder {
    * Returns the current classpaths of the given classloader including its parents.
    *
    * @throws IllegalArgumentException if the given classloader had classpaths which we could not
-   *                                  determine or use for compilation.
+   *     determine or use for compilation.
    */
-  private static String getClasspathFromClassloader(ClassLoader currentClassloader) {
+  private static String getClasspath(ClassLoader currentClassloader) {
     ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
 
     // Add all URLClassloaders in the hierarchy till the system classloader.
@@ -176,8 +140,7 @@ public class GenerationPathHandler extends TemporaryFolder {
     while (true) {
       // We only know how to extract classpaths from URLClassloaders.
       if (currentClassloader instanceof URLClassLoader) classloaders.add((URLClassLoader) currentClassloader);
-      else
-        throw new IllegalArgumentException("Classpath for compilation could not be extracted as classloader is not a URLClassloader");
+      else throw new IllegalArgumentException("Classpath for compilation could not be extracted as classloader is not a URLClassloader");
 
       if (currentClassloader == systemClassLoader) break;
       else currentClassloader = currentClassloader.getParent();
@@ -187,8 +150,7 @@ public class GenerationPathHandler extends TemporaryFolder {
     for (URLClassLoader classLoader : classloaders) {
       for (URL url : classLoader.getURLs()) {
         if (url.getProtocol().equals("file")) classpaths.add(url.getPath());
-        else
-          throw new IllegalArgumentException("Given classloader consists of classpaths which are unsupported for compilation.");
+        else throw new IllegalArgumentException("Given classloader consists of classpaths which are unsupported for compilation.");
       }
     }
 

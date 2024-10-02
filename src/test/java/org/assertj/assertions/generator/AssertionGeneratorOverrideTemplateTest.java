@@ -14,49 +14,51 @@ package org.assertj.assertions.generator;
 
 import org.assertj.assertions.generator.data.cars.Car;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static org.assertj.assertions.generator.Template.Type.ABSTRACT_ASSERT_CLASS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
+import static org.assertj.core.api.Assertions.assertThatRuntimeException;
 
-public class AssertionGeneratorOverrideTemplateTest {
+class AssertionGeneratorOverrideTemplateTest {
 
   private BaseAssertionGenerator assertionGenerator;
   private ClassToClassDescriptionConverter converter;
+  private GenerationHandler genHandle;
 
-  @Rule
-  public final GenerationPathHandler genHandle = new GenerationPathHandler(
-          Paths.get("src/test/resources"));
-
-  @Before
-  public void before() throws IOException {
+  @BeforeEach
+  void before(@TempDir Path tempDir) throws IOException {
     assertionGenerator = new BaseAssertionGenerator();
-    assertionGenerator.setDirectoryWhereAssertionFilesAreGenerated(genHandle.getRoot());
+    assertionGenerator.setDirectoryWhereAssertionFilesAreGenerated(tempDir.toFile());
     converter = new ClassToClassDescriptionConverter();
-  }
-
-  @Test(expected = NullPointerException.class)
-  public void should_fail_if_custom_template_is_null() {
-    assertionGenerator.register(null);
-  }
-
-  @Test(expected = NullPointerException.class)
-  public void should_fail_if_custom_template_content_is_null() {
-    assertionGenerator.register(new Template(Template.Type.ABSTRACT_ASSERT_CLASS, (File) null));
-  }
-
-  @Test(expected = RuntimeException.class)
-  public void should_fail_if_custom_template_content_cant_be_read() {
-    assertionGenerator.register(new Template(Template.Type.ABSTRACT_ASSERT_CLASS, new File("not_existing.template")));
+    genHandle = new GenerationHandler(tempDir, Paths.get("src/test/resources"));
   }
 
   @Test
-  public void should_generate_assertion_with_custom_template() throws IOException {
+  void should_fail_if_custom_template_is_null() {
+    assertThatNullPointerException().isThrownBy(() -> assertionGenerator.register(null));
+  }
+
+  @Test
+  void should_fail_if_custom_template_content_is_null() {
+    assertThatNullPointerException().isThrownBy(() -> assertionGenerator.register(new Template(ABSTRACT_ASSERT_CLASS, (File) null)));
+  }
+
+  @Test
+  void should_fail_if_custom_template_content_cant_be_read() {
+    assertThatRuntimeException().isThrownBy(() -> assertionGenerator.register(new Template(ABSTRACT_ASSERT_CLASS, new File("not_existing.template"))));
+  }
+
+  @Test
+  void should_generate_assertion_with_custom_template() throws IOException {
     assertionGenerator.register(new Template(Template.Type.HAS_FOR_WHOLE_NUMBER,
                                              new File("customtemplates" + File.separator,
                                                       "custom_has_assertion_template_for_whole_number.txt")));
@@ -67,7 +69,7 @@ public class AssertionGeneratorOverrideTemplateTest {
     // compile it!
     genHandle.compileGeneratedFilesFor(Car.class);
 
-    assertThat(actualFile).hasSameContentAs(expectedFile);
+    assertThat(actualFile).hasSameTextualContentAs(expectedFile);
   }
 
 }

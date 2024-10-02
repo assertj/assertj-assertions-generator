@@ -13,46 +13,45 @@
 package org.assertj.assertions.generator;
 
 import org.assertj.assertions.generator.data.OuterClass;
-import org.junit.experimental.theories.DataPoint;
 
 /**
  * This class contains a set of constants for nested classes.
  */
-public abstract class NestedClassesTest {
-  @DataPoint
-  public static NestedClass SNC = new NestedClass(OuterClass.StaticNestedPerson.class,
+public interface NestedClassesTest {
+
+  NestedClass SNC = new NestedClass(OuterClass.StaticNestedPerson.class,
                                     "OuterClass.StaticNestedPerson",
                                     "OuterClassStaticNestedPersonAssert",
                                     "org.assertj.assertions.generator.data.OuterClass",
                                     "OuterClassStaticNestedPersonAssert.java",
                                     "AbstractOuterClassStaticNestedPersonAssert",
                                     "AbstractOuterClassStaticNestedPersonAssert.java");
-  @DataPoint
-  public static NestedClass SNC_SNC = new NestedClass(OuterClass.StaticNestedPerson.SNP_StaticNestedPerson.class,
+
+  NestedClass SNC_SNC = new NestedClass(OuterClass.StaticNestedPerson.SNP_StaticNestedPerson.class,
                                         "OuterClass.StaticNestedPerson.SNP_StaticNestedPerson",
                                         "OuterClassStaticNestedPersonSNP_StaticNestedPersonAssert",
                                         "org.assertj.assertions.generator.data.OuterClass",
                                         "OuterClassStaticNestedPersonSNP_StaticNestedPersonAssert.java",
                                         "AbstractOuterClassStaticNestedPersonSNP_StaticNestedPersonAssert",
                                         "AbstractOuterClassStaticNestedPersonSNP_StaticNestedPersonAssert.java");
-  @DataPoint
-  public static NestedClass SNC_IC = new NestedClass(OuterClass.StaticNestedPerson.SNP_InnerPerson.class,
+
+  NestedClass SNC_IC = new NestedClass(OuterClass.StaticNestedPerson.SNP_InnerPerson.class,
                                        "OuterClass.StaticNestedPerson.SNP_InnerPerson",
                                        "OuterClassStaticNestedPersonSNP_InnerPersonAssert",
                                        "org.assertj.assertions.generator.data.OuterClass",
                                        "OuterClassStaticNestedPersonSNP_InnerPersonAssert.java",
                                        "AbstractOuterClassStaticNestedPersonSNP_InnerPersonAssert",
                                        "AbstractOuterClassStaticNestedPersonSNP_InnerPersonAssert.java");
-  @DataPoint
-  public static NestedClass IC = new NestedClass(OuterClass.InnerPerson.class,
+
+  NestedClass IC = new NestedClass(OuterClass.InnerPerson.class,
                                    "OuterClass.InnerPerson",
                                    "OuterClassInnerPersonAssert",
                                    "org.assertj.assertions.generator.data.OuterClass",
                                    "OuterClassInnerPersonAssert.java",
                                    "AbstractOuterClassInnerPersonAssert",
                                    "AbstractOuterClassInnerPersonAssert.java");
-  @DataPoint
-  public static NestedClass IC_IC = new NestedClass(OuterClass.InnerPerson.IP_InnerPerson.class,
+
+  NestedClass IC_IC = new NestedClass(OuterClass.InnerPerson.IP_InnerPerson.class,
                                       "OuterClass.InnerPerson.IP_InnerPerson",
                                       "OuterClassInnerPersonIP_InnerPersonAssert",
                                       "org.assertj.assertions.generator.data.OuterClass",
@@ -60,7 +59,9 @@ public abstract class NestedClassesTest {
                                       "AbstractOuterClassInnerPersonIP_InnerPersonAssert",
                                       "AbstractOuterClassInnerPersonIP_InnerPersonAssert.java");
 
-  public static class NestedClass {
+  NestedClass[] NESTED_CLASSES = { SNC, SNC_SNC, SNC_IC, IC, IC_IC };
+
+  class NestedClass {
     public final Class<?> nestedClass;
     public final String assertClassName;
     public final String assertClassFilename;

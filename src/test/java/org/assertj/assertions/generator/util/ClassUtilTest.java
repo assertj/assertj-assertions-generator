@@ -12,37 +12,9 @@
  */
 package org.assertj.assertions.generator.util;
 
-import static java.util.Arrays.asList;
-import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
-import static org.assertj.assertions.generator.util.ClassUtil.declaredGetterMethodsOf;
-import static org.assertj.assertions.generator.util.ClassUtil.getAllFieldsInHierarchy;
-import static org.assertj.assertions.generator.util.ClassUtil.getAssertType;
-import static org.assertj.assertions.generator.util.ClassUtil.getClassesRelatedTo;
-import static org.assertj.assertions.generator.util.ClassUtil.getNegativePredicateFor;
-import static org.assertj.assertions.generator.util.ClassUtil.getPredicatePrefix;
-import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
-import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
-import static org.assertj.assertions.generator.util.ClassUtil.inheritsCollectionOrIsIterable;
-import static org.assertj.assertions.generator.util.ClassUtil.isBoolean;
-import static org.assertj.assertions.generator.util.ClassUtil.isInnerPackageOf;
-import static org.assertj.assertions.generator.util.ClassUtil.isJavaLangType;
-import static org.assertj.assertions.generator.util.ClassUtil.isPredicate;
-import static org.assertj.assertions.generator.util.ClassUtil.isStandardGetter;
-import static org.assertj.assertions.generator.util.ClassUtil.isValidGetterName;
-import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
-import static org.assertj.assertions.generator.util.ClassUtil.resolveTypeNameInPackage;
-import static org.assertj.assertions.generator.util.ClassUtil.visibilityOf;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.AssertionGeneratorTest;
 import org.assertj.assertions.generator.NestedClassesTest;
 import org.assertj.assertions.generator.data.BeanWithOneException;
@@ -67,37 +39,63 @@ import org.assertj.assertions.generator.data.nba.PlayerAgent;
 import org.assertj.assertions.generator.description.GetterDescriptionTest;
 import org.assertj.assertions.generator.description.Visibility;
 import org.assertj.core.api.BooleanAssert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.theories.Theories;
-import org.junit.experimental.theories.Theory;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.FieldSource;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-import com.google.common.reflect.TypeToken;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
-@RunWith(Theories.class)
-public class ClassUtilTest extends NestedClassesTest {
+import static java.util.Arrays.asList;
+import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
+import static org.assertj.assertions.generator.util.ClassUtil.declaredGetterMethodsOf;
+import static org.assertj.assertions.generator.util.ClassUtil.getAllFieldsInHierarchy;
+import static org.assertj.assertions.generator.util.ClassUtil.getAssertType;
+import static org.assertj.assertions.generator.util.ClassUtil.getClassesRelatedTo;
+import static org.assertj.assertions.generator.util.ClassUtil.getNegativePredicateFor;
+import static org.assertj.assertions.generator.util.ClassUtil.getPredicatePrefix;
+import static org.assertj.assertions.generator.util.ClassUtil.getSimpleNameWithOuterClass;
+import static org.assertj.assertions.generator.util.ClassUtil.getterMethodsOf;
+import static org.assertj.assertions.generator.util.ClassUtil.inheritsCollectionOrIsIterable;
+import static org.assertj.assertions.generator.util.ClassUtil.isBoolean;
+import static org.assertj.assertions.generator.util.ClassUtil.isInnerPackageOf;
+import static org.assertj.assertions.generator.util.ClassUtil.isJavaLangType;
+import static org.assertj.assertions.generator.util.ClassUtil.isPredicate;
+import static org.assertj.assertions.generator.util.ClassUtil.isStandardGetter;
+import static org.assertj.assertions.generator.util.ClassUtil.isValidGetterName;
+import static org.assertj.assertions.generator.util.ClassUtil.propertyNameOf;
+import static org.assertj.assertions.generator.util.ClassUtil.resolveTypeNameInPackage;
+import static org.assertj.assertions.generator.util.ClassUtil.visibilityOf;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+
+class ClassUtilTest implements NestedClassesTest {
 
   private static final Class<?>[] NO_PARAMS = new Class[0];
 
   private static final TypeToken<Player> PLAYER_TYPE = TypeToken.of(Player.class);
 
   @Test
-  public void should_get_class_only() {
+  void should_get_class_only() {
     assertThat(collectClasses(getClass().getClassLoader(), Movie.class.getName())).containsOnly(TypeToken.of(Movie.class));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void should_throw_exception_when_classLoader_null() {
-    collectClasses((ClassLoader) null, "org.assertj.assertions.generator.data");
+  @Test
+  void should_throw_exception_when_classLoader_null() {
+    assertThatIllegalArgumentException().isThrownBy(() -> collectClasses((ClassLoader) null, "org.assertj.assertions.generator.data"));
   }
 
   private static final Function<Class<?>, TypeToken<?>> TYPE_TOKEN_TRANSFORM = TypeToken::of;
 
   @Test
-  public void should_get_classes_in_package_and_subpackages() {
+  void should_get_classes_in_package_and_subpackages() {
     Set<TypeToken<?>> classesInPackage = collectClasses("org.assertj.assertions.generator.data");
     List<Class<?>> classes = asList(Player.class,
                                     PlayerAgent.class,
@@ -127,7 +125,7 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  public void should_get_private_classes_when_included() {
+  void should_get_private_classes_when_included() {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     Set<TypeToken<?>> classesInPackage = collectClasses(classLoader,
                                                         true, "org.assertj.assertions.generator.data",
@@ -139,8 +137,8 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  @Ignore // getting nested class is not yet supported. issue #120
-  public void should_get_nested_classes() {
+  @Disabled("Getting nested class is not yet supported, see #120")
+  void should_get_nested_classes() {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     Set<TypeToken<?>> classesInPackage = collectClasses(classLoader, false, "org.assertj.assertions.generator.data.inner.Data");
     List<Class<?>> classes = asList(Data.class, Data.NestedClass.class);
@@ -149,7 +147,7 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  public void should_get_classes_with_provided_class_loader() {
+  void should_get_classes_with_provided_class_loader() {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     Set<TypeToken<?>> classesInPackage = collectClasses(classLoader, "org.assertj.assertions.generator.data");
     List<Class<?>> classes = asList(Player.class, ArtWork.class, Name.class, Movie.class, Ring.class, Race.class);
@@ -158,21 +156,21 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  public void should_return_empty_collection_if_package_does_not_exist() {
+  void should_return_empty_collection_if_package_does_not_exist() {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     assertThat(collectClasses(classLoader, "fakepackage")).isEmpty();
     assertThat(collectClasses("fakepackage")).isEmpty();
   }
 
   @Test
-  public void should_return_property_of_getter_method() throws Exception {
+  void should_return_property_of_getter_method() throws Exception {
     assertThat(propertyNameOf(Player.class.getMethod("getTeam", NO_PARAMS))).isEqualTo("team");
     assertThat(propertyNameOf(Player.class.getMethod("isRookie", NO_PARAMS))).isEqualTo("rookie");
     assertThat(propertyNameOf(EnemyReport.class.getMethod("getTarget"))).isEqualTo("target");
   }
 
   @Test
-  public void should_return_true_if_class_implements_iterable_interface() {
+  void should_return_true_if_class_implements_iterable_interface() {
     assertThat(inheritsCollectionOrIsIterable(Iterable.class)).isTrue();
     assertThat(inheritsCollectionOrIsIterable(Collection.class)).isTrue();
     assertThat(inheritsCollectionOrIsIterable(List.class)).isTrue();
@@ -180,33 +178,33 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  public void should_return_true_if_method_is_a_standard_getter() throws Exception {
+  void should_return_true_if_method_is_a_standard_getter() throws Exception {
     assertThat(isStandardGetter(Player.class.getMethod("getTeam", NO_PARAMS))).isTrue();
   }
 
   @Test
-  public void should_return_false_if_method_is_not_a_standard_getter() throws Exception {
+  void should_return_false_if_method_is_not_a_standard_getter() throws Exception {
     assertThat(isStandardGetter(Player.class.getMethod("isRookie", NO_PARAMS))).isFalse();
     assertThat(isStandardGetter(Player.class.getMethod("getVoid", NO_PARAMS))).isFalse();
     assertThat(isStandardGetter(Player.class.getMethod("getWithParam", String.class))).isFalse();
   }
 
   @Test
-  public void should_return_true_if_method_is_a_boolean_getter() throws Exception {
+  void should_return_true_if_method_is_a_boolean_getter() throws Exception {
     assertThat(isPredicate(Player.class.getMethod("isRookie", NO_PARAMS))).isTrue();
     assertThat(isPredicate(Primitives.class.getMethod("isBoolean", NO_PARAMS))).isTrue();
     assertThat(isPredicate(Primitives.class.getMethod("isBooleanWrapper", NO_PARAMS))).isTrue();
   }
 
   @Test
-  public void should_return_false_if_method_is_not_a_boolean_getter() throws Exception {
+  void should_return_false_if_method_is_not_a_boolean_getter() throws Exception {
     assertThat(isPredicate(Player.class.getMethod("getTeam", NO_PARAMS))).isFalse();
     assertThat(isPredicate(Player.class.getMethod("isVoid", NO_PARAMS))).isFalse();
     assertThat(isPredicate(Player.class.getMethod("isWithParam", String.class))).isFalse();
   }
 
   @Test
-  public void should_return_negative_predicate() {
+  void should_return_negative_predicate() {
     for (String[] pair : new String[][] {
         { "isADog", "isNotADog" },
         { "canRun", "cannotRun" },
@@ -218,7 +216,7 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  public void should_return_true_if_string_follows_getter_name_pattern() throws Exception {
+  void should_return_true_if_string_follows_getter_name_pattern() throws Exception {
     for (String name : new String[] { "isRookie", "getTeam", "wasTeam", "canRun", "shouldWin",
         "hasTrophy", "doesNotHaveFun", "cannotWin", "shouldNotPlay" }) {
       assertThat(isValidGetterName(name)).as(name).isTrue();
@@ -226,7 +224,7 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  public void should_return_predicate_prefix() throws Exception {
+  void should_return_predicate_prefix() throws Exception {
     assertThat(getPredicatePrefix("isRookie")).isEqualTo("is");
     assertThat(getPredicatePrefix("wasTeam")).isEqualTo("was");
     assertThat(getPredicatePrefix("canRun")).isEqualTo("can");
@@ -238,7 +236,7 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  public void should_return_false_if_string_does_not_follow_getter_name_pattern() throws Exception {
+  void should_return_false_if_string_does_not_follow_getter_name_pattern() throws Exception {
     for (String name : new String[] { "isrookie", "getteam", "GetTeam", "get", "is", "wascool", "hastRophy",
         "shouldnotWin" }) {
       assertThat(isValidGetterName(name)).as(name).isFalse();
@@ -246,80 +244,81 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  public void should_return_getters_methods_only() throws Exception {
+  void should_return_getters_methods_only() throws Exception {
     Set<Method> playerGetterMethods = getterMethodsOf(PLAYER_TYPE, Collections.<Class<?>> emptySet());
     assertThat(playerGetterMethods).contains(Player.class.getMethod("getTeam", NO_PARAMS))
                                    .doesNotContain(Player.class.getMethod("isInTeam", String.class));
   }
 
   @Test
-  public void should_also_return_inherited_getters_methods() throws Exception {
+  void should_also_return_inherited_getters_methods() throws Exception {
     Set<Method> playerGetterMethods = getterMethodsOf(TypeToken.of(Movie.class), Collections.<Class<?>> emptySet());
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS),
                                              ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }
 
   @Test
-  public void should_not_return_inherited_getters_methods() throws Exception {
+  void should_not_return_inherited_getters_methods() throws Exception {
     Set<Method> playerGetterMethods = declaredGetterMethodsOf(TypeToken.of(Movie.class), Collections.<Class<?>> emptySet());
     assertThat(playerGetterMethods).contains(Movie.class.getMethod("getReleaseDate", NO_PARAMS))
                                    .doesNotContain(ArtWork.class.getMethod("getTitle", NO_PARAMS));
   }
 
-  @Theory
-  public void should_return_inner_class_name_with_outer_class_name(NestedClass nestedClass) {
+  @ParameterizedTest
+  @FieldSource("NESTED_CLASSES")
+  void should_return_inner_class_name_with_outer_class_name(NestedClass nestedClass) {
     String actualName = getSimpleNameWithOuterClass(nestedClass.nestedClass);
     assertThat(actualName).isEqualTo(nestedClass.classNameWithOuterClass);
   }
 
   @Test
-  public void testGetSimpleNameWithOuterClass_notNestedClass() throws Exception {
+  void testGetSimpleNameWithOuterClass_notNestedClass() throws Exception {
     assertThat(getSimpleNameWithOuterClass(String.class)).isEqualTo("String");
   }
 
   @Test
-  public void getClass_on_parameterized_List_should_return_List_class() throws Exception {
+  void getClass_on_parameterized_List_should_return_List_class() throws Exception {
     Method method = Generic.class.getMethod("getListOfInteger");
     Class<?> clazz = ClassUtil.getClass(method.getGenericReturnType());
     assertThat(clazz).isEqualTo(List.class);
   }
 
   @Test
-  public void getClass_on_parameterized_List_should_return_Integer_class() throws Exception {
+  void getClass_on_parameterized_List_should_return_Integer_class() throws Exception {
     Method method = Generic.class.getMethod("getListOfInteger");
     Class<?> clazz = ClassUtil.getClass(((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0]);
     assertThat(clazz).isEqualTo(Integer.class);
   }
 
   @Test
-  public void getClass_on_wildcard_List_should_return_Integer_class() throws Exception {
+  void getClass_on_wildcard_List_should_return_Integer_class() throws Exception {
     Method method = Generic.class.getMethod("getListOfWildcardInteger");
     Class<?> clazz = ClassUtil.getClass(((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0]);
     assertThat(clazz).isEqualTo(Integer.class);
   }
 
   @Test
-  public void getClass_on_variable_type_should_return_null() throws Exception {
+  void getClass_on_variable_type_should_return_null() throws Exception {
     Method method = Generic.class.getMethod("getGenericArray");
     Class<?> clazz = ClassUtil.getClass((method.getGenericReturnType()));
     assertThat(clazz).isEqualTo(Object[].class);
   }
 
   @Test
-  public void getClassRelatedTo_on_non_generic_type_should_return_given_type() throws Exception {
+  void getClassRelatedTo_on_non_generic_type_should_return_given_type() throws Exception {
     Set<Class<?>> classes = getClassesRelatedTo(String.class.getMethod("toString").getReturnType());
     assertThat(classes).containsOnly(String.class);
   }
 
   @Test
-  public void getClassRelatedTo_on_generic_list_should_return_list_and_component_type() throws Exception {
+  void getClassRelatedTo_on_generic_list_should_return_list_and_component_type() throws Exception {
     Method method = Generic.class.getMethod("getListOfInteger");
     Set<Class<?>> classes = getClassesRelatedTo(method.getGenericReturnType());
     assertThat(classes).containsOnly(Integer.class, List.class);
   }
 
   @Test
-  public void getClass_on_generic_should_return_Number_class() throws Exception {
+  void getClass_on_generic_should_return_Number_class() throws Exception {
     Method method = Generic.class.getMethod("getNumber");
     Class<?> classes = ClassUtil.getClass(method.getGenericReturnType());
     assertThat(classes).isEqualTo(Number.class);
@@ -329,7 +328,7 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  public void resolve_type_name_in_package() throws Exception {
+  void resolve_type_name_in_package() throws Exception {
     assertThat(resolveTypeNameInPackage(String.class, String.class.getPackage().getName()))
                                                                                            .as("java lang type has simple name with package")
                                                                                            .isEqualTo(String.class.getSimpleName());
@@ -358,7 +357,7 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  public void java_lang_types_should_work_with_isJavaLangType() throws Exception {
+  void java_lang_types_should_work_with_isJavaLangType() throws Exception {
     assertThat(isJavaLangType(Object.class)).isTrue();
     assertThat(isJavaLangType(boolean.class)).isTrue();
     assertThat(isJavaLangType(Boolean.class)).isTrue();
@@ -368,7 +367,7 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  public void can_properly_compute_Assert_types() throws Exception {
+  void can_properly_compute_Assert_types() throws Exception {
     TypeToken<ClassUtilTest> thisType = TypeToken.of(ClassUtilTest.class);
 
     assertThat(getAssertType(thisType, thisType.getRawType().getPackage().getName()))
@@ -391,7 +390,7 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  public void properly_check_if_types_are_boolean() throws Exception {
+  void properly_check_if_types_are_boolean() throws Exception {
     TypeToken<Boolean> wrapper = new TypeToken<Boolean>(getClass()) {};
     TypeToken<Boolean> primitive = TypeToken.of(boolean.class);
     TypeToken<ClassUtilTest> neither = TypeToken.of(ClassUtilTest.class);
@@ -402,7 +401,7 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  public void should_check_that_nested_packages_work() throws Exception {
+  void should_check_that_nested_packages_work() throws Exception {
 
     assertThat(isInnerPackageOf(ClassUtilTest.class.getPackage(), AssertionGeneratorTest.class.getPackage()))
                                                                                                              .as("from 'super' package")
@@ -419,14 +418,14 @@ public class ClassUtilTest extends NestedClassesTest {
   }
 
   @Test
-  public void should_return_all_fields_in_hierarchy_except_Object_fields() throws Exception {
+  void should_return_all_fields_in_hierarchy_except_Object_fields() throws Exception {
     List<Field> fields = getAllFieldsInHierarchy(TypeToken.of(WithPrivateFields.class));
     assertThat(fields).extracting("name")
                       .contains("age", "name", "address", "country", "nickname", "city");
   }
 
   @Test
-  public void should_determine_fields_visibility() throws Exception {
+  void should_determine_fields_visibility() throws Exception {
     List<Field> fields = ClassUtil.declaredFieldsOf(TypeToken.of(WithPrivateFields.class));
     List<Visibility> fieldsVisibility = new ArrayList<>();
     for (Field field : fields)

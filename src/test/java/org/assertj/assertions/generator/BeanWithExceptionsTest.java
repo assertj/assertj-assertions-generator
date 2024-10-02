@@ -16,7 +16,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
 import org.assertj.assertions.generator.data.BeanWithOneException;
 import org.assertj.assertions.generator.data.BeanWithTwoExceptions;
-import org.junit.experimental.theories.DataPoint;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -25,73 +24,86 @@ import java.util.List;
 /**
  * This interface contains a set of constants for testing generation from {@link org.assertj.assertions.generator.data.BeanWithOneException} class.
  */
-public abstract class BeanWithExceptionsTest extends NestedClassesTest {
+public interface BeanWithExceptionsTest {
 
-    private static final List<TypeToken<? extends Throwable>> ONE_EXCEPTION =
-        ImmutableList.<TypeToken<? extends Throwable>>of(TypeToken.of(IOException.class));
+  List<TypeToken<? extends Throwable>> ONE_EXCEPTION =
+    ImmutableList.of(TypeToken.of(IOException.class));
 
-    private static final List<TypeToken<? extends Throwable>> TWO_EXCEPTIONS =
-        ImmutableList.<TypeToken<? extends Throwable>>of(TypeToken.of(IOException.class), TypeToken.of(SQLException.class));
-
-    @DataPoint
-    public static TypeToken<BeanWithOneException> BEAN_WITH_ONE_EXCEPTION = TypeToken.of(BeanWithOneException.class);
-    
-    @DataPoint
-    public static TypeToken<BeanWithTwoExceptions> BEAN_WITH_TWO_EXCEPTIONS = TypeToken.of(BeanWithTwoExceptions.class);
-    
-    @DataPoint
-    public static GetterWithException STRING_1_EXCEPTION = new GetterWithException(BEAN_WITH_ONE_EXCEPTION, "stringPropertyThrowsException", ONE_EXCEPTION, false);
-    @DataPoint
-    public static GetterWithException STRING_2_EXCEPTIONS = new GetterWithException(BEAN_WITH_TWO_EXCEPTIONS, "stringPropertyThrowsException", TWO_EXCEPTIONS, false);
-    @DataPoint
-    public static GetterWithException BOOLEAN_1_EXCEPTION = new GetterWithException(BEAN_WITH_ONE_EXCEPTION, "booleanPropertyThrowsException", ONE_EXCEPTION, true);
-    @DataPoint
-    public static GetterWithException BOOLEAN_2_EXCEPTIONS = new GetterWithException(BEAN_WITH_TWO_EXCEPTIONS, "booleanPropertyThrowsException", TWO_EXCEPTIONS, true);
-    @DataPoint
-    public static GetterWithException ARRAY_1_EXCEPTION = new GetterWithException(BEAN_WITH_ONE_EXCEPTION, "arrayPropertyThrowsException", ONE_EXCEPTION, false);
-    @DataPoint
-    public static GetterWithException ARRAY_2_EXCEPTIONS = new GetterWithException(BEAN_WITH_TWO_EXCEPTIONS, "arrayPropertyThrowsException", TWO_EXCEPTIONS, false);
-    @DataPoint
-    public static GetterWithException ITERABLE_1_EXCEPTION = new GetterWithException(BEAN_WITH_ONE_EXCEPTION, "iterablePropertyThrowsException", ONE_EXCEPTION, false);
-    @DataPoint
-    public static GetterWithException ITERABLE_2_EXCEPTIONS = new GetterWithException(BEAN_WITH_TWO_EXCEPTIONS, "iterablePropertyThrowsException", TWO_EXCEPTIONS, false);
+  List<TypeToken<? extends Throwable>> TWO_EXCEPTIONS =
+    ImmutableList.of(TypeToken.of(IOException.class), TypeToken.of(SQLException.class));
 
 
-    public static class GetterWithException implements Comparable<GetterWithException> {
-        private final TypeToken<?> beanClass;
-        private final String propertyName;
-        private final List<TypeToken<? extends Throwable>> exceptions;
-        private final boolean booleanType;
+  TypeToken<BeanWithOneException> BEAN_WITH_ONE_EXCEPTION = TypeToken.of(BeanWithOneException.class);
 
-        public GetterWithException(TypeToken<?> beanClass,
-                                   String propertyName,
-                                   List<TypeToken<? extends Throwable>> exceptions,
-                                   boolean booleanType) {
-            this.beanClass = beanClass;
-            this.propertyName = propertyName;
-            this.booleanType = booleanType;
-            this.exceptions = exceptions;
-        }
 
-        public String getPropertyName() {
-            return propertyName;
-        }
+  TypeToken<BeanWithTwoExceptions> BEAN_WITH_TWO_EXCEPTIONS = TypeToken.of(BeanWithTwoExceptions.class);
 
-        public List<TypeToken<? extends Throwable>> getExceptions() {
-            return exceptions;
-        }
+  TypeToken<?>[] TYPE_TOKENS = {BEAN_WITH_ONE_EXCEPTION, BEAN_WITH_TWO_EXCEPTIONS};
 
-        public TypeToken<?> getBeanClass() {
-            return beanClass;
-        }
 
-        public boolean isBooleanType() {
-            return booleanType;
-        }
-    
-        @Override
-        public int compareTo(GetterWithException o) {
-            return propertyName.compareTo(o.propertyName);
-        }
+  GetterWithException STRING_1_EXCEPTION = new GetterWithException(BEAN_WITH_ONE_EXCEPTION, "stringPropertyThrowsException", ONE_EXCEPTION, false);
+
+  GetterWithException STRING_2_EXCEPTIONS = new GetterWithException(BEAN_WITH_TWO_EXCEPTIONS, "stringPropertyThrowsException", TWO_EXCEPTIONS, false);
+
+  GetterWithException BOOLEAN_1_EXCEPTION = new GetterWithException(BEAN_WITH_ONE_EXCEPTION, "booleanPropertyThrowsException", ONE_EXCEPTION, true);
+
+  GetterWithException BOOLEAN_2_EXCEPTIONS = new GetterWithException(BEAN_WITH_TWO_EXCEPTIONS, "booleanPropertyThrowsException", TWO_EXCEPTIONS, true);
+
+  GetterWithException ARRAY_1_EXCEPTION = new GetterWithException(BEAN_WITH_ONE_EXCEPTION, "arrayPropertyThrowsException", ONE_EXCEPTION, false);
+
+  GetterWithException ARRAY_2_EXCEPTIONS = new GetterWithException(BEAN_WITH_TWO_EXCEPTIONS, "arrayPropertyThrowsException", TWO_EXCEPTIONS, false);
+
+  GetterWithException ITERABLE_1_EXCEPTION = new GetterWithException(BEAN_WITH_ONE_EXCEPTION, "iterablePropertyThrowsException", ONE_EXCEPTION, false);
+
+  GetterWithException ITERABLE_2_EXCEPTIONS = new GetterWithException(BEAN_WITH_TWO_EXCEPTIONS, "iterablePropertyThrowsException", TWO_EXCEPTIONS, false);
+
+  GetterWithException[] GETTER_WITH_EXCEPTIONS = {
+    STRING_1_EXCEPTION,
+    STRING_2_EXCEPTIONS,
+    BOOLEAN_1_EXCEPTION,
+    BOOLEAN_2_EXCEPTIONS,
+    ARRAY_1_EXCEPTION,
+    ARRAY_2_EXCEPTIONS,
+    ITERABLE_1_EXCEPTION,
+    ITERABLE_2_EXCEPTIONS
+  };
+
+  class GetterWithException implements Comparable<GetterWithException> {
+    private final TypeToken<?> beanClass;
+    private final String propertyName;
+    private final List<TypeToken<? extends Throwable>> exceptions;
+    private final boolean booleanType;
+
+    public GetterWithException(TypeToken<?> beanClass,
+                               String propertyName,
+                               List<TypeToken<? extends Throwable>> exceptions,
+                               boolean booleanType) {
+      this.beanClass = beanClass;
+      this.propertyName = propertyName;
+      this.booleanType = booleanType;
+      this.exceptions = exceptions;
     }
+
+    public String getPropertyName() {
+      return propertyName;
+    }
+
+    public List<TypeToken<? extends Throwable>> getExceptions() {
+      return exceptions;
+    }
+
+    public TypeToken<?> getBeanClass() {
+      return beanClass;
+    }
+
+    public boolean isBooleanType() {
+      return booleanType;
+    }
+
+    @Override
+    public int compareTo(GetterWithException o) {
+      return propertyName.compareTo(o.propertyName);
+    }
+  }
+
 }

@@ -192,9 +192,8 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
    * Creates a new <code>{@link BaseAssertionGenerator}</code> with the templates from the given directory.
    *
    * @param templatesDirectory path where to find templates
-   * @throws IOException if some template file could not be found or read
    */
-  public BaseAssertionGenerator(String templatesDirectory) throws IOException {
+  public BaseAssertionGenerator(String templatesDirectory) {
     templateRegistry = DefaultTemplateRegistryProducer.create(templatesDirectory);
   }
 

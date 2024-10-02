@@ -27,11 +27,9 @@ import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.PlayerAgent;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.GetterDescription;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.experimental.theories.Theories;
-import org.junit.experimental.theories.Theory;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.FieldSource;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -39,23 +37,18 @@ import java.util.List;
 
 import static org.assertj.assertions.generator.util.ClassUtil.getTypeDeclaration;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
-@RunWith(Theories.class)
-public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest {
+class ClassToClassDescriptionConverterTest implements BeanWithExceptionsTest, NestedClassesTest {
 
-  private static ClassToClassDescriptionConverter converter;
-
-  @BeforeClass
-  public static void beforeAllTests() {
-    converter = new ClassToClassDescriptionConverter();
-  }
+  private final ClassToClassDescriptionConverter underTest = new ClassToClassDescriptionConverter();
 
   @Test
-  public void should_build_player_class_description() {
+  void should_build_player_class_description() {
     // Given
     Class<?> clazz = Player.class;
     // When
-    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    ClassDescription classDescription = underTest.convertToClassDescription(clazz);
     // Then
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Player");
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data.nba");
@@ -72,11 +65,11 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
   }
 
   @Test
-  public void should_build_movie_class_description() {
+  void should_build_movie_class_description() {
     // Given
     Class<?> clazz = Movie.class;
     // When
-    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    ClassDescription classDescription = underTest.convertToClassDescription(clazz);
     // Then
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Movie");
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
@@ -96,19 +89,19 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
   }
 
   @Test
-  public void should_build_comparable_class_description() {
+  void should_build_comparable_class_description() {
     // Given
     Class<?> clazz = Name.class;
     // When
-    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    ClassDescription classDescription = underTest.convertToClassDescription(clazz);
     // Then
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Name");
     assertThat(classDescription.implementsComparable()).as("implementsComparable ? ").isTrue();
   }
 
   @Test
-  public void should_build_WithPrivateFields_class_description() {
-    ClassDescription classDescription = converter.convertToClassDescription(WithPrivateFields.class);
+  void should_build_WithPrivateFields_class_description() {
+    ClassDescription classDescription = underTest.convertToClassDescription(WithPrivateFields.class);
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("WithPrivateFields");
     assertThat(classDescription.getPackageName()).isEqualTo("org.assertj.assertions.generator.data");
     assertThat(classDescription.getFieldsDescriptions()).hasSize(8);
@@ -118,12 +111,13 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
     assertThat(classDescription.getSuperType()).isEqualTo(TypeToken.of(WithPrivateFieldsParent.class));
   }
 
-  @Theory
-  public void should_build_nested_class_description(NestedClass nestedClass) {
+  @ParameterizedTest
+  @FieldSource("NESTED_CLASSES")
+  void should_build_nested_class_description(NestedClass nestedClass) {
     // Given
     Class<?> clazz = nestedClass.nestedClass;
     // When
-    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    ClassDescription classDescription = underTest.convertToClassDescription(clazz);
     // Then
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo(nestedClass.classNameWithOuterClass);
     assertThat(classDescription.getFullyQualifiedOuterClassName()).isEqualTo(nestedClass.fullyQualifiedOuterClassName);
@@ -135,13 +129,14 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
   }
 
-  @Theory
-  public void should_build_getter_with_exception_description(GetterWithException getter) {
+  @ParameterizedTest
+  @FieldSource("GETTER_WITH_EXCEPTIONS")
+  void should_build_getter_with_exception_description(GetterWithException getter) {
     // Given
     TypeToken<?> type = getter.getBeanClass();
     Class<?> clazz = type.getRawType();
     // When
-    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    ClassDescription classDescription = underTest.convertToClassDescription(clazz);
     // Then
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo(clazz.getSimpleName());
     assertThat(classDescription.getPackageName()).isEqualTo(clazz.getPackage().getName());
@@ -164,11 +159,11 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
   }
 
   @Test
-  public void should_build_class_description_for_iterable_of_primitive_type_array() {
+  void should_build_class_description_for_iterable_of_primitive_type_array() {
     // Given
     Class<?> clazz = WithPrimitiveArrayCollection.class;
     // When
-    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    ClassDescription classDescription = underTest.convertToClassDescription(clazz);
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
     // Then
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
@@ -192,17 +187,18 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
     }
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void should_fail_to_build_class_description_for_local_class() {
+  @Test
+  void should_fail_to_build_class_description_for_local_class() {
     class Local {
     }
-    converter.convertToClassDescription(Local.class);
+
+    assertThatIllegalArgumentException().isThrownBy(() -> underTest.convertToClassDescription(Local.class));
   }
 
   @Test
-  public void should_build_class_description_for_array_of_primitive_type_array() {
+  void should_build_class_description_for_array_of_primitive_type_array() {
     // When
-    ClassDescription classDescription = converter.convertToClassDescription(WithPrimitiveArrayArrayCollection.class);
+    ClassDescription classDescription = underTest.convertToClassDescription(WithPrimitiveArrayArrayCollection.class);
     // Then
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
@@ -212,9 +208,9 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
   }
 
   @Test
-  public void should_build_class_description_for_enum_type() {
+  void should_build_class_description_for_enum_type() {
     // When
-    ClassDescription classDescription = converter.convertToClassDescription(TreeEnum.class);
+    ClassDescription classDescription = underTest.convertToClassDescription(TreeEnum.class);
     // Then
     // should not contain getDeclaringClassGetter as we don't want to have hasDeclaringClass assertion
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
@@ -226,7 +222,7 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
     assertThat(getterDescription.isArrayType()).as("getterDescription must be an array").isFalse();
   }
 
-  class WithIterableObjectType {
+  static class WithIterableObjectType {
     List<Player[]> players;
 
     @SuppressWarnings("unused")
@@ -236,11 +232,11 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
   }
 
   @Test
-  public void should_build_class_description_for_iterable_of_Object_type() {
+  void should_build_class_description_for_iterable_of_Object_type() {
     // Given
     Class<?> clazz = WithIterableObjectType.class;
     // When
-    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    ClassDescription classDescription = underTest.convertToClassDescription(clazz);
     // Then
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
     GetterDescription getterDescription = classDescription.getGettersDescriptions().iterator().next();
@@ -255,11 +251,11 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
   }
 
   @Test
-  public void should_build_class_description_for_interface() {
+  void should_build_class_description_for_interface() {
     // Given an interface
     Class<?> clazz = PlayerAgent.class;
     // When
-    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    ClassDescription classDescription = underTest.convertToClassDescription(clazz);
     // Then
     assertThat(classDescription.getSuperType()).isNull();
     assertThat(classDescription.getGettersDescriptions()).hasSize(1);
@@ -272,11 +268,11 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
   }
 
   @Test
-  public void should_build_fellowshipOfTheRing_class_description() {
+  void should_build_fellowshipOfTheRing_class_description() {
     // Given
     Class<?> clazz = FellowshipOfTheRing.class;
     // When
-    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    ClassDescription classDescription = underTest.convertToClassDescription(clazz);
     // Then
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("FellowshipOfTheRing");
     assertThat(classDescription.getFullyQualifiedClassName()).isEqualTo("org.assertj.assertions.generator.data.lotr.FellowshipOfTheRing");
@@ -286,17 +282,17 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
   }
 
   @Test
-  public void should_handle_toString() {
-    ClassDescription classDescription = converter.convertToClassDescription(FellowshipOfTheRing.class);
+  void should_handle_toString() {
+    ClassDescription classDescription = underTest.convertToClassDescription(FellowshipOfTheRing.class);
     assertThat(classDescription.toString()).contains(FellowshipOfTheRing.class.getName());
   }
 
   @Test
-  public void should_build_class_description_for_class_with_public_fields() {
+  void should_build_class_description_for_class_with_public_fields() {
     // Given
     Class<?> clazz = Team.class;
     // When
-    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    ClassDescription classDescription = underTest.convertToClassDescription(clazz);
     // Then
     assertThat(classDescription.getClassNameWithOuterClass()).isEqualTo("Team");
     assertThat(classDescription.getFullyQualifiedClassName()).isEqualTo("org.assertj.assertions.generator.data.Team");
@@ -316,7 +312,7 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
                                                                       "privateField");
   }
 
-  class Bug21_SQLException extends SQLException {
+  static class Bug21_SQLException extends SQLException {
     private static final long serialVersionUID = 1L;
 
     @SuppressWarnings("unused")
@@ -326,16 +322,16 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
   }
 
   @Test
-  public void bug21_reflection_error_on_iterable_ParameterizedType() {
-    ClassDescription classDescription = converter.convertToClassDescription(Bug21_SQLException.class);
+  void bug21_reflection_error_on_iterable_ParameterizedType() {
+    ClassDescription classDescription = underTest.convertToClassDescription(Bug21_SQLException.class);
     // exceptionChain is a SQLException which is an Iterable<Throwable> but looking only at SQLException we can't deduce
     // iterable valueType
     assertThat(classDescription.getGettersDescriptions()).extracting("name").contains("exceptionChain");
   }
 
   @Test
-  public void should_only_describe_overridden_getter_once() {
-    ClassDescription myClassDescription = converter.convertToClassDescription(ClassOverridingGetter.class);
+  void should_only_describe_overridden_getter_once() {
+    ClassDescription myClassDescription = underTest.convertToClassDescription(ClassOverridingGetter.class);
     assertThat(myClassDescription.getGettersDescriptions()).extracting("name").containsOnlyOnce("myList");
   }
 
@@ -344,7 +340,7 @@ public class ClassToClassDescriptionConverterTest extends BeanWithExceptionsTest
     List<String> getMyList();
   }
 
-  class ClassOverridingGetter implements InterfaceWithGetter {
+  static class ClassOverridingGetter implements InterfaceWithGetter {
     @Override
     public ArrayList<String> getMyList() {
       return null;

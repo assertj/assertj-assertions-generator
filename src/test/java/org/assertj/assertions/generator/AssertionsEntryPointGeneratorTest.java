@@ -25,36 +25,44 @@ import org.assertj.assertions.generator.data.nba.Player;
 import org.assertj.assertions.generator.data.nba.team.Team;
 import org.assertj.assertions.generator.description.ClassDescription;
 import org.assertj.assertions.generator.description.converter.ClassToClassDescriptionConverter;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
-import static org.assertj.assertions.generator.AssertionsEntryPointType.*;
+import static org.assertj.assertions.generator.AssertionsEntryPointType.AUTO_CLOSEABLE_BDD_SOFT;
+import static org.assertj.assertions.generator.AssertionsEntryPointType.AUTO_CLOSEABLE_SOFT;
+import static org.assertj.assertions.generator.AssertionsEntryPointType.BDD;
+import static org.assertj.assertions.generator.AssertionsEntryPointType.BDD_SOFT;
+import static org.assertj.assertions.generator.AssertionsEntryPointType.JUNIT_BDD_SOFT;
+import static org.assertj.assertions.generator.AssertionsEntryPointType.JUNIT_SOFT;
+import static org.assertj.assertions.generator.AssertionsEntryPointType.SOFT;
+import static org.assertj.assertions.generator.AssertionsEntryPointType.STANDARD;
 import static org.assertj.assertions.generator.util.ClassUtil.collectClasses;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.contentOf;
 
-public class AssertionsEntryPointGeneratorTest {
+class AssertionsEntryPointGeneratorTest {
+
+  @TempDir
+  private Path tempDir;
+
   private BaseAssertionGenerator generator;
 
-  @Rule
-  public final GenerationPathHandler genHandle = new GenerationPathHandler(AssertionsEntryPointGeneratorTest.class,
-                                                                           Paths.get("src/test/resources"));
-
-  @Before
-  public void beforeEachTest() throws IOException {
-    generator = genHandle.buildAssertionGenerator();
+  @BeforeEach
+  void before() throws IOException {
+    generator = new BaseAssertionGenerator();
+    generator.setDirectoryWhereAssertionFilesAreGenerated(tempDir.toFile());
   }
 
   @Test
-  public void should_generate_standard_assertions_entry_point_class_file() throws Exception {
+  void should_generate_standard_assertions_entry_point_class_file() throws Exception {
     // GIVEN : classes we want to have entry point assertions for
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
                                                                        Name.class, Player.class, Movie.class,
@@ -70,7 +78,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_generate_correctly_standard_assertions_entry_point_class_for_classes_with_same_name()
+  void should_generate_correctly_standard_assertions_entry_point_class_for_classes_with_same_name()
                                                                                                            throws Exception {
     // GIVEN : classes we want to have entry point assertions for
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Team.class,
@@ -84,7 +92,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_generate_assertion_entry_point_class_file_with_custom_package() throws Exception {
+  void should_generate_assertion_entry_point_class_file_with_custom_package() throws Exception {
     // GIVEN : classes we want to have entry point assertions for
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
                                                                        Name.class, Player.class, Movie.class,
@@ -97,11 +105,11 @@ public class AssertionsEntryPointGeneratorTest {
     String expectedContent = readExpectedContentFromFile("AssertionsWithCustomPackage.expected.txt");
     assertThat(assertionsEntryPointFile).as("check entry point class content")
                                         .hasContent(expectedContent)
-                                        .hasParent(genHandle.getRoot().toPath().resolve("my/custom/package").toFile());
+                                        .hasParent(tempDir.resolve("my/custom/package").toFile());
   }
 
   @Test
-  public void should_generate_bdd_assertion_entry_point_class_file() throws Exception {
+  void should_generate_bdd_assertion_entry_point_class_file() throws Exception {
     // GIVEN : classes we want to have entry point assertions for
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
                                                                        Name.class, Player.class, Movie.class,
@@ -115,7 +123,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_generate_soft_assertions_entry_point_class_file() throws Exception {
+  void should_generate_soft_assertions_entry_point_class_file() throws Exception {
     // GIVEN : classes we want to have entry point assertions for
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
                                                                        Name.class, Player.class, Movie.class,
@@ -130,7 +138,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_generate_junit_soft_assertions_entry_point_class_file() throws Exception {
+  void should_generate_junit_soft_assertions_entry_point_class_file() throws Exception {
     // GIVEN : classes we want to have entry point assertions for
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
                                                                        Name.class, Player.class, Movie.class,
@@ -147,7 +155,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_generate_bdd_soft_assertions_entry_point_class_file() throws Exception {
+  void should_generate_bdd_soft_assertions_entry_point_class_file() throws Exception {
     // GIVEN : classes we want to have entry point assertions for
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
                                                                        Name.class, Player.class, Movie.class,
@@ -163,7 +171,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_generate_junit_bdd_soft_assertions_entry_point_class_file() throws Exception {
+  void should_generate_junit_bdd_soft_assertions_entry_point_class_file() throws Exception {
     // GIVEN : classes we want to have entry point assertions for
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
                                                                        Name.class, Player.class, Movie.class,
@@ -179,7 +187,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_generate_auto_closeable_soft_assertions_entry_point_class_file() throws Exception {
+  void should_generate_auto_closeable_soft_assertions_entry_point_class_file() throws Exception {
     // GIVEN : classes we want to have entry point assertions for
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
                                                                        Name.class, Player.class, Movie.class,
@@ -196,7 +204,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_generate_auto_closeable_bdd_soft_assertions_entry_point_class_file() throws Exception {
+  void should_generate_auto_closeable_bdd_soft_assertions_entry_point_class_file() throws Exception {
     // GIVEN : classes we want to have entry point assertions for
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class, Race.class, ArtWork.class,
                                                                        Name.class, Player.class, Movie.class,
@@ -213,7 +221,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_generate_an_assertions_entry_point_class_file_that_matches_given_class_name() throws Exception {
+  void should_generate_an_assertions_entry_point_class_file_that_matches_given_class_name() throws Exception {
     // GIVEN : custom entry point class template changing the class name.
     Set<ClassDescription> classDescriptionSet = getClassDescriptionsOf(Ring.class);
     generator.register(new Template(Template.Type.ASSERTIONS_ENTRY_POINT_CLASS,
@@ -230,7 +238,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_return_null_assertion_entry_point_file_if_no_classes_description_are_given() throws Exception {
+  void should_return_null_assertion_entry_point_file_if_no_classes_description_are_given() throws Exception {
     // GIVEN no ClassDescription
     Set<ClassDescription> classDescriptionSet = newLinkedHashSet();
     // THEN generated entry points file are null
@@ -241,7 +249,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_return_empty_assertion_entry_point_class_content_if_no_classes_description_are_given()
+  void should_return_empty_assertion_entry_point_class_content_if_no_classes_description_are_given()
                                                                                                             throws Exception {
     // GIVEN no ClassDescription
     Set<ClassDescription> emptySet = newLinkedHashSet();
@@ -253,7 +261,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_return_null_assertion_entry_point_file_if_null_classes_description_are_given() throws Exception {
+  void should_return_null_assertion_entry_point_file_if_null_classes_description_are_given() throws Exception {
     // GIVEN no ClassDescription
     // THEN generated entry points file are null
     for (AssertionsEntryPointType assertionsEntryPointType : AssertionsEntryPointType.values()) {
@@ -262,7 +270,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_return_empty_assertion_entry_point_class_if_null_classes_description_are_given() throws Exception {
+  void should_return_empty_assertion_entry_point_class_if_null_classes_description_are_given() throws Exception {
     // GIVEN no ClassDescription
     // THEN generated entry points file are null
     for (AssertionsEntryPointType assertionsEntryPointType : AssertionsEntryPointType.values()) {
@@ -271,7 +279,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_not_generate_assertion_entry_point_for_non_public_class_in_package() throws Exception {
+  void should_not_generate_assertion_entry_point_for_non_public_class_in_package() throws Exception {
     // GIVEN package including a package private class
     Set<ClassDescription> classDescriptions = getClassDescriptionsOf(collectClasses("org.assertj.assertions.generator.data"));
     // WHEN
@@ -283,7 +291,7 @@ public class AssertionsEntryPointGeneratorTest {
   }
 
   @Test
-  public void should_not_generate_assertion_entry_point_for_non_public_class() throws Exception {
+  void should_not_generate_assertion_entry_point_for_non_public_class() throws Exception {
     // GIVEN package including a package private class
     Set<ClassDescription> classDescriptions = getClassDescriptionsOf(collectClasses("org.assertj.assertions.generator.data.inner.PackagePrivate"));
     // WHEN

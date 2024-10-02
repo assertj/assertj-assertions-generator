@@ -26,6 +26,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Needed to properly bring in the Maven dependencies, see http://maven.apache.org/surefire/maven-surefire-plugin/examples/class-loading.html -->
     <surefire.useSystemClassLoader>false</surefire.useSystemClassLoader>
+    <!-- Dependency versions overriding -->
+    <junit-jupiter.version>5.11.1</junit-jupiter.version>
   </properties>
 
   <dependencyManagement>
@@ -34,12 +36,6 @@
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>33.3.1-jre</version>
-      </dependency>
-      <dependency>
-        <groupId>org.junit</groupId>
-        <artifactId>junit-bom</artifactId>
-        <version>5.11.1</version>
-        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -70,6 +66,12 @@
       <artifactId>compile-testing</artifactId>
       <version>0.21.0</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit</artifactId>
+          <groupId>junit</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
@@ -86,11 +88,6 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

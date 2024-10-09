@@ -3,7 +3,7 @@ package org.assertj.assertions.generator.data;
 /**
  * Entry point for BDD assertions of different data types.
  */
-@javax.annotation.Generated(value="assertj-assertions-generator")
+@javax.annotation.processing.Generated(value="assertj-assertions-generator")
 public class BddAssertions {
 
   /**

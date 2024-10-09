@@ -8,7 +8,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
- * Copyright 2012-2021 the original author or authors.
+ * Copyright 2012-2024 the original author or authors.
  */
 package my.assertions;
 
@@ -19,7 +19,7 @@ import org.assertj.core.api.AbstractObjectAssert;
 /**
  * this class was generated but kep in source control to see what was needed in term of import when dealing with nested classes 
  */
-@javax.annotation.Generated(value = "assertj-assertions-generator")
+@javax.annotation.processing.Generated(value = "assertj-assertions-generator")
 public class OuterClassStaticNestedPersonAssert
     extends AbstractObjectAssert<OuterClassStaticNestedPersonAssert, OuterClass.StaticNestedPerson> {
 

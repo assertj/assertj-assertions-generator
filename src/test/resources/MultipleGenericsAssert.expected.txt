@@ -6,7 +6,7 @@ package org.assertj.assertions.generator.data.generic;
  * Although this class is not final to allow Soft assertions proxy, if you wish to extend it, 
  * extend {@link AbstractMultipleGenericsAssert<T,U,V,W>} instead.
  */
-@javax.annotation.Generated(value="assertj-assertions-generator")
+@javax.annotation.processing.Generated(value="assertj-assertions-generator")
 public class MultipleGenericsAssert<T,U,V,W> extends AbstractMultipleGenericsAssert<MultipleGenericsAssert<T,U,V,W>, MultipleGenerics<T,U,V,W>, T,U,V,W> {
 
   /**

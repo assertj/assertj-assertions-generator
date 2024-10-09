@@ -4,8 +4,8 @@
 
   <parent>
     <groupId>org.assertj</groupId>
-    <artifactId>assertj-parent-pom</artifactId>
-    <version>2.2.14</version>
+    <artifactId>assertj-parent</artifactId>
+    <version>3.26.3</version>
   </parent>
 
   <artifactId>assertj-assertions-generator</artifactId>

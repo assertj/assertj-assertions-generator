@@ -12,7 +12,6 @@
  */
 package org.assertj.assertions.generator;
 
-import com.google.common.base.Joiner;
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.CompilationSubject;
 import com.google.testing.compile.Compiler;
@@ -23,12 +22,9 @@ import javax.tools.JavaFileObject;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 public class GenerationHandler {
 
@@ -41,8 +37,7 @@ public class GenerationHandler {
   GenerationHandler(Path root, Path resourcesDir) {
     this.root = root;
     this.resourcesDir = resourcesDir;
-    this.compiler = Compiler.javac()
-                            .withOptions("-classpath", getClasspath(ClassLoader.getSystemClassLoader()));
+    this.compiler = Compiler.javac().withOptions("-classpath", System.getProperty("java.class.path"));
   }
 
   Path getResourcesDir() {
@@ -124,37 +119,6 @@ public class GenerationHandler {
       }
     }
     compileGeneratedFiles(files);
-  }
-
-  /**
-   * Returns the current classpaths of the given classloader including its parents.
-   *
-   * @throws IllegalArgumentException if the given classloader had classpaths which we could not
-   *     determine or use for compilation.
-   */
-  private static String getClasspath(ClassLoader currentClassloader) {
-    ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-
-    // Add all URLClassloaders in the hierarchy till the system classloader.
-    List<URLClassLoader> classloaders = new ArrayList<>();
-    while (true) {
-      // We only know how to extract classpaths from URLClassloaders.
-      if (currentClassloader instanceof URLClassLoader) classloaders.add((URLClassLoader) currentClassloader);
-      else throw new IllegalArgumentException("Classpath for compilation could not be extracted as classloader is not a URLClassloader");
-
-      if (currentClassloader == systemClassLoader) break;
-      else currentClassloader = currentClassloader.getParent();
-    }
-
-    Set<String> classpaths = new LinkedHashSet<>();
-    for (URLClassLoader classLoader : classloaders) {
-      for (URL url : classLoader.getURLs()) {
-        if (url.getProtocol().equals("file")) classpaths.add(url.getPath());
-        else throw new IllegalArgumentException("Given classloader consists of classpaths which are unsupported for compilation.");
-      }
-    }
-
-    return Joiner.on(File.pathSeparatorChar).join(classpaths);
   }
 
 }

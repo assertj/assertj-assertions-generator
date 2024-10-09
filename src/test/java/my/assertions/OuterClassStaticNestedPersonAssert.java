@@ -19,7 +19,7 @@ import org.assertj.core.api.AbstractObjectAssert;
 /**
  * this class was generated but kep in source control to see what was needed in term of import when dealing with nested classes 
  */
-@javax.annotation.Generated(value = "assertj-assertions-generator")
+@javax.annotation.processing.Generated(value = "assertj-assertions-generator")
 public class OuterClassStaticNestedPersonAssert
     extends AbstractObjectAssert<OuterClassStaticNestedPersonAssert, OuterClass.StaticNestedPerson> {
 

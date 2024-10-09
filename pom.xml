@@ -21,8 +21,7 @@
   </scm>
 
   <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Needed to properly bring in the Maven dependencies, see http://maven.apache.org/surefire/maven-surefire-plugin/examples/class-loading.html -->
     <surefire.useSystemClassLoader>false</surefire.useSystemClassLoader>

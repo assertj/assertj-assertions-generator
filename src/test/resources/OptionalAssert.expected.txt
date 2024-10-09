@@ -6,7 +6,7 @@ package com.google.common.base;
  * Although this class is not final to allow Soft assertions proxy, if you wish to extend it, 
  * extend {@link AbstractOptionalAssert} instead.
  */
-@javax.annotation.Generated(value="assertj-assertions-generator")
+@javax.annotation.processing.Generated(value="assertj-assertions-generator")
 public class OptionalAssert extends AbstractOptionalAssert<OptionalAssert, Optional> {
 
   /**

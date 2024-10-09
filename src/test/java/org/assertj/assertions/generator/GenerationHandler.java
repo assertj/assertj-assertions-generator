@@ -44,10 +44,6 @@ public class GenerationHandler {
     return resourcesDir;
   }
 
-  private Path packagePathFor(Class<?> clazz) {
-    return pathFromRoot(clazz.getPackage().getName().replace('.', File.separatorChar));
-  }
-
   File fileGeneratedFor(Class<?> clazz) {
     String generatedFileName = CONVERTER.convertToClassDescription(clazz).getAssertClassFilename();
     return packagePathFor(clazz).resolve(generatedFileName).toFile();
@@ -66,6 +62,10 @@ public class GenerationHandler {
   File abstractFileGeneratedFor(Class<?> clazz, String generatedAssertionPackage) {
     String generatedFileName = CONVERTER.convertToClassDescription(clazz).getAbstractAssertClassFilename();
     return pathFromRoot(generatedAssertionPackage).resolve(generatedFileName).toFile();
+  }
+
+  private Path packagePathFor(Class<?> clazz) {
+    return pathFromRoot(clazz.getPackage().getName().replace('.', File.separatorChar));
   }
 
   private Path pathFromRoot(String generatedAssertionPackage) {

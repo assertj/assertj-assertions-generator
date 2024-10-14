@@ -6,7 +6,7 @@ package org.assertj.assertions.generator.data;
  * Although this class is not final to allow Soft assertions proxy, if you wish to extend it, 
  * extend {@link AbstractAutoValueAnnotatedClassAssert} instead.
  */
-@javax.annotation.Generated(value="assertj-assertions-generator")
+@javax.annotation.processing.Generated(value="assertj-assertions-generator")
 public class AutoValueAnnotatedClassAssert extends AbstractAutoValueAnnotatedClassAssert<AutoValueAnnotatedClassAssert, AutoValueAnnotatedClass> {
 
   /**

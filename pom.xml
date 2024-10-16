@@ -9,16 +9,20 @@
   </parent>
 
   <artifactId>assertj-assertions-generator</artifactId>
-  <version>2.2.2-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
 
   <name>AssertJ Assertions Generator</name>
 
   <scm>
-    <developerConnection>scm:git:git@github.com:joel-costigliola/assertj-assertions-generator.git</developerConnection>
-    <connection>scm:git:git@github.com:joel-costigliola/assertj-assertions-generator.git</connection>
-    <url>git@github.com:joel-costigliola/assertj-assertions-generator</url>
+    <developerConnection>scm:git:https://github.com/assertj/assertj-assertions-generator.git</developerConnection>
+    <connection>scm:git:https://github.com/assertj/assertj-assertions-generator.git</connection>
+    <url>https://github.com/assertj/assertj-assertions-generator</url>
     <tag>HEAD</tag>
   </scm>
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/assertj/assertj-assertions-generator/issues</url>
+  </issueManagement>
 
   <properties>
     <maven.compiler.release>17</maven.compiler.release>

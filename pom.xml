@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>assertj-assertions-generator</artifactId>
-  <version>3.0.0-M3-SNAPSHOT</version>
+  <version>3.0.0-M3</version>
 
   <name>AssertJ Assertions Generator</name>
 
@@ -17,7 +17,7 @@
     <developerConnection>scm:git:https://github.com/assertj/assertj-assertions-generator.git</developerConnection>
     <connection>scm:git:https://github.com/assertj/assertj-assertions-generator.git</connection>
     <url>https://github.com/assertj/assertj-assertions-generator</url>
-    <tag>HEAD</tag>
+    <tag>assertj-assertions-generator-3.0.0-M3</tag>
   </scm>
   <issueManagement>
     <system>GitHub</system>

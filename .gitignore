@@ -13,3 +13,6 @@
 *.ear
 /Vagrantfile
 /.vagrant/
+
+.flattened-pom.xml
+.mvn/wrapper/maven-wrapper.jar

@@ -23,6 +23,22 @@ jobs:
       - name: Test
         run: ./mvnw $MAVEN_ARGS verify
 
+  javadoc:
+
+    name: Javadoc
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+          cache: 'maven'
+      - name: Generate Javadoc
+        run: ./mvnw $MAVEN_ARGS -DskipTests package javadoc:javadoc
+
   sonar:
 
     name: Sonar code analysis

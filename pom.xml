@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>assertj-assertions-generator</artifactId>
-  <version>3.0.0-SNAPSHOT</version>
+  <version>3.0.0-M1-SNAPSHOT</version>
 
   <name>AssertJ Assertions Generator</name>
 

@@ -1,7 +1,6 @@
-# AssertJ - Assertions Generator
+# AssertJ - Assertions Generator [![Maven Central](https://img.shields.io/maven-central/v/org.assertj/assertj-assertions-generator.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22org.assertj%22%20AND%20a:%22assertj-assertions-generator%22) [![Javadocs](http://www.javadoc.io/badge/org.assertj/assertj-assertions-generator.svg)](http://www.javadoc.io/doc/org.assertj/assertj-assertions-generator)
 
-![CI](https://github.com/assertj/assertj-assertions-generator/workflows/CI/badge.svg)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.assertj/assertj-assertions-generator-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.assertj/assertj-assertions-generator-maven-plugin)
+[![CI](https://github.com/assertj/assertj-assertions-generator/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/assertj/assertj-assertions-generator/actions/workflows/main.yml?query=branch%3Amain)
 
 ## Overview 
 

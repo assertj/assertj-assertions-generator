@@ -630,6 +630,7 @@ public class ClassUtil {
       String name = typeVariable.getName();
       name = removeAll(name, "capture#\\d+-of\\s+");
       name = removeAll(name, " class");
+      name = removeAll(name, " interface");
       typeDeclaration.append(name);
     } else if (!isJavaLangType(type)) {
       // it's a normal class but not in java.lang => add the package name

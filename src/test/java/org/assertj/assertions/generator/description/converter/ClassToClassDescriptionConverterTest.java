@@ -55,7 +55,7 @@ class ClassToClassDescriptionConverterTest implements BeanWithExceptionsTest, Ne
     assertThat(classDescription.getFullyQualifiedClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.Player");
     assertThat(classDescription.getFullyQualifiedOuterClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.Player");
     assertThat(classDescription.getFullyQualifiedClassNameWithoutGenerics()).isEqualTo(classDescription.getFullyQualifiedClassName());
-    assertThat(classDescription.getGettersDescriptions()).hasSize(19);
+    assertThat(classDescription.getGettersDescriptions()).hasSize(20);
     assertThat(classDescription.getAssertClassName()).isEqualTo("PlayerAssert");
     assertThat(classDescription.getAssertClassFilename()).isEqualTo("PlayerAssert.java");
     assertThat(classDescription.getFullyQualifiedAssertClassName()).isEqualTo("org.assertj.assertions.generator.data.nba.PlayerAssert");

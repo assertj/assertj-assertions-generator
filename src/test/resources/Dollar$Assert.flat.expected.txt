@@ -51,4 +51,48 @@ public class Dollar$Assert extends AbstractObjectAssert<Dollar$Assert, Dollar$> 
     return this;
   }
 
+  /**
+   * Verifies that the actual Dollar$'s test is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Dollar$'s test is not <code>null</code>.
+   */
+  public Dollar$Assert hasNullTest() {
+    // check that actual Dollar$ we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting test of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    String actualTest = actual.test;
+    if (actualTest != null) {
+      failWithMessage(assertjErrorMessage, actual, actualTest);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
+  /**
+   * Verifies that the actual Dollar$'s test is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual Dollar$'s test is <code>null</code>.
+   */
+  public Dollar$Assert hasNotNullTest() {
+    // check that actual Dollar$ we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting test of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    String actualTest = actual.test;
+    if (actualTest == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return this;
+  }
+
 }

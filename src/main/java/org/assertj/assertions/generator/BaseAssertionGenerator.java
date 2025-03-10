@@ -496,15 +496,21 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
       // resolve class assert (ex: PlayerAssert)
       // in case of inner classes like Movie.PublicCategory, class assert will be MoviePublicCategoryAssert
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CUSTOM_ASSERTION_CLASS,
-                                                 classDescription.getFullyQualifiedAssertClassName());
+                                                 getAssertClassName(classDescription));
       // resolve class (ex: Player)
       // in case of inner classes like Movie.PublicCategory use class name with outer class i.e. Movie.PublicCategory.
       assertionEntryPointMethodContent = replace(assertionEntryPointMethodContent, CLASS_TO_ASSERT,
-                                                 classDescription.getFullyQualifiedClassName());
+              classDescription.getFullyQualifiedClassName());
 
       allAssertThatsContentBuilder.append(lineSeparator).append(assertionEntryPointMethodContent);
     }
     return allAssertThatsContentBuilder.toString();
+  }
+
+  private String getAssertClassName(final ClassDescription classDescription) {
+    return generatedAssertionsPackage == null ?
+            classDescription.getFullyQualifiedAssertClassName() :
+            generatedAssertionsPackage + "." + classDescription.getAssertClassName();
   }
 
   private String determineBestEntryPointsAssertionsClassPackage(final Set<ClassDescription> classDescriptionSet) {

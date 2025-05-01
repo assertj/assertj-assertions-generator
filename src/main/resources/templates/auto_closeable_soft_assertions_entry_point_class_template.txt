@@ -19,7 +19,7 @@ package ${package};
  * }
  * </pre>
  */
-@javax.annotation.processing.Generated(value="assertj-assertions-generator")
+${class_annotations}
 public class AutoCloseableSoftAssertions extends org.assertj.core.api.SoftAssertions implements AutoCloseable {
 ${all_assertions_entry_points}
   @Override

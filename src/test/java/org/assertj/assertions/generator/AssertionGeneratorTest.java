@@ -85,8 +85,21 @@ public class AssertionGeneratorTest implements BeanWithExceptionsTest, NestedCla
 
   @Test
   void should_generate_assertion_for_player_class() throws Exception {
-    verifyFlatAssertionGenerationFor(Player.class);
     verifyHierarchicalAssertionGenerationFor(Player.class);
+  }
+
+  @Test
+  void should_generate_assertion_for_player_class_with_custom_annotation() throws Exception {
+    Class<?> clazz = Player.class;
+    logger.info("Generating flat assertions for {}", clazz);
+    assertionGenerator.setGeneratedAssertionClassAnnotations("@jakarta.annotation.Generated(value=\"assertj-assertions-generator\")");
+    ClassDescription classDescription = converter.convertToClassDescription(clazz);
+    assertionGenerator.generateCustomAssertionFor(classDescription);
+    String expectedAssertFile = clazz.getSimpleName() + "Assert.flat.expected.txt";
+    File expectedFile = generationHandler.getResourcesDir().resolve(expectedAssertFile).toAbsolutePath().toFile();
+    File actualFile = generationHandler.fileGeneratedFor(clazz);
+
+    assertThat(actualFile).hasSameTextualContentAs(expectedFile);
   }
 
   @Test

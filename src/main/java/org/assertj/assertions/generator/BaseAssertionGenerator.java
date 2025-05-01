@@ -68,6 +68,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private static final String PROPERTY_WITH_LOWERCASE_FIRST_CHAR = "${property}";
   private static final String PROPERTY_WITH_SAFE = "${property_safe}";
   private static final String PACKAGE = "${package}";
+  private static final String CLASS_ANNOTATIONS = "${class_annotations}";
   private static final String PROPERTY_TYPE = "${propertyType}";
   private static final String PROPERTY_SIMPLE_TYPE = "${propertySimpleType}";
   private static final String PROPERTY_ASSERT_TYPE = "${propertyAssertType}";
@@ -178,6 +179,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   private TemplateRegistry templateRegistry;// the pattern to search for
   private boolean generateAssertionsForAllFields = false;
   private String generatedAssertionsPackage = null;
+  private String generatedAssertionClassAnnotations = "@javax.annotation.processing.Generated(value=\"assertj-assertions-generator\")";
 
   /**
    * Creates a new <code>{@link BaseAssertionGenerator}</code> with default templates directory.
@@ -208,6 +210,10 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
   public void setGeneratedAssertionsPackage(String generatedAssertionsPackage) {
     checkGivenPackageIsValid(generatedAssertionsPackage);
     this.generatedAssertionsPackage = generatedAssertionsPackage;
+  }
+
+  public void setGeneratedAssertionClassAnnotations(String generatedAssertionClassAnnotations) {
+    this.generatedAssertionClassAnnotations = generatedAssertionClassAnnotations;
   }
 
   private void checkGivenPackageIsValid(String generatedAssertionsPackage) {
@@ -326,6 +332,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
     final String myself = concrete ? "this" : "myself";
 
     template = replace(template, PACKAGE, determinePackageName(classDescription));
+    template = replace(template, CLASS_ANNOTATIONS, generatedAssertionClassAnnotations);
     template = replace(template, CUSTOM_ASSERTION_CLASS, customAssertionClass);
     // use a simple parent class name as we have already imported it
     // className could be a nested class like "OuterClass.NestedClass", in that case assert class will be OuterClassNestedClass
@@ -451,6 +458,7 @@ public class BaseAssertionGenerator implements AssertionGenerator, AssertionsEnt
         ? determineBestEntryPointsAssertionsClassPackage(classDescriptionSet)
         : entryPointClassPackage;
     entryPointAssertionsClassContent = replace(entryPointAssertionsClassContent, PACKAGE, classPackage);
+    entryPointAssertionsClassContent = replace(entryPointAssertionsClassContent, CLASS_ANNOTATIONS, generatedAssertionClassAnnotations);
 
     String allEntryPointsAssertionContent = generateAssertionEntryPointMethodsFor(classDescriptionSet,
                                                                                   entryPointAssertionMethodTemplate);

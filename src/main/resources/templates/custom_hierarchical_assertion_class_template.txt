@@ -6,7 +6,7 @@ ${imports}
  * Although this class is not final to allow Soft assertions proxy, if you wish to extend it, 
  * extend {@link Abstract${custom_assertion_class}} instead.
  */
-@javax.annotation.processing.Generated(value="assertj-assertions-generator")
+${class_annotations}
 public class ${custom_assertion_class} extends Abstract${custom_assertion_class}<${custom_assertion_class}, ${class_to_assert}> {
 
   /**

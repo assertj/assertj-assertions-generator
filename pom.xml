@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>assertj-generator-build</artifactId>
-  <version>3.0.0-M5-SNAPSHOT</version>
+  <version>3.0.0-M5</version>
   <packaging>pom</packaging>
 
   <name>AssertJ Generator Build</name>
@@ -23,7 +23,7 @@
     <developerConnection>scm:git:https://github.com/assertj/assertj-generator.git</developerConnection>
     <connection>scm:git:https://github.com/assertj/assertj-generator.git</connection>
     <url>https://github.com/assertj/assertj-generator</url>
-    <tag>HEAD</tag>
+    <tag>assertj-generator-build-3.0.0-M5</tag>
   </scm>
   <issueManagement>
     <system>GitHub</system>

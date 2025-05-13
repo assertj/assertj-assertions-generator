@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.assertj</groupId>
     <artifactId>assertj-generator-build</artifactId>
-    <version>3.0.0-M5-SNAPSHOT</version>
+    <version>3.0.0-M5</version>
   </parent>
 
   <artifactId>assertj-generator</artifactId>

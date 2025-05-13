@@ -14,6 +14,7 @@ package org.assertj.assertions.generator.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
@@ -76,6 +77,8 @@ public class ClassUtil {
   private static final Comparator<Method> GETTER_COMPARATOR = Comparator.comparing(Method::getName);
   public static final Package JAVA_LANG_PACKAGE = Object.class.getPackage();
   private static final String CAPITAL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  private static final Set<String> FORBIDDEN_ENUM_GETTER_NAMES = newHashSet("name", "values", "ordinal");
+  private static final Set<String> FORBIDDEN_GETTER_NAMES = newHashSet("hashCode", "toString");
 
   /**
    * Call {@link #collectClasses(ClassLoader, String...)} with <code>Thread.currentThread().getContextClassLoader()
@@ -312,10 +315,48 @@ public class ClassUtil {
     return Collection.class.isAssignableFrom(returnType) || Iterable.class.equals(returnType);
   }
 
-  public static boolean isStandardGetter(Method method) {
-    return isValidStandardGetterName(method.getName())
-           && !Void.TYPE.equals(method.getReturnType())
-           && method.getParameterTypes().length == 0;
+  public static boolean isGetter(Method method) {
+    return !Void.TYPE.equals(method.getReturnType())
+           && method.getParameterTypes().length == 0
+           && !isForbiddenGetter(method)
+           && !isReturnGeneric(method);
+  }
+
+  private static boolean isForbiddenGetter(Method method) {
+    return FORBIDDEN_GETTER_NAMES.contains(method.getName())
+            || isForbiddenEnumGetter(method);
+  }
+
+  private static boolean isForbiddenEnumGetter(Method method) {
+    Class<?> declaringClass = method.getDeclaringClass();
+    boolean isEnum = declaringClass.isEnum() || declaringClass == java.lang.Enum.class;
+    return isEnum && FORBIDDEN_ENUM_GETTER_NAMES.contains(method.getName());
+  }
+
+  private static boolean isReturnGeneric(Method method) {
+    Type returnType = method.getGenericReturnType();
+    return containsGenericType(returnType);
+  }
+
+  private static boolean containsGenericType(Type type) {
+    return isGenericType(type)
+            || isParameterizedByGenericType(type);
+  }
+
+  private static boolean isGenericType(Type type) {
+    return type instanceof java.lang.reflect.TypeVariable;
+  }
+
+  private static boolean isParameterizedByGenericType(Type type) {
+    if (type instanceof ParameterizedType) {
+      ParameterizedType parameterizedType = (ParameterizedType) type;
+      for (Type actualTypeArgument : parameterizedType.getActualTypeArguments()) {
+        if (containsGenericType(actualTypeArgument)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   public static boolean isPredicate(Method method) {
@@ -389,11 +430,6 @@ public class ClassUtil {
     PREDICATE_PREFIXES = Collections.unmodifiableMap(map);
   }
 
-  private static boolean isValidStandardGetterName(String name) {
-    Matcher m = PREFIX_PATTERN.matcher(name);
-    return m.find() && m.group().equals(GET_PREFIX);
-  }
-
   public static String getPredicatePrefix(String name) {
     Matcher m = PREFIX_PATTERN.matcher(name);
     return m.find() ? m.group() : null;
@@ -438,7 +474,7 @@ public class ClassUtil {
   }
 
   private static boolean isGetter(Method method, Set<Class<?>> includeAnnotations, boolean isClassAnnotated) {
-    return isStandardGetter(method)
+    return isGetter(method)
            || isPredicate(method)
            || isAnnotated(method, includeAnnotations, isClassAnnotated);
   }
@@ -772,10 +808,12 @@ public class ClassUtil {
     return memberName;
   }
 
-  private static String getterProperty(String memberName) {
+  public static String getterProperty(String memberName) {
     if (memberName.startsWith(GET_PREFIX)) {
       String propertyWithCapitalLetter = removeStart(memberName, GET_PREFIX);
-      return uncapitalize(propertyWithCapitalLetter);
+      if (!propertyWithCapitalLetter.isEmpty()) {
+        return uncapitalize(propertyWithCapitalLetter);
+      }
     }
     return memberName;
   }

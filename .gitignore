@@ -1,9 +1,10 @@
 *.class
-/target
+target
 /.settings
 /.classpath
 /.project
-.idea
+.idea/*
+!/.idea/icon.svg
 *.iml
 
 

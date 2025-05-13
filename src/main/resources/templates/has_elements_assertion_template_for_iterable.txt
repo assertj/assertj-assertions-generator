@@ -150,3 +150,47 @@
     // return the current assertion for method chaining
     return ${myself};
   }
+
+  /**
+   * Verifies that the actual ${class_to_assert}'s ${property} is <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ${class_to_assert}'s ${property} is not <code>null</code>.${throws_javadoc}
+   */
+  public ${self_type} hasNull${Property}() ${throws}{
+    // check that actual ${class_to_assert} we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting ${property} of:\n  <%s>\nto be:\n  null\nbut was:\n  <%s>";
+
+    // check
+    ${propertyType} actual${Property} = actual.${getter}();
+    if (actual${Property} != null) {
+      failWithMessage(assertjErrorMessage, actual, actual${Property});
+    }
+
+    // return the current assertion for method chaining
+    return ${myself};
+  }
+
+  /**
+   * Verifies that the actual ${class_to_assert}'s ${property} is not <code>null</code>.
+   * @return this assertion object.
+   * @throws AssertionError - if the actual ${class_to_assert}'s ${property} is <code>null</code>.${throws_javadoc}
+   */
+  public ${self_type} hasNotNull${Property}() ${throws}{
+    // check that actual ${class_to_assert} we want to make assertions on is not null.
+    isNotNull();
+
+    // overrides the default error message with a more explicit one
+    String assertjErrorMessage = "\nExpecting ${property} of:\n  <%s>\nto be:\n  not-null\nbut was:\n  <null>";
+
+    // check
+    ${propertyType} actual${Property} = actual.${getter}();
+    if (actual${Property} == null) {
+      failWithMessage(assertjErrorMessage, actual);
+    }
+
+    // return the current assertion for method chaining
+    return ${myself};
+  }

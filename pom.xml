@@ -15,7 +15,6 @@
   <name>AssertJ Generator Build</name>
 
   <modules>
-    <module>assertj-assertions-generator</module>
     <module>assertj-generator</module>
   </modules>
 
